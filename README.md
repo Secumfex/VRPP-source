@@ -15,7 +15,8 @@ How-To mit GitHub (Win):
   - rumspielen...
       - neuen Branch erstellen, Dateien im repository Ordner erstellen,
        comitten, schauen ob es auf GitHub.com angezeigt wird,
-       auf publish drücken, Dateien ändern und comitten, syncen etc. etc.
+       auf publish drücken, nochmal schauen ob es auf GitHub.com angezeigt wird,
+        Dateien ändern und comitten, syncen etc. etc.
   
 _________________
 hier gibt es eigentlich nicht viel kaputt zu machen...
