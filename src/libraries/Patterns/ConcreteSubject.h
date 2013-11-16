@@ -18,9 +18,9 @@ private:
 
 public:
 
-	void setData (string _data) {data = _data;}
-	string getData() {return data;}
-	ConcreteSubject() : Subject() {}
+	void setData (string _data);
+	string getData();
+	ConcreteSubject();
 };
 
 #endif /* CONCRETESUBJECT_H_ */
