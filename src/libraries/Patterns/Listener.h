@@ -5,8 +5,8 @@
 //Ich werde die Klassen einzeln packen, das macht die Wartung und Übersicht etwas leichter wie ich finde
 
 class Listener{
-protected:
-	virtual void update() = 0;
+public:
+	virtual void update() = 0;		//abstract method which must be defined by every concrete Listener class
 };
 
 #endif
