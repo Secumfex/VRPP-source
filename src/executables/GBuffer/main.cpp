@@ -17,7 +17,7 @@
 
 int main() {
     
-    //render window
+    // render window
     glfwInit();
     
 #ifdef __APPLE__
@@ -320,5 +320,6 @@ int main() {
     
     glfwDestroyWindow(window);
     glfwTerminate();
-    return 0;   
+    return 0;
+    
 };
