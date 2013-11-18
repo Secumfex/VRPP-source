@@ -6,14 +6,17 @@ void State::printType(){
 }
 
 State::~State(){ }
+
 void VRState::initPhysics(){
-
+	std::cout<<"initiating Physics..."<<std::endl;
 }
+
 void VRState::initRenderer(){
-
+	std::cout<<"initiating Renderer..."<<std::endl;
 }
-void VRState::initScene(){
 
+void VRState::initScene(){
+	std::cout<<"initiating Scene..."<<std::endl;
 }
 
 void VRState::printType(){

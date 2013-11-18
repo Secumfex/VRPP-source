@@ -1,8 +1,10 @@
 #ifndef RENDERQUEUE_H
 #define RENDERQUEUE_H
 
-class RenderQueue {
+#include "VirtualObject.h"
 
+class RenderQueue {
+// List of VirtualObjects
 };
 
 #endif
