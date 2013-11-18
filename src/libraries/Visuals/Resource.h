@@ -2,6 +2,7 @@
 #define RESOURCE_H_
 
 #include <vector>
+#include <glm/glm.hpp>
 
 using namespace std;
 
