@@ -6,5 +6,6 @@
 
 int main() {
 
-	Application::instance();
+	Application* app = Application::instance();
+	app->setState(VRState());
 };

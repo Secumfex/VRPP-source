@@ -26,13 +26,13 @@ template <typename C>
     Singleton () { }
  };
 
-
  template <typename C> C* Singleton <C>::_instance = 0;
 
 
+
+ //Beispielklasse die Singleton implementiert
 class ConcreteSingleton : public Singleton <ConcreteSingleton>
  {
-
 //nötig damit Singleton Zugriff auf private und protected Membervariablen von ConcreteSingleton hat
  friend class Singleton <ConcreteSingleton>;
 
