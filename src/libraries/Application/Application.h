@@ -13,7 +13,7 @@ State state;
 protected:
 	Application();
 public:
-	void setState(State to);
+	void setState(State* to);
 };
 
 #endif

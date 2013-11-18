@@ -12,7 +12,9 @@ Application::Application(){
 	vr.initScene();
 }
 
-void Application::setState(State to){
-	std::cout<< "entering state :" << typeid(to).name() <<std::endl;
-	state = to;
+void Application::setState(State* to){
+	std::cout<< "entering state : " ;
+	to->printType();
+	std::cout<<std::endl;
+	state = *to;
 }
