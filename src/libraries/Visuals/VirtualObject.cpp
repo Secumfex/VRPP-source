@@ -1,0 +1,1 @@
+#include "VirtualObject.h"
