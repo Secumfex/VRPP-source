@@ -206,7 +206,7 @@ int main() {
         using namespace glm;
         
         //rotation angle
-        angle = fmod(angle + rotationSpeed * glfwGetTime(), pi<float>() * 2.0f);
+        angle = fmod((float)(angle+rotationSpeed*glfwGetTime()), (float)(pi<float>()*2.0f));
         glfwSetTime(0.0);
         
         //scale a cube into a flat plane
