@@ -9,7 +9,7 @@ template <typename C>
  class Singleton
  {
  public:
-    static C* instance ()
+    static C* getInstance ()
     {
        if (!_instance)
           _instance = new C ();

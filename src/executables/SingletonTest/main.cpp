@@ -6,6 +6,13 @@
 
 int main() {
 
-	Application* app = Application::instance();
+	Application* app = Application::getInstance();
 	app->setState(new VRState());
+
+	ConcreteSingleton::getInstance()->helloWorld();
+
+	while (true){
+
+	}
+	return 0;
 };
