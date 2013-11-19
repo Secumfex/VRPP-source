@@ -38,7 +38,6 @@ void Texture :: getResource(char* filename){
 
 void Mesh :: streamToVRAM(){
 
-
 	glGenBuffers(4, &VBO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -60,12 +59,14 @@ void Mesh :: streamToVRAM(){
 }
 
 void Mesh :: getResource(char* filename){
-    
-
 
 GLMmodel *model = glmReadOBJ(filename);
 
-//&mNormals[0] = model->normals;
+mVertices = model->vertices;
+
+mNormals = model->normals;
+
+mUVs = model->numtexcoords;
 
 }
 
@@ -73,14 +74,5 @@ vector<glm::vec3> Mesh::returnMesh()
 {
     return meshVertices;
 }
-    
-	//TODO: GLMModel machen
-
-	//TODO: file finden und das Model damit füttern
-
-	//TODO: Alle notwendigen Daten aus dem Model lesen
-
-	//TODO: Model löschen
-
 
 
