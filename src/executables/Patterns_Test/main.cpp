@@ -5,6 +5,7 @@
 #include "Patterns/ConcreteListener.h"
 #include "Patterns/ConcreteSubject.h"
 #include "Application/Application.h"
+#include "Visuals/RenderManager.h"
 
 //Test Executable, die das Singleton Pattern und Listener / Subject Pattern testet 
 int main() {
@@ -16,11 +17,25 @@ int main() {
 	Application* app = Application::getInstance();
 	app->setState(new VRState());
 
+	std::cout<<"- - - - - - - - - - - - - - -"<<std::endl;
+
+	//einzige Application-Instanz ansprechen
+	RenderManager* rm1 = RenderManager::getInstance();
+	std::cout<<"The RenderManager address in pointer 1 is: " << rm1 <<std::endl;
+	RenderManager* rm2 = RenderManager::getInstance();
+	std::cout<<"The RenderManager address in pointer 2 is: " << rm2 <<std::endl;
+
+	std::cout<<"- - - - - - - - - - - - - - -"<<std::endl;
+
 	//einzige ConcreteSingleton-Instanz ansprechen und spezifische Methode aufrufen
 	ConcreteSingleton::getInstance()->helloWorld();
 
+	std::cout<<"_____________________________"<<std::endl;
+
 	////////////////////////////////////////////////////////////////////////////////
 	/*Listener / Subject Pattern - Test*/
+
+	//create a subject
 	ConcreteSubject* s = new ConcreteSubject();
 
 	//create some listeners listening to the subject
