@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 #include <vector>
 #include <glm/glm.hpp>
+#include "Tools/glm.h"
 
 #include <iostream>
 #include <fstream>
@@ -18,7 +19,7 @@ class Resource{
 public:
 
 	virtual void streamToVRAM();
-	virtual void getResource(const char* filename);
+	virtual void getResource(char* filename);
 
 	virtual void setName(char* name);
 	//---------------MEMBER VARIABLES--------------------
@@ -37,7 +38,7 @@ public:
 	Texture ();
 	~Texture ();
 	void streamToVRAM();
-	void getResource(const char* filename);
+	void getResource(char* filename);
 
 	//---------------MEMBER VARIABLES--------------------
 };
@@ -49,7 +50,7 @@ public:
 	Mesh();
 	~Mesh();
 	void streamToVRAM();
-	void getResource(const char* filename);
+	void getResource(char* filename);
     vector<glm::vec3> returnMesh();//return the vertices of mesh data
 	vector<float> getVertices();
 	vector<float> getIndices();

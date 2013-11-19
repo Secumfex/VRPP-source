@@ -21,17 +21,17 @@ void Texture :: streamToVRAM(){
 
 }
 
-void Texture :: getResource(const char* filename){
+void Texture :: getResource(char* filename){
 
 	//TODO: GLMModel machen
 
-	//TODO: file finden und das Model damit füttern
+	//TODO: file finden und das Model damit fÃ¼ttern
 
 	//TODO: MTL erkennen und subfunctions invokieren
 
 	//TODO: Funktionen invokieren
 
-	//TODO: Model löschen
+	//TODO: Model lÃ¶schen
 }
 
 //---------------MESH SCOPE--------------------
@@ -58,46 +58,12 @@ void Mesh :: streamToVRAM(){
 
 }
 
-void Mesh :: getResource(const char* filename){
+void Mesh :: getResource(char* filename){
     
-    ifstream in(filename, ios::in);
-    if (!in)
-    {
-        cerr << "Objekt kann nicht geoeffnet werden..." << filename << endl;
-        exit(1);
-        
-    }
-    cout << "Objekt geoeffnet..." << filename << endl;
-    std::string line;
-    while (std::getline(in, line))
-    {
-        //cout<<line<<endl;
-        if (line.substr(0,2)=="v "){
-            std::istringstream v(line.substr(2));
-            glm::vec3 vert;
-            double x,y,z;
-            v>>x;v>>y;v>>z;
-            vert=glm::vec3(x,y,z);
-            mVertices.push_back(vert);
-        }
-        else if(line.substr(0,2)=="f "){
-            std::istringstream v(line.substr(2));
-            GLuint a,b,c;
-            v>>a;v>>b;v>>c;
-            a--;b--;c--;
-            mIndices.push_back(a);
-            mIndices.push_back(b);
-            mIndices.push_back(c);
-        }
-        
-    }
-    for(unsigned int i=0;i<mIndices.size();i++)
-    {
-        glm::vec3 meshData;
-        meshData=glm::vec3(mVertices[mIndices[i]].x,mVertices[mIndices[i]].y,mVertices[mIndices[i]].z);
-        meshVertices.push_back(meshData);
-        
-    }
+
+
+GLMmodel *model = glmReadOBJ(filename);
+
 }
 
 vector<glm::vec3> Mesh::returnMesh()
@@ -107,11 +73,11 @@ vector<glm::vec3> Mesh::returnMesh()
     
 	//TODO: GLMModel machen
 
-	//TODO: file finden und das Model damit füttern
+	//TODO: file finden und das Model damit fÃ¼ttern
 
 	//TODO: Alle notwendigen Daten aus dem Model lesen
 
-	//TODO: Model löschen
+	//TODO: Model lÃ¶schen
 
 
 
