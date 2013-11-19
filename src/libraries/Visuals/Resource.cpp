@@ -14,6 +14,8 @@ void Resource :: setName(char* name){
 
 }
 
+void Resource :: streamToVRAM(){ }
+void Resource :: getResource(char* filename){ }
 
 //---------------TEXTURE SCOPE--------------------
 
@@ -66,7 +68,7 @@ mVertices = model->vertices;
 
 mNormals = model->normals;
 
-mUVs = model->numtexcoords;
+mUVs = model->texcoords;
 
 }
 
@@ -76,3 +78,5 @@ vector<glm::vec3> Mesh::returnMesh()
 }
 
 
+Mesh::Mesh() { }
+Mesh::~Mesh() { }
