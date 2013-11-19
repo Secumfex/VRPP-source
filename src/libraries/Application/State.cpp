@@ -1,5 +1,6 @@
 #include "State.h"
 #include <iostream>
+#include "Visuals/RenderManager.h"
 
 void State::printType(){
 	std::cout<< "State" <<std::endl;
