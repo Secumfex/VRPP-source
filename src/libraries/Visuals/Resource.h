@@ -11,6 +11,9 @@
 =======
 
 
+<<<<<<< HEAD
+>>>>>>> 60d3bb6c9f47411894c4c4880de7d1065b5225d5
+=======
 >>>>>>> 60d3bb6c9f47411894c4c4880de7d1065b5225d5
 using namespace std;
 
@@ -32,6 +35,9 @@ private:
 
 public:
 	GLuint VBO;
+<<<<<<< HEAD
+>>>>>>> 60d3bb6c9f47411894c4c4880de7d1065b5225d5
+=======
 >>>>>>> 60d3bb6c9f47411894c4c4880de7d1065b5225d5
 
 };
