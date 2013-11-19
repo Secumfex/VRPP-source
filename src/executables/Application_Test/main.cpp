@@ -21,10 +21,8 @@
 GLFWwindow* window;
 int width, height;
 
-//related to shader program creation
 GLuint programHandle;
 
-//related to GBuffer uniform Variables creation
 GLuint modelHandle;
 GLuint viewHandle;
 GLuint projectionHandle;
@@ -32,12 +30,29 @@ GLuint inverseHandle;
 
 GLuint lightPositionHandle;
 
-//related to VertexArrayObject Creation
+//Virtual Object related values
 GLuint cubeVertexArrayHandle;
-GLuint textureHandle;
 
+float ange_cube;
+float rotationSpeed;
+
+glm::vec4 lightPosition;
+        
+glm::mat4 viewMatrix;
+glm::mat4 projectionMatrix;
+
+glm::mat4 modelCube_1;
+glm::mat4 inverseModel_1;
+
+glm::mat4 modelCube_2; 
+glm::mat4 inverseModel_2;
+
+/* fills member variables of RenderManager 
+*        the GLFW Window
+*        the Shader Program Handles
+*/
 void initRenderer(){
-    // render window
+    // Init GLFW
     glfwInit();
     
 #ifdef __APPLE__
@@ -48,12 +63,12 @@ void initRenderer(){
     glewExperimental= GL_TRUE;
 #endif
     
+    //Create a Window
     window = glfwCreateWindow(800, 800, "VR Project", NULL, NULL);
     glfwMakeContextCurrent(window);
     glClearColor(1,1,1,0);
     
     // get framebuffer size
-    
     glfwGetFramebufferSize(window, &width, &height);
     
     //init opengl 3 extension
@@ -69,106 +84,112 @@ void initRenderer(){
     projectionHandle = glGetUniformLocation(programHandle, "uniformProjection");
     inverseHandle = glGetUniformLocation(programHandle, "uniformInverse");
     lightPositionHandle = glGetUniformLocation(programHandle, "uniformInverse");
-   
-    //--------------------------------------------//
-    //        Create a Vertex Array Object        //
-    //         containing several buffers         //
-    //             to render a cube               //
-    //--------------------------------------------//
-    
-    {
-        glGenVertexArrays(1, &cubeVertexArrayHandle);
-        glBindVertexArray(cubeVertexArrayHandle);
-        
-        //we generate multiple buffers at a time
-        GLuint vertexBufferHandles[3];
-        glGenBuffers(3, vertexBufferHandles);
-        
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandles[0]);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(CubeGeometry::positions), CubeGeometry::positions, GL_STATIC_DRAW);
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-        
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandles[1]);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(CubeGeometry::uvCoordinates), CubeGeometry::uvCoordinates, GL_STATIC_DRAW);
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
-        
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandles[2]);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(CubeGeometry::normals), CubeGeometry::normals, GL_STATIC_DRAW);
-        glEnableVertexAttribArray(2);
-        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    }
-    
-    //load a fancy texture
-    textureHandle = TextureTools::loadTexture(RESOURCES_PATH "/cubeTexture.jpg");
-    
-}
-
-void renderLoop(){
-    //rotation of the cube
-    float angle = 0.0f;
-    float rotationSpeed = 1.0f;
-
-
 
     glEnable(GL_DEPTH_TEST);
+    glUseProgram(programHandle);
+}
 
-    while(!glfwWindowShouldClose(window)) {
+/* inits Physics specific stuff
+*        start Physics-Engine
+*        gravity, etc.
+*/
+void initPhysics(){
+    rotationSpeed = 1.0f;
+}
+
+/* fills RenderQueue of RenderManager 
+*        Create Virtual Objects consisting of Vertex Arrays streamed to VRAM (vertices, normals, uvcoordinates)
+*        Create ViewMatrix in IOManager::ViewMatrix
+*        Init Model-Matrices of Virtual Objects (via PhysicsComponent)
+*        
+*/
+void initScene(){ 
+    using namespace glm;
+    //////////////////////// Load used Materials to VRAM /////////////////
+    {  
+        {   //This should be streamed to GPU by Mesh::streamToVRAM()
+            glGenVertexArrays(1, &cubeVertexArrayHandle);
+            glBindVertexArray(cubeVertexArrayHandle);
         
-        using namespace glm;
-
-        //hardcoded light position
-        vec4 lightPosition = vec4(0, 10, 0, 1);
+            GLuint vertexBufferHandles[3];
+            glGenBuffers(3, vertexBufferHandles);
         
-
-        //setting up the camera parameters
-        mat4 viewMatrix = lookAt(vec3(0.0f, 1.0f, -6.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
-        mat4 projectionMatrix = perspective(40.0f, 1.0f, 0.1f, 100.f);
-
-        //rotation angle
-        angle = fmod((float)(angle + rotationSpeed * glfwGetTime()), pi<float>() * 2.0f);
-        glfwSetTime(0.0);
+            glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandles[0]);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(CubeGeometry::positions), CubeGeometry::positions, GL_STATIC_DRAW);
+            glEnableVertexAttribArray(0);
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
         
-        //scale a cube into a flat plane
-        mat4 modelCube_1 = scale(translate(mat4(1.0f), vec3(0.0f, -1.0f, 0.0f)), vec3(2.5f, 0.2f, 2.5f));
-        //compute transponsed inverse model matrix
-        mat4 inverseModel_1 = transpose(inverse(viewMatrix * modelCube_1));
+            glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandles[1]);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(CubeGeometry::uvCoordinates), CubeGeometry::uvCoordinates, GL_STATIC_DRAW);
+            glEnableVertexAttribArray(1);
+            glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+        
+            glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandles[2]);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(CubeGeometry::normals), CubeGeometry::normals, GL_STATIC_DRAW);
+            glEnableVertexAttribArray(2);
+            glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
+        }
+    }
+
+    /////////////////////////// Init View-Matrix of IOManager ///////////////////////////////////
+    {
+        viewMatrix = lookAt(vec3(0.0f, 1.0f, -6.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
+        projectionMatrix = perspective(40.0f, 1.0f, 0.1f, 100.f);
+    }
+
+    /////////////////////// Create some Objects and attach them to RenderQueue /////////////////
+    {
+        //Floor-Object
+        {  
+            modelCube_1 = scale(translate(mat4(1.0f), vec3(0.0f, -1.0f, 0.0f)), vec3(2.5f, 0.2f, 2.5f));
+            inverseModel_1 = transpose(inverse(viewMatrix * modelCube_1));
+        }
+        { //Rotating-Cube-Object
             
-        
-        //nice rotation of a small cube
-        mat4 modelCube_2 = scale(translate(rotate(mat4(1.0f), degrees(angle), vec3(1.0f, 1.0f, 0.0f)), vec3(0.0f, 0.5f, -0.5f)), vec3(0.6f, 0.6f, 0.6f));
-        //compute transponsed inverse model matrix
-        mat4 inverseModel_2 = transpose(inverse(viewMatrix * modelCube_2));
-        
-        //--------------------------------------------//
-        //        Render the Scene                    //
-        //--------------------------------------------//
-        
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
- 
-        glBindVertexArray(cubeVertexArrayHandle);
-        glBindTexture(GL_TEXTURE_2D, textureHandle);
-        
-        glUseProgram(programHandle);
-        
-        glViewport(0, 0, width, height);
-        
-        glUniform3fv(lightPositionHandle, 1, value_ptr(lightPosition));
+            ange_cube = 0.0f; //start rotation of the cube
+            modelCube_2 = scale(translate(rotate(mat4(1.0f), degrees(ange_cube), vec3(1.0f, 1.0f, 0.0f)), vec3(0.0f, 0.5f, -0.5f)), vec3(0.6f, 0.6f, 0.6f));
+            inverseModel_2 = transpose(inverse(viewMatrix * modelCube_2));
+        }
+    }
 
-        glUniformMatrix4fv(viewHandle, 1, GL_FALSE, value_ptr(viewMatrix));
-        glUniformMatrix4fv(projectionHandle, 1, GL_FALSE, value_ptr(projectionMatrix));
+    lightPosition = vec4(0, 10, 0, 1);        //hardcoded light position
+}
+
+/*renders the scene
+*        update virtual objects
+*        render RenderQueue Objects*/
+void renderLoop(){
+    using namespace glm;
+    while(!glfwWindowShouldClose(window)) {
+        ///////////////  Update Objects via Physics Engine//////////////////
+        {   ange_cube = fmod((float)(ange_cube + rotationSpeed * glfwGetTime()), pi<float>() * 2.0f);
+            glfwSetTime(0.0);
+            modelCube_2 = scale(translate(rotate(mat4(1.0f), degrees(ange_cube), vec3(1.0f, 1.0f, 0.0f)), vec3(0.0f, 0.5f, -0.5f)), vec3(0.6f, 0.6f, 0.6f));
+            inverseModel_2 = transpose(inverse(viewMatrix * modelCube_2));
+        }
+        /////////////// Begin Rendering             ////////////////////////
+        {
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glViewport(0, 0, width, height);
+            glUniform3fv(lightPositionHandle, 1, value_ptr(lightPosition));
+
+            glUniformMatrix4fv(viewHandle, 1, GL_FALSE, value_ptr(viewMatrix));
+            glUniformMatrix4fv(projectionHandle, 1, GL_FALSE, value_ptr(projectionMatrix));
+                
+             ///////  Render Objects of RenderQueue  /////
+            {
+                glBindVertexArray(cubeVertexArrayHandle);   //Using Cube-Materials from VRAM
         
-        glUniformMatrix4fv(modelHandle, 1, GL_FALSE, value_ptr(modelCube_1));
-        glUniformMatrix4fv(inverseHandle, 1, GL_FALSE, value_ptr(inverseModel_1));
-        glDrawArrays(GL_TRIANGLES, 0, 12*3); //DRAW FLOOR
+                glUniformMatrix4fv(modelHandle, 1, GL_FALSE, value_ptr(modelCube_1));
+                glUniformMatrix4fv(inverseHandle, 1, GL_FALSE, value_ptr(inverseModel_1));
+                glDrawArrays(GL_TRIANGLES, 0, 12*3); //DRAW FLOOR
         
-        glUniformMatrix4fv(modelHandle, 1, GL_FALSE, value_ptr(modelCube_2));
-        glUniformMatrix4fv(inverseHandle, 1, GL_FALSE, value_ptr(inverseModel_2));
-        glDrawArrays(GL_TRIANGLES, 0, 12*3);
-        
-        //show what's been drawn
+                glUniformMatrix4fv(modelHandle, 1, GL_FALSE, value_ptr(modelCube_2));
+                glUniformMatrix4fv(inverseHandle, 1, GL_FALSE, value_ptr(inverseModel_2));
+                glDrawArrays(GL_TRIANGLES, 0, 12*3);
+            }
+        }
+
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -176,27 +197,23 @@ void renderLoop(){
 
 //The actual program
 int main() {
-
     //enter VRState
     VRState* vr = new VRState();
     Application::getInstance()->setState(vr);
     
-    //init window and shader handles
     vr->initRenderer();
-    initRenderer(); //this should be done by VRState
+    initRenderer();
 
-    //init Virtual Objects for the scene
-    vr->initScene();
-
-    //init Physics engine
     vr->initPhysics();
+    initPhysics();
 
-    //enter RenderLoop;
+    vr->initScene();
+    initScene();
+
     RenderManager::getInstance()->renderLoop();
-    renderLoop();   //this should be done by RenderManager
+    renderLoop();
     
     glfwDestroyWindow(window);
     glfwTerminate();
     return 0;
-    
 };
