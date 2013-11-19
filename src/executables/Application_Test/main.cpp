@@ -15,9 +15,9 @@
 #include "Tools/Geometry.h"
 
 #include "Application/Application.h"
+#include "Visuals/RenderManager.h"
 
 //global handles should be known by RenderManager 
-
 GLFWwindow* window;
 int width, height;
 
@@ -236,8 +236,6 @@ void renderLoop(){
 
     while(!glfwWindowShouldClose(window)) {
         
-        glfwMakeContextCurrent(window);
-        
         using namespace glm;
         
         //rotation angle
@@ -351,6 +349,7 @@ int main() {
     vr->initPhysics();
 
     //enter RenderLoop;
+    RenderManager::getInstance()->renderLoop();
     renderLoop();   //this should be done by RenderManager
     
     glfwDestroyWindow(window);
