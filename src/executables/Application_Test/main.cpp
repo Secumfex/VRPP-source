@@ -16,16 +16,46 @@
 
 #include "Application/Application.h"
 
+//global handles should be known by RenderManager 
 
+GLFWwindow* window;
+int width, height;
 
-int main() {
+//related to finalCompositing shader program creation
+GLuint simpleTextureProgramHandle;
+GLuint finalCompositingProgramHandle;
 
-    VRState* vr = new VRState();
-	Application::getInstance()->setState(vr);
-    vr->initRenderer();
-    vr->initPhysics();
-    vr->initScene();
+//related to final Compositing uniform Variables creation
+GLint positionMapHandle;
+GLint colorMapHandle;
+GLint normalMapHandle;
+GLint blurStrengthHandle;
+
+//related to GBuffer shader program creation
+GLuint gBufferProgramHandle;
     
+//related to GBuffer uniform Variables creation
+GLuint modelHandle;
+GLuint viewHandle;
+GLuint projectionHandle;
+
+//related to VertexArrayObject Creation
+GLuint screenFillVertexArrayHandle;
+
+//related to VertexArrayObject Creation
+GLuint cubeVertexArrayHandle;
+
+//related to FrameBufferObject Creation
+GLuint framebufferHandle;
+GLuint positionTextureHandle;
+GLuint normalTextureHandle;
+GLuint colorTextureHandle;
+GLuint depthbufferHandle;
+
+//related to Texture Handle creation
+GLuint textureHandle;
+
+void initRenderer(){
     // render window
     glfwInit();
     
@@ -37,12 +67,12 @@ int main() {
     glewExperimental= GL_TRUE;
 #endif
     
-    GLFWwindow* window = glfwCreateWindow(800, 800, "VR Project", NULL, NULL);
+    window = glfwCreateWindow(800, 800, "VR Project", NULL, NULL);
     glfwMakeContextCurrent(window);
     glClearColor(1,1,1,0);
     
     // get framebuffer size
-    int width, height;
+    
     glfwGetFramebufferSize(window, &width, &height);
     
     //init opengl 3 extension
@@ -55,32 +85,32 @@ int main() {
     std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
     
     //load, compile and link simple texture rendering program for a screen filling plane
-    GLuint simpleTextureProgramHandle = ShaderTools::makeShaderProgram(
+    simpleTextureProgramHandle = ShaderTools::makeShaderProgram(
                                                                        SHADERS_PATH "/GBuffer/screenFill.vert",
                                                                        SHADERS_PATH "/GBuffer/simpleTexture.frag");
     
     
     
     //load, compile and link final compositing program for a screen filling plane
-    GLuint finalCompositingProgramHandle = ShaderTools::makeShaderProgram(
+    finalCompositingProgramHandle = ShaderTools::makeShaderProgram(
                                                                           SHADERS_PATH "/GBuffer/screenFill.vert",
                                                                           SHADERS_PATH "/GBuffer/finalCompositing.frag");
     
-    GLint positionMapHandle = glGetUniformLocation(finalCompositingProgramHandle, "positionMap");
-    GLint colorMapHandle = glGetUniformLocation(finalCompositingProgramHandle, "colorMap");
-    GLint normalMapHandle = glGetUniformLocation(finalCompositingProgramHandle, "normalMap");
-    GLint blurStrengthHandle = glGetUniformLocation(finalCompositingProgramHandle, "blurStrength");
+    positionMapHandle = glGetUniformLocation(finalCompositingProgramHandle, "positionMap");
+    colorMapHandle = glGetUniformLocation(finalCompositingProgramHandle, "colorMap");
+    normalMapHandle = glGetUniformLocation(finalCompositingProgramHandle, "normalMap");
+    blurStrengthHandle = glGetUniformLocation(finalCompositingProgramHandle, "blurStrength");
     
     
     
     //load, compile and link GBuffer renderer
-    GLuint gBufferProgramHandle = ShaderTools::makeShaderProgram(
+    gBufferProgramHandle = ShaderTools::makeShaderProgram(
                                                                  SHADERS_PATH "/GBuffer/GBuffer.vert",
                                                                  SHADERS_PATH "/GBuffer/GBuffer.frag");
     
-    GLuint modelHandle = glGetUniformLocation(gBufferProgramHandle, "uniformModel");
-    GLuint viewHandle = glGetUniformLocation(gBufferProgramHandle, "uniformView");
-    GLuint projectionHandle = glGetUniformLocation(gBufferProgramHandle, "uniformProjection");
+    modelHandle = glGetUniformLocation(gBufferProgramHandle, "uniformModel");
+    viewHandle = glGetUniformLocation(gBufferProgramHandle, "uniformView");
+    projectionHandle = glGetUniformLocation(gBufferProgramHandle, "uniformProjection");
     
     
     
@@ -90,7 +120,6 @@ int main() {
     //           fills the whole screen           //
     //--------------------------------------------//
     
-    GLuint screenFillVertexArrayHandle;
     {
         glGenVertexArrays(1, &screenFillVertexArrayHandle);
         glBindVertexArray(screenFillVertexArrayHandle);
@@ -123,7 +152,6 @@ int main() {
     //             to render a cube               //
     //--------------------------------------------//
     
-    GLuint cubeVertexArrayHandle;
     {
         glGenVertexArrays(1, &cubeVertexArrayHandle);
         glBindVertexArray(cubeVertexArrayHandle);
@@ -154,11 +182,6 @@ int main() {
     //         Create a Framebuffer Object        //
     //--------------------------------------------//
     
-    GLuint framebufferHandle;
-    GLuint positionTextureHandle;
-    GLuint normalTextureHandle;
-    GLuint colorTextureHandle;
-    GLuint depthbufferHandle;
     {
         glGenFramebuffers(1, &framebufferHandle);
         glBindFramebuffer(GL_FRAMEBUFFER, framebufferHandle);
@@ -201,13 +224,16 @@ int main() {
     }
     
     //load a fancy texture
-    GLuint textureHandle = TextureTools::loadTexture(RESOURCES_PATH "/cubeTexture.jpg");
+    textureHandle = TextureTools::loadTexture(RESOURCES_PATH "/cubeTexture.jpg");
     
+}
+
+void renderLoop(){
     //rotation of the cube
     float angle = 0.0f;
     float rotationSpeed = 1.0f;
-	int blurStrength = 4;
-    
+    int blurStrength = 4;
+
     while(!glfwWindowShouldClose(window)) {
         
         glfwMakeContextCurrent(window);
@@ -270,7 +296,7 @@ int main() {
         
         glUseProgram(finalCompositingProgramHandle);
         
-		glUniform1i(blurStrengthHandle, blurStrength);
+        glUniform1i(blurStrengthHandle, blurStrength);
         glViewport(0, 0, width, height);
         
         glActiveTexture(GL_TEXTURE0);
@@ -305,6 +331,27 @@ int main() {
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
+}
+
+//The actual program
+int main() {
+
+    //enter VRState
+    VRState* vr = new VRState();
+    Application::getInstance()->setState(vr);
+    
+    //init window and shader handles
+    vr->initRenderer();
+    initRenderer(); //this should be done by VRState
+
+    //init Virtual Objects for the scene
+    vr->initScene();
+
+    //init Physics engine
+    vr->initPhysics();
+
+    //enter RenderLoop;
+    renderLoop();   //this should be done by RenderManager
     
     glfwDestroyWindow(window);
     glfwTerminate();
