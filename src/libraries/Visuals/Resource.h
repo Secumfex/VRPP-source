@@ -52,17 +52,17 @@ public:
 	void streamToVRAM();
 	void getResource(char* filename);
     vector<glm::vec3> returnMesh();//return the vertices of mesh data
-	vector<float> getVertices();
-	vector<float> getIndices();
-	vector<float> getNormals();
-	vector<float> getUVs();
+	vector<GLfloat> getVertices();
+	vector<GLuint> getIndices();
+	vector<GLfloat> getNormals();
+	vector<GLfloat> getUVs();
 
 	//---------------MEMBER VARIABLES--------------------
 private:
-	vector<glm::vec3> mVertices;
-	vector<int> mIndices;
-	vector<float> mNormals;
-	vector<float> mUVs;
+	GLfloat* mVertices;
+	GLuint* mIndices;
+	GLfloat* mNormals;
+	GLfloat* mUVs;
     vector<glm::vec3> meshVertices;//to store all 3D model face vertices
 
 };
