@@ -47,6 +47,7 @@ class Texture : public Resource {
 	//---------------MEMBER FUNCTIONS--------------------
 public:
 	Texture ();
+	~Texture ();
 	void streamToVRAM();
 	void getResource(const char* filename);
 
@@ -57,6 +58,8 @@ class Mesh : public Resource{
 
 	//---------------MEMBER FUNCTIONS--------------------
 public:
+	Mesh();
+	~Mesh();
 	void streamToVRAM();
 	void getResource(const char* filename);
     vector<glm::vec3> returnMesh();//return the vertices of mesh data
