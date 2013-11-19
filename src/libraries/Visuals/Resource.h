@@ -3,6 +3,9 @@
 
 #include <vector>
 #include <glm/glm.hpp>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
 
 using namespace std;
 
@@ -16,6 +19,8 @@ public:
 	//---------------MEMBER VARIABLES--------------------
 private:
 	char* mName;
+
+	GLuint VBO;
 
 };
 
