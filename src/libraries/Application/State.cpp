@@ -20,5 +20,5 @@ void VRState::initScene(){
 }
 
 void VRState::printType(){
-	std::cout<< "VR State" <<std::endl;
+	std::cout<< "VR State";
 }

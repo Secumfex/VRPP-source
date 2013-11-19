@@ -21,11 +21,11 @@
 int main() {
 
     VRState* vr = new VRState();
-	Application::instance()->setState(vr);
+	Application::getInstance()->setState(vr);
     vr->initRenderer();
     vr->initPhysics();
     vr->initScene();
-
+    
     // render window
     glfwInit();
     

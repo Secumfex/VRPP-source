@@ -38,7 +38,7 @@ class ConcreteSingleton : public Singleton <ConcreteSingleton>
 
  public:
     ~ConcreteSingleton () { }
-    void helloWorld () {cout<<"Isch bins, ein Singleton!"<<endl; }
+    void helloWorld () {cout<<"Hallo Welt, Ich bin die einzige Instanz von ConcreteSingleton!"<<endl; }
  protected:
     ConcreteSingleton () { }
  };
