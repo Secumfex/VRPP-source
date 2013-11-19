@@ -1,6 +1,20 @@
 #include "Resource.h"
 
+
 //---------------MESH SCOPE--------------------
+
+void Resource :: setName(const char* name){
+	mName = name;
+
+}
+
+
+//---------------MESH SCOPE--------------------
+
+void Texture :: streamToVRAM(){
+
+}
+
 void Texture :: getResource(const char* filename){
 
 	//TODO: GLMModel machen
@@ -15,6 +29,11 @@ void Texture :: getResource(const char* filename){
 }
 
 //---------------MESH SCOPE--------------------
+
+void Mesh :: streamToVRAM(){
+
+}
+
 void Mesh :: getResource(const char* filename){
 
 	//TODO: GLMModel machen

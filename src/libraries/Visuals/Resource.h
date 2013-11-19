@@ -7,9 +7,15 @@
 using namespace std;
 
 class Resource{
+
+	//---------------MEMBER FUNCTIONS--------------------
 public:
 	virtual void streamToVRAM();
 	virtual void getResource(const char* filename);
+	virtual void setName(const char* name);
+	//---------------MEMBER VARIABLES--------------------
+private:
+	char* mName;
 
 };
 
