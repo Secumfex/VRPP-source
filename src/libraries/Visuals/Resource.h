@@ -5,16 +5,10 @@
 #include <GLFW/glfw3.h>
 #include <vector>
 #include <glm/glm.hpp>
-<<<<<<< HEAD
+
 #include <iostream>
 #include <fstream>
-=======
 
-
-<<<<<<< HEAD
->>>>>>> 60d3bb6c9f47411894c4c4880de7d1065b5225d5
-=======
->>>>>>> 60d3bb6c9f47411894c4c4880de7d1065b5225d5
 using namespace std;
 
 
@@ -22,12 +16,10 @@ class Resource{
 
 	//---------------MEMBER FUNCTIONS--------------------
 public:
-<<<<<<< HEAD
-	//virtual void streamToVRAM();
-	//virtual void getResource(const char* filename);
-=======
+
 	virtual void streamToVRAM();
 	virtual void getResource(const char* filename);
+
 	virtual void setName(char* name);
 	//---------------MEMBER VARIABLES--------------------
 private:
@@ -35,10 +27,6 @@ private:
 
 public:
 	GLuint VBO;
-<<<<<<< HEAD
->>>>>>> 60d3bb6c9f47411894c4c4880de7d1065b5225d5
-=======
->>>>>>> 60d3bb6c9f47411894c4c4880de7d1065b5225d5
 
 };
 

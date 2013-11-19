@@ -5,22 +5,7 @@
 #include <GLFW/glfw3.h>
 
 
-//---------------RESOURCE SCOPE--------------------
 
-void Resource :: setName(char* name){
-	mName = name;
-
-}
-
-
-//---------------TEXTURE SCOPE--------------------
-
-void Texture :: streamToVRAM(){
-
-}
-
-<<<<<<< HEAD
-=======
 
 //---------------RESOURCE SCOPE--------------------
 
@@ -36,7 +21,6 @@ void Texture :: streamToVRAM(){
 
 }
 
->>>>>>> 60d3bb6c9f47411894c4c4880de7d1065b5225d5
 void Texture :: getResource(const char* filename){
 
 	//TODO: GLMModel machen
