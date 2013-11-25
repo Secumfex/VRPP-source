@@ -1,4 +1,6 @@
-#include "RenderManager.h"
+
+
+#include "Visuals/RenderManager.h"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -20,9 +22,14 @@ GLuint vbo;
 GLuint ibo;
 
 GLuint MVPHandle;
+GLuint shaderProgramHandle;
+
 GLFWwindow* window; 
 
 using namespace glm;
+
+//RenderManager::RenderManager(){
+//}
 
 //glfw error-callback
 void errorCallback(int error, const char* description){
@@ -76,9 +83,9 @@ static void libInit(){
     std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
 }
 
-void RenderManager :: renderLoop(){
-	std::cout<<"renderLoop()..."<<std::endl; 
-}
+//void RenderManager :: renderLoop(){
+	//std::cout<<"renderLoop()..."<<std::endl; 
+//}
 
 //TODO filling Buffer with queued objects
 static void createVertexBuffer(){
@@ -99,31 +106,71 @@ static void createIndexBuffer(){
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 }
 
-//adding a shader (attaching to program)
-static void addShader(GLuint shaderProgram, const char* pShaderText, GLuint shaderType){
-    GLuint shaderObject = glCreateShader(shaderType);
+static void manageShaderProgram(){
 
-    if (shaderObject == 0) {
-        fprintf(stderr, "Error creating shader type %d\n", shaderType);
-        exit(0);
-    }
+	shaderProgramHandle = ShaderTools::makeShaderProgram(
+                                                                 SHADERS_PATH "/RenderManagerApp/RenderManagerApp.vert",
+                                                                 SHADERS_PATH "/RenderManagerApp/RenderManagerApp.frag");
 
-    const char* p[1];
-    p[0] = pShaderText;
-    GLint lengths[1];
-    lengths[0] = strlen(pShaderText);
-
-    glShaderSource(shaderObject, 1, p, lengths);   
-    glCompileShader(shaderObject);
-
-    //compilation successful? (not in final version)
-    GLint success;
-    glGetShaderiv(shaderObject, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        GLchar InfoLog[1024];
-        glGetShaderInfoLog(shaderObject, sizeof(InfoLog), NULL, InfoLog);
-    fprintf(stderr, "Error compiling shader type %d: '%s'\n", shaderType, InfoLog);
-    }
-
-    glAttachShader(shaderProgram, shaderObject);
+	glUseProgram(shaderProgramHandle);
 }
+
+static void loop(){
+
+    MVPHandle = glGetUniformLocation(shaderProgramHandle, "uniformMVP");
+
+    while(!glfwWindowShouldClose(window)){
+
+        glfwMakeContextCurrent(window);
+
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        static float scaleFloat = 0.0f;
+        scaleFloat += 0.01;
+
+        mat4 modelMatrix = scale(mat4(1.0f), vec3(1.0f, 1.0f, 0.0f));
+        mat4 viewMatrix = lookAt(vec3(0.0f, 1.0f, -6.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
+        mat4 projectionMatrix = perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
+
+        mat4 MVPMatrix = projectionMatrix * viewMatrix * modelMatrix;
+
+        GLfloat transformation[] = {
+            1.2+sin(scaleFloat), 0.0, 0.0, 0.0,
+            0.0, 1.2+sin(scaleFloat), 0.0, 0.0,
+            0.0, 0.0, 1.0, 0.0,
+            0.0, 0.0, 0.0, 1.0
+        };
+
+        glUniformMatrix4fv(MVPHandle, 1, GL_TRUE, value_ptr(MVPMatrix));
+
+        glEnableVertexAttribArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+        glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
+
+        glDisableVertexAttribArray(0);
+
+        glfwSwapBuffers(window);
+
+        glfwPollEvents();
+    }
+}
+
+void RenderManager::renderLoop() { 
+	std::cout<<"renderLoop()..."<<std::endl;   
+
+    libInit();
+
+    createVertexBuffer();
+
+    createIndexBuffer();
+
+    manageShaderProgram();
+
+    loop();
+
+    glfwTerminate();
+
+};
