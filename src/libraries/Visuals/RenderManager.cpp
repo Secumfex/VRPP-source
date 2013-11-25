@@ -50,6 +50,7 @@ static void keyCallback(GLFWwindow* window, int key, int scancode, int action, i
 }
 
 static void libInit(){
+	std::cout<<"Initializing glew/glfw libraries.."<<std::endl;
     glfwSetErrorCallback(errorCallback);
 
     if(!glfwInit()){
@@ -113,6 +114,8 @@ static void manageShaderProgram(){
 }
 
 static void loop(){
+
+	std::cout<<"Render loop reached successfully."<<std::endl;
 
     MVPHandle = glGetUniformLocation(shaderProgramHandle, "uniformMVP");
 
