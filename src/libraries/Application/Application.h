@@ -1,19 +1,15 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-#include "State.h"
+#include "ApplicationContext.h"
 #include "Patterns/Singleton.h"
 
-class Application : public Singleton<Application>{
-
+//Application is a Singleton State Machine (ApplicationContext) 
+class Application : public Singleton<Application>, public ApplicationContext{
 friend class Singleton<Application>;
 
-private:
-State state;
-protected:
-	Application();
-public:
-	void setState(State* to);
+Application();
+
 };
 
 #endif

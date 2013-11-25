@@ -9,27 +9,17 @@ template <typename C>
  class Singleton
  {
  public:
-    static C* getInstance ()
-    {
-       if (!_instance)
-          _instance = new C ();
-       return _instance;
-    }
-    virtual
-    ~Singleton ()
-    {
-       _instance = 0;
-    }
+    static C* getInstance (); //static Method to get the only instance
+    virtual ~Singleton ();    //virtual destroyer in case there is other stuff to destroy
  private:
-    static C* _instance;
+    static C* _instance;      //static variable containing a pointer to itself
  protected:
-    Singleton () { }
+    Singleton ();
  };
 
- template <typename C> C* Singleton <C>::_instance = 0;
+ template <typename C> C* Singleton <C>::_instance = 0; // generic template
 
-
-
+////////////////////////////////////////////////////////////////
  //Beispielklasse die Singleton implementiert
 class ConcreteSingleton : public Singleton <ConcreteSingleton>
  {
@@ -37,10 +27,10 @@ class ConcreteSingleton : public Singleton <ConcreteSingleton>
  friend class Singleton <ConcreteSingleton>;
 
  public:
-    ~ConcreteSingleton () { }
-    void helloWorld () {cout<<"Hallo Welt, Ich bin die einzige Instanz von ConcreteSingleton!"<<endl; }
+    ~ConcreteSingleton ();
+    void helloWorld ();
  protected:
-    ConcreteSingleton () { }
+    ConcreteSingleton ();
  };
 
  #endif

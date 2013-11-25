@@ -1,14 +1,8 @@
 #include "Application.h"
 
 #include <iostream>
-#include <typeinfo>
 
+//Application starts in the Idle State
 Application::Application(){
-}
-
-void Application::setState(State* to){
-	std::cout<< "entering state : " ;
-	to->printType();
-	std::cout<<std::endl;
-	state = *to;
+	setState(new IdleState());
 }
