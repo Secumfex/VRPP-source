@@ -19,11 +19,6 @@ int main() {
 
 	std::cout<<"- - - - - - - - - - - - - - -"<<std::endl;
 
-	//einzige Application-Instanz ansprechen
-	RenderManager* rm1 = RenderManager::getInstance();
-	std::cout<<"The RenderManager address in pointer 1 is: " << rm1 <<std::endl;
-	RenderManager* rm2 = RenderManager::getInstance();
-	std::cout<<"The RenderManager address in pointer 2 is: " << rm2 <<std::endl;
 
 	std::cout<<"- - - - - - - - - - - - - - -"<<std::endl;
 
