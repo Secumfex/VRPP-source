@@ -1,9 +1,9 @@
 #ifndef CONTEXT_H
 #define CONTEXT_H
-
-class State;
+#include "State.h"
 
 class Context{		//a context
+friend class State;
 private:
 	State* mState;	//is in a certain state
 public:
