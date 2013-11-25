@@ -17,6 +17,7 @@ public:
 	VirtualObject();
 
 	void render();
+	void updateModelMatrix();
 };
 
 

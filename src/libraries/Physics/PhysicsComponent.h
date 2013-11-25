@@ -2,7 +2,9 @@
 #define PHYSICSCOMPONENT_H
 
 class PhysicsComponent{
+public:
 
+	PhysicsComponent();
 };
 
 #endif
