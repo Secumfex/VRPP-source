@@ -14,8 +14,10 @@
 
 #include "Tools/ShaderTools.h"
 #include "Tools/TextureTools.h"
-//#include "Tools/Geometry.h" <-- causes error
+#include "Tools/Geometry.h"
 
+
+GLFWwindow* renderWindow; 
 
 using namespace glm;
 
