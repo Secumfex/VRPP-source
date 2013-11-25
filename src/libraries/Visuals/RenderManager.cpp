@@ -89,7 +89,7 @@ static void libInit(){
 
 //TODO filling Buffer with queued objects
 static void createVertexBuffer(){
-    GLfloat vertices[] = {-1.0,-1.0,0.0, 0.0,-1.0,1.0, 1.0,-1.0,0.0, 0.0,1.0,0.0};
+    GLfloat vertices[] = {-1.0,-0.6,0.0, 1.0,-0.6,0.0, 0.0,0.3,0.0};
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
@@ -97,10 +97,7 @@ static void createVertexBuffer(){
 
 //TODO filling buffer with indices of queued object-vertices
 static void createIndexBuffer(){
-    GLuint indices[] = {0, 3, 1,
-                        1, 3, 2,
-                        2, 3, 0,
-                        0, 1, 2 };
+    GLuint indices[] = {0, 1, 2};
     glGenBuffers(1, &ibo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
@@ -126,11 +123,12 @@ static void loop(){
         glClear(GL_COLOR_BUFFER_BIT);
 
         static float scaleFloat = 0.0f;
-        scaleFloat += 0.01;
+        scaleFloat += 0.001;
 
-        mat4 modelMatrix = scale(mat4(1.0f), vec3(1.0f, 1.0f, 0.0f));
+        mat4 modelMatrix = rotate(scale(mat4(1.0f), vec3(2.0f+sinf(scaleFloat), 2.0f+sinf(scaleFloat), 0.0f)), 
+        	30*scaleFloat, vec3(0.0f, 0.0f, 1.0f));
         mat4 viewMatrix = lookAt(vec3(0.0f, 1.0f, -6.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
-        mat4 projectionMatrix = perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
+        mat4 projectionMatrix = perspective(40.0f, 16.0f / 9.0f, 0.1f, 100.f);
 
         mat4 MVPMatrix = projectionMatrix * viewMatrix * modelMatrix;
 
