@@ -4,6 +4,8 @@
 #include <iostream>
 #include <string.h>
 
+#include <glm/glm.lib>
+#include <glm/glm.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/matrix_transform.hpp>
