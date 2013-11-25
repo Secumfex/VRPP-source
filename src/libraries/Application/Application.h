@@ -8,6 +8,7 @@
 class Application : public Singleton<Application>, public ApplicationContext{
 friend class Singleton<Application>;
 
+public:
 Application();
 
 };

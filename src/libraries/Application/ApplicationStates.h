@@ -3,15 +3,19 @@
 
 #include "Patterns/State.h"
 
-class ApplicationState : public State{
+class ApplicationContext;
 
+class ApplicationState : public State{
+protected:
+	virtual void setState(State* state, Context* context);
 };
 
 class IdleState : public ApplicationState {
-
 };
 
 class VRState : public ApplicationState {
+protected:
+	virtual void setState(State* state, Context* context);
 public:
 	void initRenderer();
 	void initPhysics();

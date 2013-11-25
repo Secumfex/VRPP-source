@@ -4,10 +4,11 @@
 
 class Context{		//a context
 friend class State;
-private:
+protected:
 	State* mState;	//is in a certain state
 public:
-	virtual void setState(State* state);	//can be set into a certain state
+	virtual void setState(State* state);	//Tell the State Machine to change States to desired state
+	State* getState();
 };
 	
 #endif

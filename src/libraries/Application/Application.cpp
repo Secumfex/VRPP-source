@@ -4,5 +4,5 @@
 
 //Application starts in the Idle State
 Application::Application(){
-	setState(new IdleState());
+	mState = new IdleState();
 }
