@@ -2,11 +2,8 @@
 #define APPLICATIONSTATES_H
 
 #include "Patterns/State.h"
-
-class ApplicationContext;
-
+//Base class of States specifically for the Application-Class
 class ApplicationState : public State{
-protected:
 	virtual void setState(State* state, Context* context);
 };
 
@@ -14,9 +11,9 @@ class IdleState : public ApplicationState {
 };
 
 class VRState : public ApplicationState {
-protected:
-	virtual void setState(State* state, Context* context);
 public:
+	virtual void setState(State* state, Context* context);
+
 	void initRenderer();
 	void initPhysics();
 	void initScene();
