@@ -6,3 +6,9 @@ using namespace std;
 PhysicsComponent::PhysicsComponent(){
 
 }
+
+//listener pattern bei kollision
+
+PhysicsComponent::~PhysicsComponent(){
+
+}

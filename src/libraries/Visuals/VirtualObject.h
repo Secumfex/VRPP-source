@@ -11,13 +11,12 @@ public:
 	glm::mat4 modelMatrix;
 
 	int id;
-	PhysicsComponent physicsComponent;
-	GraphicsComponent graphicsComponent;
+	PhysicsComponent *physicsComponent;
+	GraphicsComponent *graphicsComponent;
 
 	VirtualObject();
+	~VirtualObject();
 
-	void render();
-	void updateModelMatrix();
 };
 
 

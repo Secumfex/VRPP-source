@@ -9,23 +9,17 @@ int lastID = 0;
 VirtualObject::VirtualObject(){
 
 	modelMatrix;
-	updateModelMatrix();
 	id = lastID + 1;
 	lastID = id;
-	graphicsComponent = GraphicsComponent();
-	physicsComponent = PhysicsComponent();
+	graphicsComponent = new GraphicsComponent();
+	physicsComponent = new PhysicsComponent();
 }
 
-//draw object
-void VirtualObject::render(){
+VirtualObject::~VirtualObject(){
 
-	//TODO
-
+	delete graphicsComponent;
+	delete physicsComponent;
 }
 
 //update modelmatrix (via bullet)
-void VirtualObject::updateModelMatrix(){
-
-	//TODO
-
-}
+//altern. ueber listener pattern

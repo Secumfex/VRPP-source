@@ -5,6 +5,7 @@ class PhysicsComponent{
 public:
 
 	PhysicsComponent();
+	~PhysicsComponent();
 };
 
 #endif
