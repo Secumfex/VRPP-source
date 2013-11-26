@@ -84,10 +84,6 @@ static void libInit(){
     std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
 }
 
-//void RenderManager :: renderLoop(){
-	//std::cout<<"renderLoop()..."<<std::endl; 
-//}
-
 //TODO filling Buffer with queued objects
 static void createVertexBuffer(){
     GLfloat vertices[] = {-1.0,-0.6,0.0, 1.0,-0.6,0.0, 0.0,0.3,0.0};
@@ -134,13 +130,6 @@ static void loop(){
         mat4 projectionMatrix = perspective(40.0f, 16.0f / 9.0f, 0.1f, 100.f);
 
         mat4 MVPMatrix = projectionMatrix * viewMatrix * modelMatrix;
-
-        GLfloat transformation[] = {
-            1.2+sin(scaleFloat), 0.0, 0.0, 0.0,
-            0.0, 1.2+sin(scaleFloat), 0.0, 0.0,
-            0.0, 0.0, 1.0, 0.0,
-            0.0, 0.0, 0.0, 1.0
-        };
 
         glUniformMatrix4fv(MVPHandle, 1, GL_TRUE, value_ptr(MVPMatrix));
 
