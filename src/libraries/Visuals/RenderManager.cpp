@@ -90,7 +90,7 @@ static void libInit(){
 
 //TODO filling Buffer with queued objects
 static void createVertexBuffer(){
-    GLfloat vertices[] = {-1.0,-0.6,0.0, 1.0,-0.6,0.0, 0.0,0.3,0.0};
+    GLfloat vertices[] = {-1.0,0.0,0.0, 1.0,0.0,0.0, 0.0,1.0,0.0};
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
