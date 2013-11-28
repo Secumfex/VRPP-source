@@ -26,7 +26,7 @@ void Texture :: streamToVRAM(){
 void Texture :: getResource(char* filename){
 
 	//TODO: GLMModel machen
-
+	Assimp::Importer importer;
 	//TODO: file finden und das Model damit füttern
 
 	//TODO: MTL erkennen und subfunctions invokieren

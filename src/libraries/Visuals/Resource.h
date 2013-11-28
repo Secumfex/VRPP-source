@@ -5,7 +5,9 @@
 #include <GLFW/glfw3.h>
 #include <vector>
 #include <glm/glm.hpp>
+//#include "stb_image.h"
 #include "Tools/glm.h"
+#include <assimp/Importer.hpp>
 
 #include <iostream>
 #include <fstream>
