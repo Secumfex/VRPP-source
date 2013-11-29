@@ -29,20 +29,23 @@ private:
 	char* mName;
 
 public:
-	GLuint VBO;
+	GLuint mHandle;
 
 };
 
-class Texture : public Resource {
+class Material : public Resource {
 
 	//---------------MEMBER FUNCTIONS--------------------
 public:
-	Texture ();
-	~Texture ();
+	Material ();
+	~Material ();
 	void streamToVRAM();
 	void getResource(char* filename);
 
 	//---------------MEMBER VARIABLES--------------------
+
+	string* textures;
+
 };
 
 class Mesh : public Resource{
@@ -53,19 +56,10 @@ public:
 	~Mesh();
 	void streamToVRAM();
 	void getResource(char* filename);
-    vector<glm::vec3> returnMesh();//return the vertices of mesh data
-	vector<GLfloat> getVertices();
-	vector<GLuint> getIndices();
-	vector<GLfloat> getNormals();
-	vector<GLfloat> getUVs();
 
 	//---------------MEMBER VARIABLES--------------------
 private:
-	GLfloat* mVertices;
-	GLuint* mIndices;
-	GLfloat* mNormals;
-	GLfloat* mUVs;
-    vector<glm::vec3> meshVertices;//to store all 3D model face vertices
+
 
 };
 
