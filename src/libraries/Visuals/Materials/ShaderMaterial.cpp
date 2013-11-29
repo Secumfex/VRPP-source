@@ -7,12 +7,12 @@
 
 #include <Visuals/Materials/ShaderMaterial.h>
 
-ShaderMaterial::ShaderMaterial() {
+PhongMaterial::PhongMaterial() {
 	// TODO Auto-generated constructor stub
 
 }
 
-ShaderMaterial::~ShaderMaterial() {
+PhongMaterial::~PhongMaterial() {
 	// TODO Auto-generated destructor stub
 }
 

@@ -6,7 +6,6 @@
 #include <vector>
 #include <glm/glm.hpp>
 //#include "stb_image.h"
-#include "Tools/glm.h"
 #include <assimp/Importer.hpp>
 
 #include <iostream>
@@ -56,6 +55,7 @@ public:
 	~Mesh();
 	void streamToVRAM();
 	void getResource(char* filename);
+	vector<glm::vec3> returnMesh();
 
 	//---------------MEMBER VARIABLES--------------------
 private:
