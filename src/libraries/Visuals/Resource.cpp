@@ -1,5 +1,5 @@
 #include "Resource.h"
-
+#include "Tools/TextureTools.h"
 
 //---------------RESOURCE SCOPE--------------------
 

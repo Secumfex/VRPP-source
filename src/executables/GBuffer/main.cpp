@@ -197,6 +197,7 @@ int main() {
     GLuint textureHandle = TextureTools::loadTexture(RESOURCES_PATH "/cubeTexture.jpg");
     
     //rotation of the cube
+	//hallo 
     float angle = 0.0f;
     float rotationSpeed = 1.0f;
 	int blurStrength = 4;
