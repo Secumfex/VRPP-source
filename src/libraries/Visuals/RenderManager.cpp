@@ -84,7 +84,7 @@ static void libInit(){
     std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
 }
 
-//TODO filling Buffer with queued objects
+/*//TODO filling Buffer with queued objects
 static void createVertexBuffer(){
     GLfloat vertices[] = {-1.0,0.0,0.0, 1.0,0.0,0.0, 0.0,1.0,0.0};
     glGenBuffers(1, &vbo);
@@ -98,7 +98,7 @@ static void createIndexBuffer(){
     glGenBuffers(1, &ibo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-}
+}*/
 
 static void manageShaderProgram(){
 
@@ -121,26 +121,22 @@ static void loop(){
 
         glClear(GL_COLOR_BUFFER_BIT);
 
-        static float scaleFloat = 0.0f;
-        scaleFloat += 0.001;
-
-        mat4 modelMatrix = rotate(scale(mat4(1.0f), vec3(2.0f+sinf(scaleFloat), 2.0f+sinf(scaleFloat), 0.0f)), 
-        	30*scaleFloat, vec3(0.0f, 0.0f, 1.0f));
-        mat4 viewMatrix = lookAt(vec3(0.0f, 1.0f, -6.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
-        mat4 projectionMatrix = perspective(40.0f, 16.0f / 9.0f, 0.1f, 100.f);
+        mat4 modelMatrix;
+        mat4 viewMatrix;
+        mat4 projectionMatrix;
 
         mat4 MVPMatrix = projectionMatrix * viewMatrix * modelMatrix;
 
-        glUniformMatrix4fv(MVPHandle, 1, GL_TRUE, value_ptr(MVPMatrix));
+        //glUniformMatrix4fv(MVPHandle, 1, GL_TRUE, value_ptr(MVPMatrix));
 
-        glEnableVertexAttribArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+        //glEnableVertexAttribArray(0);
+        //glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+        //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
-        glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
+        //glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
 
-        glDisableVertexAttribArray(0);
+        //glDisableVertexAttribArray(0);
 
         glfwSwapBuffers(window);
 
@@ -153,9 +149,9 @@ void RenderManager::renderLoop() {
 
     libInit();
 
-    createVertexBuffer();
+    //createVertexBuffer();
 
-    createIndexBuffer();
+    //createIndexBuffer();
 
     manageShaderProgram();
 
