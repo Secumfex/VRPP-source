@@ -10,13 +10,13 @@ class RenderManager : public Singleton<RenderManager>, public Subject{
 	friend class Singleton <RenderManager>;  //nötig damit Singleton Zugriff auf private und protected Membervariablen von RenderManager hat
 protected:
 	RenderManager();
-	void loop();
-	void libInit();
-	void manageShaderProgram();
+	void rudimental();
 public:
     ~RenderManager ();
 	RenderQueue renderQueue;
 	IOManager iOManager;
+	void libInit();
+	void manageShaderProgram();
 	void renderLoop();
 };
 
