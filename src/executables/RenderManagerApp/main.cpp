@@ -10,8 +10,8 @@ int main() {
 	//RenderManager Pointer via Singleton
 	RenderManager* rm = RenderManager::getInstance();
 
-	//
-	Subject* s = rm;
+	
+	//Subject* s = rm;
 
 
 	rm->renderLoop();

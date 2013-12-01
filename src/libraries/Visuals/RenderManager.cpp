@@ -30,9 +30,6 @@ RenderManager* rm;
 
 using namespace glm;
 
-/*RenderManager::RenderManager(){
-    rm = this;
-}*/
 
 //glfw error-callback
 void errorCallback(int error, const char* description){
@@ -47,7 +44,7 @@ static void keyCallback(GLFWwindow* window, int key, int scancode, int action, i
     }
 }
 
-void libInit(){
+void RenderManager::libInit(){
 
 	std::cout<<"Initializing glew/glfw libraries.."<<std::endl;
     glfwSetErrorCallback(errorCallback);
@@ -99,7 +96,7 @@ static void createIndexBuffer(){
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 }*/
 
-void manageShaderProgram(){
+void RenderManager::manageShaderProgram(){
 
 	shaderProgramHandle = ShaderTools::makeShaderProgram(
                                                                  SHADERS_PATH "/RenderManagerApp/RenderManagerApp.vert",
@@ -108,7 +105,7 @@ void manageShaderProgram(){
 	glUseProgram(shaderProgramHandle);
 }
 
-void loop(){
+void RenderManager::loop(){
 
 	std::cout<<"Render loop reached successfully."<<std::endl;
 
@@ -116,17 +113,18 @@ void loop(){
 
     while(!glfwWindowShouldClose(window)){
 
-       // this.notify();
+        notify();
 
         glfwMakeContextCurrent(window);
 
         glClear(GL_COLOR_BUFFER_BIT);
-
+        
+        /*
         mat4 modelMatrix;
         mat4 viewMatrix;
         mat4 projectionMatrix;
 
-        mat4 MVPMatrix = projectionMatrix * viewMatrix * modelMatrix;
+        mat4 MVPMatrix = projectionMatrix * viewMatrix * modelMatrix;*/
 
         //glUniformMatrix4fv(MVPHandle, 1, GL_TRUE, value_ptr(MVPMatrix));
 
