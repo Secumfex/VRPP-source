@@ -20,4 +20,4 @@ public:
 	void renderLoop();
 };
 
-#endif
+#endif /* RENDERMANAGER_H */

@@ -14,4 +14,4 @@ class Mesh : public Resource{
 
 };
 
-#endif
+#endif /* RESOURCE_H */

@@ -16,4 +16,4 @@ public:
 };
 
 
-#endif
+#endif /* VIRTUALOBJECT_H */

@@ -8,4 +8,4 @@ class RenderQueue {
 // List of VirtualObjects possibly via HashMap
 };
 
-#endif
+#endif /* RENDERQUEUE_H */
