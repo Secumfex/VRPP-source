@@ -7,7 +7,14 @@
 
 class GraphicsComponent{
 public:
-	std::vector<Resource* > ressources;
+	void setMesh(Mesh mesh);
+	void setMaterial(Material material);
+	Mesh getMesh();
+	Material getMaterial();
+
+private:
+	Mesh *mMesh;
+	Material *mMaterial;
 
 };
 
