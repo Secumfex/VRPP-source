@@ -199,7 +199,8 @@ void renderLoop(){
 int main() {
     //enter VRState
     VRState* vr = new VRState();
-    Application::getInstance()->setState(vr);
+    Application* app = Application::getInstance();
+    app->setState(vr);
     
     vr->initRenderer();
     initRenderer();

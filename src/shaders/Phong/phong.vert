@@ -8,14 +8,12 @@ uniform mat4 uniformView;
 uniform mat4 uniformInverse;
 uniform mat4 uniformProjection;
 
-uniform vec4 lightPosition;
-
 out vec3 passNormal;
 out vec3 passLightPosition;
 out vec3 passPosition;
 
 void main() {
-    passLightPosition = (uniformView * lightPosition).xyz;
+    passLightPosition = (uniformView * vec4(-3,3,2,1)).xyz;
 
     gl_Position = uniformProjection * uniformView * uniformModel * positionAttribute;
 
