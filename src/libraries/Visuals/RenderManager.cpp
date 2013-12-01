@@ -18,6 +18,7 @@
 #include "Tools/TextureTools.h"
 #include "Tools/Geometry.h"
 
+
 GLuint vbo;
 GLuint ibo;
 
@@ -28,8 +29,6 @@ GLFWwindow* window;
 
 using namespace glm;
 
-//RenderManager::RenderManager(){
-//}
 
 //glfw error-callback
 void errorCallback(int error, const char* description){
@@ -39,11 +38,6 @@ void errorCallback(int error, const char* description){
 //key callback, will be removed when there is I/O functionality
 static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods){
     if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS){
-        
-        glfwSetWindowShouldClose(window, GL_TRUE);
-    }
-
-    if(key == GLFW_KEY_UP && action == GLFW_PRESS){
         
         glfwSetWindowShouldClose(window, GL_TRUE);
     }
