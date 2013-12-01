@@ -14,6 +14,8 @@
 #include <glm/glm.hpp>
 #include <vector>
 
+#include "GraphicsComponent.h"
+
 using namespace std;
 
 class StreamManager {

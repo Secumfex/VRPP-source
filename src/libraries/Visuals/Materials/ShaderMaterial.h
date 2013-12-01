@@ -8,7 +8,7 @@
 #ifndef SHADERMATERIAL_H_
 #define SHADERMATERIAL_H_
 
-#include "./Resource.h"
+#include "../Resource.h"
 
 class PhongMaterial : public Material{
 public:
