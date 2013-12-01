@@ -4,12 +4,13 @@
 #include <list>
 
 #include "VirtualObject.h"
-#include "Visuals/RenderManager.h"
 
 using namespace std;
 
 class RenderQueue {
-// List of VirtualObjects possibly via HashMap
+public: 
+	RenderQueue();
+	~RenderQueue();
 private:
 	list<VirtualObject*> voList;
 };
