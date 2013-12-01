@@ -10,7 +10,7 @@ void Subject::notify(){			//this method sends the updates to the attached listen
 void Subject:: notify(string name){
 	list<Listener*>::iterator i = listeners.begin();
 	for ( ; i != listeners.end(); i++){
-		if((*i)->getName()==name)
+		if((*i)->getName().compare(name)==0)
 			(*i)->update();
 	}
 }
