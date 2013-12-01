@@ -18,6 +18,8 @@
 #include "Tools/TextureTools.h"
 #include "Tools/Geometry.h"
 
+#include "Visuals/FrameListener.h"
+
 GLuint vbo;
 GLuint ibo;
 
@@ -159,3 +161,11 @@ void RenderManager::renderLoop() {
     glfwTerminate();
 
 };
+
+RenderManager::~RenderManager(){ 
+
+}
+
+RenderManager::RenderManager(){
+    attach(new FrameListener());
+}
