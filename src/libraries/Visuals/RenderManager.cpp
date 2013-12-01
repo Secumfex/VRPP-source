@@ -18,7 +18,6 @@
 #include "Tools/TextureTools.h"
 #include "Tools/Geometry.h"
 
-
 GLuint vbo;
 GLuint ibo;
 
@@ -27,8 +26,13 @@ GLuint shaderProgramHandle;
 
 GLFWwindow* window; 
 
+RenderManager* rm;
+
 using namespace glm;
 
+/*RenderManager::RenderManager(){
+    rm = this;
+}*/
 
 //glfw error-callback
 void errorCallback(int error, const char* description){
@@ -43,7 +47,8 @@ static void keyCallback(GLFWwindow* window, int key, int scancode, int action, i
     }
 }
 
-static void libInit(){
+void libInit(){
+
 	std::cout<<"Initializing glew/glfw libraries.."<<std::endl;
     glfwSetErrorCallback(errorCallback);
 
@@ -94,7 +99,7 @@ static void createIndexBuffer(){
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 }*/
 
-static void manageShaderProgram(){
+void manageShaderProgram(){
 
 	shaderProgramHandle = ShaderTools::makeShaderProgram(
                                                                  SHADERS_PATH "/RenderManagerApp/RenderManagerApp.vert",
@@ -103,13 +108,15 @@ static void manageShaderProgram(){
 	glUseProgram(shaderProgramHandle);
 }
 
-static void loop(){
+void loop(){
 
 	std::cout<<"Render loop reached successfully."<<std::endl;
 
     MVPHandle = glGetUniformLocation(shaderProgramHandle, "uniformMVP");
 
     while(!glfwWindowShouldClose(window)){
+
+       // this.notify();
 
         glfwMakeContextCurrent(window);
 

@@ -2,9 +2,10 @@
 #define RENDERQUEUE_H
 
 #include "VirtualObject.h"
+#include "Patterns/Singleton.h"
 
 class RenderQueue {
-// List of VirtualObjects
+// List of VirtualObjects possibly via HashMap
 };
 
 #endif
