@@ -105,18 +105,6 @@ void RenderManager::renderLoop(){
     glfwTerminate();
 }
 
-void RenderManager::rudimental() { 
-	std::cout<<"renderLoop()..."<<std::endl;   
-
-    libInit();
-
-    manageShaderProgram();
-
-    renderLoop();
-
-    glfwTerminate();
-
-};
 
 RenderManager::~RenderManager(){ 
 
