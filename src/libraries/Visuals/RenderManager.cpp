@@ -20,16 +20,21 @@
 
 #include "Visuals/FrameListener.h"
 
+using namespace glm;
+
 GLuint vbo;
 GLuint ibo;
 
+mat4 projectionMatrix;
 GLuint MVPHandle;
+
 GLuint shaderProgramHandle;
 
 GLFWwindow* window; 
 
-using namespace glm;
-
+void setDefaultProjectionMatrix(){
+    projectionMatrix = perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
+}
 
 //glfw error-callback
 void errorCallback(int error, const char* description){
@@ -78,6 +83,10 @@ void RenderManager::libInit(){
     std::cout << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
     std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
     std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
+
+    //set default projectionMatrix
+    setDefaultProjectionMatrix();
+
 }
 
 void RenderManager::manageShaderProgram(){
