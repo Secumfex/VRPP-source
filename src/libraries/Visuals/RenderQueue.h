@@ -14,6 +14,7 @@ public:
 	void addVirtualObject(VirtualObject* vo);
 	void removeVirtualObject(VirtualObject* vo);
 	VirtualObject* getNextObject();
+	bool hasNext();
 private:
 	list<VirtualObject*> voList;
 };
