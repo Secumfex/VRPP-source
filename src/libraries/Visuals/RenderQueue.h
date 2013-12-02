@@ -11,6 +11,8 @@ class RenderQueue {
 public: 
 	RenderQueue();
 	~RenderQueue();
+	void addVirtualObject(VirtualObject* vo);
+	void removeVirtualObject(VirtualObject* vo);
 private:
 	list<VirtualObject*> voList;
 };
