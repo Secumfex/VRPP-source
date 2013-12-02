@@ -13,6 +13,7 @@ public:
 	~RenderQueue();
 	void addVirtualObject(VirtualObject* vo);
 	void removeVirtualObject(VirtualObject* vo);
+	VirtualObject* getNextObject();
 private:
 	list<VirtualObject*> voList;
 };
