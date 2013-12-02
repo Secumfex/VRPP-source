@@ -32,6 +32,14 @@ GLuint shaderProgramHandle;
 
 GLFWwindow* window; 
 
+mat4 getProjectionMatrix(){
+    return projectionMatrix;
+}
+
+void setProjectionMatrix(mat4 _projectionMatrix){
+    projectionMatrix = _projectionMatrix;
+}
+
 void setDefaultProjectionMatrix(){
     projectionMatrix = perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
 }
