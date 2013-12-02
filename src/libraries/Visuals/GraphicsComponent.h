@@ -12,4 +12,4 @@ public:
 	};
 
 
-#endif
+#endif /* GRAPHICSCOMPONENT_H */

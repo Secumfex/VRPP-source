@@ -9,6 +9,7 @@
 
 #include <typeinfo>
 
+
 void testListenerSubjectPattern(){
 	//create a subject
 	ConcreteSubject* s = new ConcreteSubject();

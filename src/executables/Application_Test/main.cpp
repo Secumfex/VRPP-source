@@ -15,7 +15,6 @@
 #include "Tools/Geometry.h"
 
 #include "Application/Application.h"
-#include "Visuals/RenderManager.h"
 
 //global handles should be known by RenderManager 
 GLFWwindow* window;
@@ -211,7 +210,6 @@ int main() {
     vr->initScene();
     initScene();
 
-    RenderManager::getInstance()->renderLoop();
     renderLoop();
     
     glfwDestroyWindow(window);
