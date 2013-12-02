@@ -1,9 +1,13 @@
 #include <iostream>
 #include "PhysicsComponent.h"
 
+#include <glm/glm.hpp>
+
 using namespace std;
 
-PhysicsComponent::PhysicsComponent(){
+PhysicsComponent::PhysicsComponent(glm::mat4 matrix){
+
+	modelMatrix = matrix;
 
 }
 
@@ -12,3 +16,9 @@ PhysicsComponent::PhysicsComponent(){
 PhysicsComponent::~PhysicsComponent(){
 
 }
+
+glm::mat4* PhysicsComponent::getModelMatrix(){
+
+	return modelMatrix;
+}
+
