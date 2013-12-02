@@ -17,7 +17,7 @@ public:
 
 	void updateModelMatrix();
 
-	VirtualObject(glm::mat4 modelMatrix);
+	VirtualObject(glm::mat4 modelMatrix = glm::mat4());
 	~VirtualObject();
 
 };

@@ -24,7 +24,7 @@ VirtualObject::~VirtualObject(){
 }
 
 void VirtualObject::updateModelMatrix(){
-	modelMatrix = PhysicsComponent::getModelMatrix;
+	modelMatrix = physicsComponent->getModelMatrix();
 }
 
 //update modelmatrix (via bullet)
