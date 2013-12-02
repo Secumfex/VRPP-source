@@ -25,5 +25,6 @@ ConcreteSubject* ConcreteListener::getSubject(){
 
 ConcreteListener::ConcreteListener(ConcreteSubject* s, string n){
 	name= n;
+	setName(n);	//Private Variable von Listener-Interface setzen
 	subject = s;
 }

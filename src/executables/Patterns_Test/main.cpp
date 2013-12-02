@@ -34,6 +34,10 @@ void testListenerSubjectPattern(){
 	//notify all listeners of the changes
 	s->notify();
 
+	//change the subjects data for one last time
+	s->setData("neue Werte, die nur für den Concrete Listener_2 relevant sind");
+	//notify specific listener 2
+	s->notify("Concrete Listener_2");
 }
 
 void testSingletonPattern(){
