@@ -5,9 +5,9 @@
 
 using namespace std;
 
-PhysicsComponent::PhysicsComponent(glm::mat4 matrix){
+PhysicsComponent::PhysicsComponent(glm::mat4 modelMatrix){
 
-	modelMatrix = matrix;
+	this-> modelMatrix = modelMatrix;
 
 }
 
@@ -17,7 +17,7 @@ PhysicsComponent::~PhysicsComponent(){
 
 }
 
-glm::mat4* PhysicsComponent::getModelMatrix(){
+glm::mat4 PhysicsComponent::getModelMatrix(){
 
 	return modelMatrix;
 }

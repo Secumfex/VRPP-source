@@ -13,10 +13,11 @@ private:
 
 public:
 
-	PhysicsComponent(glm::mat4 matrix);
+	glm::mat4 getModelMatrix();
+
+	PhysicsComponent(glm::mat4 modelMatrix);
 	~PhysicsComponent();
 
-	glm::mat4* getModelMatrix();
 };
 
 #endif

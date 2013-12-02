@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 
 class VirtualObject{
+
 public:
 
 	//TODO Model Matrix
@@ -14,7 +15,9 @@ public:
 	PhysicsComponent *physicsComponent;
 	GraphicsComponent *graphicsComponent;
 
-	VirtualObject();
+	void updateModelMatrix();
+
+	VirtualObject(glm::mat4 modelMatrix);
 	~VirtualObject();
 
 };
