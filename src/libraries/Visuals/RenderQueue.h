@@ -15,7 +15,9 @@ public:
 	void removeVirtualObject(VirtualObject* vo);
 	VirtualObject* getNextObject();
 	bool hasNext();
+	void resetQueue();	//resetting iterator to list begin
 private:
+	list<VirtualObject* >::iterator currentFirstElement;	//Aktuelles vorderstes Objekt
 	list<VirtualObject*> voList;
 };
 

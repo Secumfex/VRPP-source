@@ -32,6 +32,11 @@ int main() {
 	vo3 = rq->getNextObject();
 	hasNext = rq->hasNext();
 
+	rq->resetQueue();		//reset queue-iterator to first element
+	while (rq->hasNext()){
+		vo3 = rq->getNextObject();
+	}
+
 	//RenderManager Pointer via Singleton
 	RenderManager* rm = RenderManager::getInstance();
 
