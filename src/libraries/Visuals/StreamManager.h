@@ -13,6 +13,7 @@
 
 #include <glm/glm.hpp>
 #include <vector>
+#include "GraphicsComponent.h"
 
 #include "GraphicsComponent.h"
 
