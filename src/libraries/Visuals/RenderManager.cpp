@@ -112,7 +112,9 @@ void RenderManager::renderLoop(){
     MVPHandle = glGetUniformLocation(shaderProgramHandle, "uniformMVP");
 
     while(!glfwWindowShouldClose(window)){
-        notify();
+
+        notify();                           //notify all Listeners for a new frame
+
         glfwMakeContextCurrent(window);
         glClear(GL_COLOR_BUFFER_BIT);
         glfwSwapBuffers(window);
@@ -128,5 +130,4 @@ RenderManager::~RenderManager(){
 }
 
 RenderManager::RenderManager(){
-    attach(new FrameListener());
 }
