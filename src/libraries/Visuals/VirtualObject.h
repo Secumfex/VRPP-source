@@ -7,14 +7,18 @@
 
 class VirtualObject{
 
+private:
+
+	glm::mat4 modelMatrix;
+	int id;
+	vector<GraphicsComponent>* graphics = graphicsComponent;
+	vector<GraphicsComponent> graphicsComponent;
+
 public:
 
-	//TODO Model Matrix
-	glm::mat4 modelMatrix;
-
-	int id;
+	glm::mat4 getModelMatrix();
+	vector<GraphicsComponent>* getGraphicsComponent();
 	PhysicsComponent *physicsComponent;
-	vector<GraphicsComponent> graphicsComponent;
 
 	void updateModelMatrix();
 
