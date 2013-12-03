@@ -11,7 +11,6 @@ private:
 
 	glm::mat4 modelMatrix;
 	int id;
-	vector<GraphicsComponent>* graphics = graphicsComponent;
 	vector<GraphicsComponent> graphicsComponent;
 
 public:

@@ -31,7 +31,7 @@ glm::mat4 VirtualObject::getModelMatrix(){
 }
 
 vector<GraphicsComponent>* VirtualObject:: getGraphicsComponent(){
-	return graphics;
+	return &graphicsComponent;
 }
 
 //update modelmatrix (via bullet)
