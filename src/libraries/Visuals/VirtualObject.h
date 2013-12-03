@@ -3,6 +3,7 @@
 #include "Physics/PhysicsComponent.h"
 #include "Visuals/GraphicsComponent.h"
 #include <glm/glm.hpp>
+#include <vector>
 
 class VirtualObject{
 
@@ -13,13 +14,12 @@ public:
 
 	int id;
 	PhysicsComponent *physicsComponent;
-	GraphicsComponent *graphicsComponent;
+	vector<GraphicsComponent> graphicsComponent;
 
 	void updateModelMatrix();
 
 	VirtualObject(glm::mat4 modelMatrix = glm::mat4());
 	~VirtualObject();
-
 };
 
 
