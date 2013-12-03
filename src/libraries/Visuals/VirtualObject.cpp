@@ -13,13 +13,12 @@ VirtualObject::VirtualObject(glm::mat4 modelMatrix){
 	this-> modelMatrix = modelMatrix;
 	id = lastID + 1;
 	lastID = id;
-	graphicsComponent = new GraphicsComponent();
+	graphicsComponent.push_back(GraphicsComponent());
 	physicsComponent = new PhysicsComponent(modelMatrix);
 }
 
 VirtualObject::~VirtualObject(){
 
-	delete graphicsComponent;
 	delete physicsComponent;
 }
 

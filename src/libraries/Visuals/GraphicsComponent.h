@@ -10,11 +10,12 @@ public:
 	Mesh getMesh();
 	Material getMaterial();
 
+	GraphicsComponent();
+
 private:
 	Mesh *mMesh;
 	Material *mMaterial;
 
-	GraphicsComponent();
 
 	};
 
