@@ -26,5 +26,13 @@ void VirtualObject::updateModelMatrix(){
 	modelMatrix = physicsComponent->getModelMatrix();
 }
 
+glm::mat4 VirtualObject::getModelMatrix(){
+	return modelMatrix;
+}
+
+vector<GraphicsComponent>* VirtualObject:: getGraphicsComponent(){
+	return &graphicsComponent;
+}
+
 //update modelmatrix (via bullet)
 //altern. ueber listener pattern
