@@ -1,18 +1,13 @@
-/*
- * StateMachine.cpp
- *
- *  Created on: 03.12.2013
- *      Author: Batsi
- */
-
 #include <Patterns/StateMachine.h>
 
-StateMachine::StateMachine() {
-	// TODO Auto-generated constructor stub
-
+void StateMachine::setState(string stateName){
+	currentState = states.
 }
 
-StateMachine::~StateMachine() {
-	// TODO Auto-generated destructor stub
+void StateMachine::addState(State* state){
+	states.insert(std::pair<char*, State*>(&(char)state->name), state);
 }
 
+State* StateMachine::getState(){
+	return currentState;
+}

@@ -1,16 +1,21 @@
-/*
- * StateMachine.h
- *
- *  Created on: 03.12.2013
- *      Author: Batsi
- */
-
 #ifndef STATEMACHINE_H_
 #define STATEMACHINE_H_
+#include "State.h"
+#include <map>
 
-class StateMachine {
+class StateMachine {		//the new Context
+friend class State;
+
+protected:
+	State* currentState;
+
+private:
+	std::map<const char*, State*> states;
+
 public:
-	StateMachine();
+	virtual void setState(State* state)=0;
+	virtual void addState(State* state);
+	State* getState();
 	virtual ~StateMachine();
 };
 
