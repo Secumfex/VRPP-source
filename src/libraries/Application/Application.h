@@ -4,13 +4,19 @@
 #include "ApplicationContext.h"
 #include "Patterns/Singleton.h"
 
+#include <string>
+
 //Application is a Singleton State Machine (ApplicationContext) 
 class Application : public Singleton<Application>, public ApplicationContext{
 friend class Singleton<Application>;
 
-public:
-Application();
+private:
+	string label;
 
+public:
+Application(std::string label = "");
+	void setLabel(std::string label);
+	std::string getLabel();
 };
 
 #endif

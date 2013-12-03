@@ -6,9 +6,9 @@ Application* myApp;
 *proposed way to work with our Libraries (?????)
 */
 void initMyApp(){
-/*
-myApp = new Application("PROJEKT PRAKTIKUM");	//create an Application labled PROJEKT PRAKTIKUM
 
+myApp = new Application("PROJEKT PRAKTIKUM");	//create an Application labled PROJEKT PRAKTIKUM
+/*
 MenuState* myMenu = new MenuState("MAINMENU");	//create a MenuState labled MAINMENU
 
 	Button* myButton = new Button("START_BUTTON");	//create a Button labled START_BUTTON
