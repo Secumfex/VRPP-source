@@ -5,8 +5,9 @@
 #include <GLFW/glfw3.h>
 #include <vector>
 #include <glm/glm.hpp>
-//#include "stb_image.h"
 #include <assimp/Importer.hpp>
+#include <Visuals/Shader.h>
+
 
 #include <iostream>
 #include <fstream>
@@ -43,7 +44,18 @@ public:
 
 	//---------------MEMBER VARIABLES--------------------
 
-	string* textures;
+	string matName;
+	string mTextures[3];
+
+	Shader* mDefaultShader;
+
+	glm::vec3 mAmbColor;
+	glm::vec3 mDiffColor;
+	glm::vec3 mSpecColor;
+	GLfloat mSpecCoeff;
+
+
+
 
 };
 
