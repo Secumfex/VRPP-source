@@ -18,8 +18,6 @@
 #include "Tools/TextureTools.h"
 #include "Tools/Geometry.h"
 
-#include "Visuals/FrameListener.h"
-
 using namespace glm;
 
 GLuint vbo;
