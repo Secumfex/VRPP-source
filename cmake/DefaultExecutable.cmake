@@ -10,7 +10,7 @@ include_directories(
     ${GLFW3_INCLUDE_PATH}
     ${GLM_INCLUDE_PATH}
     ${ASSIMP_INCLUDE_PATH}
-    #${BULLET_INCLUDE_PATH}
+    ${BULLET_INCLUDE_PATH}
     ${EXTERNAL_LIBRARY_PATHS}
     ${CMAKE_SOURCE_DIR}/src/libraries/
 )
