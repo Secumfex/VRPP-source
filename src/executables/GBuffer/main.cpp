@@ -19,7 +19,9 @@ Mesh cube;
 vector<glm::vec3> vertexData;
 static void Load3DModel(){
     cube.getResource(RESOURCES_PATH "/cude.obj");//load 3D model in obj formate
+
 //    vertexData=cube.returnMesh();//return the vertex data of mesh
+
     
 }
 

@@ -6,7 +6,7 @@
 #include <vector>
 #include <glm/glm.hpp>
 #include <assimp/Importer.hpp>
-#include <Visuals/Shader.h>
+class Shader;
 
 
 #include <iostream>
