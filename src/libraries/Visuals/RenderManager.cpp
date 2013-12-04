@@ -111,7 +111,7 @@ void RenderManager::renderLoop(){
 
     while(!glfwWindowShouldClose(window)){
 
-        notify();                           //notify all Listeners for a new frame
+        notify("FRAMELISTENER");      //notify all listeners labeled FRAMELISTENER
 
         glfwMakeContextCurrent(window);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -128,4 +128,8 @@ RenderManager::~RenderManager(){
 }
 
 RenderManager::RenderManager(){
+}
+void RenderManager::attachFrameListener(Listener* listener){
+    listener->setName("FRAMELISTENER"); //label this listener as framelistener
+    attach(listener);                   //attach listener
 }
