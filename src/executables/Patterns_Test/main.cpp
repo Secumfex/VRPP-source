@@ -2,13 +2,14 @@
 #include <string.h>
 
 #include "Patterns/Singleton.h"
-#include "Patterns/ConcreteListener.h"
-#include "Patterns/ConcreteSubject.h"
+#include "ConcreteListener.h"
+#include "ConcreteSubject.h"
 #include "Application/Application.h"
 #include "Visuals/RenderManager.h"
 
 #include <typeinfo>
 
+Application* app;
 
 void testListenerSubjectPattern(){
 	//create a subject
@@ -43,7 +44,7 @@ void testListenerSubjectPattern(){
 
 void testSingletonPattern(){
 	//einzige Application-Instanz ansprechen und Status ändern
-	Application* app = Application::getInstance();
+	app = Application::getInstance();
 
 	std::cout<<"- - - - - - - - - - - - - - -"<<std::endl;
 
@@ -108,7 +109,7 @@ int main() {
 
 	////////////////////////////////////////////////////////////////////////////////
 	/*Context / State Pattern - Test*/
-	testContextStatePattern();
+//	testContextStatePattern();				Bald sowieso überflüßig 
 	
 	std::cout<<"_____________________________"<<std::endl;
 
