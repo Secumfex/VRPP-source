@@ -5,6 +5,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <cmath>
 
+/*First Person Kamera*/
 class Camera{
 private:
 	glm::vec3 m_position;
@@ -14,22 +15,23 @@ private:
 	float m_phi;		//Drehung
 	float m_theta;		//Neigung
 
-inline void updateViewDirection();
+inline void updateViewDirection();	// Blickrichtung aus Winkeln berechnen 
 
 public:
 	Camera();
 	~Camera();
 
-	void turn(float deg_phi, float deg_theta);
+	void turn(float deg_phi, float deg_theta);	// Kamera drehen
+	void move(float delta_x, float delta_y, float delta_z);	// Kamera bewegen
+	void move(glm::vec3 translation);	// Kamera bewegen
 
-void setPosition(float x, float y, float z);
+	void setPosition(float x, float y, float z);
 	glm::vec3 getPosition();
-	glm::vec3 getViewDir();
+	glm::vec3 getViewDirection();
 	float getPhi();
 	float getTheta();
 
-glm::mat4 getViewMatrix();
-
+	glm::mat4 getViewMatrix();	// View Matrix berechnen und zurück lassen
 };
 
 #endif

@@ -16,6 +16,7 @@ void Camera::updateViewDirection(){
 	m_direction = glm::vec3(std::sin(m_theta)*std::cos(m_phi),
 				std::cos(m_theta),
 		   std::sin(m_phi)*std::sin(m_theta));
+	glm::normalize(m_direction);
 }
 
 Camera::~Camera(){}
@@ -32,7 +33,7 @@ glm::vec3 Camera::getPosition(){
 	return m_position;
 }
 
-glm::vec3 Camera::getViewDir(){
+glm::vec3 Camera::getViewDirection(){
 	return m_direction;
 }
 
@@ -56,4 +57,12 @@ void Camera::turn(float deg_phi, float deg_theta){
 		m_theta = PI-0.1;
 	}
 	updateViewDirection();
+}
+
+void Camera::move(float delta_x, float delta_y, float delta_z){
+	move(glm::vec3(delta_x,delta_y,delta_z));
+}
+
+void Camera::move(glm::vec3 translation){
+	m_position = m_position + translation;
 }
