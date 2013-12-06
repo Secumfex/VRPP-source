@@ -17,17 +17,17 @@ class Shader {
 public:
 	Shader();
 	virtual ~Shader();
-	virtual void fillShader(Material mat);
+	virtual void fillShader(Material* mat);
+//	void setShaderPath(char*);
+	char* getShaderPath();
+	void setShaderHandle(GLuint handle);
+	GLuint getShaderHandle();
 
 	//-----------------MEMBER VARIABLES-----------------
-public:
+private:
 
-	char* shaderPath;
-
+	char* mShaderPath;
+	GLuint mShaderHandle;
 };
-
-
-
-
 
 #endif /* SHADER_H_ */

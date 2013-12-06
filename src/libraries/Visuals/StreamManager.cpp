@@ -28,11 +28,10 @@ void StreamManager::stream(GraphicsComponent graphic){
 
 	//TODO:check ConcreteMaterial
 	//TODO:upload if required
-	graphic.getMaterial().streamToVRAM();
+
 
 	//TODO:check for Mesh
 	//TODO:upload Mesh
-	graphic.getMesh().streamToVRAM();
 
 	//TODO:get Modelmatrix
 	//TODO:upload if required

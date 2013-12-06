@@ -6,8 +6,8 @@
 #include <vector>
 #include <glm/glm.hpp>
 #include <assimp/Importer.hpp>
+#include <vector>
 class Shader;
-
 
 #include <iostream>
 #include <fstream>
@@ -21,15 +21,10 @@ class Resource{
 public:
 
 	virtual void streamToVRAM();
-	virtual void getResource(char* filename);
-
-	virtual void setName(char* name);
 	//---------------MEMBER VARIABLES--------------------
 private:
-	char* mName;
 
 public:
-	GLuint mHandle;
 
 };
 
@@ -40,14 +35,26 @@ public:
 	Material ();
 	~Material ();
 	void streamToVRAM();
-	void getResource(char* filename);
 
+	void setName(char* name);
+	void setShader(Shader shader);
+	void setAmbient(glm::vec3 ambient);
+	void setDiffuse(glm::vec3 diffuse);
+	void setSpecular(glm::vec3 specular);
+	void setSpecularTerm(GLfloat term);
+	void setTexture(int index, GLuint handle);
+
+	Shader getShader();
+	glm::vec3* getAmbient();
+	glm::vec3* getDiffuse();
+	glm::vec3* getSpecular();
+	GLfloat getSpecularTerm();
 	//---------------MEMBER VARIABLES--------------------
 
-	string matName;
-	string mTextures[3];
+	char* mName;
+	vector<GLuint> mTextures;
 
-	Shader* mDefaultShader;
+	Shader* mShader;
 
 	glm::vec3 mAmbColor;
 	glm::vec3 mDiffColor;
@@ -66,12 +73,12 @@ public:
 	Mesh();
 	~Mesh();
 	void streamToVRAM();
-	void getResource(char* filename);
-	vector<glm::vec3> returnMesh();
+	void setVAO(GLuint vao);
+	GLuint getVAO();
 
 	//---------------MEMBER VARIABLES--------------------
 private:
-
+GLuint mVaoHandle;
 
 };
 

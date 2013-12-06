@@ -5,12 +5,13 @@
 
 class GraphicsComponent{
 public:
-	void setMesh(Mesh mesh);
-	void setMaterial(Material material);
-	Mesh getMesh();
-	Material getMaterial();
+	void setMesh(Mesh* mesh);
+	void setMaterial(Material* material);
+	Mesh* getMesh();
+	Material* getMaterial();
 
 	GraphicsComponent();
+	GraphicsComponent(Mesh* mesh, Material* material);
 
 private:
 	Mesh *mMesh;

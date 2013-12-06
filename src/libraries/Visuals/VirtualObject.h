@@ -5,19 +5,23 @@
 #include <glm/glm.hpp>
 #include <vector>
 
+
 class VirtualObject{
 
 private:
 
 	glm::mat4 modelMatrix;
 	int id;
-	vector<GraphicsComponent> graphicsComponent;
+	vector<GraphicsComponent*> mGraphComponent;
+
 
 public:
 
 	glm::mat4 getModelMatrix();
-	vector<GraphicsComponent>* getGraphicsComponent();
+	vector<GraphicsComponent*> getGraphicsComponent();
 	PhysicsComponent *physicsComponent;
+	void addGraphicsComponent(GraphicsComponent *graphcomp);
+
 
 	void updateModelMatrix();
 
