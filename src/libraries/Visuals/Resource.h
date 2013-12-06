@@ -7,7 +7,9 @@
 #include <glm/glm.hpp>
 #include <assimp/Importer.hpp>
 #include <vector>
+#include <Visuals/Texture.h>
 class Shader;
+
 
 #include <iostream>
 #include <fstream>
@@ -36,13 +38,13 @@ public:
 	~Material ();
 	void streamToVRAM();
 
-	void setName(char* name);
+	void setName(std::string name);
 	void setShader(Shader shader);
 	void setAmbient(glm::vec3 ambient);
 	void setDiffuse(glm::vec3 diffuse);
 	void setSpecular(glm::vec3 specular);
 	void setSpecularTerm(GLfloat term);
-	void setTexture(int index, GLuint handle);
+	void setTexture(int index, Texture texture);
 
 	Shader getShader();
 	glm::vec3* getAmbient();
@@ -51,8 +53,8 @@ public:
 	GLfloat getSpecularTerm();
 	//---------------MEMBER VARIABLES--------------------
 
-	char* mName;
-	vector<GLuint> mTextures;
+	std::string mName;
+	vector<Texture*> mTextures;
 
 	Shader* mShader;
 

@@ -11,7 +11,7 @@
 VirtualObject* VirtualObjectFactory::createVirtualObject(){
 	return new VirtualObject();
 }
-VirtualObject* VirtualObjectFactory::createVirtualObject(char* filename){
+VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 	VirtualObject* virtualObject = new VirtualObject();
 	//TODO: filename wird im System gefunden
 	//TODO: assimp Mesh incl Materialien werden erstellt und befuellt

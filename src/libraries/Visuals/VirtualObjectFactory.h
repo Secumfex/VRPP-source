@@ -24,7 +24,7 @@ public:
 	static void hello();
 
 static VirtualObject* createVirtualObject();
-static VirtualObject* createVirtualObject(char* filename);
+static VirtualObject* createVirtualObject(std::string filename);
 static VirtualObject* createVirtualObject(vector<GraphicsComponent*> graphcomps);
 static VirtualObject* copyVirtualObject(VirtualObject vo);
 
