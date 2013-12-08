@@ -66,3 +66,17 @@ void Camera::move(float delta_x, float delta_y, float delta_z){
 void Camera::move(glm::vec3 translation){
 	m_position = m_position + translation;
 }
+
+void Camera::moveForward(float distance){
+	glm::vec3 translation = m_direction * distance;
+	move(translation); 
+}
+
+void Camera::moveLeft(float distance){
+	glm::vec3 translation = glm::normalize(glm::cross(m_up, m_direction)) * distance;
+	move(translation);
+}
+
+void Camera::moveUp(float distance){
+	glm::vec3 translation = m_up * distance;
+}
