@@ -11,7 +11,9 @@ private:
 	std::string name;
 
 public:
+	State(std::string name = "");
 	std::string getName();
+	void setName(std::string name);
 	virtual void activate();
 };
 

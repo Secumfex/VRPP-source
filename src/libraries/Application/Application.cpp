@@ -2,9 +2,11 @@
 
 #include <iostream>
 
+#include "ActivateStateListener.h"
 //Application starts in the Idle State
 Application::Application(std::string label){
 	this->label = label;
+	attachStateChangeListener(new ActivateStateListener(this));
 }
 
 void Application::setLabel(std::string label){
@@ -15,6 +17,22 @@ std::string Application::getLabel(){
 	return label;
 }
 
-void Application::setState(State* state){
-	
+bool Application::setState(State* state){
+	if (StateMachine::setState(state)){
+		notify("STATECHANGELISTENER");
+		return true;
+	}
+	return false;
+}
+
+bool Application::setState(std::string state){
+	if (StateMachine::setState(state)){
+		notify("STATECHANGELISTENER");
+	}
+	return false;
+}
+
+void Application::attachStateChangeListener(Listener* listener){
+	listener->setName("STATECHANGELISTENER");
+	attach(listener);
 }
