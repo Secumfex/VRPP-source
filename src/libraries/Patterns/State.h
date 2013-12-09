@@ -12,6 +12,7 @@ private:
 
 public:
 	std::string getName();
+	virtual void activate();
 };
 
 #endif
