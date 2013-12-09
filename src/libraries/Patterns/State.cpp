@@ -1,7 +1,9 @@
 #include "State.h"
 
-#include "Context.h"
-//any state change is accepted by default
-void State::setState(State* state, Context* context){ 
-	context->mState = state;
+void State::activate(){
+
+}
+
+std::string State::getName(){
+	return name;
 }
