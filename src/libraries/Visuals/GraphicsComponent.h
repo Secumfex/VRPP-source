@@ -10,6 +10,7 @@ public:
 	Mesh* getMesh();
 	Material* getMaterial();
 
+
 	GraphicsComponent();
 	GraphicsComponent(Mesh* mesh, Material* material);
 

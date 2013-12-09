@@ -18,7 +18,7 @@ class Texture {
 	//-----------------MEMBER FUNCTIONS-----------------
 public:
 	/** Man macht die Textur direkt mit dem Dateinamen */
-	Texture(std::string filename);
+	Texture(std::string filename = "checkers.jpg");
 	virtual ~Texture();
 	/** Das Handle wird übergeben */
 	GLuint getTextureHandle();

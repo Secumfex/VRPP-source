@@ -4,8 +4,8 @@
 using namespace std;
 
 GraphicsComponent::GraphicsComponent(Mesh* mesh, Material* material){
-mMesh = mesh;
-mMaterial = material;
+	mMesh = mesh;
+	mMaterial = material;
 }
 void GraphicsComponent::setMesh(Mesh* mesh){
 
@@ -18,3 +18,4 @@ Mesh* GraphicsComponent::getMesh(){
 Material* GraphicsComponent::getMaterial(){
 	return mMaterial;
 }
+
