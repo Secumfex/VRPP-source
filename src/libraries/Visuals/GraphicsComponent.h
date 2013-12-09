@@ -7,6 +7,10 @@
 
 class GraphicsComponent{
 public:
+
+	GraphicsComponent();
+	~GraphicsComponent();
+
 	void setMesh(Mesh mesh);
 	void setMaterial(Material material);
 	Mesh getMesh();
