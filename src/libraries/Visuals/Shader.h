@@ -8,9 +8,12 @@
 #ifndef SHADER_H_
 #define SHADER_H_
 
-#include <Visuals/Resource.h>
+#include <Visuals/GraphicsComponent.h>
 #include <string>
 #include "Tools/ShaderTools.h"
+#include <vector>
+
+using namespace std;
 
 class Shader {
 
@@ -19,28 +22,34 @@ private:
 	Shader();
 public:
 	virtual ~Shader();
-	virtual void fillShader(Material* mat, Mesh* mesh);
+	virtual void uploadUniforms(GraphicsComponent* graphcomp);
+	virtual void uploadUniforms(glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
 	std::string getShaderName();
 	void setProgramHandle(GLuint handle);
 	GLuint getProgramHandle();
+	static void setLights(vector<glm:: vec3> sources, vector<glm:: vec3> colors);
+	static void setMatrix(glm::mat4 matrix, int index);
 
 	//-----------------MEMBER VARIABLES-----------------
 private:
-
+	vector<glm:: vec3> mLightsource;
+	vector<glm:: vec3> mLightcolor;
 	std::string mShaderName;
 	GLuint mProgramHandle;
+	vector<glm::mat4> mMatrizes;
 };
 
 class Phong : public Shader{
 public:
 	Phong();
-	void fillShader(Material* mat, Mesh* mesh);
+	void uploadUniforms(GraphicsComponent* graphcomp);
+	void uploadUniforms(glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
 
 private:
-	GLfloat ambient;
-	GLfloat diffuse;
-	GLfloat specular;
-	GLfloat specularTerm;
+	GLuint modelHandle;
+	GLuint viewHandle;
+	GLuint inverseHandle;
+	GLuint projectionHandle;
 
 
 };

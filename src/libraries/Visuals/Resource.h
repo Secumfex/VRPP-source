@@ -10,7 +10,6 @@
 #include <assimp/scene.h>
 #include <vector>
 #include <Visuals/Texture.h>
-class Shader;
 
 
 #include <iostream>
@@ -41,24 +40,34 @@ public:
 	void streamToVRAM();
 
 	void setName(std::string name);
-	void setShader(Shader shader);
 	void setAmbient(glm::vec3 ambient);
 	void setDiffuse(glm::vec3 diffuse);
 	void setSpecular(glm::vec3 specular);
 	void setSpecularTerm(GLfloat term);
-	void setTexture(int index, Texture texture);
 
-	Shader getShader();
+	void setAmbientMap(Texture* tex);
+	void setDiffuseMap(Texture* tex);
+	void setSpecularMap(Texture* tex);
+	void setNormalMap(Texture* tex);
+	void setHeightMap(Texture* tex);
+	void setShadowMap(Texture* tex);
+
+	Texture* getAmbientMap();
+	Texture* getDiffuseMap();
+	Texture* getSpecularMap();
+	Texture* getNormalMap();
+	Texture* getHeightMap();
+	Texture* getShadowMap();
+
 	glm::vec3* getAmbient();
 	glm::vec3* getDiffuse();
 	glm::vec3* getSpecular();
 	GLfloat getSpecularTerm();
-	//---------------MEMBER VARIABLES--------------------
 
+	//---------------MEMBER VARIABLES--------------------
+private:
 	std::string mName;
 	vector<Texture*> mTextures;
-
-	Shader* mShader;
 
 	glm::vec3 mAmbColor;
 	glm::vec3 mDiffColor;

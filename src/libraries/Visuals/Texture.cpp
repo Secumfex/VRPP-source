@@ -8,12 +8,11 @@
 #include <Visuals/Texture.h>
 
 Texture::Texture(std::string filename) {
-	// TODO Auto-generated constructor stub
 createTextureHandle(filename);
 }
 
 Texture::~Texture() {
-	// TODO Auto-generated destructor stub
+
 }
 
 GLuint Texture::getTextureHandle(){
