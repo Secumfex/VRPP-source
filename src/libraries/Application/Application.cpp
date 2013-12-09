@@ -6,6 +6,7 @@
 //Application starts in the Idle State
 Application::Application(std::string label){
 	this->label = label;
+	currentState = 0;
 	attachStateChangeListener(new ActivateStateListener(this));
 }
 
@@ -28,6 +29,7 @@ bool Application::setState(State* state){
 bool Application::setState(std::string state){
 	if (StateMachine::setState(state)){
 		notify("STATECHANGELISTENER");
+		return true;
 	}
 	return false;
 }
