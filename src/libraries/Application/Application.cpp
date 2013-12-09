@@ -14,3 +14,7 @@ void Application::setLabel(std::string label){
 std::string Application::getLabel(){
 	return label;
 }
+
+void Application::setState(State* state){
+	
+}

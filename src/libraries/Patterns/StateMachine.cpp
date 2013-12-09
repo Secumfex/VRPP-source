@@ -1,13 +1,17 @@
 #include <Patterns/StateMachine.h>
 
 void StateMachine::setState(State* state){
-	currentState = states[state->getName()];
-}
+	if(states.find(state->getName()) != states.end()){
+		currentState = states[state->getName()];
+		}
+	}
 
 void StateMachine::addState(State* state){
-	states.insert(std::pair<const char*, State*>(state->getName(),state));
+	states.insert(std::pair<std::string, State*>(state->getName(),state));
 }
 
 State* StateMachine::getState(){
 	return currentState;
 }
+
+StateMachine::~StateMachine(){}

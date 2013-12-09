@@ -10,7 +10,7 @@ protected:
 	State* currentState;
 
 private:
-	std::map<const char*, State*> states;
+	std::map<std::string, State*> states;
 
 public:
 	virtual void setState(State* state)=0;

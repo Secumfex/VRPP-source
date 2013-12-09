@@ -15,6 +15,7 @@
 #include "Tools/Geometry.h"
 
 #include "Application/Application.h"
+#include "Application/ApplicationStates.h"
 
 //global handles should be known by RenderManager 
 GLFWwindow* window;
