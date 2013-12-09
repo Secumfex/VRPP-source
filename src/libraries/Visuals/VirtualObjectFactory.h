@@ -18,6 +18,33 @@ class VirtualObjectFactory : public Singleton<VirtualObjectFactory> {
 	friend class Singleton<VirtualObjectFactory>;
 //---------------MEMBER VARIABLES--------------------
 
+	  struct MyMesh{
+        GLuint vao;
+        GLuint texUnits[MAX_TEXTURES];
+        GLuint texTypes[MAX_TEXTURES];
+        GLuint uniformBlockIndex;
+        float transform[16];
+        int numIndices;
+		int numFaces;
+        unsigned int type;
+        struct Material mat;
+        unsigned int *indexes;
+        float *positions;
+        float *normals;
+    };
+
+	  struct MyMaterial{
+
+	float diffuse[4];
+	float ambient[4];
+	float specular[4];
+	float emissive[4];
+	float shininess;
+	int texCount;
+};
+
+
+
 //---------------MEMBER FUNCTIONS--------------------
 public:
 
