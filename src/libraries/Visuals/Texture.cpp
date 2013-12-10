@@ -27,7 +27,7 @@ void Texture::createTextureHandle(std::string filename){
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-        mTextureHandles.insert(std::pair<char*, GLuint>(filename, newHandle));
+        mTextureHandles.insert(std::pair<std::string, GLuint>(filename, newHandle));
 	}
 
 	mFilename = filename;

@@ -12,13 +12,14 @@
 #include <string>
 #include "Tools/ShaderTools.h"
 #include <vector>
+#include <glm/gtc/type_ptr.hpp>
 
 using namespace std;
 
 class Shader {
 
 	//-----------------MEMBER FUNCTIONS-----------------
-private:
+protected:
 	Shader();
 public:
 	virtual ~Shader();
@@ -31,7 +32,7 @@ public:
 	static void setMatrix(glm::mat4 matrix, int index);
 
 	//-----------------MEMBER VARIABLES-----------------
-private:
+protected:
 	vector<glm:: vec3> mLightsource;
 	vector<glm:: vec3> mLightcolor;
 	std::string mShaderName;

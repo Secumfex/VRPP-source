@@ -20,9 +20,6 @@ void Shader::setProgramHandle(GLuint handle){}
 	GLuint Shader::getProgramHandle(){
 	return mProgramHandle;
 }
-	GLuint Shader:: getProgramHandle(){
-		return mProgramHandle;
-	}
 
 /**-----------PHONG SHADER----------*/
 
@@ -44,6 +41,6 @@ void Phong::uploadUniforms(glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat
 	glUniformMatrix4fv(modelHandle, 1, GL_FALSE, glm::value_ptr(modelMatrix));
 	glUniformMatrix4fv(viewHandle, 1, GL_FALSE, glm::value_ptr(viewMatrix));
 	glUniformMatrix4fv(projectionHandle, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-	glm::mat4 inverseMatrix = glm::value_ptr(glm::transpose(glm::inverse(modelMatrix * viewMatrix)));
-	glUniformMatrix4fv(inverseHandle, 1, GL_FALSE, inverseMatrix);
+	glm::mat4 inverseMatrix = glm::transpose(glm::inverse(modelMatrix * viewMatrix));
+	glUniformMatrix4fv(inverseHandle, 1, GL_FALSE, glm::value_ptr(inverseMatrix));
 }

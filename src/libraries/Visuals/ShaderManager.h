@@ -9,6 +9,7 @@
 #define SHADERMANAGER_H_
 
 #include <vector>
+#include <Visuals/Shader.h>
 
 using namespace std;
 

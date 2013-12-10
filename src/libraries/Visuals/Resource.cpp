@@ -14,7 +14,7 @@ void Resource :: streamToVRAM(){ }
 
 //---------------TEXTURE SCOPE--------------------
 
-void Material :: Material(){
+	Material :: Material(){
 	Texture* tex = new Texture();
 	mTextures.push_back(tex);
 	mTextures.push_back(tex);
