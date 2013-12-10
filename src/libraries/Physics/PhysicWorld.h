@@ -1,7 +1,7 @@
 #ifndef PHYSICWORLD_H_
 #define PHYSICWORLD_H_
 
-//#include "btBulletDynamicsCommon.h"
+#include "btBulletDynamicsCommon.h"
 #include "bullet.h"
 
 class PhysicWorld {
@@ -13,11 +13,12 @@ public:
 	btSequentialImpulseConstraintSolver *solver;
 	btDiscreteDynamicsWorld *dynamicsWorld;
 
+	void initPhysics();
+	void deleteLoc();
 	PhysicWorld();
 	~PhysicWorld();
 
-	//void initPhysics();
-	//void deleteLoc();
+
 };
 
 

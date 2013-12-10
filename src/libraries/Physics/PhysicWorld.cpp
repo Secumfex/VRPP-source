@@ -1,18 +1,18 @@
 #include <iostream>
 #include "PhysicWorld.h"
-//#include "btBulletDynamicsCommon.h"
+#include "btBulletDynamicsCommon.h"
 
 using namespace std;
 
-//todo: singelton pattern (?)
+//TODO singelton pattern (?)
 
-/*
+
 btBroadphaseInterface* broadphase;
 btDefaultCollisionConfiguration* collisionConfiguration;
 btCollisionDispatcher* dispatcher;
 btSequentialImpulseConstraintSolver* solver;
 btDiscreteDynamicsWorld* dynamicsWorld;
-*/
+
 
 PhysicWorld::PhysicWorld() {
 
@@ -24,7 +24,7 @@ PhysicWorld::PhysicWorld() {
 
 	dynamicsWorld->setGravity(btVector3(0,-10,0));
 }
- /*
+
 void PhysicWorld::initPhysics() {
 
 	broadphase = new btDbvtBroadphase();
@@ -35,7 +35,7 @@ void PhysicWorld::initPhysics() {
 
 	dynamicsWorld->setGravity(btVector3(0,-10,0));
 }
-*/
+
 
 PhysicWorld::~PhysicWorld() {
 
@@ -46,7 +46,7 @@ PhysicWorld::~PhysicWorld() {
 	delete broadphase;
 }
 
-/*
+
 void PhysicWorld::deleteLoc() {
 
 	delete dynamicsWorld;
@@ -55,4 +55,4 @@ void PhysicWorld::deleteLoc() {
 	delete dispatcher;
 	delete broadphase;
 }
-*/
+

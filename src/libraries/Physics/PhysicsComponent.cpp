@@ -20,7 +20,7 @@ PhysicsComponent::PhysicsComponent(float radius, float x, float y, float z, floa
 
 PhysicsComponent::~PhysicsComponent() {
 
-	//dynamicWorld->removeCollisionObject(rigidBody);		//todo: muss noch der welt zugeordnet werden
+	//dynamicWorld->removeCollisionObject(rigidBody);		//TODO muss noch der welt zugeordnet werden
 	btMotionState* motionState = rigidBody->getMotionState();
 	btCollisionShape* shape = rigidBody->getCollisionShape();
 	delete shape;
@@ -50,12 +50,12 @@ btRigidBody* PhysicsComponent::addSphere(float radius, float x, float y, float z
 	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,sphere);
 	btRigidBody* body = new btRigidBody(info);
 
-	//dynamicsWorld->addRigidBody(body);		//todo: muss noch der welt zugeordnet werden
+	//dynamicsWorld->addRigidBody(body);		//TODO muss noch der welt zugeordnet werden
 
 	return body;
 }
 
-//todo: update methode per listener pattern
+//TODO update methode per listener pattern
 void PhysicsComponent::updateModelMatrix() {
 
 	btRigidBody* sphere = rigidBody;
