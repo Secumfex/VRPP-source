@@ -20,9 +20,6 @@ void Shader::setProgramHandle(GLuint handle){}
 	GLuint Shader::getProgramHandle(){
 	return mProgramHandle;
 }
-	GLuint Shader:: getProgramHandle(){
-		return mProgramHandle;
-	}
 
 /**-----------PHONG SHADER----------*/
 

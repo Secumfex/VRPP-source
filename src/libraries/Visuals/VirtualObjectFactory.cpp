@@ -8,6 +8,25 @@
 #include <Visuals/VirtualObjectFactory.h>
 
 
+//eingefügt
+void set_float4(float f[4], float a, float b, float c, float d)
+{
+f[0] = a;
+f[1] = b;
+f[2] = c;
+f[3] = d;
+}
+ 
+void color4_to_float4(const aiColor4D *c, float f[4])
+{
+f[0] = c->r;
+f[1] = c->g;
+f[2] = c->b;
+f[3] = c->a;
+}
+
+
+
 VirtualObject* VirtualObjectFactory::createVirtualObject(){
 	return new VirtualObject();
 }
@@ -78,7 +97,11 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
  
         // create array with faces
         // have to convert from Assimp format to array
+
+		//kein array?!
         unsigned int *faceArray;
+
+
         faceArray = (unsigned int *)malloc(sizeof(unsigned int) * mesh->mNumFaces * 3);
         unsigned int faceIndex = 0;
  
@@ -106,8 +129,10 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
             glGenBuffers(1, &buffer);
             glBindBuffer(GL_ARRAY_BUFFER, buffer);
             glBufferData(GL_ARRAY_BUFFER, sizeof(float)*3*mesh->mNumVertices, mesh->mVertices, GL_STATIC_DRAW);
-            glEnableVertexAttribArray(vertexLoc);
-            glVertexAttribPointer(vertexLoc, 3, GL_FLOAT, 0, 0, 0);
+
+			//vertexLoc wurde hier ersetzt
+            glEnableVertexAttribArray(0);
+            glVertexAttribPointer(0, 3, GL_FLOAT, 0, 0, 0);
         }
  
         // buffer for vertex normals
@@ -115,8 +140,9 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
             glGenBuffers(1, &buffer);
             glBindBuffer(GL_ARRAY_BUFFER, buffer);
             glBufferData(GL_ARRAY_BUFFER, sizeof(float)*3*mesh->mNumVertices, mesh->mNormals, GL_STATIC_DRAW);
-            glEnableVertexAttribArray(normalLoc);
-            glVertexAttribPointer(normalLoc, 3, GL_FLOAT, 0, 0, 0);
+            // normalLoc wurde hier ersetzt
+			glEnableVertexAttribArray(1);
+            glVertexAttribPointer(1, 3, GL_FLOAT, 0, 0, 0);
         }
  
         // buffer for vertex texture coordinates
@@ -131,8 +157,9 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
             glGenBuffers(1, &buffer);
             glBindBuffer(GL_ARRAY_BUFFER, buffer);
             glBufferData(GL_ARRAY_BUFFER, sizeof(float)*2*mesh->mNumVertices, texCoords, GL_STATIC_DRAW);
-            glEnableVertexAttribArray(texCoordLoc);
-            glVertexAttribPointer(texCoordLoc, 2, GL_FLOAT, 0, 0, 0);
+            //und texCoordLoc wurde dann auch ersetzt
+			glEnableVertexAttribArray(2);
+            glVertexAttribPointer(2, 2, GL_FLOAT, 0, 0, 0);
         }
  
         // unbind buffers
@@ -152,7 +179,9 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
             }
         else
             aMat.texCount = 0;
- 
+
+
+
         float c[4];
         set_float4(c, 0.8f, 0.8f, 0.8f, 1.0f);
         aiColor4D diffuse;
@@ -187,6 +216,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
         glBindBuffer(GL_UNIFORM_BUFFER,aMesh.uniformBlockIndex);
         glBufferData(GL_UNIFORM_BUFFER, sizeof(aMat), (void *)(&aMat), GL_STATIC_DRAW);
  
+		// der vector wurde jetzt in VirtualObjectFactory.h static(!) erstellt. ist das in ordnung?
         myMeshes.push_back(aMesh);
     }
 
