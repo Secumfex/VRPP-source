@@ -34,7 +34,7 @@ private:
 	/** hier werden alle nötigen Handles gespeichert, mehr nicht*/
 	static std::map<std::string, GLuint> mTextureHandles;
 	/** damit is der DateiPfad gemeint wie zB Wurst.jpg oder Pictures/Hallo.png */
-	char* mFilename;
+	std::string mFilename;
 	/** Format */
 	int height;
 	int width;
