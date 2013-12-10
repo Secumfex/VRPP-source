@@ -3,9 +3,22 @@
 #include <iostream>
 using namespace std;
 
+#include "Visuals/RenderManager.h"
+
 void ApplicationState::activate(){
 	State::activate();
-	//TODO bind variables method
+	bindObjects();	
+}
+
+void ApplicationState::bindObjects(){
+	// RenderManager* rm = RenderManager::getInstance();
+	
+	// rm->setProjectionMatrix(projectionMatrix);
+	// rm->setRenderQueue(renderQueue);
+
+	// IOManager* io = IOManager::getInstance();
+	// io->setCamera(camera);
+	// io->setInputType(inputType);
 }
 
 VRState::VRState(std::string name){

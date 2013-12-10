@@ -4,7 +4,12 @@
 #include "Patterns/State.h"
 //Base class of States specifically for the Application-Class
 class ApplicationState : public State{
+
+protected: 
+	//Bind Objects to RenderManager and IOManager
+	virtual void bindObjects();
 public:
+	//Activate this State
 	virtual void activate();
 };
 
