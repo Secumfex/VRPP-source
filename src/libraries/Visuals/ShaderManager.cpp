@@ -7,12 +7,19 @@
 
 #include <Visuals/ShaderManager.h>
 
-ShaderManager::ShaderManager() {
-	// TODO Auto-generated constructor stub
-
+ShaderManager :: ShaderManager() {
 }
 
-ShaderManager::~ShaderManager() {
-	// TODO Auto-generated destructor stub
+ShaderManager :: ~ShaderManager() {
+}
+void ShaderManager :: addShader(Shader* shader){
+	mShaders.push_back(shader);
+}
+Shader* ShaderManager :: getShader(std::string shaderName){
+	for (unsigned int i = 0; i < sizeof(mShaders) ; ++i) {
+		if(mShaders[i]->getShaderName() == shaderName)
+			return mShaders[i];
+	}
+	return 0;
 }
 

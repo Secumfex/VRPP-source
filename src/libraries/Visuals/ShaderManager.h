@@ -18,7 +18,11 @@ public:
 	ShaderManager();
 	virtual ~ShaderManager();
 
-	static vector<Shader> shaders;
+	vector<Shader*> mShaders;
+
+	Shader* getShader(std::string shaderName);
+	void addShader(Shader* shader);
+
 };
 
 #endif /* SHADERMANAGER_H_ */

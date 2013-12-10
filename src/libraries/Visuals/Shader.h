@@ -19,40 +19,25 @@ using namespace std;
 class Shader {
 
 	//-----------------MEMBER FUNCTIONS-----------------
-protected:
-	Shader();
 public:
+	Shader(string directory, string shaderName);
 	virtual ~Shader();
 	virtual void uploadUniforms(GraphicsComponent* graphcomp);
 	virtual void uploadUniforms(glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
 	std::string getShaderName();
-	void setProgramHandle(GLuint handle);
 	GLuint getProgramHandle();
+
+	void uploadModelMatrix(glm::mat4 modelMatrix);
+	void uploadViewMatrix(glm::mat4 viewMatrix);
+	void uploadProjectionMatrix(glm::mat4 projectionMatrix);
+	void uploadInverseMatrix (glm::mat4 modelMatrix, glm::mat4 viewMatrix);
+
 	static void setLights(vector<glm:: vec3> sources, vector<glm:: vec3> colors);
-	static void setMatrix(glm::mat4 matrix, int index);
 
 	//-----------------MEMBER VARIABLES-----------------
 protected:
-	vector<glm:: vec3> mLightsource;
-	vector<glm:: vec3> mLightcolor;
 	std::string mShaderName;
 	GLuint mProgramHandle;
-	vector<glm::mat4> mMatrizes;
-};
-
-class Phong : public Shader{
-public:
-	Phong();
-	void uploadUniforms(GraphicsComponent* graphcomp);
-	void uploadUniforms(glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
-
-private:
-	GLuint modelHandle;
-	GLuint viewHandle;
-	GLuint inverseHandle;
-	GLuint projectionHandle;
-
-
 };
 
 #endif /* SHADER_H_ */
