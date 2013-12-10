@@ -44,7 +44,7 @@ class VirtualObjectFactory : public Singleton<VirtualObjectFactory> {
         int numIndices;
 		int numFaces;
         unsigned int type;
-        struct Material mat;
+        struct MyMaterial mat;
         unsigned int *indexes;
         float *positions;
         float *normals;
