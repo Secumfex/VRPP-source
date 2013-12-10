@@ -3,23 +3,34 @@
 #include <iostream>
 using namespace std;
 
+void ApplicationState::activate(){
+	State::activate();
+	//TODO bind variables method
+}
+
 VRState::VRState(std::string name){
 	setName(name);
 }
 
 void VRState::activate(){
-	State::activate();
+	//TODO let this only be called once at all by having a boolean variable or something
 	initRenderer();
 	initPhysics();
 	initScene();
+
+	//bind Input-Object, RenderQueue-Object, Camera-Object, Projectionmatrix 
+	ApplicationState::activate();
+	
 }
 
 void VRState::initRenderer(){
 	cout<<"initializing Renderer..."<<endl;
+	//TODO call RenderManager::initlibs which opens window, binds callbackfuncs, etc. 
 }
 
 void VRState::initPhysics(){
 	cout<<"initializing Physics..."<<endl;
+	//TODO find a Way to init Bullet library
 }
 
 void VRState::initScene(){

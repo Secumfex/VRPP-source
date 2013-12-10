@@ -4,6 +4,8 @@
 #include "Patterns/State.h"
 //Base class of States specifically for the Application-Class
 class ApplicationState : public State{
+public:
+	virtual void activate();
 };
 
 class IdleState : public ApplicationState {
