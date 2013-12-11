@@ -18,7 +18,7 @@ private:
 inline void updateViewDirection();	// Blickrichtung aus Winkeln berechnen 
 
 public:
-	Camera();
+	Camera(glm::vec3 pos = glm::vec3(0.0,0.0,0.0), glm::vec3 direction = glm::vec3(0.0,0.0,-1.0), glm::vec3 up = glm::vec3(0.0,1.0,0.0));
 	~Camera();
 
 	void turn(float deg_phi, float deg_theta);	// Kamera drehen

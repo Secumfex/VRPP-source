@@ -2,9 +2,14 @@
 
 #define PI 3.14159265
 
-Camera::Camera(){ 
-	m_theta = PI/2.0; 	//horizontal
-	m_phi = 3.0*PI/2.0;	  //gerade aus in z=-1 richtung	
+Camera::Camera(glm::vec3 pos, glm::vec3 direction, glm::vec3 up){ 
+	m_position 	= pos,
+	m_direction = direction;
+	m_up 		= up;
+	
+	//TODO : compute theta, phi by using the direction vector
+	m_theta 	= PI/2.0; 	//horizontal
+	m_phi 		= 3.0*PI/2.0;	  //gerade aus in z=-1 richtung	
 	}
 
 glm::mat4 Camera::getViewMatrix(){
