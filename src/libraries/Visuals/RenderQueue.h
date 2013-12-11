@@ -3,7 +3,7 @@
 
 #include <list>
 
-#include "GraphicsComponent.h"
+#include "VirtualObject.h"
 
 using namespace std;
 
@@ -11,14 +11,14 @@ class RenderQueue {
 public: 
 	RenderQueue();
 	~RenderQueue();
-	void addGC(GraphicsComponent* gc);
-	void removeGC(GraphicsComponent* gc);
-	GraphicsComponent* getNextGC();
+	void addVirtualObject(VirtualObject* vo);
+	void removeVirtualObject(VirtualObject* vo);
+	VirtualObject* getNextObject();
 	bool hasNext();
 	void resetQueue();	//resetting iterator to list begin
 private:
-	list<GraphicsComponent* >::iterator currentFirstElement;	//Aktuelles vorderstes Objekt
-	list<GraphicsComponent*> voList;
+	list<VirtualObject* >::iterator currentFirstElement;	//Aktuelles vorderstes Objekt
+	list<VirtualObject*> voList;
 };
 
 #endif /* RENDERQUEUE_H */

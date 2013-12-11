@@ -11,25 +11,25 @@ RenderQueue::~RenderQueue(){
 	
 }
 
-void RenderQueue::addGC(GraphicsComponent* gc){
-	cout<<"Adding gc."<<endl; // <-- REMOVE IN FINAL
-	voList.push_back(gc);
+void RenderQueue::addVirtualObject(VirtualObject* vo){
+	cout<<"Adding VO."<<endl; // <-- REMOVE IN FINAL
+	voList.push_back(vo);
 }
 
-void RenderQueue::removeGC(GraphicsComponent* gc){
-	cout<<"Removing gc."<<endl; // <-- REMOVE IN FINAL
-	voList.remove(gc);
+void RenderQueue::removeVirtualObject(VirtualObject* vo){
+	cout<<"Removing VO."<<endl; // <-- REMOVE IN FINAL
+	voList.remove(vo);
 }
 
-//extract the first gc from the list and remove it after extraction before returning the pointer
-GraphicsComponent* RenderQueue::getNextGC(){
-//	cout<<"Getting gc and iterating queue-iterator."<<endl; // <-- REMOVE IN FINAL
-	GraphicsComponent* gc = *currentFirstElement;
+//extract the first VO from the list and remove it after extraction before returning the pointer
+VirtualObject* RenderQueue::getNextObject(){
+//	cout<<"Getting VO and iterating queue-iterator."<<endl; // <-- REMOVE IN FINAL
+	VirtualObject* vo = *currentFirstElement;
 	currentFirstElement++;
-	return gc;
+	return vo;
 }
 
-//test if gc list is empty
+//test if VO list is empty
 bool RenderQueue::hasNext(){
 	if(currentFirstElement == voList.end()){
 //		cout<<"no more queued Virtual Objects remaining."<<endl; // <-- REMOVE IN FINAL
