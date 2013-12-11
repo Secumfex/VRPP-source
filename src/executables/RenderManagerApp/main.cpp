@@ -9,7 +9,7 @@ int main() {
 
 	//Testing Render Queue
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	VirtualObject* vo1 = new VirtualObject();
+	/*VirtualObject* vo1 = new VirtualObject();
 	VirtualObject* vo2 = new VirtualObject();
 	VirtualObject* vo3 = new VirtualObject();
 	VirtualObject* vo4 = new VirtualObject();
@@ -36,7 +36,7 @@ int main() {
 	while (rq->hasNext()){
 		vo3 = rq->getNextObject();
 	}
-
+	*/
 	//RenderManager Pointer via Singleton
 	RenderManager* rm = RenderManager::getInstance();
 
