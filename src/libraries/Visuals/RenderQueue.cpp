@@ -43,3 +43,7 @@ bool RenderQueue::hasNext(){
 void RenderQueue::resetQueue(){
 	currentFirstElement = voList.begin();
 }
+
+void extractAndSort(){
+	//TODO
+}
