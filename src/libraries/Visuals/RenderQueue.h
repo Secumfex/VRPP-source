@@ -5,6 +5,7 @@
 #include <map>
 
 #include "VirtualObject.h"
+//#include "GraphicComponent.h"
 
 using namespace std;
 
@@ -21,7 +22,7 @@ public:
 private:
 	list<VirtualObject* >::iterator currentFirstElement;	//Aktuelles vorderstes Objekt
 	list<VirtualObject*> voList;
-	map<string, list<VirtualObject*> > gcStorage; //GC map sorted by shaders
+	map<string, list<vector<GraphicsComponent*> > > gcStorage; //GC map sorted by shaders
 };
 
 #endif /* RENDERQUEUE_H */

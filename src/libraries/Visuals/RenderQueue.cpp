@@ -44,6 +44,11 @@ void RenderQueue::resetQueue(){
 	currentFirstElement = voList.begin();
 }
 
-void extractAndSort(){
-	//TODO
+void RenderQueue::extractAndSort(){
+	string shader = "fuckyeah"; //TESTSTRING, WILL BE REMOVED SOON
+	if(gcStorage.find(shader) == gcStorage.end()){
+		//no list for that shader exists in the map
+	}else{
+		//
+	}
 }
