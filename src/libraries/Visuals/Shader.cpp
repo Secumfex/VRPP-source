@@ -18,7 +18,6 @@ Shader::Shader(string directory, string shaderName) {
 
 Shader::~Shader() {}
 
-
 std::string Shader::getShaderName(){
 	return mShaderName;
 }
