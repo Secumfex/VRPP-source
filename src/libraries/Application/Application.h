@@ -7,7 +7,10 @@
 
 #include <string>
 
-//Application is a Singleton State Machine (ApplicationContext) 
+/*! @brief Application is a Singleton State Machine (ApplicationContext).
+ *
+ *	@todo detailed description pls
+ */
 class Application : public Singleton<Application>, public StateMachine, public Subject{
 friend class Singleton<Application>;
 
@@ -15,14 +18,17 @@ private:
 	string label;
 
 public:
-	bool setState(State* state);	//returns true if successful, false if unsuccessful, calls statechange listeners
-	bool setState(std::string state);
+	bool setState(State* state);	//!<returns true if successful, false if unsuccessful, calls statechange listeners
+	bool setState(std::string state);	//!<returns true if successful, false if unsuccessful, calls statechange listeners
+
 	Application(std::string label = "");
+
 	void setLabel(std::string label);
+
 	std::string getLabel();
 
 	/*Application Listeners*/
-	void attachStateChangeListener(Listener* listener); //attach a listener that will be called at any successful statechange
+	void attachStateChangeListener(Listener* listener); //!< attach a listener that will be called at any successful statechange
 };
 
 #endif
