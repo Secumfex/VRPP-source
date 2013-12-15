@@ -17,7 +17,7 @@ public:
 	VirtualObject* getNextObject(); //iterate list
 	bool hasNext(); //is voList empty?
 	void resetQueue();	//resetting iterator to list begin
-	void extractAndSort(); //extracts GCs from all VOs in VO list and sorts them into the gcStorage map
+	void sortByShaders(); //extracts GCs from all VOs in VO list and sorts them into the gcStorage map
 private:
 	list<VirtualObject* >::iterator currentFirstElement;	//Aktuelles vorderstes Objekt
 	vector<GraphicsComponent>::iterator gcIterator; //iterator for gc-vectors

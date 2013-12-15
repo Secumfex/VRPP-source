@@ -25,8 +25,8 @@ int main() {
 
 	rq->removeVirtualObject(vo3);
 
-	rq->extractAndSort();
-	
+	rq->sortByShaders();
+
 	vo3 = rq->getNextObject();
 	vo3 = rq->getNextObject();
 	vo3 = rq->getNextObject();

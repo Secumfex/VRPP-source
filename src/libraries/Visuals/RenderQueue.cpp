@@ -45,7 +45,7 @@ void RenderQueue::resetQueue(){
 }
 
 //extract VOs from voList, extract gc-vectors from the VOs, extract the gcs from the vectors and throw them into a list in a map
-void RenderQueue::extractAndSort(){
+void RenderQueue::sortByShaders(){
 	resetQueue();
 	string shader = "DEFERRED_SHADING"; 
 	VirtualObject* vo;
@@ -59,7 +59,7 @@ void RenderQueue::extractAndSort(){
 		gcVector = vo->getGraphicsComponent();
 		for(gcIterator = gcVector->begin(); gcIterator != gcVector->end(); gcIterator++){
 			cout<<"Adding GC to the map."<<endl; //TO BE REMOVED
-			gcStorage[shader]->push_back(*gcIterator);
+			gcStorage[shader]->push_back(*gcIterator); //<---!!! Hier liegt das Problem
 		}
 	}
 	
