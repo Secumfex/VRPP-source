@@ -16,10 +16,12 @@ public:
 	glm::mat4 getModelMatrix();
 
 	btRigidBody* addSphere(float radius, float x, float y, float z, float mass);
+	btRigidBody* addBox(float width, float height, float depth, float x, float y, float z, float mass);
 	void updateModelMatrix();
 
 	PhysicsComponent(glm::mat4 modelMatrix);
 	PhysicsComponent(float radius, float x, float y, float z, float mass);
+	PhysicsComponent(float width, float height, float depth, float x, float y, float z, float mass);
 	~PhysicsComponent();
 };
 

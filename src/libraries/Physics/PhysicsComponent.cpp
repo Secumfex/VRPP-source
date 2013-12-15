@@ -16,6 +16,13 @@ PhysicsComponent::PhysicsComponent(glm::mat4 modelMatrix) {
 PhysicsComponent::PhysicsComponent(float radius, float x, float y, float z, float mass) {
 
 	rigidBody = addSphere(radius,x,y,z,mass);
+	updateModelMatrix();
+}
+
+PhysicsComponent::PhysicsComponent(float width, float height, float depth, float x, float y, float z, float mass) {
+
+	rigidBody = addBox(width,height,depth,x,y,z,mass);
+	updateModelMatrix();
 }
 
 PhysicsComponent::~PhysicsComponent() {
@@ -55,18 +62,54 @@ btRigidBody* PhysicsComponent::addSphere(float radius, float x, float y, float z
 	return body;
 }
 
+btRigidBody* PhysicsComponent::addBox(float width, float height, float depth, float x, float y, float z, float mass){
+
+	btTransform t;
+	t.setIdentity();
+	t.setOrigin(btVector3(x,y,z));
+
+	btBoxShape* box = new btBoxShape(btVector3(width/2.0,height/2.0,depth/2.0));
+
+	btVector3 inertia(0,0,0);
+	if(mass != 0.0) {
+		box->calculateLocalInertia(mass,inertia);
+	}
+
+	btMotionState* motion = new btDefaultMotionState(t);
+	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,box);
+	btRigidBody* body = new btRigidBody(info);
+
+	//dynamicsWorld->addRigidBody(body);		//TODO muss noch der welt zugeordnet werden
+
+	return body;
+}
+
 //TODO update methode per listener pattern
 void PhysicsComponent::updateModelMatrix() {
 
-	btRigidBody* sphere = rigidBody;
-	if(sphere->getCollisionShape()->getShapeType() != SPHERE_SHAPE_PROXYTYPE){
+	btRigidBody* body = rigidBody;
+	if(body->getCollisionShape()->getShapeType() == SPHERE_SHAPE_PROXYTYPE){
+
+		btTransform t;
+		body->getMotionState()->getWorldTransform(t);
+		float mat[16];
+		t.getOpenGLMatrix(mat);
+
+		this-> modelMatrix = glm::make_mat4(mat);
+	}
+	if(body->getCollisionShape()->getShapeType() == BOX_SHAPE_PROXYTYPE) {
+
+		btTransform t;
+		body->getMotionState()->getWorldTransform(t);
+		float mat[16];
+		t.getOpenGLMatrix(mat);
+
+		this-> modelMatrix = glm::make_mat4(mat);
+	}
+	else {
 		return;
 	}
-	btTransform t;
-	sphere->getMotionState()->getWorldTransform(t);
-	float mat[16];
-	t.getOpenGLMatrix(mat);
 
-	this-> modelMatrix = glm::make_mat4(mat);
+	//this-> modelMatrix = glm::make_mat4(mat);
 }
 
