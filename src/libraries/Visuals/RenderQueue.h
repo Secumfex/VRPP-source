@@ -5,7 +5,6 @@
 #include <map>
 
 #include "VirtualObject.h"
-//#include "GraphicComponent.h"
 
 using namespace std;
 
@@ -21,8 +20,8 @@ public:
 	void extractAndSort(); //extracts GCs from all VOs in VO list and sorts them into the gcStorage map
 private:
 	list<VirtualObject* >::iterator currentFirstElement;	//Aktuelles vorderstes Objekt
-	vector<GraphicsComponent>::iterator gcIterator;
-	list<VirtualObject*> voList;
+	vector<GraphicsComponent>::iterator gcIterator; //iterator for gc-vectors
+	list<VirtualObject*> voList; //list of VOs
 	map<string, vector<GraphicsComponent>* > gcStorage; //GC map sorted by shaders
 };
 

@@ -23,7 +23,7 @@ void RenderQueue::removeVirtualObject(VirtualObject* vo){
 
 //extract the first VO from the list and remove it after extraction before returning the pointer
 VirtualObject* RenderQueue::getNextObject(){
-//	cout<<"Getting VO and iterating queue-iterator."<<endl; // <-- REMOVE IN FINAL
+	cout<<"Getting VO and iterating queue-iterator."<<endl; // <-- REMOVE IN FINAL
 	VirtualObject* vo = *currentFirstElement;
 	currentFirstElement++;
 	return vo;
@@ -32,10 +32,10 @@ VirtualObject* RenderQueue::getNextObject(){
 //test if VO list is empty
 bool RenderQueue::hasNext(){
 	if(currentFirstElement == voList.end()){
-//		cout<<"no more queued Virtual Objects remaining."<<endl; // <-- REMOVE IN FINAL
+		cout<<"no more queued Virtual Objects remaining."<<endl; // <-- REMOVE IN FINAL
 		return false;
 	}else{
-//		cout<<"queued Virtual Objects remaining."<<endl; // <-- REMOVE IN FINAL
+		cout<<"queued Virtual Objects remaining."<<endl; // <-- REMOVE IN FINAL
 		return true;
 	}
 }
@@ -46,15 +46,19 @@ void RenderQueue::resetQueue(){
 
 //extract VOs from voList, extract gc-vectors from the VOs, extract the gcs from the vectors and throw them into a list in a map
 void RenderQueue::extractAndSort(){
+	resetQueue();
 	string shader = "DEFERRED_SHADING"; 
 	VirtualObject* vo;
-	vector<GraphicsComponent>* gcVector;
+	vector<GraphicsComponent>* gcVector = new vector<GraphicsComponent>;
+
+
+	cout<<"Entering extractAndSort"<<endl;
 
 	while(hasNext()){
 		vo = getNextObject();
 		gcVector = vo->getGraphicsComponent();
 		for(gcIterator = gcVector->begin(); gcIterator != gcVector->end(); gcIterator++){
-			cout<<"test"<<endl; //TO BE REMOVED
+			cout<<"Adding GC to the map."<<endl; //TO BE REMOVED
 			gcStorage[shader]->push_back(*gcIterator);
 		}
 	}

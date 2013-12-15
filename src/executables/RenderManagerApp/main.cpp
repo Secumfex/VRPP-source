@@ -25,6 +25,8 @@ int main() {
 
 	rq->removeVirtualObject(vo3);
 
+	rq->extractAndSort();
+	
 	vo3 = rq->getNextObject();
 	vo3 = rq->getNextObject();
 	vo3 = rq->getNextObject();
@@ -36,6 +38,7 @@ int main() {
 	while (rq->hasNext()){
 		vo3 = rq->getNextObject();
 	}
+
 
 	//RenderManager Pointer via Singleton
 	RenderManager* rm = RenderManager::getInstance();
