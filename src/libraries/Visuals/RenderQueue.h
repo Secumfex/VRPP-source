@@ -21,8 +21,9 @@ public:
 	void extractAndSort(); //extracts GCs from all VOs in VO list and sorts them into the gcStorage map
 private:
 	list<VirtualObject* >::iterator currentFirstElement;	//Aktuelles vorderstes Objekt
+	vector<GraphicsComponent>::iterator gcIterator;
 	list<VirtualObject*> voList;
-	map<string, list<vector<GraphicsComponent*> > > gcStorage; //GC map sorted by shaders
+	map<string, vector<GraphicsComponent>* > gcStorage; //GC map sorted by shaders
 };
 
 #endif /* RENDERQUEUE_H */

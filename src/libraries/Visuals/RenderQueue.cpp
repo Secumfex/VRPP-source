@@ -51,16 +51,21 @@ are several lists each containing vectors of GCs. Each list specifies a certain 
 single VO.
 */
 void RenderQueue::extractAndSort(){
-	string shader = "DEFERRED_SHADING"; //TESTSTRING, TO BE REMOVED
+	string shader = "DEFERRED_SHADING"; 
 	VirtualObject* vo;
+	vector<GraphicsComponent>* gcVector;
+	map<string, vector<GraphicsComponent*> >::iterator i;
+	GraphicsComponent gc;
 
 	while(hasNext()){
 		vo = getNextObject();
+		gcVector = vo->getGraphicsComponent();
+		for(gcIterator = gcVector->begin(); gcIterator != gcVector->end(); gcIterator++){
+			cout<<"test"<<endl; //TO BE REMOVED
+			gcStorage[shader]->push_back(*gcIterator);
+		}
 	}
+	
 
-	if(gcStorage.find(shader) == gcStorage.end()){
-		//no list for that shader exists in the map
-	}else{
-		//a list exists and we need to insert the gc-vector
-	}
+
 }
