@@ -49,17 +49,17 @@ void RenderQueue::sortByShaders(){
 	resetQueue();
 	string shader = "DEFERRED_SHADING"; 
 	VirtualObject* vo;
-	vector<GraphicsComponent>* gcVector = new vector<GraphicsComponent>;
+	vector<GraphicsComponent> gcVector; // = new vector<GraphicsComponent>;
 
 
 	cout<<"Entering extractAndSort"<<endl;
 
 	while(hasNext()){
 		vo = getNextObject();
-		gcVector = vo->getGraphicsComponent();
-		for(gcIterator = gcVector->begin(); gcIterator != gcVector->end(); gcIterator++){
+		gcVector = *vo->getGraphicsComponent();
+		for(gcIterator = gcVector.begin(); gcIterator != gcVector.end(); gcIterator++){
 			cout<<"Adding GC to the map."<<endl; //TO BE REMOVED
-			gcStorage[shader]->push_back(*gcIterator); //<---!!! Hier liegt das Problem
+			gcStorage[shader].push_back(*gcIterator); //<---!!! Hier liegt das Problem
 		}
 	}
 	

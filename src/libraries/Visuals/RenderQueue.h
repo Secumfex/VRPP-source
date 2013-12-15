@@ -22,7 +22,7 @@ private:
 	list<VirtualObject* >::iterator currentFirstElement;	//Aktuelles vorderstes Objekt
 	vector<GraphicsComponent>::iterator gcIterator; //iterator for gc-vectors
 	list<VirtualObject*> voList; //list of VOs
-	map<string, vector<GraphicsComponent>* > gcStorage; //GC map sorted by shaders
+	map<string, vector<GraphicsComponent> > gcStorage; //GC map sorted by shaders
 };
 
 #endif /* RENDERQUEUE_H */
