@@ -44,11 +44,11 @@ void RenderQueue::resetQueue(){
 	currentFirstElement = voList.begin();
 }
 
-void RenderQueue::extractAndSort(){
+void RenderQueue::extractAndSort(VirtualObject* vo){
 	string shader = "fuckyeah"; //TESTSTRING, WILL BE REMOVED SOON
 	if(gcStorage.find(shader) == gcStorage.end()){
 		//no list for that shader exists in the map
 	}else{
-		//
+		//a list exists and we need to insert the gc-vector
 	}
 }
