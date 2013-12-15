@@ -44,8 +44,20 @@ void RenderQueue::resetQueue(){
 	currentFirstElement = voList.begin();
 }
 
-void RenderQueue::extractAndSort(VirtualObject* vo){
-	string shader = "fuckyeah"; //TESTSTRING, WILL BE REMOVED SOON
+/*
+Working with all the VOs from voList. Thus, need to iterate the list. While doing so we need to extract GCs from each VO.
+After extracting the GC vectors need to be sorted into the map using their tag. Currently no tag exists. in the map there
+are several lists each containing vectors of GCs. Each list specifies a certain shader and each vector is extractet from a 
+single VO.
+*/
+void RenderQueue::extractAndSort(){
+	string shader = "DEFERRED_SHADING"; //TESTSTRING, TO BE REMOVED
+	VirtualObject* vo;
+
+	while(hasNext()){
+		vo = getNextObject();
+	}
+
 	if(gcStorage.find(shader) == gcStorage.end()){
 		//no list for that shader exists in the map
 	}else{
