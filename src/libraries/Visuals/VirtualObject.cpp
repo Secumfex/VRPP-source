@@ -21,7 +21,7 @@ VirtualObject::VirtualObject(glm::mat4 modelMatrix){
 
 
 void VirtualObject:: addGraphicsComponent(GraphicsComponent *graphcomp){
-	//TODO: GraphicComponente wird an der zustaendigen Vector übergeben
+	//TODO: GraphicComponente wird an den zustaendigen Vector übergeben
 
 }
 

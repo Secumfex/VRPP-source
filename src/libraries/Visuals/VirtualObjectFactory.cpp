@@ -86,9 +86,13 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 
 
 
-	  struct MyMesh aMesh;
-    struct MyMaterial aMat;
+	 // struct MyMesh aMesh;
+
+	Mesh* aMesh=new Mesh();
+    Material* aMat=new Material();
     GLuint buffer;
+
+
  
     // For each mesh
     for (unsigned int n = 0; n < pScene->mNumMeshes; ++n)
@@ -113,11 +117,11 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
         }
 
 		// hier wurde aMesh.numFaces in dem Struct erstellt (VirtualObjectFactory.h)
-        aMesh.numFaces = pScene->mMeshes[n]->mNumFaces;
+        aMesh->numFaces = pScene->mMeshes[n]->mNumFaces;
  
         // generate Vertex Array for mesh
-        glGenVertexArrays(1,&(aMesh.vao));
-        glBindVertexArray(aMesh.vao);
+        glGenVertexArrays(1,&(aMesh->vao));
+        glBindVertexArray(aMesh->vao);
  
         // buffer for faces
         glGenBuffers(1, &buffer);
@@ -174,11 +178,11 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
         if(AI_SUCCESS == mtl->GetTexture(aiTextureType_DIFFUSE, 0, &texPath)){
                 //bind texture
                 unsigned int texId = textureIdMap[texPath.data];
-                aMesh.texIndex = texId;
-                aMat.texCount = 1;
+                aMesh->texIndex = texId;
+                aMat->texCount = 1;
             }
         else
-            aMat.texCount = 0;
+            aMat->texCount = 0;
 
 
 
@@ -187,41 +191,72 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
         aiColor4D diffuse;
         if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_DIFFUSE, &diffuse))
             color4_to_float4(&diffuse, c);
-        memcpy(aMat.diffuse, c, sizeof(c));
- 
+        
+		
+		//memcpy(aMat.diffuse, c, sizeof(c));
+		aMat->setDiffuse(glm::vec4(diffuse.r,diffuse.g, diffuse.b, diffuse.a));
+
+
         set_float4(c, 0.2f, 0.2f, 0.2f, 1.0f);
         aiColor4D ambient;
         if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_AMBIENT, &ambient))
             color4_to_float4(&ambient, c);
-        memcpy(aMat.ambient, c, sizeof(c));
- 
+
+
+        //memcpy(aMat.ambient, c, sizeof(c));
+		aMat->setAmbient(glm::vec4(ambient.r, ambient.g, ambient.b, ambient.a));
+
+
+
         set_float4(c, 0.0f, 0.0f, 0.0f, 1.0f);
         aiColor4D specular;
         if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_SPECULAR, &specular))
             color4_to_float4(&specular, c);
-        memcpy(aMat.specular, c, sizeof(c));
- 
+
+
+        //memcpy(aMat.specular, c, sizeof(c));
+		aMat->setSpecular(glm::vec4(specular.r, specular.g, specular.b, specular.a));
+
+
+
         set_float4(c, 0.0f, 0.0f, 0.0f, 1.0f);
         aiColor4D emission;
         if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_EMISSIVE, &emission))
             color4_to_float4(&emission, c);
-        memcpy(aMat.emissive, c, sizeof(c));
- 
+       
+		
+		
+		//memcpy(aMat.emissive, c, sizeof(c));
+		aMat->setEmission(glm::vec4(emission.r, emission.g, emission.b, emission.a));
+
+
+
+
         float shininess = 0.0;
         unsigned int max;
         aiGetMaterialFloatArray(mtl, AI_MATKEY_SHININESS, &shininess, &max);
-        aMat.shininess = shininess;
+        aMat->setShininess(shininess);
  
-        glGenBuffers(1,&(aMesh.uniformBlockIndex));
-        glBindBuffer(GL_UNIFORM_BUFFER,aMesh.uniformBlockIndex);
+        glGenBuffers(1,&(aMesh->uniformBlockIndex));
+        glBindBuffer(GL_UNIFORM_BUFFER,aMesh->uniformBlockIndex);
         glBufferData(GL_UNIFORM_BUFFER, sizeof(aMat), (void *)(&aMat), GL_STATIC_DRAW);
  
+
+		//TODO: Mesh und Material wird gelesen und in neuer GraphicsComponent gespeichert
+		//überlegen, wo das folgende sinn ergibt! noch in der forschleife und einen vektor erstellen?
+		GraphicsComponent* gc=new GraphicsComponent(aMesh, aMat);
+
+
+
+
+
 		// der vector wurde jetzt in VirtualObjectFactory.h static(!) erstellt. ist das in ordnung?
-        myMeshes.push_back(aMesh);
+       // vorerst rausgenommen
+		// myMeshes.push_back(aMesh);
     }
 
 
-	//TODO: Mesh und Material wird gelesen und in neuer GraphicsComponent gespeichert
+	
 	//TODO: SPÄTER: Wenn moeglich mehr als eine GraphicComponente aus einem Mesh lesen
 	//TODO: GraphicsComponent(s) and virtualOBject.addGraphicComponent weitergeben.
 	return virtualObject;
