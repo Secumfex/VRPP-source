@@ -89,26 +89,38 @@ public:
 	Mesh();
 	~Mesh();
 	void streamToVRAM();
-	void setVAO(GLuint vao);
-	GLuint getVAO();
+	void setVao(GLuint vao);
+	GLuint getVao();
+
+
+
+	void setUniformBlockIndex(GLuint ind);
+	GLuint getUniformBlockIndex();
+
+	void setNumFaces (int faces);
+	int getNumFaces();
+
+	void setTexIndex(int index);
+	int getTexIndex();
+
 
 	//---------------MEMBER VARIABLES--------------------
 private:
-GLuint mVaoHandle;
+GLuint mVaoHandle;  //gleiche wie unten "vao",  also noch anpassen. (wurde jetzt gelöscht)
 
-public:
-	  GLuint vao;
+
+// TODO set variables privat. setter&getter!
 
 //copy from VirtualObjectFactory.h  (struct)
         GLuint uniformBlockIndex;
-        float transform[16];
-        int numIndices;
+       // float transform[16];
+       // int numIndices;
 		int numFaces;
-        unsigned int type;
-        Material mat;
-        unsigned int *indexes;
-        float *positions;
-        float *normals;
+        //unsigned int type;
+       // Material mat;
+      //  unsigned int *indexes;
+        // float *positions;
+      //  float *normals;
 		int texIndex;
 //end of copy
 

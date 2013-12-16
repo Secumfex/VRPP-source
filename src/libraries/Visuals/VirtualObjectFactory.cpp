@@ -30,6 +30,9 @@ f[3] = c->a;
 VirtualObject* VirtualObjectFactory::createVirtualObject(){
 	return new VirtualObject();
 }
+
+
+
 VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 	VirtualObject* virtualObject = new VirtualObject();
 	
@@ -37,7 +40,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 
 
 	
-	//TODO: filename wird im System gefunden
+	//filename wird im System gefunden
 
 
 
@@ -82,7 +85,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
  */
 
 
-	//TODO: assimp Mesh mit Materialien wird erstellt und befuellt
+	// assimp Mesh mit Materialien wird erstellt und befuellt
 
 
 
@@ -117,12 +120,15 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
         }
 
 		// hier wurde aMesh.numFaces in dem Struct erstellt (VirtualObjectFactory.h)
-        aMesh->numFaces = pScene->mMeshes[n]->mNumFaces;
+        aMesh->setNumFaces(pScene->mMeshes[n]->mNumFaces);
  
         // generate Vertex Array for mesh
-        glGenVertexArrays(1,&(aMesh->vao));
-        glBindVertexArray(aMesh->vao);
- 
+
+		GLuint temp;
+		glGenVertexArrays(1,&temp);
+        glBindVertexArray(aMesh->getVao());
+		aMesh->setVao(temp);
+
         // buffer for faces
         glGenBuffers(1, &buffer);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
@@ -178,7 +184,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
         if(AI_SUCCESS == mtl->GetTexture(aiTextureType_DIFFUSE, 0, &texPath)){
                 //bind texture
                 unsigned int texId = textureIdMap[texPath.data];
-                aMesh->texIndex = texId;
+                aMesh->setTexIndex(texId);
                 aMat->texCount = 1;
             }
         else
@@ -237,28 +243,31 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
         aiGetMaterialFloatArray(mtl, AI_MATKEY_SHININESS, &shininess, &max);
         aMat->setShininess(shininess);
  
-        glGenBuffers(1,&(aMesh->uniformBlockIndex));
-        glBindBuffer(GL_UNIFORM_BUFFER,aMesh->uniformBlockIndex);
+
+		GLuint temp1;
+
+        glGenBuffers(1,&temp1);
+        glBindBuffer(GL_UNIFORM_BUFFER,aMesh->getUniformBlockIndex());
         glBufferData(GL_UNIFORM_BUFFER, sizeof(aMat), (void *)(&aMat), GL_STATIC_DRAW);
+
+		aMesh->setUniformBlockIndex(temp1);
  
 
-		//TODO: Mesh und Material wird gelesen und in neuer GraphicsComponent gespeichert
+		//Mesh und Material wird gelesen und in neuer GraphicsComponent gespeichert
 		//überlegen, wo das folgende sinn ergibt! noch in der forschleife und einen vektor erstellen?
 		GraphicsComponent* gc=new GraphicsComponent(aMesh, aMat);
 
+	//GraphicsComponent(s) and virtualOBject.addGraphicComponent weitergeben.
 
-
-
+		virtualObject->addGraphicsComponent(gc);
 
 		// der vector wurde jetzt in VirtualObjectFactory.h static(!) erstellt. ist das in ordnung?
        // vorerst rausgenommen
 		// myMeshes.push_back(aMesh);
     }
-
-
+	//SPÄTER: Wenn moeglich mehr als eine GraphicComponente aus einem Mesh lesen
+	// done
 	
-	//TODO: SPÄTER: Wenn moeglich mehr als eine GraphicComponente aus einem Mesh lesen
-	//TODO: GraphicsComponent(s) and virtualOBject.addGraphicComponent weitergeben.
 	return virtualObject;
 }
 
@@ -272,6 +281,10 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(vector<GraphicsComponen
 
 	return virtualObject;
 }
+
+
+
+
 VirtualObject* VirtualObjectFactory::copyVirtualObject(VirtualObject vo){
 	VirtualObject* virtualObject = new VirtualObject();
 	//TODO: variable wird überfuehrt
