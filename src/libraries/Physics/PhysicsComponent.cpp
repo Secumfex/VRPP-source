@@ -16,12 +16,14 @@ PhysicsComponent::PhysicsComponent(glm::mat4 modelMatrix) {
 PhysicsComponent::PhysicsComponent(float radius, float x, float y, float z, float mass) {
 
 	rigidBody = addSphere(radius,x,y,z,mass);
+	addCollisionFlag(4);
 	updateModelMatrix();
 }
 
 PhysicsComponent::PhysicsComponent(float width, float height, float depth, float x, float y, float z, float mass) {
 
 	rigidBody = addBox(width,height,depth,x,y,z,mass);
+	addCollisionFlag(4);
 	updateModelMatrix();
 }
 
@@ -84,6 +86,13 @@ btRigidBody* PhysicsComponent::addBox(float width, float height, float depth, fl
 	return body;
 }
 
+void PhysicsComponent::addCollisionFlag(int flag) {
+
+	if(flag == 4) {
+		rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK);
+	}
+}
+
 //TODO update methode per listener pattern
 void PhysicsComponent::updateModelMatrix() {
 
@@ -109,7 +118,5 @@ void PhysicsComponent::updateModelMatrix() {
 	else {
 		return;
 	}
-
-	//this-> modelMatrix = glm::make_mat4(mat);
 }
 

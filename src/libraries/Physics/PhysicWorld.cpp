@@ -6,13 +6,15 @@ using namespace std;
 
 //TODO singelton pattern (?)
 
-
+/*
 btBroadphaseInterface* broadphase;
 btDefaultCollisionConfiguration* collisionConfiguration;
 btCollisionDispatcher* dispatcher;
 btSequentialImpulseConstraintSolver* solver;
 btDiscreteDynamicsWorld* dynamicsWorld;
+*/
 
+//gContactAddedCallback = collisionCallbackFunc;
 
 PhysicWorld::PhysicWorld() {
 
@@ -23,8 +25,11 @@ PhysicWorld::PhysicWorld() {
 	dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher,broadphase,solver,collisionConfiguration);
 
 	dynamicsWorld->setGravity(btVector3(0,-10,0));
+
+	//gContactAddedCallback = collisionCallbackFunc;
 }
 
+/* init in constructor or in extra function, not both
 void PhysicWorld::initPhysics() {
 
 	broadphase = new btDbvtBroadphase();
@@ -35,7 +40,16 @@ void PhysicWorld::initPhysics() {
 
 	dynamicsWorld->setGravity(btVector3(0,-10,0));
 }
+*/
 
+/*
+bool PhysicWorld::collisionCallbackFunc(btManifoldPoint& collisionPoint, const btCollisionObjectWrapper* obj1, int id1, int index1, const btCollisionObjectWrapper* obj2, int id2, int index2) {
+
+	cout<<"collision"<<endl;
+
+	return false;
+}
+*/
 
 PhysicWorld::~PhysicWorld() {
 
@@ -46,7 +60,7 @@ PhysicWorld::~PhysicWorld() {
 	delete broadphase;
 }
 
-
+/* delete in destructor or in extra function, not both
 void PhysicWorld::deleteLoc() {
 
 	delete dynamicsWorld;
@@ -55,4 +69,4 @@ void PhysicWorld::deleteLoc() {
 	delete dispatcher;
 	delete broadphase;
 }
-
+*/

@@ -17,6 +17,7 @@ public:
 
 	btRigidBody* addSphere(float radius, float x, float y, float z, float mass);
 	btRigidBody* addBox(float width, float height, float depth, float x, float y, float z, float mass);
+	void addCollisionFlag(int flag);
 	void updateModelMatrix();
 
 	PhysicsComponent(glm::mat4 modelMatrix);
