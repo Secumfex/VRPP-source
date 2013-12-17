@@ -65,8 +65,8 @@ Texture* Material ::getShadowMap(){
 //---------------MESH SCOPE--------------------
 
 
-void Mesh :: setVao(GLuint vao){}
-GLuint Mesh :: getVao(){
+void Mesh :: setVAO(GLuint vao){}
+GLuint Mesh :: getVAO(){
 	return mVaoHandle;
 }
 

@@ -39,7 +39,6 @@ public:
 
 	int texCount;
 
-	int texCount;
 
 	void setName(std::string name);
 	void setAmbient(glm::vec4 ambient);
@@ -89,9 +88,8 @@ public:
 	Mesh();
 	~Mesh();
 
-	void streamToVRAM();
-	void setVao(GLuint vao);
-	GLuint getVao();
+	void setVAO(GLuint vao);
+	GLuint getVAO();
 
 
 

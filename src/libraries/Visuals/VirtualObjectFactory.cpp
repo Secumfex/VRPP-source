@@ -126,8 +126,8 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 
 		GLuint temp;
 		glGenVertexArrays(1,&temp);
-        glBindVertexArray(aMesh->getVao());
-		aMesh->setVao(temp);
+        glBindVertexArray(aMesh->getVAO());
+		aMesh->setVAO(temp);
 
         // buffer for faces
         glGenBuffers(1, &buffer);
