@@ -14,7 +14,10 @@
 #include "Tools/TextureTools.h"
 #include "Tools/Geometry.h"
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 59b2870a1f8f644db6b965d75096e6c48bf47896
 
 int main() {
     
@@ -78,7 +81,10 @@ int main() {
     
     
     
+<<<<<<< HEAD
     
+=======
+>>>>>>> 59b2870a1f8f644db6b965d75096e6c48bf47896
     //--------------------------------------------//
     //        Create a Vertex Array Object        //
     //         to render a triangle that          //
@@ -196,9 +202,6 @@ int main() {
     }
     
     
-    //-------------------------------------------------
-
-    //----------------------------------------------------
     
     //load a fancy texture
     GLuint textureHandle = TextureTools::loadTexture(RESOURCES_PATH "/cubeTexture.jpg");
