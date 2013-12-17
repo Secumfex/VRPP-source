@@ -15,6 +15,7 @@
 #include "Tools/Geometry.h"
 
 
+
 int main() {
     
     // render window
@@ -75,7 +76,8 @@ int main() {
     GLuint viewHandle = glGetUniformLocation(gBufferProgramHandle, "uniformView");
     GLuint projectionHandle = glGetUniformLocation(gBufferProgramHandle, "uniformProjection");
     
-        
+    
+    
     
     //--------------------------------------------//
     //        Create a Vertex Array Object        //
