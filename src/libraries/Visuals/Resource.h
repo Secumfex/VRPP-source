@@ -23,7 +23,6 @@ class Resource{
 	//---------------MEMBER FUNCTIONS--------------------
 public:
 
-	virtual void streamToVRAM();
 	//---------------MEMBER VARIABLES--------------------
 private:
 
@@ -37,7 +36,8 @@ class Material : public Resource {
 public:
 	Material ();
 	~Material ();
-	void streamToVRAM();
+
+	int texCount;
 
 	int texCount;
 
@@ -88,6 +88,7 @@ class Mesh : public Resource{
 public:
 	Mesh();
 	~Mesh();
+
 	void streamToVRAM();
 	void setVao(GLuint vao);
 	GLuint getVao();
@@ -106,7 +107,9 @@ public:
 
 	//---------------MEMBER VARIABLES--------------------
 private:
-GLuint mVaoHandle;  //gleiche wie unten "vao",  also noch anpassen. (wurde jetzt gelöscht)
+
+GLuint mVaoHandle;  //gleiche wie unten "vao",  also noch anpassen. (wurde jetzt gelï¿½scht)
+
 
 
 // TODO set variables privat. setter&getter!
