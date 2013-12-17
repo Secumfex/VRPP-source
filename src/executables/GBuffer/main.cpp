@@ -13,17 +13,7 @@
 #include "Tools/ShaderTools.h"
 #include "Tools/TextureTools.h"
 #include "Tools/Geometry.h"
-#include "Visuals/Resource.h"
 
-Mesh cube;
-vector<glm::vec3> vertexData;
-static void Load3DModel(){
-//    cube.getResource(RESOURCES_PATH "/cude.obj");//load 3D model in obj formate
-
-//    vertexData=cube.returnMesh();//return the vertex data of mesh
-
-    
-}
 
 int main() {
     
@@ -84,12 +74,6 @@ int main() {
     GLuint modelHandle = glGetUniformLocation(gBufferProgramHandle, "uniformModel");
     GLuint viewHandle = glGetUniformLocation(gBufferProgramHandle, "uniformView");
     GLuint projectionHandle = glGetUniformLocation(gBufferProgramHandle, "uniformProjection");
-    
-    
-    
-    //------------------------------------------------------
-    Load3DModel();
-    //------------------------------------------------------
     
     
     
@@ -210,9 +194,6 @@ int main() {
     }
     
     
-    //-------------------------------------------------
-
-    //----------------------------------------------------
     
     //load a fancy texture
     GLuint textureHandle = TextureTools::loadTexture(RESOURCES_PATH "/cubeTexture.jpg");

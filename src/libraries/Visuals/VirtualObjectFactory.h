@@ -19,7 +19,7 @@ class VirtualObjectFactory : public Singleton<VirtualObjectFactory> {
 //---------------MEMBER VARIABLES--------------------
 
 
-
+/*
 
 	  struct MyMaterial{
 
@@ -30,7 +30,7 @@ class VirtualObjectFactory : public Singleton<VirtualObjectFactory> {
 	float shininess;
 	int texCount;
 };
-
+*/
 
 	  struct MyMesh{
         GLuint vao;
@@ -44,7 +44,7 @@ class VirtualObjectFactory : public Singleton<VirtualObjectFactory> {
         int numIndices;
 		int numFaces;
         unsigned int type;
-        struct Material mat;
+        Material mat;
         unsigned int *indexes;
         float *positions;
         float *normals;

@@ -65,10 +65,39 @@ Texture* Material ::getShadowMap(){
 //---------------MESH SCOPE--------------------
 
 
-void Mesh :: setVAO(GLuint vao){}
-GLuint Mesh :: getVAO(){
+void Mesh :: setVao(GLuint vao){}
+GLuint Mesh :: getVao(){
 	return mVaoHandle;
 }
+
+
+
+
+
+void Mesh::setUniformBlockIndex(GLuint ind){
+	uniformBlockIndex=ind;}
+
+	GLuint Mesh::getUniformBlockIndex(){
+		return uniformBlockIndex;}
+
+	void Mesh::setNumFaces (int faces){
+	numFaces=faces;}
+
+	int Mesh::getNumFaces(){
+		return numFaces;
+	}
+
+	void Mesh::setTexIndex(int index){
+	texIndex=index;}
+	
+	
+	int Mesh::getTexIndex(){
+	return texIndex;
+	}
+
+
+
+
 
 
 Mesh::Mesh() { }
