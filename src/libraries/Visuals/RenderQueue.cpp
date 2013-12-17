@@ -60,6 +60,7 @@ void RenderQueue::sortByShaders(){
 		for(gcIterator = gcVector.begin(); gcIterator != gcVector.end(); gcIterator++){
 			cout<<"Adding GC to the map."<<endl; //TO BE REMOVED
 			gcStorage[shader].push_back(*gcIterator); //<---!!! Hier liegt das Problem
+			gc2voMap[vo].push_back(*gcIterator);
 		}
 	}
 	

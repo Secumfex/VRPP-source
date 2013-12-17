@@ -23,6 +23,7 @@ private:
 	vector<GraphicsComponent>::iterator gcIterator; //iterator for gc-vectors
 	list<VirtualObject*> voList; //list of VOs
 	map<string, vector<GraphicsComponent> > gcStorage; //GC map sorted by shaders
+	map<VirtualObject*, vector<GraphicsComponent> > gc2voMap; //each GC is assigned to some VO
 };
 
 #endif /* RENDERQUEUE_H */
