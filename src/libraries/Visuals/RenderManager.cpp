@@ -42,7 +42,7 @@ void setDefaultProjectionMatrix(){
     projectionMatrix = perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
 }
 
-//glfw error-callback
+//glfw error-callback function
 void errorCallback(int error, const char* description){
     fputs(description, stderr);
 }
@@ -129,6 +129,7 @@ RenderManager::~RenderManager(){
 
 RenderManager::RenderManager(){
 }
+
 void RenderManager::attachFrameListener(Listener* listener){
     listener->setName("FRAMELISTENER"); //label this listener as framelistener
     attach(listener);                   //attach listener
