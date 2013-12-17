@@ -10,8 +10,6 @@
 //---------------RESOURCE SCOPE--------------------
 
 
-void Resource :: streamToVRAM(){ }
-
 //---------------TEXTURE SCOPE--------------------
 
 	Material :: Material(){
@@ -66,8 +64,6 @@ Texture* Material ::getShadowMap(){
 
 //---------------MESH SCOPE--------------------
 
-void Mesh :: streamToVRAM(){
-}
 
 void Mesh :: setVAO(GLuint vao){}
 GLuint Mesh :: getVAO(){

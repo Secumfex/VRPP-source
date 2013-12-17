@@ -23,7 +23,6 @@ class Resource{
 	//---------------MEMBER FUNCTIONS--------------------
 public:
 
-	virtual void streamToVRAM();
 	//---------------MEMBER VARIABLES--------------------
 private:
 
@@ -37,7 +36,6 @@ class Material : public Resource {
 public:
 	Material ();
 	~Material ();
-	void streamToVRAM();
 
 	void setName(std::string name);
 	void setAmbient(glm::vec3 ambient);
@@ -85,7 +83,7 @@ class Mesh : public Resource{
 public:
 	Mesh();
 	~Mesh();
-	void streamToVRAM();
+
 	void setVAO(GLuint vao);
 	GLuint getVAO();
 

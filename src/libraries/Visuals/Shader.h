@@ -20,8 +20,10 @@ class Shader {
 
 	//-----------------MEMBER FUNCTIONS-----------------
 public:
-	Shader(string directory, string shaderName);
+
+	Shader(string vertexShader, string fragmentShader);
 	virtual ~Shader();
+	void setShaderName(string name);
 	virtual void uploadUniforms(GraphicsComponent* graphcomp);
 	virtual void uploadUniforms(glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
 	std::string getShaderName();
@@ -33,6 +35,9 @@ public:
 	void uploadInverseMatrix (glm::mat4 modelMatrix, glm::mat4 viewMatrix);
 
 	static void setLights(vector<glm:: vec3> sources, vector<glm:: vec3> colors);
+
+private:
+	void makeShader(string vert, string frag);
 
 	//-----------------MEMBER VARIABLES-----------------
 protected:
