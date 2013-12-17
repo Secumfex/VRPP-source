@@ -111,6 +111,9 @@ void DeferredShader::uploadProjectionMatrix(glm::mat4 projectionMatrix){
 }
 
 void DeferredShader::composeScene(){
+
+	createScreenFillVertexArrayObject();
+
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
