@@ -12,9 +12,6 @@ public:
 	btSequentialImpulseConstraintSolver* solver;				/**< causes the objects to interact properly */
 	btDiscreteDynamicsWorld* dynamicsWorld;						/**< bullet dynamic world */
 
-	//void initPhysics();
-	//void deleteLoc();
-
 	/** \brief constructor
 	 *
 	 * initializes the physics world

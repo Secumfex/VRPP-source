@@ -15,9 +15,9 @@ VirtualObject::VirtualObject() {
 	id = lastID + 1;
 	lastID = id;
 	//graphicsComponent = new GraphicsComponent();
-	physicsComponent = new PhysicsComponent(modelMatrix);
+	//physicsComponent = new PhysicsComponent(modelMatrix);
 
-	float radius,x,y,z,mass; 	//aus graphiccomponent bkommen (?)
+	float radius,x,y,z,mass = 1.0; 	//aus graphiccomponent bkommen (?) 1.0 zum test
 
 	physicsComponent = new PhysicsComponent(radius,x,y,z,mass);
 }
