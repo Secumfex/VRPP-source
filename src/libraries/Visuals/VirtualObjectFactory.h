@@ -70,6 +70,11 @@ static	void color4_to_float4(const aiColor4D *c, float f[4]);
 
 
 static VirtualObject* createVirtualObject();
+/*!
+*@author Moe
+*@param blablabla
+*/
+
 static VirtualObject* createVirtualObject(std::string filename);
 static VirtualObject* createVirtualObject(vector<GraphicsComponent*> graphcomps);
 static VirtualObject* copyVirtualObject(VirtualObject vo);
