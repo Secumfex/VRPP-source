@@ -38,13 +38,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 	
 	    Assimp::Importer Importer;
 
-
-	
-	//filename wird im System gefunden
-
-
-
-	//gucken, ob file existiert
+	//looking up the file
     std::ifstream fin(filename.c_str());
     if(!fin.fail()) {
         fin.close();
@@ -126,8 +120,8 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 
 		GLuint temp;
 		glGenVertexArrays(1,&temp);
-        glBindVertexArray(aMesh->getVao());
-		aMesh->setVao(temp);
+        glBindVertexArray(aMesh->getVAO());
+		aMesh->setVAO(temp);
 
         // buffer for faces
         glGenBuffers(1, &buffer);
@@ -254,7 +248,6 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
  
 
 		//Mesh und Material wird gelesen und in neuer GraphicsComponent gespeichert
-		//überlegen, wo das folgende sinn ergibt! noch in der forschleife und einen vektor erstellen?
 		GraphicsComponent* gc=new GraphicsComponent(aMesh, aMat);
 
 	//GraphicsComponent(s) and virtualOBject.addGraphicComponent weitergeben.
