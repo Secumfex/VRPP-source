@@ -15,6 +15,7 @@
 #include "Tools/Geometry.h"
 
 
+
 int main() {
     
     // render window
@@ -77,6 +78,7 @@ int main() {
     
     
     
+
     //--------------------------------------------//
     //        Create a Vertex Array Object        //
     //         to render a triangle that          //
