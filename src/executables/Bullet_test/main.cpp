@@ -19,7 +19,6 @@ bool collisionCallbackFunc(btManifoldPoint& collisionPoint, const btCollisionObj
 int main() {
 
 	PhysicWorld* world = new PhysicWorld();
-	//initPhysics();
 	cout << "world created" << endl;
 
 	gContactAddedCallback = collisionCallbackFunc;
@@ -28,7 +27,6 @@ int main() {
 	cout << test1 << endl;
 
 	cout << test1->physicsComponent->getModelMatrix()[0][1]<< endl;
-	//VirtualObject *test1 = new VirtualObject();
 
 	return 0;
 };
