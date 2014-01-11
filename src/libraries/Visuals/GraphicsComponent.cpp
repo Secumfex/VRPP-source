@@ -3,6 +3,11 @@
 
 using namespace std;
 
+GraphicsComponent::GraphicsComponent(){
+	mMaterial = new Material();
+	mMesh = new Mesh();
+}
+
 GraphicsComponent::GraphicsComponent(Mesh* mesh, Material* material){
 	mMesh = mesh;
 	mMaterial = material;
