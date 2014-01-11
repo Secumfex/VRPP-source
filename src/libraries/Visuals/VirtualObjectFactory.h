@@ -64,15 +64,15 @@ class VirtualObjectFactory : public Singleton<VirtualObjectFactory> {
 public:
 
 	static void hello();
-	//eingefügt
+	//eingefï¿½gt
 static	void set_float4(float f[4], float a, float b, float c, float d);
 static	void color4_to_float4(const aiColor4D *c, float f[4]);
 
 
-static VirtualObject* createVirtualObject();
-static VirtualObject* createVirtualObject(std::string filename);
-static VirtualObject* createVirtualObject(vector<GraphicsComponent*> graphcomps);
-static VirtualObject* copyVirtualObject(VirtualObject vo);
+VirtualObject* createVirtualObject();
+VirtualObject* createVirtualObject(std::string filename);
+VirtualObject* createVirtualObject(vector<GraphicsComponent*> graphcomps);
+VirtualObject* copyVirtualObject(VirtualObject vo);
 
 };
 

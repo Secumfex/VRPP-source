@@ -63,7 +63,8 @@ int main() {
 
 
     //der Order muss im System existieren
-    	VirtualObject* cow = VirtualObjectFactory::createVirtualObject(RESOURCES_PATH "/testModels/cow.obj");
+    	VirtualObjectFactory* voFactory = VirtualObjectFactory::getInstance();
+    	VirtualObject* cow = voFactory->createVirtualObject(RESOURCES_PATH "/testModels/cow.obj");
 
     	using namespace glm;
 
@@ -91,9 +92,8 @@ int main() {
         	        glDrawArrays(GL_TRIANGLES, 0, cow->getGraphicsComponent()[i]->getMesh()->getNumFaces() );
 				}
 
-    	        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     	        glfwSwapBuffers(window);
+    	        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     	        glfwPollEvents();
     	 }
     	    glfwDestroyWindow(window);
