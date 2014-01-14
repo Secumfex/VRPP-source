@@ -12,6 +12,10 @@
 #include <Visuals/VirtualObject.h>
 #include <vector>
 
+#include "assimp/Importer.hpp"
+#include "assimp/scene.h"
+#include "assimp/postprocess.h"
+
 using namespace std;
 
 class VirtualObjectFactory : public Singleton<VirtualObjectFactory> {
@@ -53,20 +57,18 @@ class VirtualObjectFactory : public Singleton<VirtualObjectFactory> {
 
 	
 	//auch dazu gebastelt. okay, dass es static ist??
-	 static std::vector<struct MyMesh> myMeshes;
+std::vector<struct MyMesh> myMeshes;
 
 	 // ebenfalls aus dem fix
-	static std::map<std::string, GLuint> textureIdMap;	
+std::map<std::string, GLuint> textureIdMap;
 
 
 
 //---------------MEMBER FUNCTIONS--------------------
 public:
 
-	static void hello();
-	//eingef�gt
-static	void set_float4(float f[4], float a, float b, float c, float d);
-static	void color4_to_float4(const aiColor4D *c, float f[4]);
+void set_float4(float f[4], float a, float b, float c, float d);
+void color4_to_float4(const aiColor4D *c, float f[4]);
 
 
 VirtualObject* createVirtualObject();

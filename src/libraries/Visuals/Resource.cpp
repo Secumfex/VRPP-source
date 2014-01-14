@@ -22,6 +22,7 @@
 	mTextures.push_back(tex);
 
 }
+	Material :: ~Material(){}
 
 void Material ::setAmbientMap(Texture* tex){
 	mTextures[0] = tex;
@@ -41,6 +42,13 @@ void Material ::setHeightMap(Texture* tex){
 void Material ::setShadowMap(Texture* tex){
 	mTextures[5] = tex;
 }
+
+void Material :: setName(std::string name){}
+void Material :: setAmbient(glm::vec4 ambient){}
+void Material :: setDiffuse(glm::vec4 diffuse){}
+void Material :: setSpecular(glm::vec4 specular){}
+void Material :: setEmission(glm::vec4 specular){}
+void Material :: setShininess(GLfloat term){}
 
 Texture* Material ::getAmbientMap(){
 	return mTextures[0];
@@ -64,7 +72,8 @@ Texture* Material ::getShadowMap(){
 
 //---------------MESH SCOPE--------------------
 
-
+Mesh::Mesh() { }
+Mesh::~Mesh() { }
 
 void Mesh :: setVAO(GLuint vao){
 mVaoHandle=vao;}
@@ -72,10 +81,6 @@ mVaoHandle=vao;}
 GLuint Mesh :: getVAO(){
 	return mVaoHandle;
 }
-
-
-
-
 
 void Mesh::setUniformBlockIndex(GLuint ind){
 	uniformBlockIndex=ind;}
@@ -98,10 +103,3 @@ void Mesh::setUniformBlockIndex(GLuint ind){
 	return texIndex;
 	}
 
-
-
-
-
-
-Mesh::Mesh() { }
-Mesh::~Mesh() { }

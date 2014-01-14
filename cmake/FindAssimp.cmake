@@ -8,8 +8,8 @@
 # 
 
 IF (MINGW)
-	FIND_PATH( ASSIMP_INCLUDE_PATH assimp.h
-		${DEPENDENCIES_PATH}/assimp/include
+	FIND_PATH( ASSIMP_INCLUDE_PATH assimp/ai_assert.h
+		${DEPENDENCIES_PATH}/assimp/include/
 	)
 
     FIND_LIBRARY( ASSIMP_LIBRARY
@@ -20,11 +20,11 @@ IF (MINGW)
 
     execute_process(COMMAND ${CMAKE_COMMAND}  -E  copy_if_different
         ${DEPENDENCIES_PATH}/assimp/lib/x86/libassimp.dll
-        ${PROJECT_BINARY_DIR}/bin/
+        ${PROJECT_BINARY_DIR}/bin/libassimp.dll
     )
 
 ELSEIF (MSVC)
-    FIND_PATH( ASSIMP_INCLUDE_PATH assimp.h
+    FIND_PATH( ASSIMP_INCLUDE_PATH assimp/include/
         ${DEPENDENCIES_PATH}/assimp/include
     )
 
@@ -37,7 +37,7 @@ ELSEIF (MSVC)
     foreach (CONFIGURATION_TYPE ${CMAKE_CONFIGURATION_TYPES})
         execute_process(COMMAND ${CMAKE_COMMAND}  -E  copy_if_different
             ${DEPENDENCIES_PATH}/assimp/lib/x86/libassimp.dll
-            ${PROJECT_BINARY_DIR}/bin/${CONFIGURATION_TYPE}/
+            ${PROJECT_BINARY_DIR}/bin/${CONFIGURATION_TYPE}/libassimp.dll
         )
     endforeach()
 
