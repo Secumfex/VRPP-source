@@ -10,11 +10,9 @@
 //---------------RESOURCE SCOPE--------------------
 
 
-void Resource :: streamToVRAM(){ }
-
 //---------------TEXTURE SCOPE--------------------
 
-void Material :: Material(){
+	Material :: Material(){
 	Texture* tex = new Texture();
 	mTextures.push_back(tex);
 	mTextures.push_back(tex);
@@ -24,6 +22,7 @@ void Material :: Material(){
 	mTextures.push_back(tex);
 
 }
+	Material :: ~Material(){}
 
 void Material ::setAmbientMap(Texture* tex){
 	mTextures[0] = tex;
@@ -43,6 +42,13 @@ void Material ::setHeightMap(Texture* tex){
 void Material ::setShadowMap(Texture* tex){
 	mTextures[5] = tex;
 }
+
+void Material :: setName(std::string name){}
+void Material :: setAmbient(glm::vec4 ambient){}
+void Material :: setDiffuse(glm::vec4 diffuse){}
+void Material :: setSpecular(glm::vec4 specular){}
+void Material :: setEmission(glm::vec4 specular){}
+void Material :: setShininess(GLfloat term){}
 
 Texture* Material ::getAmbientMap(){
 	return mTextures[0];
@@ -66,14 +72,34 @@ Texture* Material ::getShadowMap(){
 
 //---------------MESH SCOPE--------------------
 
-void Mesh :: streamToVRAM(){
-}
+Mesh::Mesh() { }
+Mesh::~Mesh() { }
 
-void Mesh :: setVAO(GLuint vao){}
+void Mesh :: setVAO(GLuint vao){
+mVaoHandle=vao;}
+
 GLuint Mesh :: getVAO(){
 	return mVaoHandle;
 }
 
+void Mesh::setUniformBlockIndex(GLuint ind){
+	uniformBlockIndex=ind;}
 
-Mesh::Mesh() { }
-Mesh::~Mesh() { }
+	GLuint Mesh::getUniformBlockIndex(){
+		return uniformBlockIndex;}
+
+	void Mesh::setNumFaces (int faces){
+	numFaces=faces;}
+
+	int Mesh::getNumFaces(){
+		return numFaces;
+	}
+
+	void Mesh::setTexIndex(int index){
+	texIndex=index;}
+	
+	
+	int Mesh::getTexIndex(){
+	return texIndex;
+	}
+

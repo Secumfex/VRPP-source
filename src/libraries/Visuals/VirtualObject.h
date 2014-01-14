@@ -19,6 +19,7 @@ public:
 
 	glm::mat4 getModelMatrix();
 	vector<GraphicsComponent*> getGraphicsComponent();
+	
 	PhysicsComponent *physicsComponent;
 	void addGraphicsComponent(GraphicsComponent *graphcomp);
 
