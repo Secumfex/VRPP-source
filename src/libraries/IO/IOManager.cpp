@@ -4,6 +4,7 @@ IOManager::IOManager(){
 	/* STATE CHECK */
 	//TODO implement state check and change
 	isMenuState = false;
+	camObject = new Camera();
 
 	//TODO discuss if implement here or get from Rendermanager
 	//initialFoV = 45.0f;

@@ -40,7 +40,7 @@ private:
 
 	inline void computeFrameTimeDifference();
 
-	Camera* camObject = new Camera();
+	Camera* camObject;
 
 public:
 	//float FoV;
