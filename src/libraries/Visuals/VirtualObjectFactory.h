@@ -74,6 +74,7 @@ VirtualObject* createVirtualObject(std::string filename);
 VirtualObject* createVirtualObject(vector<GraphicsComponent*> graphcomps);
 VirtualObject* copyVirtualObject(VirtualObject vo);
 
+
 };
 
 #endif /* VIRTUALOBJECTFACTORY_H_ */

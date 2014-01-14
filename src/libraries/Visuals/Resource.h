@@ -88,6 +88,7 @@ public:
 	Mesh();
 	~Mesh();
 
+
 	void setVAO(GLuint vao);
 	GLuint getVAO();
 
