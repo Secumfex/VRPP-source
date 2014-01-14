@@ -42,3 +42,10 @@ void VirtualObject::updateModelMatrix() {
 	modelMatrix = physicsComponent->getModelMatrix();
 }
 
+vector<GraphicsComponent*> VirtualObject:: getGraphicsComponent(){
+        return mGraphComponent;
+}
+
+void VirtualObject:: addGraphicsComponent(GraphicsComponent *graphcomp){
+        //TODO: GraphicComponente wird an den zustaendigen Vector übergeben
+}

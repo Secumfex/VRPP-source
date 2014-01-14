@@ -42,6 +42,17 @@ public:
 	 */
 	void updateModelMatrix();
 	
+	/** \brief
+	*
+	* 	@todo detailed description
+	*/
+	vector<GraphicsComponent*> getGraphicsComponent();
+
+	/** \brief
+	*
+	* 	@todo detailed description
+	*/
+	void addGraphicsComponent(GraphicsComponent *graphcomp);
 };
 
 

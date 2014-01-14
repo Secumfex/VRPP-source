@@ -1,11 +1,17 @@
 #ifndef PHYSICWORLD_H_
 #define PHYSICWORLD_H_
 
+#include "Patterns/Singleton.h"
 #include "btBulletDynamicsCommon.h"
 
-class PhysicWorld {
-public:
+/** \brief
+ *
+ *  @todo detailed description
+ */
+class PhysicWorld : public Singelton<PhysicWorld> {
+friend class Singelton<PhysicWorld>
 
+public:
 	btBroadphaseInterface* broadphase;							/**< specifies the broadphase algorithm */
 	btDefaultCollisionConfiguration* collisionConfiguration;	/**< fine tunes the algorithms used for the full (not broadphase) collision detection */
 	btCollisionDispatcher* dispatcher;							/**< register a callback that filters overlapping broadphase proxies */
