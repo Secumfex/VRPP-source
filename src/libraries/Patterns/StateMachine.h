@@ -13,11 +13,17 @@ private:
 	std::map<std::string, State*> states;
 
 public:
+	virtual ~StateMachine();
+
 	virtual bool setState(State* state);
 	virtual bool setState(std::string state);
 	virtual void addState(State* state);
 	State* getState();
-	virtual ~StateMachine();
+
+	bool setInitialState(State* state);
+	bool setInitialState(std::string state);
+
+	
 };
 
 #endif /* STATEMACHINE_H_ */

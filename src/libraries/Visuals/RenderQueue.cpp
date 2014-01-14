@@ -64,21 +64,21 @@ void RenderQueue::sortByShaders(){
 	resetQueue();
 	string shader = "DEFERRED_SHADING"; 
 	VirtualObject* vo;
-	vector<GraphicsComponent> gcVector; 
+	vector<GraphicsComponent* > gcVector; 
 
 
 	cout<<"Entering extractAndSort"<<endl; // <-- REMOVE IN FINAL
 
 	while(hasNext()){
 		vo = getNextObject();
-		gcVector = *vo->getGraphicsComponent();
-		for(gcIterator = gcVector.begin(); gcIterator != gcVector.end(); gcIterator++){
+		gcVector = vo->getGraphicsComponent();
+		for(unsigned int i = 0; i < gcVector.size(); i++){
 			cout<<"Adding GC to the map."<<endl; // <-- REMOVE IN FINAL
 
-			gcStorage[shader].push_back(*gcIterator); /// shader --> GC
-			gc2voMap[vo].push_back(*gcIterator); /// VO --> GC
+			gcStorage[shader].push_back(gcVector[i]); /// shader --> GC
+			gc2voMap[vo].push_back(gcVector[i]); /// VO --> GC
 
-			// vo2gcMap[*gcIterator].push_back(vo); <-- doesnt work yet
+			vo2gcMap[gcVector[i]] = vo;
 		}
 	}
 	
