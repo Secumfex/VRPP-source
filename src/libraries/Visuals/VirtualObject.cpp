@@ -14,14 +14,15 @@ VirtualObject::VirtualObject(glm::mat4 modelMatrix){
 	this-> modelMatrix = modelMatrix;
 	id = lastID + 1;
 	lastID = id;
-	mGraphComponent.push_back(new GraphicsComponent());
+	GraphicsComponent* gc = new GraphicsComponent();
+	mGraphComponent.push_back(gc);
 	physicsComponent = new PhysicsComponent(modelMatrix);
 }
 
 
 
 void VirtualObject:: addGraphicsComponent(GraphicsComponent *graphcomp){
-	//TODO: GraphicComponente wird an der zustaendigen Vector übergeben
+	//TODO: GraphicComponente wird an den zustaendigen Vector übergeben
 
 }
 

@@ -11,14 +11,16 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <map>
-#include <Tools/TextureTools.h>
+#include <Visuals/TextureManager.h>
 #include <string>
+
+using namespace std;
 
 class Texture {
 	//-----------------MEMBER FUNCTIONS-----------------
 public:
 	/** Man macht die Textur direkt mit dem Dateinamen */
-	Texture(std::string filename = "checkers.jpg");
+	Texture(string filename = "checkers.jpg");
 	virtual ~Texture();
 	/** Das Handle wird übergeben */
 	GLuint getTextureHandle();
@@ -27,17 +29,13 @@ public:
 	/** Textur wird entbunden*/
 	void unbindTexture();
 
-private:
-	void createTextureHandle(std::string filename);
 	//-----------------MEMBER VARIABLES-----------------
 private:
-	/** hier werden alle nötigen Handles gespeichert, mehr nicht*/
-	static std::map<std::string, GLuint> mTextureHandles;
 	/** damit is der DateiPfad gemeint wie zB Wurst.jpg oder Pictures/Hallo.png */
-	std::string mFilename;
-	/** Format */
-	int height;
-	int width;
+
+	string mFilename;
+
+	TextureManager* mTexManager;
 };
 
 #endif /* TEXTURE_H_ */

@@ -23,7 +23,6 @@ class Resource{
 	//---------------MEMBER FUNCTIONS--------------------
 public:
 
-	virtual void streamToVRAM();
 	//---------------MEMBER VARIABLES--------------------
 private:
 
@@ -37,13 +36,16 @@ class Material : public Resource {
 public:
 	Material ();
 	~Material ();
-	void streamToVRAM();
+
+	int texCount;
+
 
 	void setName(std::string name);
-	void setAmbient(glm::vec3 ambient);
-	void setDiffuse(glm::vec3 diffuse);
-	void setSpecular(glm::vec3 specular);
-	void setSpecularTerm(GLfloat term);
+	void setAmbient(glm::vec4 ambient);
+	void setDiffuse(glm::vec4 diffuse);   //erstes basteln
+	void setSpecular(glm::vec4 specular);
+	void setEmission(glm::vec4 specular);
+	void setShininess(GLfloat term);
 
 	void setAmbientMap(Texture* tex);
 	void setDiffuseMap(Texture* tex);
@@ -85,13 +87,46 @@ class Mesh : public Resource{
 public:
 	Mesh();
 	~Mesh();
-	void streamToVRAM();
+
+
 	void setVAO(GLuint vao);
 	GLuint getVAO();
 
+
+
+	void setUniformBlockIndex(GLuint ind);
+	GLuint getUniformBlockIndex();
+
+	void setNumFaces (int faces);
+	int getNumFaces();
+
+	void setTexIndex(int index);
+	int getTexIndex();
+
+
 	//---------------MEMBER VARIABLES--------------------
 private:
-GLuint mVaoHandle;
+
+GLuint mVaoHandle;  //gleiche wie unten "vao",  also noch anpassen. (wurde jetzt gel�scht)
+
+
+
+// TODO set variables privat. setter&getter!
+
+//copy from VirtualObjectFactory.h  (struct)
+        GLuint uniformBlockIndex;
+       // float transform[16];
+       // int numIndices;
+		int numFaces;
+        //unsigned int type;
+       // Material mat;
+      //  unsigned int *indexes;
+        // float *positions;
+      //  float *normals;
+		int texIndex;
+//end of copy
+
+
 
 };
 

@@ -21,16 +21,6 @@ class VirtualObjectFactory : public Singleton<VirtualObjectFactory> {
 
 
 
-	  struct MyMaterial{
-
-	float diffuse[4];
-	float ambient[4];
-	float specular[4];
-	float emissive[4];
-	float shininess;
-	int texCount;
-};
-
 
 	  struct MyMesh{
         GLuint vao;
@@ -44,7 +34,8 @@ class VirtualObjectFactory : public Singleton<VirtualObjectFactory> {
         int numIndices;
 		int numFaces;
         unsigned int type;
-        struct MyMaterial mat;
+
+        Material mat;
         unsigned int *indexes;
         float *positions;
         float *normals;
@@ -64,15 +55,17 @@ class VirtualObjectFactory : public Singleton<VirtualObjectFactory> {
 public:
 
 	static void hello();
-	//eingefügt
+
+	//eingefï¿½gt
 static	void set_float4(float f[4], float a, float b, float c, float d);
 static	void color4_to_float4(const aiColor4D *c, float f[4]);
 
 
-static VirtualObject* createVirtualObject();
-static VirtualObject* createVirtualObject(std::string filename);
-static VirtualObject* createVirtualObject(vector<GraphicsComponent*> graphcomps);
-static VirtualObject* copyVirtualObject(VirtualObject vo);
+VirtualObject* createVirtualObject();
+VirtualObject* createVirtualObject(std::string filename);
+VirtualObject* createVirtualObject(vector<GraphicsComponent*> graphcomps);
+VirtualObject* copyVirtualObject(VirtualObject vo);
+
 
 };
 

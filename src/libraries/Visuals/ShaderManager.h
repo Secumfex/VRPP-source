@@ -9,6 +9,7 @@
 #define SHADERMANAGER_H_
 
 #include <vector>
+#include <Visuals/Shader.h>
 
 using namespace std;
 
@@ -17,7 +18,11 @@ public:
 	ShaderManager();
 	virtual ~ShaderManager();
 
-	static vector<Shader> shaders;
+	vector<Shader*> mShaders;
+
+	Shader* getShader(std::string shaderName);
+	void addShader(Shader* shader);
+
 };
 
 #endif /* SHADERMANAGER_H_ */

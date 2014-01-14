@@ -10,11 +10,9 @@
 //---------------RESOURCE SCOPE--------------------
 
 
-void Resource :: streamToVRAM(){ }
-
 //---------------TEXTURE SCOPE--------------------
 
-void Material :: Material(){
+	Material :: Material(){
 	Texture* tex = new Texture();
 	mTextures.push_back(tex);
 	mTextures.push_back(tex);
@@ -66,13 +64,43 @@ Texture* Material ::getShadowMap(){
 
 //---------------MESH SCOPE--------------------
 
-void Mesh :: streamToVRAM(){
-}
 
-void Mesh :: setVAO(GLuint vao){}
+
+void Mesh :: setVAO(GLuint vao){
+mVaoHandle=vao;}
+
 GLuint Mesh :: getVAO(){
 	return mVaoHandle;
 }
+
+
+
+
+
+void Mesh::setUniformBlockIndex(GLuint ind){
+	uniformBlockIndex=ind;}
+
+	GLuint Mesh::getUniformBlockIndex(){
+		return uniformBlockIndex;}
+
+	void Mesh::setNumFaces (int faces){
+	numFaces=faces;}
+
+	int Mesh::getNumFaces(){
+		return numFaces;
+	}
+
+	void Mesh::setTexIndex(int index){
+	texIndex=index;}
+	
+	
+	int Mesh::getTexIndex(){
+	return texIndex;
+	}
+
+
+
+
 
 
 Mesh::Mesh() { }
