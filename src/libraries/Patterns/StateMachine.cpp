@@ -28,6 +28,11 @@ bool StateMachine::setState(std::string state){
 	}
 
 void StateMachine::addState(State* state){
+
+	if (states.size() == 0){							// initial state is first added state
+		currentState = state;		
+	}
+
 	states.insert(std::pair<std::string, State*>(state->getName(),state));
 }
 
@@ -35,4 +40,25 @@ State* StateMachine::getState(){
 	return currentState;
 }
 
+
+State* StateMachine::getCurrentState(){
+	return currentState;
+}
+
+std::list <State* >StateMachine::getStatesList(){
+	std::list<State* > result;
+	for (std::map<std::string , State* >::iterator it = states.begin(); it != states.end(); ++it ){
+		result.push_back(it->second);
+	}
+	return result;
+}
+
+std::map<std::string, State* > StateMachine::getStatesMap(){
+	return states;
+}
+
 StateMachine::~StateMachine(){}
+
+StateMachine::StateMachine(){
+	currentState = 0;
+}
