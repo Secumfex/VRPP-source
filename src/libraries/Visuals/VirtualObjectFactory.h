@@ -24,18 +24,8 @@ class VirtualObjectFactory : public Singleton<VirtualObjectFactory> {
 
 
 
-/*
 
-	  struct MyMaterial{
 
-	float diffuse[4];
-	float ambient[4];
-	float specular[4];
-	float emissive[4];
-	float shininess;
-	int texCount;
-};
-*/
 
 	  struct MyMesh{
         GLuint vao;
@@ -63,6 +53,7 @@ class VirtualObjectFactory : public Singleton<VirtualObjectFactory> {
 std::vector<struct MyMesh> myMeshes;
 
 	 // ebenfalls aus dem fix
+
 std::map<std::string, GLuint> textureIdMap;
 
 
@@ -71,8 +62,10 @@ std::map<std::string, GLuint> textureIdMap;
 //---------------MEMBER FUNCTIONS--------------------
 public:
 
+
 void set_float4(float f[4], float a, float b, float c, float d);
 void color4_to_float4(const aiColor4D *c, float f[4]);
+
 
 
 VirtualObject* createVirtualObject();

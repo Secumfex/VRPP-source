@@ -205,6 +205,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
         if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_DIFFUSE, &diffuse))
             color4_to_float4(&diffuse, c);
 
+
 		
 		//memcpy(aMat.diffuse, c, sizeof(c));
 		aMat->setDiffuse(glm::vec4(diffuse.r,diffuse.g, diffuse.b, diffuse.a));
@@ -216,6 +217,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
             color4_to_float4(&ambient, c);
 
 
+
         //memcpy(aMat.ambient, c, sizeof(c));
 		aMat->setAmbient(glm::vec4(ambient.r, ambient.g, ambient.b, ambient.a));
 
@@ -225,6 +227,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
         aiColor4D specular;
         if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_SPECULAR, &specular))
             color4_to_float4(&specular, c);
+
 
 
         //memcpy(aMat.specular, c, sizeof(c));

@@ -20,6 +20,7 @@ Texture::~Texture() {
 GLuint Texture::getTextureHandle(){
 	return mTexManager->getTextureHandle(mFilename);
 }
+
 void Texture:: bindTexture(){
     glBindTexture(GL_TEXTURE_2D, getTextureHandle());
 }
