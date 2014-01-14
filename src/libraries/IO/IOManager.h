@@ -26,7 +26,8 @@ private:
 	// mouse position
 	double xPos, yPos;
 
-	float speed;
+	float speed_walk;
+	float speed_run;
 	float mouseSpeed;
 
 	glm::mat4 mViewMatrix;
