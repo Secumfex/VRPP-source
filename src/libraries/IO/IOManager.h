@@ -4,11 +4,12 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include "Camera.h"
+#include "Patterns\Singleton.h"
 
 //TODO make singleton
-/*class IOManager : public Singleton<IOManager>{
-	friend class Singleton<IOManager>;*/
-class IOManager{
+class IOManager : public Singleton<IOManager>{
+	friend class Singleton<IOManager>;
+//class IOManager{
 
 private:
 	/* WINDOW SIZE */
@@ -45,7 +46,7 @@ public:
 	GLFWwindow* window;
 	glm::mat4 getViewMatrix();
 	void computeIO();
-	void keyFunction(int key);
+	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	//void computeFoV();
 };
 

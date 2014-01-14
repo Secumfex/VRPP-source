@@ -50,7 +50,42 @@ void IOManager::computeIO(){
 	lastTime = currentTime;
 }
 //TODO switch implementations for menu state and game state
-void IOManager::keyFunction(int key){
+
+void IOManager::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{	
+	if (isMenuState == false){
+		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS){
+			//not exit but enter menu state
+			//glfwSetWindowShouldClose(window, GL_TRUE);
+			isMenuState == true;
+			return;
+		}
+		glm::vec3 gotPosition = camObject->getPosition();
+		// Move forward
+		if (key == GLFW_KEY_UP && action == GLFW_REPEAT){
+			gotPosition += camObject->getViewDirection() * deltaTime * speed;
+			camObject->setPosition(gotPosition);
+		}
+		// Move backward
+		if (key == GLFW_KEY_DOWN && action == GLFW_REPEAT){
+			gotPosition -= camObject->getViewDirection() * deltaTime * speed;
+			camObject->setPosition(gotPosition);
+		}
+		// Strafe right
+		if (key == GLFW_KEY_RIGHT && action == GLFW_REPEAT){
+			gotPosition += camObject->getRight() * deltaTime * speed;
+			camObject->setPosition(gotPosition);
+		}
+		// Strafe left
+		if (key == GLFW_KEY_LEFT && action == GLFW_REPEAT){
+			gotPosition -= camObject->getRight() * deltaTime * speed;
+			camObject->setPosition(gotPosition);
+		}
+	}
+}
+
+// keep as reference
+/*void IOManager::keyFunction(int key){
 	glm::vec3 gotPosition = camObject->getPosition();
 	// Move forward
 	switch (key){
@@ -75,6 +110,10 @@ void IOManager::keyFunction(int key){
 			break;
 	}
 }
+*/
+
+//this HAS TO BE put in rendermanager
+//glfwSetKeyCallback(window, key_callback);
 
 glm::mat4 IOManager::getViewMatrix(){
 	return mViewMatrix;
