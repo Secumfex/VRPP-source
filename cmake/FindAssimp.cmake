@@ -24,8 +24,8 @@ IF (MINGW)
     )
 
 ELSEIF (MSVC)
-    FIND_PATH( ASSIMP_INCLUDE_PATH assimp/include/
-        ${DEPENDENCIES_PATH}/assimp/include
+    FIND_PATH( ASSIMP_INCLUDE_PATH assimp/ai_assert.h
+        ${DEPENDENCIES_PATH}/assimp/include/
     )
 
     FIND_LIBRARY( ASSIMP_LIBRARY
