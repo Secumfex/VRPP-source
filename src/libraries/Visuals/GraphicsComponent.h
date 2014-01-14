@@ -1,8 +1,6 @@
 #ifndef GRAPHICSCOMPONENT_H
 #define GRAPHICSCOMPONENT_H
-
 #include <vector>
-
 #include "Visuals/Resource.h"
 
 class GraphicsComponent{
@@ -16,11 +14,14 @@ public:
 	Mesh getMesh();
 	Material getMaterial();
 
+	GraphicsComponent();
+
 private:
 	Mesh *mMesh;
 	Material *mMaterial;
 
-};
+
+	};
 
 
-#endif
+#endif /* GRAPHICSCOMPONENT_H */

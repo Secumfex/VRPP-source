@@ -8,6 +8,8 @@
 #include <iostream>
 #include "ConcreteListener.h"
 
+ #include "ConcreteSubject.h"
+
 using namespace std;
 
 void ConcreteListener::update(){
@@ -25,5 +27,6 @@ ConcreteSubject* ConcreteListener::getSubject(){
 
 ConcreteListener::ConcreteListener(ConcreteSubject* s, string n){
 	name= n;
+	setName(n);	//Private Variable von Listener-Interface setzen
 	subject = s;
 }

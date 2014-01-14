@@ -85,6 +85,7 @@ public:
 	* clears the allocated memory. deletes shape, motionState and rigidBody.
 	*/
 	~PhysicsComponent();
+
 };
 
 #endif

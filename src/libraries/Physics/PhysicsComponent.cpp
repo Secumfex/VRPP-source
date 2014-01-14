@@ -37,7 +37,7 @@ PhysicsComponent::~PhysicsComponent() {
 	delete rigidBody;
 }
 
-glm::mat4 PhysicsComponent::getModelMatrix() {
+glm::mat4 PhysicsComponent::getModelMatrix(){
 
 	return modelMatrix;
 }
@@ -119,4 +119,3 @@ void PhysicsComponent::updateModelMatrix() {
 		return;
 	}
 }
-

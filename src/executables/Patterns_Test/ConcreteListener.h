@@ -8,8 +8,9 @@
 #ifndef CONCRETELISTENER_H_
 #define CONCRETELISTENER_H_
 #include <string>
-#include "Listener.h"
-#include "ConcreteSubject.h"
+#include <Patterns/Listener.h>
+
+class ConcreteSubject;
 
 using namespace std;
 

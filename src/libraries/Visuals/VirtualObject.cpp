@@ -8,6 +8,7 @@ using namespace std;
 int lastID = 0;
 
 //constructor
+
 VirtualObject::VirtualObject() {
 
 	modelMatrix = glm::mat4(); 	//loadidentity
@@ -40,3 +41,4 @@ void VirtualObject::updateModelMatrix() {
 
 	modelMatrix = physicsComponent->getModelMatrix();
 }
+

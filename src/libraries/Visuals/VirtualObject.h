@@ -1,4 +1,3 @@
-
 #ifndef VIRTUALOBJECT_H
 #define VIRTUALOBJECT_H
 #include "Physics/PhysicsComponent.h"
@@ -42,7 +41,8 @@ public:
 	 * fetches the current modelMatrix of the physicsComponent
 	 */
 	void updateModelMatrix();
+	
 };
 
 
-#endif
+#endif /* VIRTUALOBJECT_H */

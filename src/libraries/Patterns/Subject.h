@@ -20,6 +20,8 @@ public:
 	void detach(Listener* listener); 	//method to "de-subscribe" a listener
 
 	void notify();		//this method sends the updates to the attached listeners
+
+	void notify(string name); 	//method to notify specific listeners
 private:
 	list<Listener*> listeners;	//list of all listeners attached to the Subject
 

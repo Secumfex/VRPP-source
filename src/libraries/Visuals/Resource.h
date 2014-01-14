@@ -75,4 +75,4 @@ private:
 
 };
 
-#endif
+#endif /* RESOURCE_H */
