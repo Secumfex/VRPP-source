@@ -35,7 +35,7 @@ int main() {
 
     GLFWwindow* window = glfwCreateWindow(800, 800, "Compositing", NULL, NULL);
     glfwMakeContextCurrent(window);
-    glClearColor(1,1,1,0);
+    glClearColor(1,0,0,0);
 
     // get framebuffer size
     int width, height;
