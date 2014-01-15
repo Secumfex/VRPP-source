@@ -36,8 +36,8 @@ ELSEIF (MSVC)
 
     foreach (CONFIGURATION_TYPE ${CMAKE_CONFIGURATION_TYPES})
         execute_process(COMMAND ${CMAKE_COMMAND}  -E  copy_if_different
-            ${DEPENDENCIES_PATH}/assimp/lib/x86/libassimp.dll
-            ${PROJECT_BINARY_DIR}/bin/${CONFIGURATION_TYPE}/libassimp.dll
+            ${DEPENDENCIES_PATH}/assimp/bin/x86/Assimp32.dll
+            ${PROJECT_BINARY_DIR}/bin/${CONFIGURATION_TYPE}/Assimp32.dll
         )
     endforeach()
 
