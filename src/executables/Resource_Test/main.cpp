@@ -38,7 +38,7 @@ int main() {
     GLFWwindow* window = glfwCreateWindow(800, 500, "Resource_Test", NULL, NULL);
     glfwMakeContextCurrent(window);
     glewInit();
-    glClearColor(0,0,0.5,0);
+    glClearColor(0,0,0.5,1);
 
 
     //init opengl 3 extension
@@ -95,11 +95,9 @@ int main() {
 
     	using namespace glm;
 
-        mat4 modelMatrix = mat4(1.0f);
-
+        mat4 modelMatrix = mat4();
         mat4 viewMatrix = lookAt(vec3(0.0f, 0.0f, -6.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
-        mat4 projectionMatrix = perspective(40.0f, 4.0f / 3.0f, 0.1f, 100.f);
-
+        mat4 projectionMatrix = perspective(40.0f, 4.0f / 3.0f, 0.1f, 100.0f);
         mat4 inverseMatrix = transpose(inverse(viewMatrix * modelMatrix));
 
         glUniformMatrix4fv(modelHandle, 1, GL_FALSE, value_ptr(modelMatrix));
@@ -110,9 +108,11 @@ int main() {
 
     	 while(!glfwWindowShouldClose(window)) {
 
-    	       glUseProgram(phongShaderHandle);
 
  	        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+ 	        glEnable(GL_DEPTH_TEST);
+
+ 	       glUseProgram(phongShaderHandle);
 
 //    	        unsigned int i = 0;
 //    	        for (i = 0; i < cow->getGraphicsComponent().size(); ++i) {

@@ -25,11 +25,11 @@ void main() {
     float specular = (pow(max(dot(reflection, eye), 0), 15) / distance) *10.0;
     float ambient = 0.3;
 
-    //fragmentColor = vec4(
+    fragmentColor = vec4(
     //comment in to use the phong lighting model:
-      //  diffuse  * vec3(1, 0, 0) + 
-       // specular * vec3(1, 1, 1) + 
-       // ambient  * vec3(1, 0.5, 0.5), 
-       // 1);
-       fragmentColor = vec4(1,1,0,1);
+        diffuse  * vec3(1, 0, 0) + 
+        specular * vec3(1, 1, 1) + 
+        ambient  * vec3(1, 0.5, 0.5), 
+        1);
+      // fragmentColor = vec4(1,0,0,1);
 }
