@@ -97,11 +97,17 @@ public:
 	void setUniformBlockIndex(GLuint ind);
 	GLuint getUniformBlockIndex();
 
-	void setNumFaces (int faces);
+	void setNumFaces(int faces);
 	int getNumFaces();
 
 	void setTexIndex(int index);
 	int getTexIndex();
+
+	void setNumVertices(int verts);
+	int getNumVertices();
+
+	void setNumIndices(int verts);
+	int getNumIndices();
 
 
 	//---------------MEMBER VARIABLES--------------------
@@ -117,13 +123,15 @@ GLuint mVaoHandle;  //gleiche wie unten "vao",  also noch anpassen. (wurde jetzt
         GLuint uniformBlockIndex;
        // float transform[16];
        // int numIndices;
-		int numFaces;
+		int mNumFaces;
+		int mNumVerts;
+		int mNumIndices;
         //unsigned int type;
        // Material mat;
       //  unsigned int *indexes;
         // float *positions;
       //  float *normals;
-		int texIndex;
+		int mTexIndex;
 //end of copy
 
 

@@ -89,17 +89,30 @@ void Mesh::setUniformBlockIndex(GLuint ind){
 		return uniformBlockIndex;}
 
 	void Mesh::setNumFaces (int faces){
-	numFaces=faces;}
+	mNumFaces=faces;}
 
 	int Mesh::getNumFaces(){
-		return numFaces;
+		return mNumFaces;
 	}
 
 	void Mesh::setTexIndex(int index){
-	texIndex=index;}
+	mTexIndex=index;}
 	
 	
 	int Mesh::getTexIndex(){
-	return texIndex;
+	return mTexIndex;
 	}
 
+	void Mesh::setNumVertices (int verts){
+		mNumVerts = verts;
+	}
+	int Mesh::getNumVertices(){
+		return mNumVerts;
+	}
+	void Mesh::setNumIndices (int indices){
+		mNumIndices = indices;
+		cout << indices << endl;
+	}
+	int Mesh::getNumIndices(){
+		return mNumIndices;
+}

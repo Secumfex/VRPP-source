@@ -75,7 +75,7 @@ int main() {
     //KUUUUUUUUUUUUHHHH
     VirtualObjectFactory *voFac = new VirtualObjectFactory();
 
-    VirtualObject *cow = voFac->createVirtualObject(RESOURCES_PATH "/cow.obj");
+    VirtualObject *cow = voFac->createVirtualObject(RESOURCES_PATH "/cube.blend");
 
 
     float angle = 0.0;
@@ -101,7 +101,7 @@ int main() {
             glUniformMatrix4fv(uniformModelHandle, 1, GL_FALSE, value_ptr(modelMatrix));
 
             //compute view matrix
-            mat4 viewMatrix = lookAt(vec3(0.0f, 1.0f, 1.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
+            mat4 viewMatrix = lookAt(vec3(0.0f, 2.0f, 2.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
             glUniformMatrix4fv(uniformViewHandle, 1, GL_FALSE, value_ptr(viewMatrix));
 
             //compute projection matrix
@@ -114,7 +114,7 @@ int main() {
         }
 
         glBindVertexArray(cow->getGraphicsComponent()[0]->getMesh()->getVAO());
-        glDrawArrays(GL_QUADS, 0, 2900);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
 
         //show what's been drawn
         glfwSwapBuffers(window);

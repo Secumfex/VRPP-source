@@ -25,6 +25,13 @@ f[2] = c->b;
 f[3] = c->a;
 }
 
+VirtualObject* VirtualObjectFactory::createCow(){
+
+	if(mCow == NULL)
+		mCow = createVirtualObject(RESOURCES_PATH "/cow.obj");
+
+	return mCow;
+}
 
 
 VirtualObject* VirtualObjectFactory::createVirtualObject(){
@@ -44,26 +51,33 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
         fin.close();
     }
     else{
-        printf("Couldn't open file: %s\n", filename.c_str());
-        printf("%s\n", Importer.GetErrorString());
-        return false;
+
+       cout<<"Couldn't open file: " << filename.c_str()<<endl;
+       cout<<Importer.GetErrorString()<<endl;
+       cout<<"Have a cow instead!"<<endl;
+
+       return createCow();
     }
  
-   const aiScene* pScene = Importer.ReadFile( filename, aiProcessPreset_TargetRealtime_Quality|aiProcess_Triangulate | aiProcess_GenSmoothNormals);
+   const aiScene* pScene = Importer.ReadFile( filename,
+		   aiProcess_Triangulate |
+		   aiProcess_GenSmoothNormals|
+		   aiProcess_GenUVCoords |
+		   aiProcess_FlipUVs|
+		   aiProcess_FlipUVs |
+		   aiProcess_PreTransformVertices);
  
     // Melden, falls der Import nicht funktioniert hat
     if( !pScene)
     {
-        printf("%s\n", Importer.GetErrorString());
-        
-		// richtig so?  bzw. was ausgeben bei misserfolg?
-		return false;
+        cout<<Importer.GetErrorString()<<endl;
+
+        return createCow();
 
 
     }
  
-    // Erfolg berichten. Jetzt können wir mit dem import arbeiten
-    printf("Import of scene %s succeeded.",filename.c_str());
+    cout<<"Import of scene " <<filename.c_str()<<" succeeded."<<endl;
 
 
  /*  für später evtl drin lassen?!
@@ -106,13 +120,15 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
         faceArray = (unsigned int *)malloc(sizeof(unsigned int) * mesh->mNumFaces * 3);
         unsigned int faceIndex = 0;
  
+        unsigned int indices = 0;
         for (unsigned int t = 0; t < mesh->mNumFaces; ++t) {
-            const aiFace* face = &mesh->mFaces[t];
- 
-            memcpy(&faceArray[faceIndex], face->mIndices,3 * sizeof(unsigned int));
-            faceIndex += 3;
+            indices += mesh->mFaces[t].mNumIndices;
+            cout << indices << endl;
         }
-
+        cout << mesh->mNumFaces << "so viele faces"<< endl;
+        cout << mesh->mNumVertices << "so viele vertices"<< endl;
+        aMesh->setNumIndices(indices);
+        aMesh->setNumVertices(mesh->mNumVertices);
 		// hier wurde aMesh.numFaces in dem Struct erstellt (VirtualObjectFactory.h)
         aMesh->setNumFaces(pScene->mMeshes[n]->mNumFaces);
  
@@ -145,8 +161,8 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
             glBindBuffer(GL_ARRAY_BUFFER, buffer);
             glBufferData(GL_ARRAY_BUFFER, sizeof(float)*3*mesh->mNumVertices, mesh->mNormals, GL_STATIC_DRAW);
             // normalLoc wurde hier ersetzt
-			glEnableVertexAttribArray(1);
-            glVertexAttribPointer(1, 3, GL_FLOAT, 0, 0, 0);
+			glEnableVertexAttribArray(2);
+            glVertexAttribPointer(2, 3, GL_FLOAT, 0, 0, 0);
         }
  
         // buffer for vertex texture coordinates
@@ -162,8 +178,8 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
             glBindBuffer(GL_ARRAY_BUFFER, buffer);
             glBufferData(GL_ARRAY_BUFFER, sizeof(float)*2*mesh->mNumVertices, texCoords, GL_STATIC_DRAW);
             //und texCoordLoc wurde dann auch ersetzt
-			glEnableVertexAttribArray(2);
-            glVertexAttribPointer(2, 2, GL_FLOAT, 0, 0, 0);
+			glEnableVertexAttribArray(1);
+            glVertexAttribPointer(1, 2, GL_FLOAT, 0, 0, 0);
         }
  
         // unbind buffers

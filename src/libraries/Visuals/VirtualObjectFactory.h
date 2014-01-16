@@ -62,6 +62,7 @@ std::vector<struct MyMesh> myMeshes;
 	 // ebenfalls aus dem fix
 std::map<std::string, GLuint> textureIdMap;
 
+VirtualObject* mCow;
 
 
 //---------------MEMBER FUNCTIONS--------------------
@@ -70,6 +71,7 @@ public:
 void set_float4(float f[4], float a, float b, float c, float d);
 void color4_to_float4(const aiColor4D *c, float f[4]);
 
+VirtualObject* createCow();
 
 VirtualObject* createVirtualObject();
 VirtualObject* createVirtualObject(std::string filename);
