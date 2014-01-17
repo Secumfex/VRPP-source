@@ -111,7 +111,6 @@ void Mesh::setUniformBlockIndex(GLuint ind){
 	}
 	void Mesh::setNumIndices (int indices){
 		mNumIndices = indices;
-		cout << indices << endl;
 	}
 	int Mesh::getNumIndices(){
 		return mNumIndices;

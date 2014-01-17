@@ -75,10 +75,12 @@ int main() {
     //KUUUUUUUUUUUUHHHH
     VirtualObjectFactory *voFac = new VirtualObjectFactory();
 
-    VirtualObject *cow = voFac->createVirtualObject(RESOURCES_PATH "/cube.blend");
+    VirtualObject *cube = voFac->createVirtualObject(RESOURCES_PATH "/cube.obj");
 
+    VirtualObject *cow = voFac->createVirtualObject(RESOURCES_PATH "/cow.obj");
 
     float angle = 0.0;
+
 
     while(!shutdown) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -101,7 +103,7 @@ int main() {
             glUniformMatrix4fv(uniformModelHandle, 1, GL_FALSE, value_ptr(modelMatrix));
 
             //compute view matrix
-            mat4 viewMatrix = lookAt(vec3(0.0f, 2.0f, 2.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
+            mat4 viewMatrix = lookAt(vec3(0.0f, 1.0f, 1.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
             glUniformMatrix4fv(uniformViewHandle, 1, GL_FALSE, value_ptr(viewMatrix));
 
             //compute projection matrix
@@ -114,7 +116,11 @@ int main() {
         }
 
         glBindVertexArray(cow->getGraphicsComponent()[0]->getMesh()->getVAO());
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+//        glDrawArrays(GL_TRIANGLES, 0, cow->getGraphicsComponent()[0]->getMesh()->getNumVertices());
+        glDrawElements(GL_TRIANGLES, cow->getGraphicsComponent()[0]->getMesh()->getNumIndices(), GL_UNSIGNED_INT, 0);
+
+        glBindVertexArray(cube->getGraphicsComponent()[0]->getMesh()->getVAO());
+        glDrawArrays(GL_TRIANGLES, 0, cube->getGraphicsComponent()[0]->getMesh()->getNumVertices());
 
         //show what's been drawn
         glfwSwapBuffers(window);

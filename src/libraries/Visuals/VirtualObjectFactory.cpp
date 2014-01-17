@@ -65,7 +65,8 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 		   aiProcess_GenUVCoords |
 		   aiProcess_FlipUVs|
 		   aiProcess_FlipUVs |
-		   aiProcess_PreTransformVertices);
+		   aiProcess_PreTransformVertices
+		   );
  
     // Melden, falls der Import nicht funktioniert hat
     if( !pScene)
@@ -99,9 +100,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 
 	 // struct MyMesh aMesh;
 
-	Mesh* aMesh=new Mesh();
-    Material* aMat=new Material();
-    GLuint buffer;
+
 
 
  
@@ -109,41 +108,49 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
     for (unsigned int n = 0; n < pScene->mNumMeshes; ++n)
     {
         const aiMesh* mesh = pScene->mMeshes[n];
- 
-        // create array with faces
-        // have to convert from Assimp format to array
 
-		//kein array?!
+        //Our Material and Mash to be filled
+        Mesh* aMesh=new Mesh();
+        Material* aMat=new Material();
+ 
+        GLuint buffer = 0;
         unsigned int *faceArray;
 
+        //Our Indices for our Vertexlist
+        vector<unsigned int> indices;
 
         faceArray = (unsigned int *)malloc(sizeof(unsigned int) * mesh->mNumFaces * 3);
         unsigned int faceIndex = 0;
  
-        unsigned int indices = 0;
         for (unsigned int t = 0; t < mesh->mNumFaces; ++t) {
-            indices += mesh->mFaces[t].mNumIndices;
-            cout << indices << endl;
+            unsigned int i=0;
+            for (i = 0; i < mesh->mFaces[t].mNumIndices; ++i) {
+            	indices.push_back(mesh->mFaces[t].mIndices[i]);
+			}
         }
-        cout << mesh->mNumFaces << "so viele faces"<< endl;
-        cout << mesh->mNumVertices << "so viele vertices"<< endl;
-        aMesh->setNumIndices(indices);
+
         aMesh->setNumVertices(mesh->mNumVertices);
+        aMesh->setNumIndices(mesh->mNumFaces * 3);
+
+
 		// hier wurde aMesh.numFaces in dem Struct erstellt (VirtualObjectFactory.h)
         aMesh->setNumFaces(pScene->mMeshes[n]->mNumFaces);
  
         // generate Vertex Array for mesh
-
-		GLuint temp;
+		GLuint temp = 0;
 		glGenVertexArrays(1,&temp);
-        glBindVertexArray(aMesh->getVAO());
+		glBindVertexArray(aMesh->getVAO());
 		aMesh->setVAO(temp);
+
+		cout<< buffer << " buffer" << endl;
 
         // buffer for faces
         glGenBuffers(1, &buffer);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * mesh->mNumFaces * 3, faceArray, GL_STATIC_DRAW);
- 
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * mesh->mNumFaces * 3, &indices[0], GL_STATIC_DRAW);
+
+        cout<< buffer << " buffer" << endl;
+
         // buffer for vertex positions
         if (mesh->HasPositions()) {
             glGenBuffers(1, &buffer);
@@ -153,8 +160,9 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 			//vertexLoc wurde hier ersetzt
             glEnableVertexAttribArray(0);
             glVertexAttribPointer(0, 3, GL_FLOAT, 0, 0, 0);
+            cout<< buffer << " buffer" << endl;
         }
- 
+
         // buffer for vertex normals
         if (mesh->HasNormals()) {
             glGenBuffers(1, &buffer);
@@ -163,8 +171,9 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
             // normalLoc wurde hier ersetzt
 			glEnableVertexAttribArray(2);
             glVertexAttribPointer(2, 3, GL_FLOAT, 0, 0, 0);
+            cout<< buffer << " buffer" << endl;
         }
- 
+
         // buffer for vertex texture coordinates
         if (mesh->HasTextureCoords(0)) {
             float *texCoords = (float *)malloc(sizeof(float)*2*mesh->mNumVertices);
@@ -180,8 +189,10 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
             //und texCoordLoc wurde dann auch ersetzt
 			glEnableVertexAttribArray(1);
             glVertexAttribPointer(1, 2, GL_FLOAT, 0, 0, 0);
+            cout<< buffer << " buffer" << endl;
         }
  
+
         // unbind buffers
         glBindVertexArray(0);
         glBindBuffer(GL_ARRAY_BUFFER,0);
@@ -253,29 +264,16 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
         aiGetMaterialFloatArray(mtl, AI_MATKEY_SHININESS, &shininess, &max);
         aMat->setShininess(shininess);
  
-
-		GLuint temp1;
-
-        glGenBuffers(1,&temp1);
-        glBindBuffer(GL_UNIFORM_BUFFER,aMesh->getUniformBlockIndex());
-        glBufferData(GL_UNIFORM_BUFFER, sizeof(aMat), (void *)(&aMat), GL_STATIC_DRAW);
-
-		aMesh->setUniformBlockIndex(temp1);
- 
-
 		//Mesh und Material wird gelesen und in neuer GraphicsComponent gespeichert
 		GraphicsComponent* gc=new GraphicsComponent(aMesh, aMat);
 
-	//GraphicsComponent(s) and virtualOBject.addGraphicComponent weitergeben.
 
 		virtualObject->addGraphicsComponent(gc);
 
-		// der vector wurde jetzt in VirtualObjectFactory.h static(!) erstellt. ist das in ordnung?
-       // vorerst rausgenommen
-		// myMeshes.push_back(aMesh);
+
+
     }
-	//SPÄTER: Wenn moeglich mehr als eine GraphicComponente aus einem Mesh lesen
-	// done
+
 	
 	return virtualObject;
 }
