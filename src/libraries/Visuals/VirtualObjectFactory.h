@@ -8,6 +8,9 @@
 #ifndef VIRTUALOBJECTFACTORY_H_
 #define VIRTUALOBJECTFACTORY_H_
 
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
 #include <Patterns/Singleton.h>
 #include <Visuals/VirtualObject.h>
 #include <vector>

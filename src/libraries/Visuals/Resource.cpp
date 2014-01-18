@@ -20,7 +20,10 @@
 	mTextures.push_back(tex);
 	mTextures.push_back(tex);
 	mTextures.push_back(tex);
-
+		mAmbColor = glm::vec3(1,1,1);
+		mDiffColor = glm::vec3(1,1,1);
+		mName = "";
+		mSpecCoeff = 0;
 }
 	Material :: ~Material(){}
 
@@ -43,7 +46,9 @@ void Material ::setShadowMap(Texture* tex){
 	mTextures[5] = tex;
 }
 
-void Material :: setName(std::string name){}
+void Material :: setName(std::string name){
+	mName = name;
+}
 void Material :: setAmbient(glm::vec4 ambient){}
 void Material :: setDiffuse(glm::vec4 diffuse){}
 void Material :: setSpecular(glm::vec4 specular){}
@@ -72,21 +77,20 @@ Texture* Material ::getShadowMap(){
 
 //---------------MESH SCOPE--------------------
 
-Mesh::Mesh() { }
-Mesh::~Mesh() { }
+	Mesh::Mesh() {
+	mNumFaces = 0;
+	mNumIndices = 0;
+	mVaoHandle = 0;
+	mNumVerts = 0;
+	}
+	Mesh::~Mesh() { }
 
-void Mesh :: setVAO(GLuint vao){
-mVaoHandle=vao;}
+	void Mesh :: setVAO(GLuint vao){
+		mVaoHandle=vao;}
 
-GLuint Mesh :: getVAO(){
+	GLuint Mesh :: getVAO(){
 	return mVaoHandle;
 }
-
-void Mesh::setUniformBlockIndex(GLuint ind){
-	uniformBlockIndex=ind;}
-
-	GLuint Mesh::getUniformBlockIndex(){
-		return uniformBlockIndex;}
 
 	void Mesh::setNumFaces (int faces){
 	mNumFaces=faces;}
@@ -95,23 +99,19 @@ void Mesh::setUniformBlockIndex(GLuint ind){
 		return mNumFaces;
 	}
 
-	void Mesh::setTexIndex(int index){
-	mTexIndex=index;}
-	
-	
-	int Mesh::getTexIndex(){
-	return mTexIndex;
-	}
 
 	void Mesh::setNumVertices (int verts){
 		mNumVerts = verts;
 	}
+
 	int Mesh::getNumVertices(){
 		return mNumVerts;
 	}
+
 	void Mesh::setNumIndices (int indices){
 		mNumIndices = indices;
 	}
+
 	int Mesh::getNumIndices(){
 		return mNumIndices;
 }

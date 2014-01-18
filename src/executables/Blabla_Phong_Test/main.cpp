@@ -79,6 +79,20 @@ int main() {
 
     VirtualObject *cow = voFac->createVirtualObject(RESOURCES_PATH "/cow.obj");
 
+    cout << cow->getGraphicsComponent()[0]->getMaterial()->getDiffuseMap()->getTexName() << endl;
+    cout << cube->getGraphicsComponent()[0]->getMaterial()->getDiffuseMap()->getTexName() << endl;
+    cout << cow->getGraphicsComponent()[0]->getMaterial()->getDiffuseMap()->getTextureHandle() << endl;
+    cout << cube->getGraphicsComponent()[0]->getMaterial()->getDiffuseMap()->getTextureHandle() << endl;
+
+        cout << cow->getGraphicsComponent()[0]->getMesh()->getNumVertices() << endl;
+        cout << cube->getGraphicsComponent()[0]->getMesh()->getNumVertices() << endl;
+
+        cout << "VAO " <<cow->getGraphicsComponent()[0]->getMesh()->getVAO() << endl;
+        cout << "VAO " <<cube->getGraphicsComponent()[0]->getMesh()->getVAO() << endl;
+
+        cout << "Indices " <<cow->getGraphicsComponent()[0]->getMesh()->getNumIndices() << endl;
+        cout << "Indices " <<cube->getGraphicsComponent()[0]->getMesh()->getNumIndices() << endl;
+
     float angle = 0.0;
 
 
@@ -89,7 +103,7 @@ int main() {
         //use the linked shaders from now on
         glUseProgram(programHandle);
 
-        {
+
             //====================== NEW ======================//
             //      we now use glm to do the matrix stuff      //
             //=================================================//
@@ -113,15 +127,14 @@ int main() {
             //compute normal matrix
             mat4 normalMatrix = transpose(inverse(viewMatrix * modelMatrix));
             glUniformMatrix4fv(uniformNormalHandle, 1, GL_FALSE, value_ptr(normalMatrix));
-        }
+
 
         glBindVertexArray(cow->getGraphicsComponent()[0]->getMesh()->getVAO());
-//        glDrawArrays(GL_TRIANGLES, 0, cow->getGraphicsComponent()[0]->getMesh()->getNumVertices());
         glDrawElements(GL_TRIANGLES, cow->getGraphicsComponent()[0]->getMesh()->getNumIndices(), GL_UNSIGNED_INT, 0);
 
-        glBindVertexArray(cube->getGraphicsComponent()[0]->getMesh()->getVAO());
-        glDrawArrays(GL_TRIANGLES, 0, cube->getGraphicsComponent()[0]->getMesh()->getNumVertices());
-
+//        glBindVertexArray(cube->getGraphicsComponent()[0]->getMesh()->getVAO());
+//        glDrawArrays(GL_TRIANGLES, 0, cube->getGraphicsComponent()[0]->getMesh()->getNumVertices());
+        cout<< "hitler ist scheisse" << endl;
         //show what's been drawn
         glfwSwapBuffers(window);
     }

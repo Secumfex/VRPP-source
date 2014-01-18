@@ -37,12 +37,11 @@ public:
 	Material ();
 	~Material ();
 
-	int texCount;
 
 
 	void setName(std::string name);
 	void setAmbient(glm::vec4 ambient);
-	void setDiffuse(glm::vec4 diffuse);   //erstes basteln
+	void setDiffuse(glm::vec4 diffuse);
 	void setSpecular(glm::vec4 specular);
 	void setEmission(glm::vec4 specular);
 	void setShininess(GLfloat term);
@@ -92,16 +91,8 @@ public:
 	void setVAO(GLuint vao);
 	GLuint getVAO();
 
-
-
-	void setUniformBlockIndex(GLuint ind);
-	GLuint getUniformBlockIndex();
-
 	void setNumFaces(int faces);
 	int getNumFaces();
-
-	void setTexIndex(int index);
-	int getTexIndex();
 
 	void setNumVertices(int verts);
 	int getNumVertices();
@@ -113,26 +104,12 @@ public:
 	//---------------MEMBER VARIABLES--------------------
 private:
 
-GLuint mVaoHandle;  //gleiche wie unten "vao",  also noch anpassen. (wurde jetzt gel�scht)
+		GLuint mVaoHandle;  //gleiche wie unten "vao",  also noch anpassen. (wurde jetzt gel�scht)
 
-
-
-// TODO set variables privat. setter&getter!
-
-//copy from VirtualObjectFactory.h  (struct)
-        GLuint uniformBlockIndex;
-       // float transform[16];
-       // int numIndices;
 		int mNumFaces;
 		int mNumVerts;
 		int mNumIndices;
-        //unsigned int type;
-       // Material mat;
-      //  unsigned int *indexes;
-        // float *positions;
-      //  float *normals;
-		int mTexIndex;
-//end of copy
+
 
 
 
