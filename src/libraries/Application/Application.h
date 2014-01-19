@@ -23,6 +23,10 @@ public:
 
 	Application(std::string label = "");
 
+	/*! @brief sets the label.
+	 *
+	 *	@param label is a string representing blabla detailed description pls
+	 */
 	void setLabel(std::string label);
 
 	std::string getLabel();
