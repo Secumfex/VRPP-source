@@ -13,9 +13,11 @@ GraphicsComponent::GraphicsComponent(Mesh* mesh, Material* material){
 	mMaterial = material;
 }
 void GraphicsComponent::setMesh(Mesh* mesh){
-
+	mMesh = mesh;
 }
-void GraphicsComponent::setMaterial(Material* material){}
+void GraphicsComponent::setMaterial(Material* material){
+	mMaterial = material;
+}
 
 Mesh* GraphicsComponent::getMesh(){
 	return mMesh;

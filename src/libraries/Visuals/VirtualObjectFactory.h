@@ -8,6 +8,9 @@
 #ifndef VIRTUALOBJECTFACTORY_H_
 #define VIRTUALOBJECTFACTORY_H_
 
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
 #include <Patterns/Singleton.h>
 #include <Visuals/VirtualObject.h>
 #include <vector>
@@ -56,6 +59,7 @@ std::vector<struct MyMesh> myMeshes;
 
 std::map<std::string, GLuint> textureIdMap;
 
+VirtualObject* mCow;
 
 
 
@@ -66,6 +70,7 @@ public:
 void set_float4(float f[4], float a, float b, float c, float d);
 void color4_to_float4(const aiColor4D *c, float f[4]);
 
+VirtualObject* createCow();
 
 
 VirtualObject* createVirtualObject();

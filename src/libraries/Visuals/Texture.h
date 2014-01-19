@@ -14,14 +14,17 @@
 #include <Visuals/TextureManager.h>
 #include <string>
 
-using namespace std;
+
 
 class Texture {
 	//-----------------MEMBER FUNCTIONS-----------------
 public:
 	/** Man macht die Textur direkt mit dem Dateinamen */
-	Texture(string filename = "checkers.jpg");
+	Texture(std::string filename);
+	Texture();
 	virtual ~Texture();
+	std::string getTexName();
+
 	/** Das Handle wird übergeben */
 	GLuint getTextureHandle();
 	/** Textur wird gebunden*/

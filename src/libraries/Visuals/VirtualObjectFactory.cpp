@@ -25,6 +25,13 @@ f[2] = c->b;
 f[3] = c->a;
 }
 
+VirtualObject* VirtualObjectFactory::createCow(){
+
+	if(mCow == NULL)
+		mCow = createVirtualObject(RESOURCES_PATH "/cow.obj");
+
+	return mCow;
+}
 
 
 VirtualObject* VirtualObjectFactory::createVirtualObject(){
@@ -37,6 +44,9 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 	VirtualObject* virtualObject = new VirtualObject();
 	
 	    Assimp::Importer Importer;
+	    TextureManager* texManager = TextureManager::getInstance();
+
+	    using namespace std;
 
 
 	//looking up the file
@@ -46,95 +56,79 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
         fin.close();
     }
     else{
-        printf("Couldn't open file: %s\n", filename.c_str());
-        printf("%s\n", Importer.GetErrorString());
-        return false;
+
+       cout<<"Couldn't open file: " << filename.c_str()<<endl;
+       cout<<Importer.GetErrorString()<<endl;
+       cout<<"Have a cow instead!"<<endl;
+
+       return createCow();
     }
  
-   const aiScene* pScene = Importer.ReadFile( filename, aiProcessPreset_TargetRealtime_Quality|aiProcess_Triangulate | aiProcess_GenSmoothNormals);
+   const aiScene* pScene = Importer.ReadFile( filename,
+		   aiProcess_Triangulate |
+		   aiProcess_GenSmoothNormals|
+		   aiProcess_GenUVCoords |
+		   aiProcess_FlipUVs|
+		   aiProcess_FlipUVs |
+		   aiProcess_PreTransformVertices
+		   );
  
     // Melden, falls der Import nicht funktioniert hat
     if( !pScene)
     {
-        printf("%s\n", Importer.GetErrorString());
-        
-		// richtig so?  bzw. was ausgeben bei misserfolg?
-		return false;
-
-
+        cout<<Importer.GetErrorString()<<endl;
+        return createCow();
     }
  
-    // Erfolg berichten. Jetzt können wir mit dem import arbeiten
-    printf("Import of scene %s succeeded.",filename.c_str());
 
+    cout<<"Import of scene " <<filename.c_str()<<" succeeded."<<endl;
 
- /*  für später evtl drin lassen?!
-
-
-    aiVector3D scene_min, scene_max, scene_center;
-    get_bounding_box(&scene_min, &scene_max);
-    float tmp;
-    tmp = scene_max.x-scene_min.x;
-    tmp = scene_max.y - scene_min.y > tmp?scene_max.y - scene_min.y:tmp;
-    tmp = scene_max.z - scene_min.z > tmp?scene_max.z - scene_min.z:tmp;
-    scaleFactor = 1.f / tmp;
- */
-
-
-
-	// assimp Mesh mit Materialien wird erstellt und befuellt
-
-
-
-	 // struct MyMesh aMesh;
-
-	Mesh* aMesh=new Mesh();
-    Material* aMat=new Material();
-    GLuint buffer;
-
-
-
- 
     // For each mesh
     for (unsigned int n = 0; n < pScene->mNumMeshes; ++n)
     {
         const aiMesh* mesh = pScene->mMeshes[n];
+
+        //Our Material and Mash to be filled
+        Mesh* aMesh = new Mesh();
+        Material* aMat = new Material();
  
-        // create array with faces
-        // have to convert from Assimp format to array
-
-		//kein array?!
-        unsigned int *faceArray;
+        GLuint buffer = 0;
 
 
-
-        faceArray = (unsigned int *)malloc(sizeof(unsigned int) * mesh->mNumFaces * 3);
-        unsigned int faceIndex = 0;
+        //Our Indices for our Vertexlist
+        vector<unsigned int> indices;
  
         for (unsigned int t = 0; t < mesh->mNumFaces; ++t) {
-            const aiFace* face = &mesh->mFaces[t];
- 
-            memcpy(&faceArray[faceIndex], face->mIndices,3 * sizeof(unsigned int));
-            faceIndex += 3;
+            unsigned int i=0;
+            for (i = 0; i < mesh->mFaces[t].mNumIndices; ++i) {
+            	indices.push_back(mesh->mFaces[t].mIndices[i]);
+			}
         }
+
+        cout << "Indices " << indices.size() << endl;
+
+        aMesh->setNumVertices(mesh->mNumVertices);
+        aMesh->setNumIndices(mesh->mNumFaces * 3);
+
 
 		// hier wurde aMesh.numFaces in dem Struct erstellt (VirtualObjectFactory.h)
 
         aMesh->setNumFaces(pScene->mMeshes[n]->mNumFaces);
  
         // generate Vertex Array for mesh
-
-		GLuint temp;
+		GLuint temp = 0;
 		glGenVertexArrays(1,&temp);
-        glBindVertexArray(aMesh->getVAO());
+		glBindVertexArray(aMesh->getVAO());
 		aMesh->setVAO(temp);
+		cout << "VAO " << temp << endl;
 
 
         // buffer for faces
         glGenBuffers(1, &buffer);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * mesh->mNumFaces * 3, faceArray, GL_STATIC_DRAW);
- 
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * mesh->mNumFaces * 3, &indices[0], GL_STATIC_DRAW);
+        cout << "Index Buffer " << buffer << endl;
+
         // buffer for vertex positions
         if (mesh->HasPositions()) {
             glGenBuffers(1, &buffer);
@@ -142,12 +136,14 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
             glBufferData(GL_ARRAY_BUFFER, sizeof(float)*3*mesh->mNumVertices, mesh->mVertices, GL_STATIC_DRAW);
 
 
+            cout << "Vertex Buffer " << buffer << endl;
+
 			//vertexLoc wurde hier ersetzt
             glEnableVertexAttribArray(0);
             glVertexAttribPointer(0, 3, GL_FLOAT, 0, 0, 0);
 
         }
- 
+
         // buffer for vertex normals
         if (mesh->HasNormals()) {
             glGenBuffers(1, &buffer);
@@ -155,29 +151,42 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
             glBufferData(GL_ARRAY_BUFFER, sizeof(float)*3*mesh->mNumVertices, mesh->mNormals, GL_STATIC_DRAW);
 
             // normalLoc wurde hier ersetzt
-			glEnableVertexAttribArray(1);
-            glVertexAttribPointer(1, 3, GL_FLOAT, 0, 0, 0);
+
+			glEnableVertexAttribArray(2);
+            glVertexAttribPointer(2, 3, GL_FLOAT, 0, 0, 0);
+
+            cout << "Normal Buffer " << buffer << endl;
 
         }
- 
+
         // buffer for vertex texture coordinates
-        if (mesh->HasTextureCoords(0)) {
-            float *texCoords = (float *)malloc(sizeof(float)*2*mesh->mNumVertices);
+
+            vector <float>texCoords;
+            if (mesh->HasTextureCoords(0))
             for (unsigned int k = 0; k < mesh->mNumVertices; ++k) {
- 
-                texCoords[k*2]   = mesh->mTextureCoords[0][k].x;
-                texCoords[k*2+1] = mesh->mTextureCoords[0][k].y;
- 
-            }
+
+                texCoords.push_back(mesh->mTextureCoords[0][k].x);
+                texCoords.push_back(mesh->mTextureCoords[0][k].y);
+
+            }else
+            	for(unsigned int k = 0; k < mesh->mNumVertices; k = k + 3){
+                    texCoords.push_back(0.0);
+                    texCoords.push_back(0.0);
+                    texCoords.push_back(1.0);
+                    texCoords.push_back(0.0);
+                    texCoords.push_back(0.0);
+                    texCoords.push_back(1.0);
+            	}
+
             glGenBuffers(1, &buffer);
             glBindBuffer(GL_ARRAY_BUFFER, buffer);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(float)*2*mesh->mNumVertices, texCoords, GL_STATIC_DRAW);
 
+            glBufferData(GL_ARRAY_BUFFER, sizeof(float)*2*mesh->mNumVertices, &texCoords[0], GL_STATIC_DRAW);
             //und texCoordLoc wurde dann auch ersetzt
-			glEnableVertexAttribArray(2);
-            glVertexAttribPointer(2, 2, GL_FLOAT, 0, 0, 0);
-        }
- 
+			glEnableVertexAttribArray(1);
+            glVertexAttribPointer(1, 2, GL_FLOAT, 0, 0, 0);
+            cout << "UV Buffer " << buffer << endl;
+
         // unbind buffers
         glBindVertexArray(0);
         glBindBuffer(GL_ARRAY_BUFFER,0);
@@ -185,19 +194,18 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
  
         // create material uniform buffer
         aiMaterial *mtl = pScene->mMaterials[mesh->mMaterialIndex];
- 
+
         aiString texPath;   //contains filename of texture
+        Texture *tex_temp = new Texture();
+
         if(AI_SUCCESS == mtl->GetTexture(aiTextureType_DIFFUSE, 0, &texPath)){
-                //bind texture
-                unsigned int texId = textureIdMap[texPath.data];
 
-                aMesh->setTexIndex(texId);
-                aMat->texCount = 1;
+//        		texManager->createTextureHandle(RESOURCES_PATH + string("/") + texPath.C_Str());
+        		tex_temp = new Texture(RESOURCES_PATH + string("/") + texPath.C_Str());
+        		cout << RESOURCES_PATH + string("/penis") + texPath.C_Str() << endl;
             }
-        else
-            aMat->texCount = 0;
 
-
+        aMat->setDiffuseMap(tex_temp);
 
         float c[4];
         set_float4(c, 0.8f, 0.8f, 0.8f, 1.0f);
@@ -206,7 +214,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
             color4_to_float4(&diffuse, c);
 
 
-		
+
 		//memcpy(aMat.diffuse, c, sizeof(c));
 		aMat->setDiffuse(glm::vec4(diffuse.r,diffuse.g, diffuse.b, diffuse.a));
 
@@ -240,9 +248,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
         if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_EMISSIVE, &emission))
             color4_to_float4(&emission, c);
 
-       
-		
-		
+
 		//memcpy(aMat.emissive, c, sizeof(c));
 		aMat->setEmission(glm::vec4(emission.r, emission.g, emission.b, emission.a));
 
@@ -253,38 +259,16 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
         unsigned int max;
         aiGetMaterialFloatArray(mtl, AI_MATKEY_SHININESS, &shininess, &max);
         aMat->setShininess(shininess);
- 
-
-		GLuint temp1;
-
-        glGenBuffers(1,&temp1);
-        glBindBuffer(GL_UNIFORM_BUFFER,aMesh->getUniformBlockIndex());
-        glBufferData(GL_UNIFORM_BUFFER, sizeof(aMat), (void *)(&aMat), GL_STATIC_DRAW);
-
-		aMesh->setUniformBlockIndex(temp1);
- 
 
 		//Mesh und Material wird gelesen und in neuer GraphicsComponent gespeichert
 		GraphicsComponent* gc=new GraphicsComponent(aMesh, aMat);
 
-	//GraphicsComponent(s) and virtualOBject.addGraphicComponent weitergeben.
-
 		virtualObject->addGraphicsComponent(gc);
-
-		// der vector wurde jetzt in VirtualObjectFactory.h static(!) erstellt. ist das in ordnung?
-       // vorerst rausgenommen
-		// myMeshes.push_back(aMesh);
     }
-	//SPÄTER: Wenn moeglich mehr als eine GraphicComponente aus einem Mesh lesen
-	// done
-	
+
 
 	return virtualObject;
 }
-
-
-
-
 
 VirtualObject* VirtualObjectFactory::createVirtualObject(vector<GraphicsComponent*> graphcomps){
 	VirtualObject* virtualObject = new VirtualObject();
@@ -293,12 +277,9 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(vector<GraphicsComponen
 	return virtualObject;
 }
 
-
-
-
 VirtualObject* VirtualObjectFactory::copyVirtualObject(VirtualObject vo){
 	VirtualObject* virtualObject = new VirtualObject();
 	//TODO: variable wird überfuehrt
 
-	return virtualObject;
+	return createCow();
 }
