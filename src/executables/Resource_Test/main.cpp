@@ -35,7 +35,7 @@ int main() {
 
     GLFWwindow* window = glfwCreateWindow(800, 800, "Compositing", NULL, NULL);
     glfwMakeContextCurrent(window);
-    glClearColor(1,1,1,0);
+    glClearColor(1,0,0,0);
 
     // get framebuffer size
     int width, height;
@@ -64,7 +64,7 @@ int main() {
 
     //der Order muss im System existieren
     	VirtualObjectFactory* voFactory = VirtualObjectFactory::getInstance();
-    	VirtualObject* cow = voFactory->createVirtualObject(RESOURCES_PATH "/testModels/cow.obj");
+    	VirtualObject* cow = voFactory->createVirtualObject(RESOURCES_PATH "/cow.obj");
 
     	using namespace glm;
 
@@ -83,6 +83,8 @@ int main() {
         glUseProgram(phongShaderHandle);
 
     	 while(!glfwWindowShouldClose(window)) {
+
+    		 std::cout <<"das programm kommt bis zur schleife" <<std::endl;
 
     	        glfwMakeContextCurrent(window);
 

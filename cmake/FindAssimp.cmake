@@ -36,14 +36,14 @@ ELSEIF (MSVC)
 
     foreach (CONFIGURATION_TYPE ${CMAKE_CONFIGURATION_TYPES})
         execute_process(COMMAND ${CMAKE_COMMAND}  -E  copy_if_different
-            ${DEPENDENCIES_PATH}/assimp/lib/x86/libassimp.dll
+            ${DEPENDENCIES_PATH}/assimp/bin/x86/Assimp32.dll
             ${PROJECT_BINARY_DIR}/bin/${CONFIGURATION_TYPE}/Assimp32.dll
         )
     endforeach()
 
 ELSEIF(APPLE)
 
-	FIND_PATH(ASSIMP_INCLUDE_PATH assimp.h
+	FIND_PATH(ASSIMP_INCLUDE_PATH assimp/ai_assert.h
 	${DEPENDENCIES_PATH}/assimp_OSX/include)
 	
 	FIND_LIBRARY( ASSIMP_LIBRARY
