@@ -4,7 +4,7 @@
 
 using namespace std;
 
-//TODO singelton pattern (?)
+//TODO singleton pattern (?)
 
 //gContactAddedCallback = collisionCallbackFunc;
 

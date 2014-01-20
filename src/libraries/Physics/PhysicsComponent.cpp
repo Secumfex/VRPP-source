@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+
 using namespace std;
 
 PhysicsComponent::PhysicsComponent(glm::mat4 modelMatrix) {
@@ -17,14 +18,14 @@ PhysicsComponent::PhysicsComponent(float radius, float x, float y, float z, floa
 
 	rigidBody = addSphere(radius,x,y,z,mass);
 	addCollisionFlag(4);
-	updateModelMatrix();
+	update();
 }
 
 PhysicsComponent::PhysicsComponent(float width, float height, float depth, float x, float y, float z, float mass) {
 
 	rigidBody = addBox(width,height,depth,x,y,z,mass);
 	addCollisionFlag(4);
-	updateModelMatrix();
+	update();
 }
 
 PhysicsComponent::~PhysicsComponent() {
@@ -93,8 +94,13 @@ void PhysicsComponent::addCollisionFlag(int flag) {
 	}
 }
 
-//TODO update methode per listener pattern
-void PhysicsComponent::updateModelMatrix() {
+void PhysicsComponent::initFrameListener(){
+	Listener* frameListener;
+	frameListener->setName("FRAMELISTENER");
+	frameListener->update();
+}
+
+void PhysicsComponent::update(){
 
 	btRigidBody* body = rigidBody;
 	if(body->getCollisionShape()->getShapeType() == SPHERE_SHAPE_PROXYTYPE){

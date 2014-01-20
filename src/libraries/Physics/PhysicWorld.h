@@ -8,8 +8,8 @@
  *
  *  @todo detailed description
  */
-class PhysicWorld : public Singelton<PhysicWorld> {
-friend class Singelton<PhysicWorld>
+class PhysicWorld : public Singleton<PhysicWorld> {
+friend class Singleton<PhysicWorld>;
 
 public:
 	btBroadphaseInterface* broadphase;							/**< specifies the broadphase algorithm */

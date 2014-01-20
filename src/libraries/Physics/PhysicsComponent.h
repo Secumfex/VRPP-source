@@ -3,10 +3,11 @@
 
 #include <glm/glm.hpp>
 #include "btBulletDynamicsCommon.h"
+#include "Patterns/Listener.h"
 
 using namespace std;
 
-class PhysicsComponent{
+class PhysicsComponent : public Listener{
 private:
 
 	glm::mat4 modelMatrix;	/**< 4x4Matrix */
@@ -49,11 +50,17 @@ public:
 	*/
 	void addCollisionFlag(int flag);
 
+	/** \brief initialize FrameListener
+	*
+	* updates the modelMatrix by the rigid body's behavior in the physics world.
+	*/
+	void initFrameListener();
+
 	/** \brief updates the model matrix
 	*
 	* updates the modelMatrix by the rigid body's behavior in the physics world.
 	*/
-	void updateModelMatrix();
+	void update();
 
 	/** \brief constructor
 	*
