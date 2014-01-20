@@ -14,6 +14,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
 
+#include "Visuals/RenderQueue.h"
+
 #include "Tools/ShaderTools.h"
 #include "Tools/TextureTools.h"
 #include "Tools/Geometry.h"
@@ -21,24 +23,28 @@
 using namespace glm;
 
 GLuint vbo;
-GLuint ibo;
+GLuint MVPHandle;
+GLuint shaderProgramHandle;
 
 mat4 projectionMatrix;
-GLuint MVPHandle;
-
-GLuint shaderProgramHandle;
 
 GLFWwindow* window; 
 
-mat4 getProjectionMatrix(){
+RenderQueue* rq;
+
+void RenderManager::setRenderQueue(){
+    
+}
+
+mat4 RenderManager::getProjectionMatrix(){
     return projectionMatrix;
 }
 
-void setProjectionMatrix(mat4 _projectionMatrix){
+void RenderManager::setProjectionMatrix(mat4 _projectionMatrix){
     projectionMatrix = _projectionMatrix;
 }
 
-void setDefaultProjectionMatrix(){
+void RenderManager::setDefaultProjectionMatrix(){
     projectionMatrix = perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
 }
 

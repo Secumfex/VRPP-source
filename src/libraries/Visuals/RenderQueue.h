@@ -12,6 +12,7 @@ class RenderQueue {
 public: 
 	RenderQueue(); //create and reset RQ
 	~RenderQueue();
+	RenderQueue* getRenderQueue(); 
 	void addVirtualObject(VirtualObject* vo); //add VO to VO list
 	void removeVirtualObject(VirtualObject* vo); //remove VO from list
 	VirtualObject* getNextObject(); //iterate list
