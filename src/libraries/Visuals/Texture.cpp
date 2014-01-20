@@ -10,7 +10,9 @@
 Texture::Texture(std::string filename) {
 	mFilename = filename;
 	mTexManager = TextureManager::getInstance();
-	mTexManager->createTextureHandle(filename);
+	bool loadSuccess = mTexManager->createTextureHandle(filename);
+	if(!loadSuccess)
+		mFilename = RESOURCES_PATH "/checkers.jpg";
 }
 Texture::Texture() {
 	mFilename = RESOURCES_PATH "/checkers.jpg";

@@ -49,8 +49,7 @@ int main() {
 
     //init opengl 3 extensions
     glewInit();
-    glClearColor(0, 0, 0, 1);
-
+    glClearColor(0, 0.5, 0, 1);
 
     //link shader programs
     GLuint programHandle = ShaderTools::makeShaderProgram(
@@ -68,8 +67,6 @@ int main() {
     //====================== NEW ======================//
     //        we generate two buffers at a time        //
     //=================================================//
-    GLuint vertexBufferHandles[2];
-    glGenBuffers(3, vertexBufferHandles);
 
 
     //KUUUUUUUUUUUUHHHH
@@ -84,14 +81,15 @@ int main() {
     cout << cow->getGraphicsComponent()[0]->getMaterial()->getDiffuseMap()->getTextureHandle() << endl;
     cout << cube->getGraphicsComponent()[0]->getMaterial()->getDiffuseMap()->getTextureHandle() << endl;
 
-        cout << cow->getGraphicsComponent()[0]->getMesh()->getNumVertices() << endl;
-        cout << cube->getGraphicsComponent()[0]->getMesh()->getNumVertices() << endl;
+        cout <<"Vertices " << cow->getGraphicsComponent()[0]->getMesh()->getNumVertices() << endl;
+        cout <<"Vertices " << cube->getGraphicsComponent()[0]->getMesh()->getNumVertices() << endl;
 
         cout << "VAO " <<cow->getGraphicsComponent()[0]->getMesh()->getVAO() << endl;
         cout << "VAO " <<cube->getGraphicsComponent()[0]->getMesh()->getVAO() << endl;
 
         cout << "Indices " <<cow->getGraphicsComponent()[0]->getMesh()->getNumIndices() << endl;
         cout << "Indices " <<cube->getGraphicsComponent()[0]->getMesh()->getNumIndices() << endl;
+
 
     float angle = 0.0;
 
@@ -117,7 +115,7 @@ int main() {
             glUniformMatrix4fv(uniformModelHandle, 1, GL_FALSE, value_ptr(modelMatrix));
 
             //compute view matrix
-            mat4 viewMatrix = lookAt(vec3(0.0f, 1.0f, 1.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
+            mat4 viewMatrix = lookAt(vec3(0.0f, 3.0f, 3.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
             glUniformMatrix4fv(uniformViewHandle, 1, GL_FALSE, value_ptr(viewMatrix));
 
             //compute projection matrix
@@ -129,12 +127,13 @@ int main() {
             glUniformMatrix4fv(uniformNormalHandle, 1, GL_FALSE, value_ptr(normalMatrix));
 
 
-        glBindVertexArray(cow->getGraphicsComponent()[0]->getMesh()->getVAO());
-        glDrawElements(GL_TRIANGLES, cow->getGraphicsComponent()[0]->getMesh()->getNumIndices(), GL_UNSIGNED_INT, 0);
+            glBindVertexArray(cow->getGraphicsComponent()[0]->getMesh()->getVAO());
+            glDrawElements(GL_TRIANGLES, cow->getGraphicsComponent()[0]->getMesh()->getNumIndices(), GL_UNSIGNED_INT, 0);
+//            glDrawArrays(GL_TRIANGLES, 0, 2900);
+
 
 //        glBindVertexArray(cube->getGraphicsComponent()[0]->getMesh()->getVAO());
 //        glDrawArrays(GL_TRIANGLES, 0, cube->getGraphicsComponent()[0]->getMesh()->getNumVertices());
-        cout<< "hitler ist scheisse" << endl;
         //show what's been drawn
         glfwSwapBuffers(window);
     }

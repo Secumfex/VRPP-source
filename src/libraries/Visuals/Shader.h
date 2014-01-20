@@ -24,10 +24,15 @@ public:
 	Shader(string vertexShader, string fragmentShader);
 	virtual ~Shader();
 	void setShaderName(string name);
-	virtual void uploadUniforms(GraphicsComponent* graphcomp);
-	virtual void uploadUniforms(glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
+	void uploadUniforms(GraphicsComponent* graphcomp);
+	void uploadUniforms(glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
 	std::string getShaderName();
 	GLuint getProgramHandle();
+
+	void uploadUniform(glm::mat4 uniformMatrix, string uniformName);
+	void uploadUniform(glm::vec3 uniformVector, string uniformName);
+	void uploadUniform(GLfloat uniformVariable, string uniformName);
+	void uploadUniform(GLint uniformVariable, string uniformName);
 
 	void uploadModelMatrix(glm::mat4 modelMatrix);
 	void uploadViewMatrix(glm::mat4 viewMatrix);

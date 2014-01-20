@@ -9,8 +9,8 @@
 
 Shader::Shader(string vertexShader, string fragmentShader) {
 
-	string vertexshader = SHADERS_PATH +  vertexShader ;
-	string fragmentshader = SHADERS_PATH + fragmentShader ;
+	string vertexshader = vertexShader ;
+	string fragmentshader = fragmentShader ;
 
 	makeShader(vertexShader, fragmentShader);
 }
@@ -35,6 +35,28 @@ GLuint Shader::getProgramHandle(){
 }
 
 void Shader :: uploadUniforms(GraphicsComponent* graphcomp){
+}
+
+void Shader :: uploadUniform(glm::mat4 uniformMatrix, string uniformName){
+	GLuint modelHandle = glGetUniformLocation(mProgramHandle, uniformName.c_str());
+	if(modelHandle != -1)
+		glUniformMatrix4fv(modelHandle, 1, GL_FALSE, glm::value_ptr(uniformMatrix));
+}
+
+void Shader :: uploadUniform(glm::vec3 uniformVector, string uniformName){
+	GLuint modelHandle = glGetUniformLocation(mProgramHandle, uniformName.c_str());
+	if(modelHandle != -1)
+	glUniform3f(modelHandle, uniformVector.x, uniformVector.y, uniformVector.z);
+}
+void Shader :: uploadUniform(GLfloat uniformVariable, string uniformName){
+	GLuint modelHandle = glGetUniformLocation(mProgramHandle, uniformName.c_str());
+	if(modelHandle != -1)
+	glUniform1f(modelHandle, uniformVariable);
+}
+void Shader :: uploadUniform(GLint uniformVariable, string uniformName){
+	GLuint modelHandle = glGetUniformLocation(mProgramHandle, uniformName.c_str());
+	if(modelHandle != -1)
+	glUniform1i(modelHandle, uniformVariable);
 }
 
 void Shader :: uploadModelMatrix(glm::mat4 modelMatrix){
