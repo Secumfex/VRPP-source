@@ -31,5 +31,5 @@ void main() {
         specular * vec3(1, 1, 1) + 
         ambient  * vec3(1, 0.5, 0.5), 
         1);
-      // fragmentColor = vec4(1,0,0,1);
+       //fragmentColor = vec4(1,0,0,1);
 }

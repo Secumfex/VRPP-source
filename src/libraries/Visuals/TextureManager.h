@@ -22,7 +22,7 @@ public:
 	friend class Singleton<TextureManager>;
 	TextureManager();
 	virtual ~TextureManager();
-	void createTextureHandle(string filename);
+	bool createTextureHandle(string filename);
 	GLuint getTextureHandle(string filename);
 	map<string, GLuint> mTextureHandles;
 

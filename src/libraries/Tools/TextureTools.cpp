@@ -7,6 +7,10 @@ namespace TextureTools {
         int width, height, bytesPerPixel;
         unsigned char *data = stbi_load(fileName.c_str(), &width, &height, &bytesPerPixel, 0);
 
+        if(data == NULL){
+        	std::cout << "ERROR: Unable to open image "  << fileName << std::endl;
+        	  return -1;}
+
         //create new texture
         GLuint textureHandle;
         glGenTextures(1, &textureHandle);
