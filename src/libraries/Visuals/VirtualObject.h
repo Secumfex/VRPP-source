@@ -7,11 +7,15 @@
 #include <vector>
 
 class VirtualObject{
+
+	private:
+
+	glm::mat4 modelMatrix;							/**< 4x4Matrix */
+	int id;											/**< identification number */
+	vector<GraphicsComponent*> mGraphComponent;
+
 public:
 
-	glm::mat4 modelMatrix;	/**< 4x4Matrix */
-
-	int id;					/**< identification number */
 
 	PhysicsComponent *physicsComponent; 			/**< pointer to the physics component of the VO */
 	vector<GraphicsComponent> graphicsComponent;	/**< pointer to the graphics Component of the VO*/

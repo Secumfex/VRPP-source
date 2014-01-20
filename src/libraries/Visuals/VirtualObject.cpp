@@ -16,7 +16,7 @@ VirtualObject::VirtualObject() {
 	id = lastID + 1;
 	lastID = id;
 	//graphicsComponent = new GraphicsComponent();
-	//physicsComponent = new PhysicsComponent(modelMatrix);
+	physicsComponent = new PhysicsComponent(modelMatrix);
 
 	float radius,x,y,z,mass = 1.0; 	//aus graphiccomponent bkommen (?) 1.0 zum test
 
@@ -43,9 +43,9 @@ void VirtualObject::updateModelMatrix() {
 }
 
 vector<GraphicsComponent*> VirtualObject:: getGraphicsComponent(){
-        return mGraphComponent;
+	return mGraphComponent;
 }
 
 void VirtualObject:: addGraphicsComponent(GraphicsComponent *graphcomp){
-        //TODO: GraphicComponente wird an den zustaendigen Vector übergeben
+	mGraphComponent.push_back(graphcomp);
 }
