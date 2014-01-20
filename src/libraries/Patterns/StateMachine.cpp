@@ -62,3 +62,39 @@ StateMachine::~StateMachine(){}
 StateMachine::StateMachine(){
 	currentState = 0;
 }
+
+void StateMachine::forbidStateTransitionFromTo(State* 	 from, State*  	   to){
+	stateTransitionConstraints.remove(std::pair<State*,State* >(from,to));
+}
+void StateMachine::forbidStateTransitionFromTo(std::string from, std::string to){
+	for (std::list<std::pair<State*, State*> >::iterator it = stateTransitionConstraints.begin(); it != stateTransitionConstraints.end(); it++){
+		if ((*it).first->getName() == from && (*it).second->getName() == to){
+			stateTransitionConstraints.erase(it);
+		}
+	}
+} 
+void StateMachine::allowStateTransitionFromTo (State* 	 from, State*  	   to){
+	stateTransitionConstraints.push_back(std::pair<State*,State*>(from , to));
+}
+void StateMachine::allowStateTransitionFromTo (std::string from, std::string to) {
+	if (states.find(from) != states.end() && states.find(to) != states.end() ){
+		stateTransitionConstraints.push_back(std::pair<State*, State*> ( states[from], states[to]));
+	}
+}
+void StateMachine::forbidAllStateTransitionsTo(State* to){
+	 for (std::list<std::pair<State*, State*> >::iterator it = stateTransitionConstraints.begin(); it != stateTransitionConstraints.end(); it++){
+		if ((*it).second->getName() == to->getName()){
+			stateTransitionConstraints.erase(it);
+		}
+		
+	}
+}		
+void StateMachine::forbidAllStateTransitionsFrom(State* from){
+	 for (std::list<std::pair<State*, State*> >::iterator it = stateTransitionConstraints.begin(); it != stateTransitionConstraints.end(); it++){
+		if ((*it).first->getName() == from->getName()){
+			stateTransitionConstraints.erase(it);
+		}
+		
+	}
+
+}
