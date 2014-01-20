@@ -11,6 +11,12 @@ RenderQueue::~RenderQueue(){
 	
 }
 
+/** \brief returns a pointer to this RenderQueue
+*/
+RenderQueue* RenderQueue::getRenderQueue(){
+	return this;
+}
+
 /** \brief adds a VO to the member list of VOs
 */
 void RenderQueue::addVirtualObject(VirtualObject* vo){

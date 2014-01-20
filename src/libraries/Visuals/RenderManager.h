@@ -12,7 +12,8 @@ protected:
 	RenderManager();
 public:
     ~RenderManager ();
-	RenderQueue renderQueue;
+	//RenderQueue renderQueue;
+	void setRenderQueue();
 	void libInit();
 	void manageShaderProgram();
 	void renderLoop();
