@@ -21,24 +21,25 @@
 using namespace glm;
 
 GLuint vbo;
-GLuint ibo;
+//GLuint ibo;
 
 mat4 projectionMatrix;
+
 GLuint MVPHandle;
 
 GLuint shaderProgramHandle;
 
 GLFWwindow* window; 
 
-mat4 getProjectionMatrix(){
+mat4 RenderManager::getProjectionMatrix(){
     return projectionMatrix;
 }
 
-void setProjectionMatrix(mat4 _projectionMatrix){
+void RenderManager::setProjectionMatrix(mat4 _projectionMatrix){
     projectionMatrix = _projectionMatrix;
 }
 
-void setDefaultProjectionMatrix(){
+void RenderManager::setDefaultProjectionMatrix(){
     projectionMatrix = perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
 }
 

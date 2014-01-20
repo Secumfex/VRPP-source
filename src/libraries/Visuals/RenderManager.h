@@ -13,12 +13,13 @@ protected:
 public:
     ~RenderManager ();
 	RenderQueue renderQueue;
-	IOManager iOManager;
 	void libInit();
 	void manageShaderProgram();
 	void renderLoop();
-
 	void attachFrameListener(Listener* listener);	//attach a listener that will be called at the beginning of a frameloop
+	glm::mat4 getProjectionMatrix();
+	void setProjectionMatrix(glm::mat4 _projectionMatrix);
+	void setDefaultProjectionMatrix();
 };
 
 #endif /* RENDERMANAGER_H */
