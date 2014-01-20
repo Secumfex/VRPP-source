@@ -32,8 +32,13 @@ public:
 	void forbidStateTransitionFromTo(std::string from, std::string to); //!< removes pair <FROM, TO> from stateTransitionConstraints if existing
 	void allowStateTransitionFromTo (State* 	 from, State*  	   to); //!< adds pair <FROM, TO> to stateTransitionConstraints if not existing
 	void allowStateTransitionFromTo (std::string from, std::string to); //!< adds pair <FROM, TO> to stateTransitionConstraints if not existing
+
 	void forbidAllStateTransitionsTo(State* to);		//!< removes all pairs < ... , TO> from stateTransitionConstraints
 	void forbidAllStateTransitionsFrom(State* from);    //!< removes all pairs <FROM, ...> from stateTransitionConstraints
-};
+	void allowAllStateTransitionsTo (State*  	   to); //!< add pairs <FROM, TO> for every existing state
+
+	bool checkStateTransitionConstraint(std::string to); //!< checks whether it is allowed to transition to comitted State from active state
+	bool checkStateTransitionConstraint(State* to); //!< checks whether it is allowed to transition to comitted State from active state
+ };
 
 #endif /* STATEMACHINE_H_ */
