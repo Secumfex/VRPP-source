@@ -1,21 +1,20 @@
+	/*
+	 * @author Sanèr, Oliver
+	 */
+
 #include "IOManager.h"
 
 IOManager::IOManager(){
-	/* STATE CHECK */
-	//TODO implement state check and change
+	/* @todo	implement state check and change
+	 * 			discuss if implement here or get from Rendermanager -> initialFoV = 45.0f;
+	 */
 	isMenuState = false;
 	camObject = new Camera();
-
-	//TODO discuss if implement here or get from Rendermanager
-	//initialFoV = 45.0f;
-
 	speed_walk = 3.0f; // 3 units / second
 	speed_run = 6.0f;
-
 	mouseSpeed = 0.005f;
-
-	// Get mouse position
 	glfwGetCursorPos(window, &xPos, &yPos);
+	// Get mouse position
 }
 
 /*
