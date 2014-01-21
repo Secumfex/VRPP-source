@@ -16,15 +16,22 @@ public:
 	FrameBufferObject();
 	virtual ~FrameBufferObject();
 
+	void createPositionTexture();
+	void createNormalTexture();
+	void createColorTexture();
+	void createDepthTexture();
 
-private:
-	void createTriangle();
+	GLuint getFboHandle();
+	GLuint getPositionTextureHandle();
+	GLuint getNormalTextureHandle();
+	GLuint getColorTextureHandle();
+	GLuint getDepthTextureHandle();
+
+protected:
 
 	int mHeight, mWidth;
 
     GLuint mFramebufferHandle;
-
-    GLuint screenFillVertexArrayHandle;
 
     GLuint mPositionTextureHandle;
     GLuint mNormalTextureHandle;

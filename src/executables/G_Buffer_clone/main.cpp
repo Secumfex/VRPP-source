@@ -15,7 +15,7 @@
 #include "Tools/Geometry.h"
 
 #include "Visuals/Shader.h"
-
+#include "Visuals/FrameBufferObject.h"
 #include "Visuals/VirtualObjectFactory.h"
 
 
@@ -115,6 +115,12 @@ VirtualObject *cube = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj
     //         Create a Framebuffer Object        //
     //--------------------------------------------//
     
+	FrameBufferObject *fbo = new FrameBufferObject();
+
+	fbo->createPositionTexture();
+	fbo->createNormalTexture();
+	fbo->createColorTexture();
+
     GLuint framebufferHandle;
     GLuint positionTextureHandle;
     GLuint normalTextureHandle;
