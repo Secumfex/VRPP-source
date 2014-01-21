@@ -2,13 +2,14 @@
 #include <string.h>
 
 #include "Patterns/Singleton.h"
-#include "Patterns/ConcreteListener.h"
-#include "Patterns/ConcreteSubject.h"
+#include "ConcreteListener.h"
+#include "ConcreteSubject.h"
 #include "Application/Application.h"
 #include "Visuals/RenderManager.h"
 
 #include <typeinfo>
 
+Application* app;
 
 void testListenerSubjectPattern(){
 	//create a subject
@@ -43,7 +44,7 @@ void testListenerSubjectPattern(){
 
 void testSingletonPattern(){
 	//einzige Application-Instanz ansprechen und Status ändern
-	Application* app = Application::getInstance();
+	app = Application::getInstance();
 
 	std::cout<<"- - - - - - - - - - - - - - -"<<std::endl;
 
@@ -59,37 +60,7 @@ void testSingletonPattern(){
 	ConcreteSingleton::getInstance()->helloWorld();
 }
 
-void testContextStatePattern(){
-	//get the current Application State
-	Application* app = Application::getInstance();
-	State* state = app->getState();
-	if ( typeid ( *state ) == typeid( IdleState ) ) {	//it should be Idle State which is the initial Application State
-		std::cout<<" The Application-State is " <<typeid(*state).name()<<" : Idle-State."<<std::endl;
-	}else{										//or something odd happend along the way
-		std::cout<<" The Application-State is weird to say the least..."<<std::endl;
-	}
 
-	//change the Applications State to VR-State
-	std::cout<<" Trying to change Application State to VRState...  "<<std::endl;
-	app->setState(new VRState());				//Try to change the state.
-	state = app->getState();					//Get the new Application State
-	if ( typeid ( *state ) == typeid ( VRState ) ) {		//it should be VRState, or it hasn't been changed
-		std::cout<<" The new Application-State is  "<<typeid(*state).name() <<" : VR-State."<<std::endl;
-	}else{
-		std::cout<<" The Application-State has not been changed."<<std::endl;
-	}
-
-	//test whether you can change the Application's State from VR-State
-	std::cout<<" Trying to change Application State to IdleState...  "<<std::endl;
-	app->setState(new IdleState());				//Try to change the state back to Idle
-	state = app->getState();
-	if ( typeid ( *state ) == typeid ( VRState ) ) {		//it should be VRState, or it has been changed
-		std::cout<<" The new Application-State is  :"<<typeid(*state).name() <<" : VR-State "<<std::endl;	//good
-	}else{
-		std::cout<<" The new Application-State is  :"<<typeid(*state).name() <<" : Idle-State, which wasn't supposed to happen"<<std::endl;	//bad
-	}
-
-}
 
 //Test Executable, die das Singleton Pattern und Listener / Subject Pattern testet 
 int main() {
@@ -108,7 +79,6 @@ int main() {
 
 	////////////////////////////////////////////////////////////////////////////////
 	/*Context / State Pattern - Test*/
-	testContextStatePattern();
 	
 	std::cout<<"_____________________________"<<std::endl;
 

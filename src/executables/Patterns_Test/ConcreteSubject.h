@@ -7,7 +7,7 @@
 
 #ifndef CONCRETESUBJECT_H_
 #define CONCRETESUBJECT_H_
-#include "Subject.h"
+#include <Patterns/Subject.h>
 #include <string>
 
 using namespace std;

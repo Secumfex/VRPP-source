@@ -1,11 +1,20 @@
 #ifndef STATE_H
 #define STATE_H
 
-class Context;
+#include <string>
+
 class State{	//a state of a context
-friend class Context;
+
 protected:
-	virtual void setState(State* state, Context* context);		//Depending on the State-Transistion-Model only some state changes are accepted
+
+private:
+	std::string name;
+
+public:
+	State(std::string name = "");
+	std::string getName();
+	void setName(std::string name);
+	virtual void activate();
 };
 
 #endif
