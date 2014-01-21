@@ -108,7 +108,7 @@ int main() {
     //--------------------------------------------//
     
 VirtualObjectFactory *voFactory = VirtualObjectFactory::getInstance();
-VirtualObject *cube = voFactory->createVirtualObject(RESOURCES_PATH "/cow.obj");
+VirtualObject *cube = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj");
     
     
     //--------------------------------------------//
@@ -195,10 +195,10 @@ VirtualObject *cube = voFactory->createVirtualObject(RESOURCES_PATH "/cow.obj");
         
         
         glEnable(GL_DEPTH_TEST);
-        glBindVertexArray(cube->getGraphicsComponent()[0]->getMesh()->getVAO());
+
         glBindTexture(GL_TEXTURE_2D, cube->getGraphicsComponent()[0]->getMaterial()->getDiffuseMap()->getTextureHandle());
         
-        glUseProgram(gbufferShader->getProgramHandle());
+        gbufferShader->useProgram();
         
         glViewport(0, 0, width, (height/4)*3);
         
@@ -206,13 +206,14 @@ VirtualObject *cube = voFactory->createVirtualObject(RESOURCES_PATH "/cow.obj");
 
         gbufferShader->uploadUniform(viewMatrix,"uniformView");
         gbufferShader->uploadUniform(projectionMatrix,"uniformProjection");
-
         gbufferShader->uploadUniform(modelCube_1,"uniformModel");
-        glDrawElements(GL_TRIANGLES, cube->getGraphicsComponent()[0]->getMesh()->getNumIndices(), GL_UNSIGNED_INT, 0);
+
+        gbufferShader->render(cube->getGraphicsComponent()[0]);
         
         
         gbufferShader->uploadUniform(modelCube_2,"uniformModel");
-        glDrawElements(GL_TRIANGLES, cube->getGraphicsComponent()[0]->getMesh()->getNumIndices(), GL_UNSIGNED_INT, 0);
+
+        gbufferShader->render(cube->getGraphicsComponent()[0]);
         
         
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -228,7 +229,7 @@ VirtualObject *cube = voFactory->createVirtualObject(RESOURCES_PATH "/cow.obj");
         glDisable(GL_DEPTH_TEST);
         glBindVertexArray(screenFillVertexArrayHandle);
         
-        glUseProgram(finalCompShader->getProgramHandle());
+        finalCompShader->useProgram();
         
 
 	    finalCompShader->uploadUniform(blurStrength,"blurStrength");
@@ -269,7 +270,7 @@ VirtualObject *cube = voFactory->createVirtualObject(RESOURCES_PATH "/cow.obj");
         glDisable(GL_DEPTH_TEST);
         
         glBindVertexArray(screenFillVertexArrayHandle);
-        glUseProgram(simpeTexShader->getProgramHandle());
+        simpeTexShader->useProgram();
         
         glViewport(0, (height/4)*3, width/3, height/4);
         glBindTexture(GL_TEXTURE_2D, positionTextureHandle);

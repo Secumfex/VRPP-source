@@ -59,41 +59,11 @@ void Shader :: uploadUniform(GLint uniformVariable, string uniformName){
 	glUniform1i(modelHandle, uniformVariable);
 }
 
-void Shader :: uploadModelMatrix(glm::mat4 modelMatrix){
-	GLuint modelHandle = glGetUniformLocation(mProgramHandle, "uniformModel");
-	if(modelHandle != -1)
-		glUniformMatrix4fv(modelHandle, 1, GL_FALSE, glm::value_ptr(modelMatrix));
-
-	modelHandle = glGetUniformLocation(mProgramHandle, "uniformModel");
-		if(modelHandle != -1)
-			glUniformMatrix4fv(modelHandle, 1, GL_FALSE, glm::value_ptr(modelMatrix));
+void Shader ::useProgram(){
+	glUseProgram(mProgramHandle);
 }
 
-void Shader :: uploadViewMatrix (glm::mat4 viewMatrix){
-	GLuint viewHandle = glGetUniformLocation(mProgramHandle, "viewModel");
-	if(viewHandle != -1)
-		glUniformMatrix4fv(viewHandle, 1, GL_FALSE, glm::value_ptr(viewMatrix));
-
-	viewHandle = glGetUniformLocation(mProgramHandle, "uniformView");
-		if(viewHandle != -1)
-	glUniformMatrix4fv(viewHandle, 1, GL_FALSE, glm::value_ptr(viewMatrix));
+void Shader ::render(GraphicsComponent *gc){
+	glBindVertexArray(gc->getMesh()->getVAO());
+	glDrawElements(GL_TRIANGLES, gc->getMesh()->getNumIndices(), GL_UNSIGNED_INT, 0);
 }
-
-void Shader :: uploadProjectionMatrix (glm::mat4 projectionMatrix){
-	GLuint projectionHandle = glGetUniformLocation(mProgramHandle, "projectionModel");
-	if(projectionHandle != -1)
-		glUniformMatrix4fv(projectionHandle, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-
-	projectionHandle = glGetUniformLocation(mProgramHandle, "uniformProjection");
-		if(projectionHandle != -1)
-			glUniformMatrix4fv(projectionHandle, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-}
-
-void Shader :: uploadInverseMatrix (glm::mat4 modelMatrix, glm::mat4 viewMatrix){
-	GLuint inverseHandle = glGetUniformLocation(mProgramHandle, "inverseModel");
-	if(inverseHandle != -1){
-		glm::mat4 inverseMatrix = glm::transpose(glm::inverse(modelMatrix * viewMatrix));
-		glUniformMatrix4fv(inverseHandle, 1, GL_FALSE, glm::value_ptr(inverseMatrix));
-	}
-}
-

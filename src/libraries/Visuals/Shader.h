@@ -34,12 +34,9 @@ public:
 	void uploadUniform(GLfloat uniformVariable, string uniformName);
 	void uploadUniform(GLint uniformVariable, string uniformName);
 
-	void uploadModelMatrix(glm::mat4 modelMatrix);
-	void uploadViewMatrix(glm::mat4 viewMatrix);
-	void uploadProjectionMatrix(glm::mat4 projectionMatrix);
-	void uploadInverseMatrix (glm::mat4 modelMatrix, glm::mat4 viewMatrix);
+	void useProgram();
 
-	static void setLights(vector<glm:: vec3> sources, vector<glm:: vec3> colors);
+	void render(GraphicsComponent *gc);
 
 private:
 	void makeShader(string vert, string frag);
