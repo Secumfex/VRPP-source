@@ -26,3 +26,22 @@ Material* GraphicsComponent::getMaterial(){
 	return mMaterial;
 }
 
+void GraphicsComponent:: setEmission(bool value){
+	mEmission = value;
+}
+void GraphicsComponent:: setShadow(bool value){
+	mShadow = value;
+}
+void GraphicsComponent::setTransparency(bool value){
+	mTranparency = value;
+}
+
+bool GraphicsComponent:: hasEmission(){
+	return mEmission;
+}
+bool GraphicsComponent:: hasShadow(){
+	return mShadow;
+}
+bool GraphicsComponent:: hasTransparency(){
+	return mTranparency;
+}

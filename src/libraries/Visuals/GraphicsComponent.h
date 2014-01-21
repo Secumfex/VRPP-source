@@ -10,6 +10,14 @@ public:
 	Mesh* getMesh();
 	Material* getMaterial();
 
+	void setEmission(bool value);
+	void setShadow(bool value);
+	void setTransparency(bool value);
+
+	bool hasEmission();
+	bool hasShadow();
+	bool hasTransparency();
+
 
 	GraphicsComponent();
 	GraphicsComponent(Mesh* mesh, Material* material);
@@ -17,6 +25,10 @@ public:
 private:
 	Mesh *mMesh;
 	Material *mMaterial;
+
+	bool mEmission;
+	bool mShadow;
+	bool mTranparency;
 
 
 	};
