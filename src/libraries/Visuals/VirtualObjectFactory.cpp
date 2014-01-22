@@ -88,6 +88,8 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
     {
         const aiMesh* mesh = pScene->mMeshes[n];
 
+        mesh->mVertices;
+
         //Our Material and Mash to be filled
         Mesh* aMesh = new Mesh();
         Material* aMat = new Material();

@@ -108,6 +108,8 @@ int main() {
     //--------------------------------------------//
     
 VirtualObjectFactory *voFactory = VirtualObjectFactory::getInstance();
+
+VirtualObject *boat = voFactory->createVirtualObject(RESOURCES_PATH "/trashy/rusty.dae");
 VirtualObject *cube = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj");
     
     
@@ -117,18 +119,8 @@ VirtualObject *cube = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj
     
 	FrameBufferObject *fbo = new FrameBufferObject();
 
-
-//	fbo->createNormalTexture();
-//	fbo->createColorTexture();
-//	fbo->createDepthTexture();
-
-//    GLuint framebufferHandle;
-//    GLuint positionTextureHandle;
-//    GLuint normalTextureHandle;
-//    GLuint colorTextureHandle;
     GLuint depthbufferHandle;
     {
-//        glGenFramebuffers(1, &framebufferHandle);
         fbo->bindFBO();
 
 
@@ -183,8 +175,8 @@ VirtualObject *cube = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj
         
         glEnable(GL_DEPTH_TEST);
 
-        cube->getGraphicsComponent()[0]->getMaterial()->getDiffuseMap()->bindTexture();
         
+
         gbufferShader->useProgram();
         
         glViewport(0, 0, width, (height/4)*3);
@@ -195,12 +187,14 @@ VirtualObject *cube = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj
         gbufferShader->uploadUniform(projectionMatrix,"uniformProjection");
         gbufferShader->uploadUniform(modelCube_1,"uniformModel");
 
+        cube->getGraphicsComponent()[0]->getMaterial()->getDiffuseMap()->bindTexture();
         gbufferShader->render(cube->getGraphicsComponent()[0]);
         
         
         gbufferShader->uploadUniform(modelCube_2,"uniformModel");
 
-        gbufferShader->render(cube->getGraphicsComponent()[0]);
+        boat->getGraphicsComponent()[0]->getMaterial()->getDiffuseMap()->bindTexture();
+        gbufferShader->render(boat->getGraphicsComponent()[0]);
         
         
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
