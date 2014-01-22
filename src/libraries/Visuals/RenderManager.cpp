@@ -111,11 +111,11 @@ void RenderManager::manageShaderProgram(){
 }
 
 void RenderManager::renderLoop(){
-    std::cout<<"Render loop reached successfully."<<std::endl;
+ //   std::cout<<"Render loop reached successfully."<<std::endl;
 
     MVPHandle = glGetUniformLocation(shaderProgramHandle, "uniformMVP");
 
-    while(!glfwWindowShouldClose(window)){
+    if(!glfwWindowShouldClose(window)){ //if window is not about to close
 
         notify("FRAMELISTENER");      //notify all listeners labeled FRAMELISTENER
 
@@ -123,6 +123,9 @@ void RenderManager::renderLoop(){
         glClear(GL_COLOR_BUFFER_BIT);
         glfwSwapBuffers(window);
         glfwPollEvents();
+    }
+    else{
+        notify("WINDOWSHOULDCLOSELISTENER"); //else notify Listeners labled WINDOWSHOULDCLOSELISTENER
     }
 
     glfwTerminate();
@@ -136,7 +139,12 @@ RenderManager::~RenderManager(){
 RenderManager::RenderManager(){
 }
 
-void RenderManager::attachFrameListener(Listener* listener){
+void RenderManager::attachListenerOnNewFrame(Listener* listener){
     listener->setName("FRAMELISTENER"); //label this listener as framelistener
     attach(listener);                   //attach listener
+}
+
+void RenderManager::attachListenerOnWindowShouldClose(Listener* listener){
+    listener->setName("WINDOWSHOULDCLOSELISTENER"); 
+    attach(listener);                   
 }

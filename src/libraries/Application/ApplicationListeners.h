@@ -1,5 +1,5 @@
-#ifndef ACTIVATESTATELISTENER_H
-#define ACTIVATESTATELISTENER_H
+#ifndef APPLICATIONLISTENERS_H
+#define APPLICATIONLISTENERS_H
 
 /// This header contains various Application class related Listeners
 
@@ -22,6 +22,16 @@ private:
 	std::string state;
 public:
 	SetStateListener(Application* application, std::string state);
+	void update();
+};
+
+/// terminates the Application (breaks the program cycle loop)
+class TerminateApplicationListener : public Listener{
+private:
+	Application* application;
+	std::string state;
+public:
+	TerminateApplicationListener(Application* application);
 	void update();
 };
 

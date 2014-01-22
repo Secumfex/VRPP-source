@@ -10,7 +10,7 @@ void testAnimateClearColor(){
 	RenderManager* rm = RenderManager::getInstance();
 
 	//AnimateClearColorListener als FrameListener anhängen
-	rm->attachFrameListener(new AnimateClearColorListener());
+	rm->attachListenerOnNewFrame(new AnimateClearColorListener());
 
 	rm->libInit();
 	rm->manageShaderProgram();

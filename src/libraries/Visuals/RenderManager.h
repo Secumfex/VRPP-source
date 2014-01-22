@@ -17,7 +17,8 @@ public:
 	void libInit();
 	void manageShaderProgram();
 	void renderLoop();
-	void attachFrameListener(Listener* listener);	//attach a listener that will be called at the beginning of a frameloop
+	void attachListenerOnNewFrame(Listener* listener);	        //!< attach a listener that will be called at the beginning of a frameloop
+	void attachListenerOnWindowShouldClose(Listener* listener); //!< attach a listener that will be called at the closure of the GLFW window
 	glm::mat4 getProjectionMatrix();
 	void setProjectionMatrix(glm::mat4 _projectionMatrix);
 	void setDefaultProjectionMatrix();

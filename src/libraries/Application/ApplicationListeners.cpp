@@ -16,3 +16,11 @@ SetStateListener::SetStateListener(Application* application, std::string state){
 void SetStateListener::update(){
 	application->setState(state);
 }
+
+TerminateApplicationListener::TerminateApplicationListener(Application* application){
+	this->application = application;
+}
+
+void TerminateApplicationListener::update(){
+	application->terminate();
+}
