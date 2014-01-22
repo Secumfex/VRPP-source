@@ -117,51 +117,32 @@ VirtualObject *cube = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj
     
 	FrameBufferObject *fbo = new FrameBufferObject();
 
-	fbo->createPositionTexture();
-	fbo->createNormalTexture();
-	fbo->createColorTexture();
 
-    GLuint framebufferHandle;
-    GLuint positionTextureHandle;
-    GLuint normalTextureHandle;
-    GLuint colorTextureHandle;
+//	fbo->createNormalTexture();
+//	fbo->createColorTexture();
+//	fbo->createDepthTexture();
+
+//    GLuint framebufferHandle;
+//    GLuint positionTextureHandle;
+//    GLuint normalTextureHandle;
+//    GLuint colorTextureHandle;
     GLuint depthbufferHandle;
     {
-        glGenFramebuffers(1, &framebufferHandle);
-        glBindFramebuffer(GL_FRAMEBUFFER, framebufferHandle);
-        
-        //the geometry buffer
-        glGenTextures(1, &positionTextureHandle);
-        glBindTexture(GL_TEXTURE_2D, positionTextureHandle);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, (height/4.0)*3, 0, GL_RGBA, GL_FLOAT, 0);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        
-        //the normal buffer
-        glGenTextures(1, &normalTextureHandle);
-        glBindTexture(GL_TEXTURE_2D, normalTextureHandle);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, (height/4.0)*3, 0, GL_RGBA, GL_FLOAT, 0);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        
-        //the color buffer
-        glGenTextures(1, &colorTextureHandle);
-        glBindTexture(GL_TEXTURE_2D, colorTextureHandle);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, (height/4.0)*3, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        
+//        glGenFramebuffers(1, &framebufferHandle);
+        fbo->bindFBO();
+
+
+        fbo->createPositionTexture();
+        fbo->createNormalTexture();
+        fbo->createColorTexture();
+        fbo->bindFBO();
+
         //the depth buffer
         glGenRenderbuffers(1, &depthbufferHandle);
         glBindRenderbuffer(GL_RENDERBUFFER, depthbufferHandle);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, (height/4.0)*3); //800x600
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthbufferHandle);
-        
-        //set color attachments
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, positionTextureHandle, 0);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, normalTextureHandle, 0);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, colorTextureHandle, 0);
-        
+
         //set the list of draw buffers.
         GLenum drawBufferHandles[3] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2};
         glDrawBuffers(3, drawBufferHandles);
@@ -196,13 +177,13 @@ VirtualObject *cube = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj
         //        Render the scene into the FBO       //
         //--------------------------------------------//
         
-        glBindFramebuffer(GL_FRAMEBUFFER, framebufferHandle);
+        fbo->bindFBO();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         
         glEnable(GL_DEPTH_TEST);
 
-        glBindTexture(GL_TEXTURE_2D, cube->getGraphicsComponent()[0]->getMaterial()->getDiffuseMap()->getTextureHandle());
+        cube->getGraphicsComponent()[0]->getMaterial()->getDiffuseMap()->bindTexture();
         
         gbufferShader->useProgram();
         
@@ -243,17 +224,17 @@ VirtualObject *cube = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj
         
         glActiveTexture(GL_TEXTURE0);
         glEnable(GL_TEXTURE_2D);
-        glBindTexture(GL_TEXTURE_2D, positionTextureHandle);
+        fbo->bindPositionTexture();
 	    finalCompShader->uploadUniform(0,"positionMap");
         
         glActiveTexture(GL_TEXTURE1);
         glEnable(GL_TEXTURE_2D);
-        glBindTexture(GL_TEXTURE_2D, normalTextureHandle);
+        fbo->bindNormalTexture();
 	    finalCompShader->uploadUniform(1,"normalMap");
         
         glActiveTexture(GL_TEXTURE2);
         glEnable(GL_TEXTURE_2D);
-        glBindTexture(GL_TEXTURE_2D, colorTextureHandle);
+        fbo->bindColorTexture();
 	    finalCompShader->uploadUniform(2,"colorMap");
         
         glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO MAIN FRAME
@@ -279,15 +260,15 @@ VirtualObject *cube = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj
         simpeTexShader->useProgram();
         
         glViewport(0, (height/4)*3, width/3, height/4);
-        glBindTexture(GL_TEXTURE_2D, positionTextureHandle);
+        glBindTexture(GL_TEXTURE_2D, fbo->getPositionTextureHandle());
         glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-LEFT VIEWPORT
         
         glViewport(width/3, (height/4)*3, width/3, height/4);
-        glBindTexture(GL_TEXTURE_2D, normalTextureHandle);
+        glBindTexture(GL_TEXTURE_2D, fbo->getNormalTextureHandle());
         glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-CENTER VIEWPORT
         
         glViewport((width/3)*2, (height/4)*3, width/3, height/4);
-        glBindTexture(GL_TEXTURE_2D, colorTextureHandle);
+        glBindTexture(GL_TEXTURE_2D, fbo->getColorTextureHandle());
         glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-RIGHT VIEWPORT
         
         //show what's been drawn

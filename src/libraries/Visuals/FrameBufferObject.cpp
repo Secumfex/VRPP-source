@@ -27,7 +27,7 @@ FrameBufferObject::FrameBufferObject() {
 FrameBufferObject::~FrameBufferObject() {
 }
 
-void FrameBufferObject:: createPositionTexture(){
+void FrameBufferObject::createPositionTexture(){
 	glBindFramebuffer(GL_FRAMEBUFFER, mFramebufferHandle);
 	glGenTextures(1, &mPositionTextureHandle);
     glBindTexture(GL_TEXTURE_2D, mPositionTextureHandle);
@@ -37,7 +37,7 @@ void FrameBufferObject:: createPositionTexture(){
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mPositionTextureHandle, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
-void FrameBufferObject:: createNormalTexture(){
+void FrameBufferObject::createNormalTexture(){
 	glBindFramebuffer(GL_FRAMEBUFFER, mFramebufferHandle);
 	glGenTextures(1, &mNormalTextureHandle);
     glBindTexture(GL_TEXTURE_2D, mNormalTextureHandle);
@@ -46,9 +46,9 @@ void FrameBufferObject:: createNormalTexture(){
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, mNormalTextureHandle, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+//    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
-void FrameBufferObject:: createColorTexture(){
+void FrameBufferObject::createColorTexture(){
 	glBindFramebuffer(GL_FRAMEBUFFER, mFramebufferHandle);
 	glGenTextures(1, &mColorTextureHandle);
     glBindTexture(GL_TEXTURE_2D, mColorTextureHandle);
@@ -57,9 +57,9 @@ void FrameBufferObject:: createColorTexture(){
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, mColorTextureHandle, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+//    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
-void FrameBufferObject:: createDepthTexture(){
+void FrameBufferObject::createDepthTexture(){
 	glBindFramebuffer(GL_FRAMEBUFFER, mFramebufferHandle);
 	glGenRenderbuffers(1, &mDepthbufferHandle);
     glBindRenderbuffer(GL_RENDERBUFFER, mDepthbufferHandle);
@@ -69,18 +69,41 @@ void FrameBufferObject:: createDepthTexture(){
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-GLuint FrameBufferObject:: getFboHandle(){
+GLuint FrameBufferObject::getFboHandle(){
 	return mFramebufferHandle;
 }
-GLuint FrameBufferObject:: getPositionTextureHandle(){
+GLuint FrameBufferObject::getPositionTextureHandle(){
 	return mPositionTextureHandle;
 }
-GLuint FrameBufferObject:: getNormalTextureHandle(){
+GLuint FrameBufferObject::getNormalTextureHandle(){
 	return mNormalTextureHandle;
 }
-GLuint FrameBufferObject:: getColorTextureHandle(){
+GLuint FrameBufferObject::getColorTextureHandle(){
 	return mColorTextureHandle;
 }
 GLuint FrameBufferObject:: getDepthTextureHandle(){
 	return mDepthbufferHandle;
+}
+
+void FrameBufferObject::bindFBO(){
+	glBindFramebuffer(GL_FRAMEBUFFER, mFramebufferHandle);
+}
+void FrameBufferObject::unbindFBO(){
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void FrameBufferObject::bindPositionTexture(){
+	glBindTexture(GL_TEXTURE_2D, mPositionTextureHandle);
+}
+void FrameBufferObject::bindNormalTexture(){
+	glBindTexture(GL_TEXTURE_2D, mNormalTextureHandle);
+}
+void FrameBufferObject::bindColorTexture(){
+	glBindTexture(GL_TEXTURE_2D, mColorTextureHandle);
+}
+void FrameBufferObject::bindDepthTexture(){
+	glBindTexture(GL_TEXTURE_2D, mDepthbufferHandle);
+}
+void FrameBufferObject::unbindTexture(){
+	glBindTexture(GL_TEXTURE_2D, 0);
 }

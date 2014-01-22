@@ -27,6 +27,15 @@ public:
 	GLuint getColorTextureHandle();
 	GLuint getDepthTextureHandle();
 
+	void bindFBO();
+	void unbindFBO();
+	void bindPositionTexture();
+	void bindNormalTexture();
+	void bindColorTexture();
+	void bindDepthTexture();
+	void unbindTexture();
+
+
 protected:
 
 	int mHeight, mWidth;
