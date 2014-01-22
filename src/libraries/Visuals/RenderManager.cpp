@@ -121,14 +121,14 @@ void RenderManager::renderLoop(){
 
         glfwMakeContextCurrent(window);
         glClear(GL_COLOR_BUFFER_BIT);
+        
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
     else{
+        glfwTerminate();
         notify("WINDOWSHOULDCLOSELISTENER"); //else notify Listeners labled WINDOWSHOULDCLOSELISTENER
     }
-
-    glfwTerminate();
 }
 
 

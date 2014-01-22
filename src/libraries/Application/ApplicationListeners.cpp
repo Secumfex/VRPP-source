@@ -1,5 +1,15 @@
 #include "ApplicationListeners.h"
 #include "Application.h"
+
+#include <iostream>
+
+ApplicationListener::ApplicationListener(Application* application){
+	this->application = application;
+}
+
+void ApplicationListener::update(){	
+}
+
 ActivateStateListener::ActivateStateListener(Application* application){
 	this->application = application;
 }

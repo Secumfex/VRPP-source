@@ -6,8 +6,17 @@
 #include "Patterns/Listener.h"
 class Application;
 
+/// base class for application listeners, has no functionality
+class ApplicationListener : public Listener {
+protected:	
+	Application* application;
+public:
+	ApplicationListener(Application* application = 0);
+	virtual void update();	
+};
+
 /// Activates the Application's current state
-class ActivateStateListener : public Listener{
+class ActivateStateListener : public ApplicationListener{
 private:
 	Application* application;
 public:
@@ -16,9 +25,8 @@ public:
 };
 
 /// sets the Application State to whatever (think about buttons)
-class SetStateListener : public Listener{
+class SetStateListener : public ApplicationListener{
 private:
-	Application* application;
 	std::string state;
 public:
 	SetStateListener(Application* application, std::string state);
@@ -26,15 +34,12 @@ public:
 };
 
 /// terminates the Application (breaks the program cycle loop)
-class TerminateApplicationListener : public Listener{
+class TerminateApplicationListener : public ApplicationListener{
 private:
 	Application* application;
-	std::string state;
 public:
 	TerminateApplicationListener(Application* application);
 	void update();
 };
-
-
 
 #endif

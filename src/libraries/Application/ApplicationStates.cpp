@@ -8,6 +8,8 @@ using namespace std;
 void ApplicationState::activate(){
 	State::activate();
 	bindObjects();	
+
+	notify("ACTIVATION_LISTENER");
 }
 
 void ApplicationState::bindObjects(){
@@ -19,6 +21,8 @@ void ApplicationState::bindObjects(){
 	// IOManager* io = IOManager::getInstance();
 	// io->setCamera(camera);
 	// io->setInputType(inputType);
+
+	notify("BINDING_OBJECTS_LISTENER");
 }
 
 VRState::VRState(std::string name){
@@ -26,30 +30,23 @@ VRState::VRState(std::string name){
 }
 
 void VRState::activate(){
-	//TODO let this only be called once at all by having a boolean variable or something
-	initRenderer();
-	initPhysics();
-	initScene();
 
 	//bind Input-Object, RenderQueue-Object, Camera-Object, Projectionmatrix 
 	ApplicationState::activate();
 	
 }
 
-void VRState::initRenderer(){
-	cout<<"initializing Renderer..."<<endl;
-	//TODO call RenderManager::initlibs which opens window, binds callbackfuncs, etc. 
-}
-
-void VRState::initPhysics(){
-	cout<<"initializing Physics..."<<endl;
-	//TODO find a Way to init Bullet library
-}
-
-void VRState::initScene(){
-	cout<<"initializing Scene..."<<endl;
-}
-
 MenuState::MenuState(std::string name){
 	setName(name);
+}
+
+/*Application States Listeners*/
+void ApplicationState::attachListenerOnActivation(Listener* listener){
+	listener->setName("ACTIVATION_LISTENER");
+	attach(listener);
+}
+
+void ApplicationState::attachListenerOnBindingObjects(Listener* listener){
+	listener->setName("BINDING_OBJECTS_LISTENER");
+	attach(listener);
 }
