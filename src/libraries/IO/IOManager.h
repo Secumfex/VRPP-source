@@ -1,10 +1,13 @@
 #ifndef IOMANAGER_H
 #define IOMANAGER_H
 
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
+
 #include <glm/glm.hpp>
-#include "Camera.h"
 #include "Patterns\Singleton.h"
+#include "Camera.h"
+
 
 class IOManager : public Singleton<IOManager>{
 	friend class Singleton<IOManager>;
@@ -35,7 +38,9 @@ private:
 
 	Camera* camObject;
 
+	IOManager();
 public:
+
 	//float FoV;
 	GLFWwindow* window;
 

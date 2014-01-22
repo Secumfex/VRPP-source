@@ -1,6 +1,6 @@
 #ifndef RENDERMANAGER_H
 #define RENDERMANAGER_H
-#include "IO/IOManager.h"
+//#include "IO/IOManager.h"   @todo problem due to multiple includes of glfw and stuff
 #include "Visuals/RenderQueue.h"
 #include "Patterns/Singleton.h"
 #include "Patterns/Subject.h"
