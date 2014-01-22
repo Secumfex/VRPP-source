@@ -6,11 +6,17 @@ using namespace std;
 GraphicsComponent::GraphicsComponent(){
 	mMaterial = new Material();
 	mMesh = new Mesh();
+	mTranparency = false;
+	mEmission = false;
+	mShadow = false;
 }
 
 GraphicsComponent::GraphicsComponent(Mesh* mesh, Material* material){
 	mMesh = mesh;
 	mMaterial = material;
+	mTranparency = false;
+	mEmission = false;
+	mShadow = false;
 }
 void GraphicsComponent::setMesh(Mesh* mesh){
 	mMesh = mesh;
