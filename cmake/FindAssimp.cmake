@@ -43,12 +43,12 @@ ELSEIF (MSVC)
 
 ELSEIF(APPLE)
 
-	FIND_PATH(ASSIMP_INCLUDE_PATH assimp/ai_assert.h
+	FIND_PATH(ASSIMP_INCLUDE_PATH assimp.h
 	${DEPENDENCIES_PATH}/assimp_OSX/include)
 	
 	FIND_LIBRARY( ASSIMP_LIBRARY
-        NAMES libassimpdll
-  		PATHS ${DEPENDENCIES_PATH}/assimp_OSX/lib
+        NAMES libassimpd.dylib
+  		PATHS ${DEPENDENCIES_PATH}/assimp_OSX/lib/Debug
 	)
 
 ELSE()
