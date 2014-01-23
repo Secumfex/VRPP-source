@@ -109,9 +109,10 @@ int main() {
     
 VirtualObjectFactory *voFactory = VirtualObjectFactory::getInstance();
 
-VirtualObject *boat = voFactory->createVirtualObject(RESOURCES_PATH "/trashy/rusty.dae");
 VirtualObject *cube = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj");
     
+
+	cout << "So viele GCs: "<<cube->getGraphicsComponent().size() << endl;
     
     //--------------------------------------------//
     //         Create a Framebuffer Object        //
@@ -193,8 +194,11 @@ VirtualObject *cube = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj
         
         gbufferShader->uploadUniform(modelCube_2,"uniformModel");
 
-        boat->getGraphicsComponent()[0]->getMaterial()->getDiffuseMap()->bindTexture();
-        gbufferShader->render(boat->getGraphicsComponent()[0]);
+        unsigned int i= 0;
+        for (i = 0; i < cube->getGraphicsComponent().size(); ++i) {
+            cube->getGraphicsComponent()[i]->getMaterial()->getDiffuseMap()->bindTexture();
+            gbufferShader->render(cube->getGraphicsComponent()[i]);
+		}
         
         
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
