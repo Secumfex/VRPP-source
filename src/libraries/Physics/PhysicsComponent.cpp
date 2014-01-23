@@ -95,9 +95,18 @@ void PhysicsComponent::addCollisionFlag(int flag) {
 }
 
 void PhysicsComponent::initFrameListener(){
-	Listener* frameListener;
-	frameListener->setName("FRAMELISTENER");
-	frameListener->update();
+/**
+ * @todo instead:
+ * 	write a "UpdatePhysicsComponentListener" class as a derivative of Listener
+ * 	as members, it receives a simple PhysicsComponent pointer
+ * 	in its update() method it calls pc->update()
+ * alternatively, leave PhysicsComponent as it is ( a Listener itself )
+ *  it may be attached to the RenderLoop just the way it is
+ *  how ever, bear in mind that it can only be attached to a single Subject
+ */
+//	Listener* frameListener;
+//	frameListener->setName("FRAMELISTENER");
+//	frameListener->update();
 }
 
 void PhysicsComponent::update(){
