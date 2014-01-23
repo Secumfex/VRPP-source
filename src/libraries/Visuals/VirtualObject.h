@@ -2,16 +2,16 @@
 #define VIRTUALOBJECT_H
 #include "Physics/PhysicsComponent.h"
 #include "Visuals/GraphicsComponent.h"
+
 #include <glm/glm.hpp>
 #include <vector>
 
 
 class VirtualObject{
 
-private:
-
-	glm::mat4 modelMatrix;
-	int id;
+	private:
+	glm::mat4 modelMatrix;							/**< 4x4Matrix */
+	int id;											/**< identification number */
 
 	vector<GraphicsComponent*> mGraphComponent;
 
@@ -20,16 +20,46 @@ public:
 
 	glm::mat4 getModelMatrix();
 
-	vector<GraphicsComponent*> getGraphicsComponent();
-	
-	PhysicsComponent *physicsComponent;
-	void addGraphicsComponent(GraphicsComponent *graphcomp);
+	PhysicsComponent *physicsComponent; 			/**< pointer to the physics component of the VO */
+//	vector<GraphicsComponent> graphicsComponent;	/**< pointer to the graphics Component of the VO*/
 
+	/** \brief constructor
+	 *
+	 * void constructor, sets modelMatrix to zero, sets the id to last id+1 and creates a new physicsComponent.
+	 */
+	VirtualObject();
 
-	void updateModelMatrix();
+	/** \brief constructor
+	 *
+	 * if you know a modelMAtrix you can start with this constructor.
+	 * it sets modelMatrix to the given one, sets the id to last id+1  and creates a new physicsComponent.
+	 * @param modelMatrix 4x4Matrix
+	 */
+	VirtualObject(glm::mat4 modelMatrix);
 
-	VirtualObject(glm::mat4 modelMatrix = glm::mat4());
+	/** \brief destructor
+	 *
+	 * deletes the physics and graphics components
+	 */
 	~VirtualObject();
+
+	/** \brief updates the modelMatrix
+	 *
+	 * fetches the current modelMatrix of the physicsComponent
+	 */
+	void updateModelMatrix();
+	
+	/** \brief
+	*
+	* 	@todo detailed description
+	*/
+	vector<GraphicsComponent*> getGraphicsComponent();
+
+	/** \brief
+	*
+	* 	@todo detailed description
+	*/
+	void addGraphicsComponent(GraphicsComponent *graphcomp);
 };
 
 

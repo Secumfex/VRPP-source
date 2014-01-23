@@ -5,6 +5,7 @@
 
 class GraphicsComponent{
 public:
+
 	void setMesh(Mesh* mesh);
 	void setMaterial(Material* material);
 	Mesh* getMesh();
