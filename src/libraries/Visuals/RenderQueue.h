@@ -20,6 +20,7 @@ public:
 	void resetQueue();	//resetting iterator to list begin
 	void sortByShaders(); //extracts GCs from all VOs in VO list and sorts them into the gcStorage map
 	void sortByTextures(); //extracts GCs from all VOs in VO list and sorts them into the gcTexStorage map
+	void sortByFlags(); //extracts GCs from all VOs and sorts them into gcFlagStorage by checking for transparency, shadow, etc
 private:
 	list<VirtualObject* >::iterator currentFirstElement; ///< VO pointer used with voList
 //	vector<GraphicsComponent>::iterator gcIterator; ///< iterator for gc-vectors
@@ -30,6 +31,7 @@ private:
 	map<VirtualObject*, vector<GraphicsComponent* > > gcTex2voMap; ///< each GC is assigned to some VO
 	map<GraphicsComponent*, VirtualObject*> vo2gcMap; ///< each VO is assigned to some GC
 	map<GraphicsComponent*, VirtualObject*> vo2gcTexMap; ///< each VO is assigned to some GC
+	map<string, vector<GraphicsComponent* > > gcFlagStorage; ///< GC map sorted by flags
 };
 
 #endif /* RENDERQUEUE_H */

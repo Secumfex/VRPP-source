@@ -117,25 +117,30 @@ void RenderQueue::sortByShaders(){
 		}
 	}
 }
-	void RenderQueue::sortByTextures(){
-		resetQueue();
-		string texID = "tex_stone";
-		VirtualObject* vo;
-		vector<GraphicsComponent* > gcTexVector;
+	
+void RenderQueue::sortByTextures(){
+	resetQueue();
+	string texID = "tex_stone";
+	VirtualObject* vo;
+	vector<GraphicsComponent* > gcTexVector;
 
 
-		cout<<"Entering extractAndSort"<<endl; // <-- REMOVE IN FINAL
+	cout<<"Entering extractAndSort"<<endl; // <-- REMOVE IN FINAL
 
-		while(hasNext()){
-			vo = getNextObject();
-			gcTexVector = vo->getGraphicsComponent();
-			for(unsigned int i = 0; i < gcTexVector.size(); i++){
-				cout<<"Adding GC to the TextureMap."<<endl; // <-- REMOVE IN FINAL
+	while(hasNext()){
+		vo = getNextObject();
+		gcTexVector = vo->getGraphicsComponent();
+		for(unsigned int i = 0; i < gcTexVector.size(); i++){
+			cout<<"Adding GC to the TextureMap."<<endl; // <-- REMOVE IN FINAL
 
-				gcTexStorage[texID].push_back(gcTexVector[i]); /// texture --> GC
-				gcTex2voMap[vo].push_back(gcTexVector[i]); /// VO --> GC
+			gcTexStorage[texID].push_back(gcTexVector[i]); /// texture --> GC
+			gcTex2voMap[vo].push_back(gcTexVector[i]); /// VO --> GC
 
-				vo2gcTexMap[gcTexVector[i]] = vo;
-			}
+			vo2gcTexMap[gcTexVector[i]] = vo;
 		}
+	}
+}
+
+void RenderQueue::sortByFlags(){
+	
 }
