@@ -102,7 +102,7 @@ void RenderQueue::sortByShaders(){
 	vector<GraphicsComponent* > gcVector; 
 
 
-	cout<<"Entering extractAndSort"<<endl; // <-- REMOVE IN FINAL
+	cout<<"Entering sortByShaders"<<endl; // <-- REMOVE IN FINAL
 
 	while(hasNext()){
 		vo = getNextObject();
@@ -125,7 +125,7 @@ void RenderQueue::sortByTextures(){
 	vector<GraphicsComponent* > gcTexVector;
 
 
-	cout<<"Entering extractAndSort"<<endl; // <-- REMOVE IN FINAL
+	cout<<"Entering sortByTextures"<<endl; // <-- REMOVE IN FINAL
 
 	while(hasNext()){
 		vo = getNextObject();
@@ -142,5 +142,34 @@ void RenderQueue::sortByTextures(){
 }
 
 void RenderQueue::sortByFlags(){
-	
+	resetQueue();
+	string sString = "SHADOW";
+	string eString = "EMISSION";
+	string tString = "TRANSPARENCY";
+
+	VirtualObject* vo;
+
+	vector<GraphicsComponent* > gcFlagVector;
+
+	cout<<"entering sortByFlags"<<endl; // <-- REMOVE IN FINAL
+
+	while(hasNext()){
+		vo = getNextObject();
+		gcFlagVector = vo->getGraphicsComponent();
+		for(unsigned int i = 0; i < gcFlagVector.size(); i++){
+			cout<<"Adding GC to the FlagMap."<<endl;
+			
+			if(gcFlagVector[i]->hasEmission()){
+				gcFlagStorage[eString].push_back(gcFlagVector[i]);
+			}
+
+			if(gcFlagVector[i]->hasShadow()){
+				gcFlagStorage[sString].push_back(gcFlagVector[i]);
+			}
+
+			if(gcFlagVector[i]->hasTransparency()){
+				gcFlagStorage[tString].push_back(gcFlagVector[i]);
+			}
+		}
+	}
 }
