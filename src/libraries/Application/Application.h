@@ -18,6 +18,7 @@ private:
 	string label;
 	bool shouldTerminate;
 	bool initialized;
+
 public:
 	void initialize(); //!< initialize RenderManager and open window
 	void terminate();	//!< break program cycle loop
@@ -29,7 +30,7 @@ public:
 
 	/*! @brief sets the label.
 	 *
-	 *	@param label is a string representing blabla detailed description pls
+	 *	@param label is a string representing it's name
 	 */
 	void setLabel(std::string label);
 

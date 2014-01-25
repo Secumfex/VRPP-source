@@ -7,7 +7,10 @@
 
 using namespace std;
 
-/*FIRST PERSON CAMERA*/
+/*! @brief Camera here means a first person camera.
+ *
+ *
+ */
 class Camera{
 private:
 	glm::vec3 position;
@@ -23,9 +26,8 @@ private:
 
 
 public:
-	/* Constructor & Destructor */
-	Camera();
-	~Camera();
+	Camera();	//!< constructor
+	~Camera();	//!< destructor
 
 	/* GETTER AND SETTER BEGIN */
 	// TODO remove unnecessary methods
@@ -36,10 +38,10 @@ public:
 	float getZ();
 	void setZ(float updateZ);
 
-	float getPhi();
-	void setPhi(float updatePhi);
-	float getTheta();
-	void setTheta(float updateTheta);
+	float getPhi();		//!< @todo please describe this further
+	void setPhi(float updatePhi);	//!< @todo please use "[at]param" to describe which constraints exist to the parameter
+	float getTheta();	//!< @todo please describe this further
+	void setTheta(float updateTheta);	//!< @todo please use "[at]param" to describe which constraints exist to the parameter
 
 	glm::vec3 getRight();
 	glm::vec3 getViewDirection();
@@ -48,11 +50,11 @@ public:
 	void setPosition(glm::vec3 newPos);
 	/* GETTER AND SETTER END */
 
-	// compute ViewDirection
-	inline void updateViewDirection();
 
-	// compute ViewMatrix
-	glm::mat4 getViewMatrix();
+	inline void updateViewDirection();		//!< compute ViewDirection
+
+
+	glm::mat4 getViewMatrix();		//!< compute ViewMatrix
 };
 
 #endif

@@ -8,6 +8,11 @@
 
 using namespace std;
 
+/*! @brief RenderQueue is a queue that contains all objects to be drawn in the scene.
+ *
+ *	@todo please write doxygen comments only in header file.
+ *	@todo please describe the parameters only if there are any parameters to the method you are commenting ;-)
+ */
 class RenderQueue {
 public: 
 	RenderQueue(); //create and reset RQ

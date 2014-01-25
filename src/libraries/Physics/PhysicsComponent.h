@@ -7,6 +7,10 @@
 
 using namespace std;
 
+/*! @brief PhysicsComponent.
+ *
+ *	@todo detailed description pls
+ */
 class PhysicsComponent : public Listener{
 private:
 
@@ -28,7 +32,7 @@ public:
 	* @param radius dimension of the sphere
 	* @param x,y,z start position in the world
 	* @param mass defines the behavior of the rigid body in the physics world
-	* @return returns a bullet rigid body
+	* @return a bullet rigid body
 	*/
 	btRigidBody* addSphere(float radius, float x, float y, float z, float mass);
 
