@@ -22,9 +22,11 @@ RenderQueue* RenderQueue::getRenderQueue(){
 void RenderQueue::addVirtualObject(VirtualObject* vo){
 	cout<<"Adding VO."<<endl; // <-- REMOVE IN FINAL
 	voList.push_back(vo);
-	 std::cout << "hier ist der übeltäter" << std::endl;
-	vector<GraphicsComponent* > gcVector = vo->getGraphicsComponent();
-	 std::cout << "hier ist der übeltäter" << std::endl;
+
+	vector<GraphicsComponent* > gcVector; 
+
+	gcVector = vo->getGraphicsComponent();
+
 	for(unsigned int i = 0; i < gcVector.size(); i++){
 		cout<<"Sort: GC->VO, VO->GC"<<endl; // <-- REMOVE IN FINAL
 
