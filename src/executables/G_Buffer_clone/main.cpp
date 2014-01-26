@@ -65,7 +65,7 @@ int main() {
 
 
     
-    cout << "GBufferHandle " << gbufferShader->getProgramHandle() << endl;
+    std::cout << "GBufferHandle " << gbufferShader->getProgramHandle() << std::endl;
     
 
     //--------------------------------------------//
@@ -112,7 +112,7 @@ VirtualObjectFactory *voFactory = VirtualObjectFactory::getInstance();
 VirtualObject *cube = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj");
     
 
-	cout << "So viele GCs: "<<cube->getGraphicsComponent().size() << endl;
+	std::cout << "So viele GCs: "<<cube->getGraphicsComponent().size() << std::endl;
     
     //--------------------------------------------//
     //         Create a Framebuffer Object        //
