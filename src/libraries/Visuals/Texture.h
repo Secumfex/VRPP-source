@@ -33,8 +33,7 @@ public:
 	void unbindTexture();
 
 	//-----------------MEMBER VARIABLES-----------------
-private:
-	/** damit is der DateiPfad gemeint wie zB Wurst.jpg oder Pictures/Hallo.png */
+protected:
 
 	string mFilename;
 

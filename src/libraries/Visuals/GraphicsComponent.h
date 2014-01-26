@@ -23,6 +23,9 @@ public:
 	bool hasShadow();	//!< @return 1 if component casts shadows @return 0 if component has shadows turned off
 	bool hasTransparency();	//!< @return 1 if component is transparent @return 0 if component is not transparent
 
+	void setBoundingBox(glm::vec3 min, glm::vec3 max);
+	glm::vec3 getBoundingBox_Min();
+	glm::vec3 getBoundingBox_Max();
 
 	GraphicsComponent();		//!< default constructor without parameters
 	GraphicsComponent(Mesh* mesh, Material* material);
@@ -30,6 +33,8 @@ public:
 private:
 	Mesh *mMesh;
 	Material *mMaterial;
+	glm::vec3 mAABB_Min;
+	glm::vec3 mAABB_Max;
 
 	bool mEmission;
 	bool mShadow;

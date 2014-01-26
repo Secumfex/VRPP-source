@@ -31,9 +31,9 @@ GLuint Texture::getTextureHandle(){
 	return mTexManager->getTextureHandle(mFilename);
 }
 
-void Texture:: bindTexture(){
+void Texture::bindTexture(){
     glBindTexture(GL_TEXTURE_2D, getTextureHandle());
 }
-void Texture:: unbindTexture(){
+void Texture::unbindTexture(){
     glBindTexture(GL_TEXTURE_2D, 0);
 }
