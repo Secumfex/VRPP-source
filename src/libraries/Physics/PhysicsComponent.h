@@ -3,7 +3,6 @@
 
 #include <glm/glm.hpp>
 #include "btBulletDynamicsCommon.h"
-#include "Patterns/Listener.h"
 
 using namespace std;
 
@@ -11,7 +10,7 @@ using namespace std;
  *
  *	@todo detailed description pls
  */
-class PhysicsComponent : public Listener{
+class PhysicsComponent{
 private:
 
 	glm::mat4 modelMatrix;	/**< 4x4Matrix */
