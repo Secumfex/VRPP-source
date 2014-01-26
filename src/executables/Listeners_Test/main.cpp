@@ -2,19 +2,26 @@
 #include <string.h>
 
 #include "SomeListeners.h"
+#include "Tools/UtilityListeners.h"
+#include "Application/Application.h"
+#include "Application/ApplicationStates.h"
 #include "Visuals/RenderManager.h"
 
 #include <typeinfo>
 void testAnimateClearColor(){
-	//RenderManager Pointer via Singleton
+	//configure minimal app
+	Application* myApp = Application::getInstance();
+	myApp->addState(new VRState());
+	myApp->attachListenerOnProgramInitialization(new PrintMessageListener(string("Application is booting")));
+	myApp->attachListenerOnProgramTermination(new PrintMessageListener(string("Application is terminating")));
+
 	RenderManager* rm = RenderManager::getInstance();
 
-	//AnimateClearColorListener als FrameListener anhängen
+	//register AnimateClearColorListener as Framelistener
 	rm->attachListenerOnNewFrame(new AnimateClearColorListener());
 
-	rm->libInit();
-	rm->manageShaderProgram();
-	rm->renderLoop();
+	//boot Application with custom configuration 
+	myApp->run();
 }
 
 using namespace std;
