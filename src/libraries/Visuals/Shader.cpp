@@ -30,6 +30,7 @@ Shader::Shader(std::string vertexShader, std::string fragmentShader) {
 	    GLuint location = glGetUniformLocation( mProgramHandle, name );
 
 	    mUniformHandles.insert(pair<string, GLuint>(name, location));
+	    mUniformNames.push_back(name);
 	}
 
 }
@@ -72,14 +73,14 @@ bool Shader :: uploadUniform(glm::vec3 uniformVector, std::string uniformName){
 	}else
 		return false;
 }
-bool Shader :: uploadUniform(GLfloat uniformVariable, std::string uniformName){
+bool Shader::uploadUniform(GLfloat uniformVariable, std::string uniformName){
 	if(mUniformHandles.find(uniformName)!=mUniformHandles.end()){
 	glUniform1f(mUniformHandles[uniformName], uniformVariable);
 	return true;
 	}else
 		return false;
 }
-bool Shader :: uploadUniform(GLint uniformVariable, std::string uniformName){
+bool Shader::uploadUniform(GLint uniformVariable, std::string uniformName){
 	if(mUniformHandles.find(uniformName)!=mUniformHandles.end()){
 	glUniform1i(mUniformHandles[uniformName], uniformVariable);
 	return true;
@@ -87,11 +88,24 @@ bool Shader :: uploadUniform(GLint uniformVariable, std::string uniformName){
 		return false;
 }
 
-void Shader ::useProgram(){
+void Shader::useProgram(){
 	glUseProgram(mProgramHandle);
 }
 
-void Shader ::render(GraphicsComponent *gc){
+void Shader::render(GraphicsComponent *gc){
 	glBindVertexArray(gc->getMesh()->getVAO());
 	glDrawElements(GL_TRIANGLES, gc->getMesh()->getNumIndices(), GL_UNSIGNED_INT, 0);
+}
+
+bool Shader::hasUniform(string uniformName){
+	unsigned int i = 0;
+	for (i = 0; i < mUniformNames.size(); ++i) {
+		if(uniformName == mUniformNames[i])
+			return true;
+	}
+	return false;
+}
+
+vector<string> Shader::getUniformNames(){
+return vector<string>(mUniformNames);
 }
