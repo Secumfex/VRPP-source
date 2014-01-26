@@ -291,12 +291,10 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
         aiGetMaterialFloatArray(mtl, AI_MATKEY_SHININESS, &shininess, &max);
         aMat->setShininess(shininess);
 
-
-        cout << "WorldMIN: " << aabbMin.x <<"/"<< aabbMin.y <<"/"<< aabbMin.z <<endl;
-        cout << "WorldMAX: " << aabbMax.x <<"/"<< aabbMax.y <<"/"<< aabbMax.z <<endl;
-
 		//Mesh und Material wird gelesen und in neuer GraphicsComponent gespeichert
 		GraphicsComponent* gc=new GraphicsComponent(aMesh, aMat);
+		gc->setBoundingBox(aabbMin, aabbMax);
+
 
 		virtualObject->addGraphicsComponent(gc);
     }

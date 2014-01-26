@@ -14,7 +14,6 @@
 #include <vector>
 #include <glm/gtc/type_ptr.hpp>
 
-using namespace std;
 
 class Shader {
 
@@ -29,10 +28,10 @@ public:
 	std::string getShaderName();
 	GLuint getProgramHandle();
 
-	void uploadUniform(glm::mat4 uniformMatrix, string uniformName);
-	void uploadUniform(glm::vec3 uniformVector, string uniformName);
-	void uploadUniform(GLfloat uniformVariable, string uniformName);
-	void uploadUniform(GLint uniformVariable, string uniformName);
+	bool uploadUniform(glm::mat4 uniformMatrix, string uniformName);
+	bool uploadUniform(glm::vec3 uniformVector, string uniformName);
+	bool uploadUniform(GLfloat uniformVariable, string uniformName);
+	bool uploadUniform(GLint uniformVariable, string uniformName);
 
 	void useProgram();
 
@@ -43,6 +42,8 @@ private:
 
 	//-----------------MEMBER VARIABLES-----------------
 protected:
+	std::map<std::string, GLuint> mUniformHandles;
+
 	std::string mShaderName;
 	GLuint mProgramHandle;
 };
