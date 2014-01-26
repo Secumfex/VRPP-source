@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string.h>
 
+#include "Application/Application.h"
+#include "Application/ApplicationStates.h"
 #include "Visuals/RenderManager.h"
 #include "Patterns/Listener.h"
 
@@ -39,13 +41,10 @@ int main() {
 		vo3 = rq->getNextObject();
 	}
 
-
-	//RenderManager Pointer via Singleton
-	RenderManager* rm = RenderManager::getInstance();
-
-	rm->libInit();
-	rm->manageShaderProgram();
-	rm->renderLoop();
+	//run Application (and thus: init Rendermanager and enter renderloop)
+	Application* myApp = Application::getInstance();
+	myApp->addState(new VRState());
+	myApp->run();
 
 	return 0;
 };
