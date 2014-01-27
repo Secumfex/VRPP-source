@@ -1,9 +1,21 @@
 #include "ApplicationStates.h"
 
 #include <iostream>
+
+#include <glm/gtc/matrix_transform.hpp>
+
 using namespace std;
 
 #include "Visuals/RenderManager.h"
+#include "Visuals/VirtualObjectFactory.h"
+#include "IO/IOManager.h"
+
+ApplicationState::ApplicationState(){
+	camera = new Camera();
+	renderQueue = new RenderQueue();
+//	InputHandler = new InputHandler();
+	projectionMatrix = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
+}
 
 void ApplicationState::activate(){
 	State::activate();
@@ -13,16 +25,23 @@ void ApplicationState::activate(){
 }
 
 void ApplicationState::bindObjects(){
-	// RenderManager* rm = RenderManager::getInstance();
+	RenderManager* rm = RenderManager::getInstance();
 	
-	// rm->setProjectionMatrix(projectionMatrix);
-	// rm->setRenderQueue(renderQueue);
+	rm->setProjectionMatrix(projectionMatrix);
+	rm->setRenderQueue(renderQueue);
 
-	// IOManager* io = IOManager::getInstance();
-	// io->setCamera(camera);
-	// io->setInputType(inputType);
+	IOManager* io = IOManager::getInstance();
+	io->setCameraObject(camera);
+	// io->setInputHandler(inputHandler);
 
 	notify("BINDING_OBJECTS_LISTENER");
+}
+
+VirtualObject* ApplicationState::createVirtualObject(std::string path){
+	VirtualObject* vo = VirtualObjectFactory::getInstance()->createVirtualObject(path);
+	renderQueue->addVirtualObject(vo);
+
+	notify("CREATE_VIRTUAL_OBJECT_LISTENER");	//in case someone cares
 }
 
 VRState::VRState(std::string name){
@@ -48,5 +67,10 @@ void ApplicationState::attachListenerOnActivation(Listener* listener){
 
 void ApplicationState::attachListenerOnBindingObjects(Listener* listener){
 	listener->setName("BINDING_OBJECTS_LISTENER");
+	attach(listener);
+}
+
+void ApplicationState::attachListenerOnCreatingVirtualObject(Listener* listener){
+	listener->setName("CREATE_VIRTUAL_OBJECT_LISTENER");
 	attach(listener);
 }

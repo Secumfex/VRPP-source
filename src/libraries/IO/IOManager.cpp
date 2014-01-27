@@ -23,6 +23,14 @@ void IOManager::computeFoV(){
 }
 */
 
+void IOManager::setCameraObject(Camera* camera){
+		camObject = camera;
+	}
+
+Camera* IOManager::getCameraObject(){
+		return camObject;
+	}
+
 void IOManager::computeFrameTimeDifference(){
 	// glfwGetTime is called only once, the first time this function is called
 	lastTime = glfwGetTime();

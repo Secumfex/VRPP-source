@@ -41,6 +41,9 @@ private:
 	IOManager();
 public:
 
+	void setCameraObject(Camera* camera);	/**< set camera pointer */
+	Camera* getCameraObject();				/**< get camera pointer */
+
 	//float FoV;
 	GLFWwindow* window;
 
