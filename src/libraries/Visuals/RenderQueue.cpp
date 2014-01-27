@@ -30,8 +30,8 @@ void RenderQueue::addVirtualObject(VirtualObject* vo){
 	for(unsigned int i = 0; i < gcVector.size(); i++){
 		cout<<"Sort: GC->VO, VO->GC"<<endl; // <-- REMOVE IN FINAL
 
-		gc2voMap[vo].push_back(gcVector[i]); /// VO --> GC
-		vo2gcMap[gcVector[i]] = vo;
+		vo2gcMap[vo].push_back(gcVector[i]); /// VO --> GC
+		gc2voMap[gcVector[i]] = vo;
 	}
 }
 
@@ -89,6 +89,18 @@ map<string, vector<GraphicsComponent* > > RenderQueue::getGcTexStorage(){
 	return gcTexStorage;
 }
 
+/** \brief getter for GC->VO map
+*/
+map<GraphicsComponent*, VirtualObject* > RenderQueue::getGc2VoMap(){
+	return gc2voMap;
+}
+
+/** \brief getter for VO->GC map
+*/
+map<VirtualObject*, vector<GraphicsComponent* > > RenderQueue::getVo2GcMap(){
+	return vo2gcMap;
+}
+
 void RenderQueue::sortByShaders(){
 	resetQueue();
 	string shader = "DEFERRED_SHADING";
@@ -105,9 +117,9 @@ void RenderQueue::sortByShaders(){
 			cout<<"Adding GC to the map."<<endl; // <-- REMOVE IN FINAL
 
 			gcShaderStorage[shader].push_back(gcVector[i]); /// shader --> GC
-			gc2voMap[vo].push_back(gcVector[i]); /// VO --> GC
+			vo2gcMap[vo].push_back(gcVector[i]); /// VO --> GC
 
-			vo2gcMap[gcVector[i]] = vo;
+			gc2voMap[gcVector[i]] = vo;
 		}
 	}
 }

@@ -26,6 +26,8 @@ public:
 	map<string, vector<GraphicsComponent* > > getGcFlagStorage();
 	map<string, vector<GraphicsComponent* > > getGcShaderStorage();
 	map<string, vector<GraphicsComponent* > > getGcTexStorage();
+	map<VirtualObject*, vector<GraphicsComponent* > > getVo2GcMap();
+	map<GraphicsComponent*, VirtualObject* > getGc2VoMap();
 	void sortByShaders(); //extracts GCs from all VOs in VO list and sorts them into the gcStorage map
 	void sortByTextures(); //extracts GCs from all VOs in VO list and sorts them into the gcTexStorage map
 	void sortByFlags(); //extracts GCs from all VOs and sorts them into gcFlagStorage by checking for transparency, shadow, etc
@@ -35,9 +37,9 @@ private:
 	list<VirtualObject*> voList; ///< list of VOs
 	map<string, vector<GraphicsComponent* > > gcShaderStorage; ///< GC map sorted by shaders
 	map<string, vector<GraphicsComponent* > > gcTexStorage; ///< GC map sorted by Textures
-	map<VirtualObject*, vector<GraphicsComponent* > > gc2voMap; ///< each GC is assigned to some VO
+	map<VirtualObject*, vector<GraphicsComponent* > > vo2gcMap; ///< each GC is assigned to some VO
 	map<VirtualObject*, vector<GraphicsComponent* > > gcTex2voMap; ///< each GC is assigned to some VO
-	map<GraphicsComponent*, VirtualObject*> vo2gcMap; ///< each VO is assigned to some GC
+	map<GraphicsComponent*, VirtualObject*> gc2voMap; ///< each VO is assigned to some GC
 	map<GraphicsComponent*, VirtualObject*> vo2gcTexMap; ///< each VO is assigned to some GC
 	map<string, vector<GraphicsComponent* > > gcFlagStorage; ///< GC map sorted by flags
 };
