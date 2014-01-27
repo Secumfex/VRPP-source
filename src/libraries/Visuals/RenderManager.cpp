@@ -32,8 +32,8 @@ GLFWwindow* window;
 
 RenderQueue* rq;
 
-void RenderManager::setRenderQueue(){
-    rq->getRenderQueue();
+void RenderManager::setRenderQueue(RenderQueue* currentRQ){
+    rq = currentRQ;
 }
 
 mat4 RenderManager::getProjectionMatrix(){

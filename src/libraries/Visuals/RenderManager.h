@@ -13,7 +13,7 @@ protected:
 public:
     ~RenderManager ();
 	//RenderQueue renderQueue;
-	void setRenderQueue();
+	void setRenderQueue(RenderQueue* currentRQ);
 	void libInit();
 	void manageShaderProgram();
 	void renderLoop();
