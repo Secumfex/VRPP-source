@@ -31,6 +31,8 @@ mat4 projectionMatrix;
 GLFWwindow* window; 
 
 RenderQueue* rq;
+GraphicsComponent* currentGC;
+VirtualObject* currentVO;
 
 void RenderManager::setRenderQueue(RenderQueue* currentRQ){
     rq = currentRQ;
@@ -39,6 +41,42 @@ void RenderManager::setRenderQueue(RenderQueue* currentRQ){
 mat4 RenderManager::getProjectionMatrix(){
     return projectionMatrix;
 }
+
+
+//TODO
+/*wir brauchen eine setCurrentGC(GraphicsComponent* gc)
+und eine getCurrentGC()
+die auf eine globale Pointer-variable im RenderManager zugreifen
+sowas wie GraphicsComponent* currentGC
+gesetzt wird der shit in der renderLoop, aber das machen wir später
+erstmal wollen wir nur den Access haben
+
+WENN wir das geschafft haben kommt Step2
+dann machen wir uns noch eine currentVO globale variable, ebenfalls im RenderManager (auf raphis anfrage)
+die getCurrentVO wird dann genauso aussehen wie die getCurrentGC, nur halt mit virtual object
+die setCurrentVO wird stattdessen auf die jeweilige map in der RenderQueue zugreifen und kann direkt in der
+setCurrentGC aufgerufen werden sobald die GC global gesetzt wurde
+
+*/
+
+
+VirtualObject getCurrentVO(map mapName,string MapField, int vecPos ){	//muss die Map, Feld & die aktuelle Pos im GC Vektor wissen
+	return mapName[MapField[vecPos]];
+}
+
+void setCurrentVO(VirtualObject* vo){
+	currentVO = vo;
+}
+
+GraphicsComponent getCurrentGC(map mapName, string MapField, int vecPos){
+	return mapName[MapField[vecPos]];
+}
+
+void setCurrentGC(GraphicsComponent* gc){
+	currentGC = gc;
+}
+
+
 
 void RenderManager::setProjectionMatrix(mat4 _projectionMatrix){
     projectionMatrix = _projectionMatrix;
