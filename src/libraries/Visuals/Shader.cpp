@@ -29,7 +29,7 @@ Shader::Shader(std::string vertexShader, std::string fragmentShader) {
 	    name[name_len] = 0;
 	    GLuint location = glGetUniformLocation( mProgramHandle, name );
 
-	    mUniformHandles.insert(pair<string, GLuint>(name, location));
+	    mUniformHandles.insert(pair<std::string, GLuint>(name, location));
 	    mUniformNames.push_back(name);
 	}
 
@@ -97,7 +97,7 @@ void Shader::render(GraphicsComponent *gc){
 	glDrawElements(GL_TRIANGLES, gc->getMesh()->getNumIndices(), GL_UNSIGNED_INT, 0);
 }
 
-bool Shader::hasUniform(string uniformName){
+bool Shader::hasUniform(std::string uniformName){
 	unsigned int i = 0;
 	for (i = 0; i < mUniformNames.size(); ++i) {
 		if(uniformName == mUniformNames[i])
@@ -106,6 +106,6 @@ bool Shader::hasUniform(string uniformName){
 	return false;
 }
 
-vector<string> Shader::getUniformNames(){
-return vector<string>(mUniformNames);
+std::vector<std::string> Shader::getUniformNames(){
+return std::vector<std::string>(mUniformNames);
 }
