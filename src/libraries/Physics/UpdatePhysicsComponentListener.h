@@ -1,9 +1,8 @@
 #ifndef UPDATEPHYSICSCOMPONENTLISTENER_H
 #define UPDATEPHYSICSCOMPONENTLISTENER_H
 
-
 #include "Patterns/Listener.h"
-
+class PhysicsComponent;
 
 class UpdatePhysicsComponentListener : public Listener {
 protected:

@@ -3,9 +3,9 @@
 
 #include <iostream>
 
-UpdatePhysicsComponentListener::Listener(PhysicsComponent* physicsComponent){
+UpdatePhysicsComponentListener::UpdatePhysicsComponentListener(PhysicsComponent* physicsComponent){
 	this->physicsComponent = physicsComponent;
 }
 void UpdatePhysicsComponentListener::update(){
-	physicsComponent->update();
+	this->physicsComponent->update();
 }
