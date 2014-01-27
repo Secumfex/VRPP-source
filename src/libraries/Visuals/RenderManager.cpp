@@ -60,21 +60,22 @@ setCurrentGC aufgerufen werden sobald die GC global gesetzt wurde
 */
 
 
-VirtualObject getCurrentVO(map mapName,string MapField, int vecPos ){	//muss die Map, Feld & die aktuelle Pos im GC Vektor wissen
-	return mapName[MapField[vecPos]];
+VirtualObject getCurrentVO(){
+	return currentVO;
 }
 
 void setCurrentVO(VirtualObject* vo){
 	currentVO = vo;
 }
 
-GraphicsComponent getCurrentGC(map mapName, string MapField, int vecPos){
-	return mapName[MapField[vecPos]];
+GraphicsComponent getCurrentGC(){
+	return currentGC;
 }
 
 void setCurrentGC(GraphicsComponent* gc){
 	currentGC = gc;
 }
+
 
 
 
