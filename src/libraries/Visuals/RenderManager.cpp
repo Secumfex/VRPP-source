@@ -60,20 +60,22 @@ setCurrentGC aufgerufen werden sobald die GC global gesetzt wurde
 */
 
 
-VirtualObject getCurrentVO(){
+VirtualObject* getCurrentVO(){
 	return currentVO;
 }
 
-void setCurrentVO(VirtualObject* vo){
-	currentVO = vo;
+void setCurrentVO(){
+	map<GraphicsComponent*, VirtualObject* > gc2voMap = rq->getGc2VoMap();
+    currentVO = gc2voMap[currentGC];
 }
 
-GraphicsComponent getCurrentGC(){
+GraphicsComponent* getCurrentGC(){
 	return currentGC;
 }
 
 void setCurrentGC(GraphicsComponent* gc){
 	currentGC = gc;
+    setCurrentVO();
 }
 
 
