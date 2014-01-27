@@ -23,6 +23,9 @@ public:
 	VirtualObject* getNextObject(); //iterate list
 	bool hasNext(); //is voList empty?
 	void resetQueue();	//resetting iterator to list begin
+	map<string, vector<GraphicsComponent* > > getGcFlagStorage();
+	map<string, vector<GraphicsComponent* > > getGcShaderStorage();
+	map<string, vector<GraphicsComponent* > > getGcTexStorage();
 	void sortByShaders(); //extracts GCs from all VOs in VO list and sorts them into the gcStorage map
 	void sortByTextures(); //extracts GCs from all VOs in VO list and sorts them into the gcTexStorage map
 	void sortByFlags(); //extracts GCs from all VOs and sorts them into gcFlagStorage by checking for transparency, shadow, etc
@@ -30,7 +33,7 @@ private:
 	list<VirtualObject* >::iterator currentFirstElement; ///< VO pointer used with voList
 //	vector<GraphicsComponent>::iterator gcIterator; ///< iterator for gc-vectors
 	list<VirtualObject*> voList; ///< list of VOs
-	map<string, vector<GraphicsComponent* > > gcStorage; ///< GC map sorted by shaders
+	map<string, vector<GraphicsComponent* > > gcShaderStorage; ///< GC map sorted by shaders
 	map<string, vector<GraphicsComponent* > > gcTexStorage; ///< GC map sorted by Textures
 	map<VirtualObject*, vector<GraphicsComponent* > > gc2voMap; ///< each GC is assigned to some VO
 	map<VirtualObject*, vector<GraphicsComponent* > > gcTex2voMap; ///< each GC is assigned to some VO

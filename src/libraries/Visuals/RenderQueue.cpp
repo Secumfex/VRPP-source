@@ -17,11 +17,22 @@ RenderQueue* RenderQueue::getRenderQueue(){
 	return this;
 }
 
-/** \brief adds a VO to the member list of VOs
+/** \brief adds a VO to the member list of VOs, also maps GC->VO and vice versa
 */
 void RenderQueue::addVirtualObject(VirtualObject* vo){
 	cout<<"Adding VO."<<endl; // <-- REMOVE IN FINAL
 	voList.push_back(vo);
+
+	vector<GraphicsComponent* > gcVector; 
+
+	gcVector = vo->getGraphicsComponent();
+
+	for(unsigned int i = 0; i < gcVector.size(); i++){
+		cout<<"Sort: GC->VO, VO->GC"<<endl; // <-- REMOVE IN FINAL
+
+		gc2voMap[vo].push_back(gcVector[i]); /// VO --> GC
+		vo2gcMap[gcVector[i]] = vo;
+	}
 }
 
 /** \brief removes a single VO from the member list of VOs
@@ -60,40 +71,23 @@ void RenderQueue::resetQueue(){
 	currentFirstElement = voList.begin();
 }
 
-/** \brief extract VOs from voList, extract gc-vectors from the VOs, extract the gcs from the vectors, put them into a list in a map
-* @param shader ID-string to one of which all GraphicsComponents will be sorted
-* @param vo temporary VO pointer variable
-* @param gcVector temporary storage for all GCs of each VO, one at a time
-* @todo  map<VO, vec<GC> > works fine, map<GC, vec<VO> > however is causing issues and the latter is what we want
+/** \brief getter for GCs sorted by flags
 */
+map<string, vector<GraphicsComponent* > > RenderQueue::getGcFlagStorage(){
+	return gcFlagStorage;
+}
 
-//Alternativ einfach nur sort Methode (alle auskommentieren Zeilen einfügen -> weniger Maps
+/** \brief getter for GCs sorted by shaders
+*/
+map<string, vector<GraphicsComponent* > > RenderQueue::getGcShaderStorage(){
+	return gcShaderStorage;
+}
 
-//void RenderQueue::sorteGC2map(){
-//	resetQueue();
-//	string shader = "DEFERRED_SHADING";
-//	string texture = "TEX_ID";
-//	VirtualObject* vo;
-//	vector<GraphicsComponent* > gcVector;
-//
-//
-//	cout<<"Entering extractAndSort"<<endl; // <-- REMOVE IN FINAL
-//
-//	while(hasNext()){
-//		vo = getNextObject();
-//		gcVector = vo->getGraphicsComponent();
-//		for(unsigned int i = 0; i < gcVector.size(); i++){
-//			cout<<"Adding GC to the map."<<endl; // <-- REMOVE IN FINAL
-//
-//			gcStorage[shader].push_back(gcVector[i]); /// shader --> GC
-//			gcStorage[texture].push_back(gcVector[i]); ///texture --> GC
-//			gc2voMap[vo].push_back(gcVector[i]); /// VO --> GC
-//
-//
-//			vo2gcMap[gcVector[i]] = vo;
-//		}
-//	}
-//}
+/** \brief getter for GCs sorted by textures
+*/
+map<string, vector<GraphicsComponent* > > RenderQueue::getGcTexStorage(){
+	return gcTexStorage;
+}
 
 void RenderQueue::sortByShaders(){
 	resetQueue();
@@ -110,7 +104,7 @@ void RenderQueue::sortByShaders(){
 		for(unsigned int i = 0; i < gcVector.size(); i++){
 			cout<<"Adding GC to the map."<<endl; // <-- REMOVE IN FINAL
 
-			gcStorage[shader].push_back(gcVector[i]); /// shader --> GC
+			gcShaderStorage[shader].push_back(gcVector[i]); /// shader --> GC
 			gc2voMap[vo].push_back(gcVector[i]); /// VO --> GC
 
 			vo2gcMap[gcVector[i]] = vo;
@@ -173,3 +167,4 @@ void RenderQueue::sortByFlags(){
 		}
 	}
 }
+
