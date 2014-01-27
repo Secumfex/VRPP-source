@@ -1,6 +1,6 @@
 #ifndef RENDERMANAGER_H
 #define RENDERMANAGER_H
-#include "IO/IOManager.h"
+//#include "IO/IOManager.h"   @todo problem due to multiple includes of glfw and stuff
 #include "Visuals/RenderQueue.h"
 #include "Patterns/Singleton.h"
 #include "Patterns/Subject.h"
@@ -13,11 +13,12 @@ protected:
 public:
     ~RenderManager ();
 	//RenderQueue renderQueue;
-	void setRenderQueue();
+	void setRenderQueue(RenderQueue* currentRQ);
 	void libInit();
 	void manageShaderProgram();
 	void renderLoop();
-	void attachFrameListener(Listener* listener);	//attach a listener that will be called at the beginning of a frameloop
+	void attachListenerOnNewFrame(Listener* listener);	        //!< attach a listener that will be called at the beginning of a frameloop
+	void attachListenerOnWindowShouldClose(Listener* listener); //!< attach a listener that will be called at the closure of the GLFW window
 	glm::mat4 getProjectionMatrix();
 	void setProjectionMatrix(glm::mat4 _projectionMatrix);
 	void setDefaultProjectionMatrix();

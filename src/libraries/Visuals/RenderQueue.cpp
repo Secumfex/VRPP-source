@@ -66,14 +66,43 @@ void RenderQueue::resetQueue(){
 * @param gcVector temporary storage for all GCs of each VO, one at a time
 * @todo  map<VO, vec<GC> > works fine, map<GC, vec<VO> > however is causing issues and the latter is what we want
 */
+
+//Alternativ einfach nur sort Methode (alle auskommentieren Zeilen einfügen -> weniger Maps
+
+//void RenderQueue::sorteGC2map(){
+//	resetQueue();
+//	string shader = "DEFERRED_SHADING";
+//	string texture = "TEX_ID";
+//	VirtualObject* vo;
+//	vector<GraphicsComponent* > gcVector;
+//
+//
+//	cout<<"Entering extractAndSort"<<endl; // <-- REMOVE IN FINAL
+//
+//	while(hasNext()){
+//		vo = getNextObject();
+//		gcVector = vo->getGraphicsComponent();
+//		for(unsigned int i = 0; i < gcVector.size(); i++){
+//			cout<<"Adding GC to the map."<<endl; // <-- REMOVE IN FINAL
+//
+//			gcStorage[shader].push_back(gcVector[i]); /// shader --> GC
+//			gcStorage[texture].push_back(gcVector[i]); ///texture --> GC
+//			gc2voMap[vo].push_back(gcVector[i]); /// VO --> GC
+//
+//
+//			vo2gcMap[gcVector[i]] = vo;
+//		}
+//	}
+//}
+
 void RenderQueue::sortByShaders(){
 	resetQueue();
-	string shader = "DEFERRED_SHADING"; 
+	string shader = "DEFERRED_SHADING";
 	VirtualObject* vo;
 	vector<GraphicsComponent* > gcVector; 
 
 
-	cout<<"Entering extractAndSort"<<endl; // <-- REMOVE IN FINAL
+	cout<<"Entering sortByShaders"<<endl; // <-- REMOVE IN FINAL
 
 	while(hasNext()){
 		vo = getNextObject();
@@ -87,7 +116,60 @@ void RenderQueue::sortByShaders(){
 			vo2gcMap[gcVector[i]] = vo;
 		}
 	}
+}
 	
+void RenderQueue::sortByTextures(){
+	resetQueue();
+	string texID = "tex_stone";
+	VirtualObject* vo;
+	vector<GraphicsComponent* > gcTexVector;
 
 
+	cout<<"Entering sortByTextures"<<endl; // <-- REMOVE IN FINAL
+
+	while(hasNext()){
+		vo = getNextObject();
+		gcTexVector = vo->getGraphicsComponent();
+		for(unsigned int i = 0; i < gcTexVector.size(); i++){
+			cout<<"Adding GC to the TextureMap."<<endl; // <-- REMOVE IN FINAL
+
+			gcTexStorage[texID].push_back(gcTexVector[i]); /// texture --> GC
+			gcTex2voMap[vo].push_back(gcTexVector[i]); /// VO --> GC
+
+			vo2gcTexMap[gcTexVector[i]] = vo;
+		}
+	}
+}
+
+void RenderQueue::sortByFlags(){
+	resetQueue();
+	string sString = "SHADOW";
+	string eString = "EMISSION";
+	string tString = "TRANSPARENCY";
+
+	VirtualObject* vo;
+
+	vector<GraphicsComponent* > gcFlagVector;
+
+	cout<<"entering sortByFlags"<<endl; // <-- REMOVE IN FINAL
+
+	while(hasNext()){
+		vo = getNextObject();
+		gcFlagVector = vo->getGraphicsComponent();
+		for(unsigned int i = 0; i < gcFlagVector.size(); i++){
+			cout<<"Adding GC to the FlagMap."<<endl;
+			
+			if(gcFlagVector[i]->hasEmission()){
+				gcFlagStorage[eString].push_back(gcFlagVector[i]);
+			}
+
+			if(gcFlagVector[i]->hasShadow()){
+				gcFlagStorage[sString].push_back(gcFlagVector[i]);
+			}
+
+			if(gcFlagVector[i]->hasTransparency()){
+				gcFlagStorage[tString].push_back(gcFlagVector[i]);
+			}
+		}
+	}
 }

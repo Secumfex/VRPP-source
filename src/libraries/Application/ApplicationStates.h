@@ -2,15 +2,18 @@
 #define APPLICATIONSTATES_H
 
 #include "Patterns/State.h"
-//Base class of States specifically for the Application-Class
-class ApplicationState : public State{
+#include "Patterns/Subject.h"
+/// Base class of States specifically for the Application-Class
+class ApplicationState : public State, public Subject{
 
 protected: 
-	//Bind Objects to RenderManager and IOManager
-	virtual void bindObjects();
+	virtual void bindObjects(); //!< bind objects to RenderManager, IOManager, PhysicsWorld etc.
 public:
-	//Activate this State
-	virtual void activate();
+	virtual void activate(); //!< activation of state --> binding objects
+
+	/*Application State Listeners*/
+	void attachListenerOnActivation(Listener* listener); //!< attach Listener on Activation
+	void attachListenerOnBindingObjects(Listener* listener); //!< attach Listener on binding objects 
 };
 
 class IdleState : public ApplicationState {
@@ -26,9 +29,5 @@ public:
 	VRState(std::string name = "");
 
 	void activate();
-
-	void initRenderer();
-	void initPhysics();
-	void initScene();
 };
 #endif

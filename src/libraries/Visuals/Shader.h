@@ -27,8 +27,9 @@ public:
 	void setShaderName(std::string name);
 	void uploadUniforms(GraphicsComponent* graphcomp);
 	void uploadUniforms(glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
-	std::string getShaderName();
+	string getShaderName();
 	GLuint getProgramHandle();
+
 
 	bool uploadUniform(glm::mat4 uniformMatrix, std::string uniformName);
 	bool uploadUniform(glm::vec3 uniformVector, std::string uniformName);
@@ -39,6 +40,7 @@ public:
 
 	std::vector<std::string> getUniformNames();
 
+
 	void useProgram();
 
 	void render(GraphicsComponent *gc);
@@ -48,11 +50,13 @@ private:
 
 	//-----------------MEMBER VARIABLES-----------------
 protected:
+
 	std::map<std::string, GLuint> mUniformHandles;
 
 	std::vector<std::string> mUniformNames;
 
 	std::string mShaderName;
+
 	GLuint mProgramHandle;
 };
 

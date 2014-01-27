@@ -16,8 +16,13 @@ friend class Singleton<Application>;
 
 private:
 	string label;
+	bool shouldTerminate;
+	bool initialized;
 
 public:
+	void initialize(); //!< initialize RenderManager and open window
+	void terminate();	//!< break program cycle loop
+
 	bool setState(State* state);	//!<returns true if successful, false if unsuccessful, calls statechange listeners
 	bool setState(std::string state);	//!<returns true if successful, false if unsuccessful, calls statechange listeners
 
@@ -25,14 +30,21 @@ public:
 
 	/*! @brief sets the label.
 	 *
-	 *	@param label is a string representing blabla detailed description pls
+	 *	@param label is a string representing it's name
 	 */
 	void setLabel(std::string label);
 
 	std::string getLabel();
 
 	/*Application Listeners*/
-	void attachStateChangeListener(Listener* listener); //!< attach a listener that will be called at any successful statechange
+	void attachListenerOnStateChange(Listener* listener);           //!< attach a listener that will be called at any successful statechange
+	void attachListenerOnBeginningProgramCycle(Listener* listener); //!< attach a listener that will be called at a beginning program cycle (run()-method)
+	void attachListenerOnProgramTermination(Listener* listener);    //!< attach a listener that will be called at program termination
+	void attachListenerOnProgramInitialization(Listener* listener);    //!< attach a listener that will be called at program initialization
+	
+	void run(); //!< enter program cycle loop
+
+
 };
 
 #endif

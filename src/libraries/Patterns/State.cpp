@@ -2,7 +2,7 @@
 
 #include <iostream>
 void State::activate(){
-	std::cout<< name << " state active."<<std::endl;
+	//	std::cout<< name << " state active."<<std::endl;
 }
 
 std::string State::getName(){
