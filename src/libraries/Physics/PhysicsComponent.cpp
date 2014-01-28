@@ -62,8 +62,6 @@ btRigidBody* PhysicsComponent::addSphere(float radius, float x, float y, float z
 	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,sphere);
 	btRigidBody* body = new btRigidBody(info);
 
-	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(body);
-
 	return body;
 }
 
@@ -83,8 +81,6 @@ btRigidBody* PhysicsComponent::addBox(float width, float height, float depth, fl
 	btMotionState* motion = new btDefaultMotionState(t);
 	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,box);
 	btRigidBody* body = new btRigidBody(info);
-
-	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(body);
 
 	return body;
 }
