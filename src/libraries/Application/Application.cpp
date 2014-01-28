@@ -52,7 +52,7 @@ std::string Application::getLabel(){
 bool Application::setState(State* state){
 	if (StateMachine::setState(state)){
 		notify("STATECHANGELISTENER");
-		state->notify();
+		currentState->notify("STATECHANGELISTENER");
 		return true;
 	}
 	return false;
@@ -61,7 +61,7 @@ bool Application::setState(State* state){
 bool Application::setState(std::string state){
 	if (StateMachine::setState(state)){
 		notify("STATECHANGELISTENER");
-		currentState->notify();
+		currentState->notify("STATECHANGELISTENER");
 		return true;
 	}
 	return false;
