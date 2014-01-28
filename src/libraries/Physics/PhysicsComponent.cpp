@@ -14,6 +14,26 @@ PhysicsComponent::PhysicsComponent(glm::mat4 modelMatrix) {
 	rigidBody =  0;
 }
 
+PhysicsComponent::PhysicsComponent(glm::vec3 min, glm::vec3 max) {
+
+	glm::vec3 boxValue = max-min;
+
+	float width = boxValue.x;
+	float height = boxValue.y;
+	float depth = boxValue.z;
+
+	float x = width / 2;
+	float y = height / 2;
+	float z = depth / 2;
+
+	int mass = 0;
+
+	rigidBody = addBox(width, height, depth, x, y, z, mass);
+	addCollisionFlag(4);
+	update();
+	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
+}
+
 PhysicsComponent::PhysicsComponent(float radius, float x, float y, float z, float mass) {
 
 	rigidBody = addSphere(radius,x,y,z,mass);

@@ -74,6 +74,13 @@ public:
 
 	/** \brief constructor
 	*
+	* constructor to create a box shaped rigid body.
+	* @param max and min contain smallest and largest x, y, z values of a given model (in VirtualObjectFactory class)
+	*/
+	PhysicsComponent(glm::vec3 min, glm::vec3 max);
+
+	/** \brief constructor
+	*
 	* constructor to create a sphere shaped rigid body.
 	* @param radius dimension of the sphere
 	* @param x,y,z start position in the world
