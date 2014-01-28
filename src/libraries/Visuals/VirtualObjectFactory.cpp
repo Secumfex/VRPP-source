@@ -204,7 +204,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
         if(AI_SUCCESS == mtl->GetTexture(aiTextureType_DIFFUSE, 0, &texPath)){
 
 //        		texManager->createTextureHandle(RESOURCES_PATH + string("/") + texPath.C_Str());
-        		tex_temp = new Texture(RESOURCES_PATH + string("/HITERL") + texPath.C_Str());
+        		tex_temp = new Texture(RESOURCES_PATH + string("/") + texPath.C_Str());
         		cout << RESOURCES_PATH + string("/") + texPath.C_Str() << endl;
             }
 

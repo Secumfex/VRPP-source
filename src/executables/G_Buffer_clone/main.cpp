@@ -108,7 +108,9 @@ int main() {
     //--------------------------------------------//
     
 VirtualObjectFactory *voFactory = VirtualObjectFactory::getInstance();
-VirtualObject *cube = voFactory->createVirtualObject(RESOURCES_PATH "/cow.obj");
+VirtualObject *cube = voFactory->createVirtualObject(RESOURCES_PATH "/cube.obj");
+VirtualObject *cow = voFactory->createVirtualObject(RESOURCES_PATH "/cow.obj");
+
     
     
     //--------------------------------------------//
@@ -195,8 +197,6 @@ VirtualObject *cube = voFactory->createVirtualObject(RESOURCES_PATH "/cow.obj");
         
         
         glEnable(GL_DEPTH_TEST);
-        glBindVertexArray(cube->getGraphicsComponent()[0]->getMesh()->getVAO());
-        glBindTexture(GL_TEXTURE_2D, cube->getGraphicsComponent()[0]->getMaterial()->getDiffuseMap()->getTextureHandle());
         
         glUseProgram(gbufferShader->getProgramHandle());
         
@@ -207,11 +207,17 @@ VirtualObject *cube = voFactory->createVirtualObject(RESOURCES_PATH "/cow.obj");
         gbufferShader->uploadUniform(viewMatrix,"uniformView");
         gbufferShader->uploadUniform(projectionMatrix,"uniformProjection");
 
-        gbufferShader->uploadUniform(modelCube_1,"uniformModel");
-        glDrawElements(GL_TRIANGLES, cube->getGraphicsComponent()[0]->getMesh()->getNumIndices(), GL_UNSIGNED_INT, 0);
-        
-        
+		        glBindVertexArray(cow->getGraphicsComponent()[0]->getMesh()->getVAO());
+        glBindTexture(GL_TEXTURE_2D, cow
+			->getGraphicsComponent()[0]->getMaterial()->getDiffuseMap()->getTextureHandle());
+
         gbufferShader->uploadUniform(modelCube_2,"uniformModel");
+        glDrawElements(GL_TRIANGLES, cow->getGraphicsComponent()[0]->getMesh()->getNumIndices(), GL_UNSIGNED_INT, 0);
+        
+                glBindVertexArray(cube->getGraphicsComponent()[0]->getMesh()->getVAO());
+        glBindTexture(GL_TEXTURE_2D, cube->getGraphicsComponent()[0]->getMaterial()->getDiffuseMap()->getTextureHandle());
+
+        gbufferShader->uploadUniform(modelCube_1,"uniformModel");
         glDrawElements(GL_TRIANGLES, cube->getGraphicsComponent()[0]->getMesh()->getNumIndices(), GL_UNSIGNED_INT, 0);
         
         
