@@ -3,7 +3,7 @@
 
 #include <string>
 
-class State{	//a state of a context
+class State : public Subject{	//a state of a context
 
 protected:
 
