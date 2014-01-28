@@ -8,6 +8,11 @@
 
 using namespace std;
 
+PhysicsComponent::PhysicsComponent(){
+	rigidBody = 0;
+	modelMatrix = glm::mat4();
+}
+
 PhysicsComponent::PhysicsComponent(glm::mat4 modelMatrix) {
 
 	this-> modelMatrix = modelMatrix;
@@ -60,29 +65,11 @@ PhysicsComponent::~PhysicsComponent() {
 	delete rigidBody;
 }
 
-glm::mat4 PhysicsComponent::getModelMatrix(){
+void PhysicsComponent::addCollisionFlag(int flag) {
 
-	return modelMatrix;
-}
-
-btRigidBody* PhysicsComponent::addSphere(float radius, float x, float y, float z, float mass) {
-
-	btTransform t;
-	t.setIdentity();
-	t.setOrigin(btVector3(x,y,z));
-
-	btSphereShape* sphere = new btSphereShape(radius);
-
-	btVector3 inertia(0,0,0);
-	if(mass != 0.0){
-		sphere->calculateLocalInertia(mass,inertia);
+	if(flag == 4) {
+		rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK);
 	}
-
-	btMotionState* motion = new btDefaultMotionState(t);
-	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,sphere);
-	btRigidBody* body = new btRigidBody(info);
-
-	return body;
 }
 
 btRigidBody* PhysicsComponent::addBox(float width, float height, float depth, float x, float y, float z, float mass){
@@ -105,26 +92,29 @@ btRigidBody* PhysicsComponent::addBox(float width, float height, float depth, fl
 	return body;
 }
 
-void PhysicsComponent::addCollisionFlag(int flag) {
+btRigidBody* PhysicsComponent::addSphere(float radius, float x, float y, float z, float mass) {
 
-	if(flag == 4) {
-		rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK);
+	btTransform t;
+	t.setIdentity();
+	t.setOrigin(btVector3(x,y,z));
+
+	btSphereShape* sphere = new btSphereShape(radius);
+
+	btVector3 inertia(0,0,0);
+	if(mass != 0.0){
+		sphere->calculateLocalInertia(mass,inertia);
 	}
+
+	btMotionState* motion = new btDefaultMotionState(t);
+	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,sphere);
+	btRigidBody* body = new btRigidBody(info);
+
+	return body;
 }
 
-void PhysicsComponent::initFrameListener(){
-/**
- * @todo instead:
- * 	write a "UpdatePhysicsComponentListener" class as a derivative of Listener
- * 	as members, it receives a simple PhysicsComponent pointer
- * 	in its update() method it calls pc->update()
- * alternatively, leave PhysicsComponent as it is ( a Listener itself )
- *  it may be attached to the RenderLoop just the way it is
- *  how ever, bear in mind that it can only be attached to a single Subject
- */
-//	Listener* frameListener;
-//	frameListener->setName("FRAMELISTENER");
-//	frameListener->update();
+glm::mat4 PhysicsComponent::getModelMatrix(){
+
+	return modelMatrix;
 }
 
 void PhysicsComponent::update(){
@@ -151,4 +141,19 @@ void PhysicsComponent::update(){
 	else {
 		return;
 	}
+}
+
+void PhysicsComponent::initFrameListener(){
+/**
+ * @todo instead:
+ * 	write a "UpdatePhysicsComponentListener" class as a derivative of Listener
+ * 	as members, it receives a simple PhysicsComponent pointer
+ * 	in its update() method it calls pc->update()
+ * alternatively, leave PhysicsComponent as it is ( a Listener itself )
+ *  it may be attached to the RenderLoop just the way it is
+ *  how ever, bear in mind that it can only be attached to a single Subject
+ */
+//	Listener* frameListener;
+//	frameListener->setName("FRAMELISTENER");
+//	frameListener->update();
 }

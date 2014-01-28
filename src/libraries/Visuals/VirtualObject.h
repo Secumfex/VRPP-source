@@ -15,12 +15,8 @@ class VirtualObject{
 
 	vector<GraphicsComponent*> mGraphComponent;
 
-
 public:
 
-	glm::mat4 getModelMatrix();
-
-	PhysicsComponent *physicsComponent; 			/**< pointer to the physics component of the VO */
 //	vector<GraphicsComponent> graphicsComponent;	/**< pointer to the graphics Component of the VO*/
 
 	/** \brief constructor
@@ -49,17 +45,32 @@ public:
 	 */
 	void updateModelMatrix();
 	
+	void addGraphicsComponent(GraphicsComponent *graphcomp);
+
 	/** \brief
 	*
 	* 	@todo detailed description
 	*/
 	vector<GraphicsComponent*> getGraphicsComponent();
 
+	void setPhysicsComponent();																							//TODO: Dokumentation
+
+	void setPhysicsComponent(glm::mat4 modelMatrix);																	//TODO: Dokumentation
+
+	void setPhysicsComponent(glm::vec3 min, glm::vec3 max);																//TODO: Dokumentation
+
+	void setPhysicsComponent(float radius, float x, float y, float z, float mass);										//TODO: Dokumentation
+
+	void setPhysicsComponent(float width, float height, float depth, float x, float y, float z, float mass);			//TODO: Dokumentation
+
+	glm::mat4 getModelMatrix();
+
 	/** \brief
 	*
 	* 	@todo detailed description
 	*/
-	void addGraphicsComponent(GraphicsComponent *graphcomp);
+
+	PhysicsComponent *physicsComponent; 			/**< pointer to the physics component of the VO */
 };
 
 
