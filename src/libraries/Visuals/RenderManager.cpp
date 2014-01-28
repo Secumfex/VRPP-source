@@ -56,18 +56,12 @@ VirtualObject* RenderManager::getCurrentVO(){
 	return myCurrentVO;
 }
 
-void RenderManager::setCurrentVO(){
-	map<GraphicsComponent*, VirtualObject* > gc2voMap = mRenderqueue->getGc2VoMap();
-    currentVO = gc2voMap[currentGC];
-}
-
 GraphicsComponent* RenderManager::getCurrentGC(){
 	return currentGC;
 }
 
 void RenderManager::setCurrentGC(GraphicsComponent* gc){
 	currentGC = gc;
-    setCurrentVO();
 }
 
 Shader* RenderManager::getCurrentShader(){
