@@ -297,6 +297,8 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 
 
 		virtualObject->addGraphicsComponent(gc);
+
+		virtualObject->setPhysicsComponent(aabbMin, aabbMax);
     }
 
 
