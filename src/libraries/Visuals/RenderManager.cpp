@@ -1,7 +1,3 @@
-
-
-#include "Visuals/RenderManager.h"
-
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
@@ -15,13 +11,13 @@
 #include <glm/gtc/matrix_inverse.hpp>
 
 #include "Visuals/RenderQueue.h"
+#include "Visuals/RenderManager.h"
 
 #include "Tools/ShaderTools.h"
 #include "Tools/TextureTools.h"
 #include "Tools/Geometry.h"
 
 using namespace glm;
-
 
 void RenderManager::setRenderQueue(RenderQueue* currentRQ){
     mRenderqueue = currentRQ;
@@ -31,28 +27,9 @@ mat4 RenderManager::getProjectionMatrix(){
     return projectionMatrix;
 }
 
-
-//TODO
-/*wir brauchen eine setCurrentGC(GraphicsComponent* gc)
-und eine getCurrentGC()
-die auf eine globale Pointer-variable im RenderManager zugreifen
-sowas wie GraphicsComponent* mCurrentGC
-gesetzt wird der shit in der renderLoop, aber das machen wir spï¿½ter
-erstmal wollen wir nur den Access haben
-
-WENN wir das geschafft haben kommt Step2
-dann machen wir uns noch eine currentVO globale variable, ebenfalls im RenderManager (auf raphis anfrage)
-die getCurrentVO wird dann genauso aussehen wie die getCurrentGC, nur halt mit virtual object
-die setCurrentVO wird stattdessen auf die jeweilige map in der RenderQueue zugreifen und kann direkt in der
-setCurrentGC aufgerufen werden sobald die GC global gesetzt wurde
-
-*/
-
-
 VirtualObject* RenderManager::getCurrentVO(){
 	map<GraphicsComponent*, VirtualObject* > gc2voMap = mRenderqueue->getGc2VoMap();
     VirtualObject* myCurrentVO = gc2voMap[mCurrentGC];
-
 	return myCurrentVO;
 }
 
@@ -72,7 +49,6 @@ Camera* RenderManager::getCamera(){
 	return mCamera;
 }
 
-
 void RenderManager::setProjectionMatrix(mat4 _projectionMatrix){
     projectionMatrix = _projectionMatrix;
 }
@@ -89,7 +65,6 @@ void errorCallback(int error, const char* description){
 //key callback, will be removed when there is I/O functionality
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods){
     if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS){
-        
         glfwSetWindowShouldClose(window, GL_TRUE);
     }
 }
@@ -131,7 +106,6 @@ void RenderManager::libInit(){
 
     //set default projectionMatrix
     setDefaultProjectionMatrix();
-
 }
 
 void RenderManager::manageShaderProgram(){
@@ -139,7 +113,6 @@ void RenderManager::manageShaderProgram(){
 	shaderProgramHandle = ShaderTools::makeShaderProgram(
                                                                  SHADERS_PATH "/RenderManagerApp/RenderManagerApp.vert",
                                                                  SHADERS_PATH "/RenderManagerApp/RenderManagerApp.frag");
-
 	glUseProgram(shaderProgramHandle);
 }
 
@@ -164,9 +137,22 @@ void RenderManager::renderLoop(){
     }
 }
 
+//TODO Abfrage an die RenderQue, gib mir alle Elemente, die zu zeichnen sind
+/*
+ * (was hinter der Cam ist, ist egal) (Tiefenmap um zu checken was eh verdeckt ist?!)
+ * dann check:
+ * 		1. Pass: getElementsByTagXY 	-- add in Vec1        -- render Vec1
+ * 			Alle Objekte Shadowmap (für alle Objekte, austausch Uniform Variablen, alles rendern)
+ * 		2. Pass: getElementsByTagXY
+ * 			Alle Objekte Phong (für alle Objekte, austausch Uniform Variablen, alles rendern)
+ * 			Phong evtl aufsplitten nach Materialien, Texturen, wie es beleuchtet ... werden soll
+ * 		3. Pass: getElementsByTagXY
+ * 			compositing, alle Texturen etc.
+ */
+
+//TODO RenderVectoren erstellen?
 
 RenderManager::~RenderManager(){ 
-
 }
 
 RenderManager::RenderManager(){

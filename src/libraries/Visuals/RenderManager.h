@@ -7,8 +7,6 @@
 #include "IO/Camera.h"
 #include "Visuals/Shader.h"
 
-
-
 // RenderManager is a Singleton and can be called by getInstance(), it is also a Subject
 class RenderManager : public Singleton<RenderManager>, public Subject{
 	friend class Singleton <RenderManager>;  //nötig damit Singleton Zugriff auf private und protected Membervariablen von RenderManager hat
@@ -46,14 +44,11 @@ private:
 
 	GLFWwindow* window;
 
-
 	Camera* mCamera;
 	RenderQueue* mRenderqueue;
 	Shader* mCurrentShader;
 	GraphicsComponent* mCurrentGC;
 	VirtualObject* mCurrentVO;
-
-
 };
 
 #endif /* RENDERMANAGER_H */

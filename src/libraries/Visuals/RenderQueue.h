@@ -18,11 +18,13 @@ public:
 	RenderQueue(); //create and reset RQ
 	~RenderQueue();
 	RenderQueue* getRenderQueue(); 
+	void resetQueue();	//resetting iterator to list begin
+
 	void addVirtualObject(VirtualObject* vo); //add VO to VO list
 	void removeVirtualObject(VirtualObject* vo); //remove VO from list
 	VirtualObject* getNextObject(); //iterate list
 	bool hasNext(); //is voList empty?
-	void resetQueue();	//resetting iterator to list begin
+
 	map<string, vector<GraphicsComponent* > > getGcFlagStorage();
 	map<string, vector<GraphicsComponent* > > getGcShaderStorage();
 	map<string, vector<GraphicsComponent* > > getGcTexStorage();
@@ -31,6 +33,7 @@ public:
 	void sortByShaders(); //extracts GCs from all VOs in VO list and sorts them into the gcStorage map
 	void sortByTextures(); //extracts GCs from all VOs in VO list and sorts them into the gcTexStorage map
 	void sortByFlags(); //extracts GCs from all VOs and sorts them into gcFlagStorage by checking for transparency, shadow, etc
+
 private:
 	list<VirtualObject* >::iterator currentFirstElement; ///< VO pointer used with voList
 //	vector<GraphicsComponent>::iterator gcIterator; ///< iterator for gc-vectors

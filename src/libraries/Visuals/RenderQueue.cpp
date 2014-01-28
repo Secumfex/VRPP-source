@@ -8,7 +8,6 @@ resetQueue();
 }
 
 RenderQueue::~RenderQueue(){
-	
 }
 
 /** \brief returns a pointer to this RenderQueue
@@ -19,6 +18,7 @@ RenderQueue* RenderQueue::getRenderQueue(){
 
 /** \brief adds a VO to the member list of VOs, also maps GC->VO and vice versa
 */
+		//TODO VOs bzw GCs direkt in die passenden Maps eintrage
 void RenderQueue::addVirtualObject(VirtualObject* vo){
 	cout<<"Adding VO."<<endl; // <-- REMOVE IN FINAL
 	voList.push_back(vo);
@@ -32,6 +32,10 @@ void RenderQueue::addVirtualObject(VirtualObject* vo){
 
 		vo2gcMap[vo].push_back(gcVector[i]); /// VO --> GC
 		gc2voMap[gcVector[i]] = vo;
+
+		//gcShaderStorage[gcVector[i].getGCshader()] = gcVector[i];
+		//gcFlagStorage[gcVector[i].getGCflag()] = gcVector[i];
+		//gcTexStorage[gcVector[i].getGCtex()] = gcVector[i];
 	}
 }
 
@@ -107,7 +111,6 @@ void RenderQueue::sortByShaders(){
 	VirtualObject* vo;
 	vector<GraphicsComponent* > gcVector; 
 
-
 	cout<<"Entering sortByShaders"<<endl; // <-- REMOVE IN FINAL
 
 	while(hasNext()){
@@ -118,7 +121,6 @@ void RenderQueue::sortByShaders(){
 
 			gcShaderStorage[shader].push_back(gcVector[i]); /// shader --> GC
 			vo2gcMap[vo].push_back(gcVector[i]); /// VO --> GC
-
 			gc2voMap[gcVector[i]] = vo;
 		}
 	}
@@ -130,7 +132,6 @@ void RenderQueue::sortByTextures(){
 	VirtualObject* vo;
 	vector<GraphicsComponent* > gcTexVector;
 
-
 	cout<<"Entering sortByTextures"<<endl; // <-- REMOVE IN FINAL
 
 	while(hasNext()){
@@ -141,7 +142,6 @@ void RenderQueue::sortByTextures(){
 
 			gcTexStorage[texID].push_back(gcTexVector[i]); /// texture --> GC
 			gcTex2voMap[vo].push_back(gcTexVector[i]); /// VO --> GC
-
 			vo2gcTexMap[gcTexVector[i]] = vo;
 		}
 	}
@@ -168,15 +168,12 @@ void RenderQueue::sortByFlags(){
 			if(gcFlagVector[i]->hasEmission()){
 				gcFlagStorage[eString].push_back(gcFlagVector[i]);
 			}
-
 			if(gcFlagVector[i]->hasShadow()){
 				gcFlagStorage[sString].push_back(gcFlagVector[i]);
 			}
-
 			if(gcFlagVector[i]->hasTransparency()){
 				gcFlagStorage[tString].push_back(gcFlagVector[i]);
 			}
 		}
 	}
 }
-
