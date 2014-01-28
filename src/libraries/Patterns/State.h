@@ -11,6 +11,7 @@ private:
 	std::string name;
 
 public:
+	virtual ~State(){};
 	State(std::string name = "");
 	std::string getName();
 	void setName(std::string name);
