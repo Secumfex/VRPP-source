@@ -4,8 +4,6 @@
 
 using namespace std;
 
-//TODO singleton pattern (?)
-
 //gContactAddedCallback = collisionCallbackFunc;
 
 PhysicWorld::PhysicWorld() {
@@ -23,14 +21,12 @@ PhysicWorld::PhysicWorld() {
 	//gContactAddedCallback = collisionCallbackFunc;
 }
 
-/*
 bool PhysicWorld::collisionCallbackFunc(btManifoldPoint& collisionPoint, const btCollisionObjectWrapper* obj1, int id1, int index1, const btCollisionObjectWrapper* obj2, int id2, int index2) {
 
 	cout<<"collision"<<endl;
 
 	return false;
 }
-*/
 
 PhysicWorld::~PhysicWorld() {
 
