@@ -133,6 +133,12 @@ void Shader::attachUniformListener(std::string uniform){
 		attach(new UploadUniformNormalMapListener("UNIFORMUPLOADLISTENER"));}
 	else if(uniform == "colorMap"){
 		attach(new UploadUniformColorMapListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "depthMap"){
+		attach(new UploadUniformDepthMapListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "diffuseMap"){
+		attach(new UploadUniformDiffuseMapListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "bumpMap"){
+		attach(new UploadUniformBumpMapListener("UNIFORMUPLOADLISTENER"));}
 	else {
 		std::cout << "ERROR: Uniform \"" << uniform << "\" is not a valid uniform name." << std:: endl;
 	}
