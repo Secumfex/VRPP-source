@@ -75,3 +75,9 @@ void ApplicationState::attachListenerOnCreatingVirtualObject(Listener* listener)
 	listener->setName("CREATE_VIRTUAL_OBJECT_LISTENER");
 	attach(listener);
 }
+
+void ApplicationState::attachListenerOnButton(Listener* listener){
+	listener->setName("BUTTON_LISTENER");
+	attach(listener);
+}
+}

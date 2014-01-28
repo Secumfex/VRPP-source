@@ -32,6 +32,7 @@ public:
 	void attachListenerOnActivation(Listener* listener); //!< attach Listener on Activation
 	void attachListenerOnBindingObjects(Listener* listener); //!< attach Listener on binding objects 
 	void attachListenerOnCreatingVirtualObject(Listener* listener); //!< attach Listener on creating a new object
+	void attachListenerOnButton(Listener* listener); //!< attach Listener on button press or button release
 };
 
 class IdleState : public ApplicationState {
