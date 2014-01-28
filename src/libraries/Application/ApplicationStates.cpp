@@ -7,7 +7,7 @@
 using namespace std;
 
 #include "Visuals/RenderManager.h"
-#include "Visuals/VirtualObjectFactory.h"
+//#include "Visuals/VirtualObjectFactory.h"
 #include "IO/IOManager.h"
 
 ApplicationState::ApplicationState(){
@@ -39,8 +39,8 @@ void ApplicationState::bindObjects(){
 }
 
 VirtualObject* ApplicationState::createVirtualObject(std::string path){
-	VirtualObject* vo = VirtualObjectFactory::getInstance()->createVirtualObject(path);
-	renderQueue->addVirtualObject(vo);
+//	VirtualObject* vo = VirtualObjectFactory::getInstance()->createVirtualObject(path);
+//	renderQueue->addVirtualObject(vo);
 
 	notify("CREATE_VIRTUAL_OBJECT_LISTENER");	//in case someone cares
 }
@@ -79,5 +79,4 @@ void ApplicationState::attachListenerOnCreatingVirtualObject(Listener* listener)
 void ApplicationState::attachListenerOnButton(Listener* listener){
 	listener->setName("BUTTON_LISTENER");
 	attach(listener);
-}
 }
