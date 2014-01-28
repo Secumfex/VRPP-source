@@ -18,7 +18,7 @@ void configureMyApp(){
 	MenuState* myMenu = new MenuState("MAINMENU");	//create a MenuState labled MAINMENU
 	/*
 		Button* myButton = new Button("START_BUTTON");	//create a Button labled START_BUTTON
-		myButton->addPressListener(new StateChangeListener(myApp, "LOADING_SCREEN")); //add a state changing listener to be notified upon a button press
+		myButton->addListenerOnButtonPress(new SetStateListener(myApp, "LOADING_SCREEN")); //add a state changing listener to be notified upon a button press
 		myMenu->addButton(myButton);	//add Button to Main Menu
 	*/
 	MenuState* myLoadingMenu = new MenuState("LOADING_SCREEN");	//create a MenuState labled LOADING_SCREEN
@@ -29,22 +29,18 @@ void configureMyApp(){
 	VRState* myVRState = new VRState("VRSTATE"); //create a VRState labled VRSTATE
 	/*
 		 = new VirtualObject("cube.obj");	//create a Virtual Object by reading an .obj file
-	myVRState->addVirtualObject(myCubeObject);	//add the Virtual Object to VRState
+		myVRState->addVirtualObject(myCubeObject);	//add the Virtual Object to VRState
 	*/
 
-	// VirtualObject* myCubeObject = VRState->createVirtualObject(RESOURCE \ "cube.obj");	
+	VirtualObject* myCubeObject = myVRState->createVirtualObject(RESOURCES_PATH "/barrel.obj");	
+
 	/*
 		VirtualObjectFactory aufrufen
 			Create VBO
 			reate bounding box
 			add to Physicsworld singleton
 		gewonnenes Object in eigene RenderQueue hinzufügen
-		
 	*/
-
-
-	// myVRState->addVirtualObject(myCubeObject);
-
 
 	myApp->attachListenerOnProgramInitialization(new PrintMessageListener(string("Application is booting")));
 	myApp->attachListenerOnProgramTermination(new PrintMessageListener(string("Application is terminating")));

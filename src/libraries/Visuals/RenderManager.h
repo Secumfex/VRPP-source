@@ -18,9 +18,6 @@ public:
     ~RenderManager ();
 	//RenderQueue renderQueue;
 
-    void errorCallback(int error, const char* description);
-    void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
-
 	void setRenderQueue(RenderQueue* currentRQ);
 	void setCurrentGC(GraphicsComponent* gc);
 	void setCurrentShader(Shader* shader);

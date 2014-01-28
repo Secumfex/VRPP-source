@@ -82,12 +82,12 @@ void RenderManager::setDefaultProjectionMatrix(){
 }
 
 //glfw error-callback function
-void RenderManager::errorCallback(int error, const char* description){
+void errorCallback(int error, const char* description){
     fputs(description, stderr);
 }
 
 //key callback, will be removed when there is I/O functionality
-void RenderManager::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods){
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods){
     if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS){
         
         glfwSetWindowShouldClose(window, GL_TRUE);

@@ -10,7 +10,7 @@
 class Camera; class RenderQueue; class VirtualObject;
 
 /// Base class of States specifically for the Application-Class
-class ApplicationState : public State, public Subject{
+class ApplicationState : public State{
 
 
 protected: 
