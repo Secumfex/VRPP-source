@@ -32,6 +32,7 @@ Shader::Shader(std::string vertexShader, std::string fragmentShader) {
 
 	    mUniformHandles.insert(pair<std::string, GLuint>(name, location));
 	    mUniformNames.push_back(name);
+	    attachUniformListener(name);
 	}
 
 }
@@ -55,7 +56,8 @@ GLuint Shader::getProgramHandle(){
 	return mProgramHandle;
 }
 
-void Shader :: uploadUniforms(GraphicsComponent* graphcomp){
+void Shader :: uploadAllUniforms(){
+notify("UNIFORMUPLOADLISTENER");
 }
 
 bool Shader :: uploadUniform(glm::mat4 uniformMatrix, std::string uniformName){
@@ -113,4 +115,25 @@ bool Shader::hasUniform(std::string uniformName){
 std::vector<std::string> Shader::getUniformNames(){
 return std::vector<std::string>(mUniformNames);
 
+}
+
+void Shader::attachUniformListener(std::string uniform){
+
+	if(uniform == "uniformModel"){
+		attach(new UploadUniformModelMatrixListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "uniformView"){
+		attach(new UploadUniformViewMatrixListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "uniformProjection"){
+		attach(new UploadUniformProjectionMatrixListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "uniformInverse"){
+		attach(new UploadUniformInverseModelViewMatrixListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "positionMap"){
+		attach(new UploadUniformPositionMapListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "normalMap"){
+		attach(new UploadUniformNormalMapListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "colorMap"){
+		attach(new UploadUniformColorMapListener("UNIFORMUPLOADLISTENER"));}
+	else {
+		std::cout << "ERROR: Uniform \"" << uniform << "\" is not a valid uniform name." << std:: endl;
+	}
 }

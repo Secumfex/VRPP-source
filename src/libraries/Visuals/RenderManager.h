@@ -4,6 +4,9 @@
 #include "Visuals/RenderQueue.h"
 #include "Patterns/Singleton.h"
 #include "Patterns/Subject.h"
+#include "IO/Camera.h"
+#include "Visuals/Shader.h"
+
 
 
 // RenderManager is a Singleton and can be called by getInstance(), it is also a Subject

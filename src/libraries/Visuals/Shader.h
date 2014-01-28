@@ -25,7 +25,7 @@ public:
 	Shader(std::string vertexShader, std::string fragmentShader);
 	virtual ~Shader();
 	void setShaderName(std::string name);
-	void uploadUniforms(GraphicsComponent* graphcomp);
+	void uploadAllUniforms();
 	void uploadUniforms(glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
 	string getShaderName();
 	GLuint getProgramHandle();
@@ -44,6 +44,8 @@ public:
 	void useProgram();
 
 	void render(GraphicsComponent *gc);
+
+	void attachUniformListener(std::string uniform);
 
 private:
 	void makeShader(std::string vert, std::string frag);
