@@ -36,7 +36,7 @@ mat4 RenderManager::getProjectionMatrix(){
 /*wir brauchen eine setCurrentGC(GraphicsComponent* gc)
 und eine getCurrentGC()
 die auf eine globale Pointer-variable im RenderManager zugreifen
-sowas wie GraphicsComponent* currentGC
+sowas wie GraphicsComponent* mCurrentGC
 gesetzt wird der shit in der renderLoop, aber das machen wir sp�ter
 erstmal wollen wir nur den Access haben
 
@@ -51,25 +51,25 @@ setCurrentGC aufgerufen werden sobald die GC global gesetzt wurde
 
 VirtualObject* RenderManager::getCurrentVO(){
 	map<GraphicsComponent*, VirtualObject* > gc2voMap = mRenderqueue->getGc2VoMap();
-    VirtualObject* myCurrentVO = gc2voMap[currentGC];
+    VirtualObject* myCurrentVO = gc2voMap[mCurrentGC];
 
 	return myCurrentVO;
 }
 
 GraphicsComponent* RenderManager::getCurrentGC(){
-	return currentGC;
+	return mCurrentGC;
 }
 
 void RenderManager::setCurrentGC(GraphicsComponent* gc){
-	currentGC = gc;
+	mCurrentGC = gc;
 }
 
 Shader* RenderManager::getCurrentShader(){
-	return currentShader;
+	return mCurrentShader;
 }
 Camera* RenderManager::getCamera(){
 	//TODO: ordentlich Kamera uebergeben
-	return new Camera;
+	return mCamera;
 }
 
 

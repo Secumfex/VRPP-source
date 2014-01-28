@@ -49,9 +49,9 @@ private:
 
 	Camera* mCamera;
 	RenderQueue* mRenderqueue;
-	Shader* currentShader;
-	GraphicsComponent* currentGC;
-	VirtualObject* currentVO;
+	Shader* mCurrentShader;
+	GraphicsComponent* mCurrentGC;
+	VirtualObject* mCurrentVO;
 
 
 };
