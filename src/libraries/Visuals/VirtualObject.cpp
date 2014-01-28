@@ -65,4 +65,5 @@ void VirtualObject::setPhysicsComponent(float radius, float x, float y, float z,
 
 void VirtualObject::setPhysicsComponent(float width, float height, float depth, float x, float y, float z, float mass){
 	physicsComponent = new PhysicsComponent(width, height, depth, x, y, z, mass);
+
 }

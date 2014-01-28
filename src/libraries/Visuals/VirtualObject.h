@@ -51,10 +51,6 @@ public:
 	*/
 	void addGraphicsComponent(GraphicsComponent *graphcomp);
 
-	/** \brief
-	*
-	* 	@todo detailed description
-	*/
 	vector<GraphicsComponent*> getGraphicsComponent();
 
 	/** \brief sets PhysicsComponent
