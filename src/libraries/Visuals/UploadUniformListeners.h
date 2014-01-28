@@ -55,18 +55,21 @@ class UploadUniformModelMatrixListener : public Listener{
  class UploadUniformDepthMapListener : public Listener{
 
  	public:
+	 UploadUniformDepthMapListener(std::string name);
  	 	void update();
  };
 
  class UploadUniformDiffuseMapListener : public Listener{
 
   	public:
+	 UploadUniformDiffuseMapListener(std::string name);
   	 	void update();
   };
 
  class UploadUniformBumpMapListener : public Listener{
 
   	public:
+	 UploadUniformBumpMapListener(std::string name);
   	 	void update();
   };
 

@@ -85,12 +85,24 @@ UploadUniformColorMapListener::UploadUniformColorMapListener(std::string name){
 	 //TODO: implementieren (GBUFFER)
  }
 
+ UploadUniformDepthMapListener::UploadUniformDepthMapListener(std::string name){
+ 	setName(name);
+ }
+
  void UploadUniformDepthMapListener::update(){
 	 //TODO: implementieren (GBUFFER)
  }
 
+ UploadUniformDiffuseMapListener::UploadUniformDiffuseMapListener(std::string name){
+ 	setName(name);
+ }
+
  void UploadUniformDiffuseMapListener::update(){
 	 //TODO: implementieren (GBUFFER)
+ }
+
+ UploadUniformBumpMapListener::UploadUniformBumpMapListener(std::string name){
+ 	setName(name);
  }
 
  void UploadUniformBumpMapListener::update(){
