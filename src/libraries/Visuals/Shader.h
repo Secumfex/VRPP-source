@@ -27,7 +27,7 @@ public:
 	void setShaderName(std::string name);
 	void uploadAllUniforms();
 	void uploadUniforms(glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
-	string getShaderName();
+	std::string getShaderName();
 	GLuint getProgramHandle();
 
 

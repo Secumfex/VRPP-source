@@ -30,7 +30,7 @@ Shader::Shader(std::string vertexShader, std::string fragmentShader) {
 	    GLuint location = glGetUniformLocation( mProgramHandle, name );
 
 
-	    mUniformHandles.insert(pair<std::string, GLuint>(name, location));
+	    mUniformHandles.insert(std::pair<std::string, GLuint>(name, location));
 	    mUniformNames.push_back(name);
 	    attachUniformListener(name);
 	}
