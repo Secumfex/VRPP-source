@@ -19,7 +19,6 @@ public:
     void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 	void setRenderQueue(RenderQueue* currentRQ);
-	void setCurrentVO();
 	void setCurrentGC(GraphicsComponent* gc);
 	void setCurrentShader(Shader* shader);
 	void setProjectionMatrix(glm::mat4 _projectionMatrix);
@@ -47,7 +46,9 @@ private:
 
 	GLFWwindow* window;
 
-	RenderQueue* rq;
+
+	Camera* mCamera;
+	RenderQueue* mRenderqueue;
 	Shader* currentShader;
 	GraphicsComponent* currentGC;
 	VirtualObject* currentVO;

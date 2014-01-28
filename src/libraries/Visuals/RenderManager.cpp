@@ -24,7 +24,7 @@ using namespace glm;
 
 
 void RenderManager::setRenderQueue(RenderQueue* currentRQ){
-    rq = currentRQ;
+    mRenderqueue = currentRQ;
 }
 
 mat4 RenderManager::getProjectionMatrix(){
@@ -50,11 +50,14 @@ setCurrentGC aufgerufen werden sobald die GC global gesetzt wurde
 
 
 VirtualObject* RenderManager::getCurrentVO(){
-	return currentVO;
+	map<GraphicsComponent*, VirtualObject* > gc2voMap = mRenderqueue->getGc2VoMap();
+    VirtualObject* myCurrentVO = gc2voMap[currentGC];
+
+	return myCurrentVO;
 }
 
 void RenderManager::setCurrentVO(){
-	map<GraphicsComponent*, VirtualObject* > gc2voMap = rq->getGc2VoMap();
+	map<GraphicsComponent*, VirtualObject* > gc2voMap = mRenderqueue->getGc2VoMap();
     currentVO = gc2voMap[currentGC];
 }
 
