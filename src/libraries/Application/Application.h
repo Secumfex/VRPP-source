@@ -23,7 +23,7 @@ public:
 	void initialize(); //!< initialize RenderManager and open window
 	void terminate();	//!< break program cycle loop
 
-	bool setState(State* state);	//!<returns true if successful, false if unsuccessful, calls statechange listeners
+	bool setState(State* state);	//!< calls statechange listeners @return true if successful @return false if unsuccessful
 	bool setState(std::string state);	//!<returns true if successful, false if unsuccessful, calls statechange listeners
 
 	Application(std::string label = "");
