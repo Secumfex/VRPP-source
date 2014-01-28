@@ -14,6 +14,7 @@ VirtualObject::VirtualObject(glm::mat4 modelMatrix){
 	this-> modelMatrix = modelMatrix;
 	id = lastID + 1;
 	lastID = id;
+
 	physicsComponent = new PhysicsComponent(modelMatrix);
 }
 
@@ -25,7 +26,6 @@ void VirtualObject:: addGraphicsComponent(GraphicsComponent *graphcomp){
 
 VirtualObject::~VirtualObject(){
 
-	delete physicsComponent;
 }
 
 void VirtualObject::updateModelMatrix(){
@@ -36,8 +36,10 @@ glm::mat4 VirtualObject::getModelMatrix(){
 	return modelMatrix;
 }
 
+
 vector<GraphicsComponent*> VirtualObject:: getGraphicsComponent(){
 	return mGraphComponent;
+
 }
 
 //update modelmatrix (via bullet)

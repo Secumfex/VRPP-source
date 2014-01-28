@@ -12,12 +12,14 @@ private:
 
 	glm::mat4 modelMatrix;
 	int id;
+
 	vector<GraphicsComponent*> mGraphComponent;
 
 
 public:
 
 	glm::mat4 getModelMatrix();
+
 	vector<GraphicsComponent*> getGraphicsComponent();
 	
 	PhysicsComponent *physicsComponent;

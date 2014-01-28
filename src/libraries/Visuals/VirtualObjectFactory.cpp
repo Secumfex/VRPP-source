@@ -46,6 +46,9 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 	    Assimp::Importer Importer;
 	    TextureManager* texManager = TextureManager::getInstance();
 
+	    std::string directory = filename.substr( filename.find_last_of( '/' ) + 1 );
+	    directory = filename.substr(0, filename.length() - directory.length());
+
 	    using namespace std;
 
 
@@ -88,11 +91,14 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
     {
         const aiMesh* mesh = pScene->mMeshes[n];
 
+
         //Our Material and Mash to be filled
         Mesh* aMesh = new Mesh();
         Material* aMat = new Material();
  
         GLuint buffer = 0;
+        glm::vec3 aabbMax = glm::vec3(INT_MIN, INT_MIN, INT_MIN);
+        glm::vec3 aabbMin = glm::vec3(INT_MAX, INT_MAX, INT_MAX);
 
 
         //Our Indices for our Vertexlist
@@ -167,11 +173,34 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
             vector <float>texCoords;
             if (mesh->HasTextureCoords(0))
             for (unsigned int k = 0; k < mesh->mNumVertices; ++k) {
-
+            	if(aabbMax.x < mesh->mVertices[k].x)
+            		aabbMax.x = mesh->mVertices[k].x;
+            	if(aabbMax.y < mesh->mVertices[k].y)
+        	        aabbMax.y = mesh->mVertices[k].y;
+            	if(aabbMax.z < mesh->mVertices[k].z)
+            		aabbMax.z = mesh->mVertices[k].z;
+            	if(aabbMin.x > mesh->mVertices[k].x)
+            		aabbMin.x = mesh->mVertices[k].x;
+            	if(aabbMin.y > mesh->mVertices[k].y)
+        	        aabbMin.y = mesh->mVertices[k].y;
+            	if(aabbMin.z > mesh->mVertices[k].z)
+            		aabbMin.z = mesh->mVertices[k].z;
                 texCoords.push_back(mesh->mTextureCoords[0][k].x);
                 texCoords.push_back(mesh->mTextureCoords[0][k].y);
             }else
             	for(unsigned int k = 0; k < mesh->mNumVertices; k++){
+                	if(aabbMax.x < mesh->mVertices[k].x)
+                		aabbMax.x = mesh->mVertices[k].x;
+                	if(aabbMax.y < mesh->mVertices[k].y)
+            	        aabbMax.y = mesh->mVertices[k].y;
+                	if(aabbMax.z < mesh->mVertices[k].z)
+                		aabbMax.z = mesh->mVertices[k].z;
+                	if(aabbMin.x > mesh->mVertices[k].x)
+                		aabbMin.x = mesh->mVertices[k].x;
+                	if(aabbMin.y > mesh->mVertices[k].y)
+            	        aabbMin.y = mesh->mVertices[k].y;
+                	if(aabbMin.z > mesh->mVertices[k].z)
+                		aabbMin.z = mesh->mVertices[k].z;
             		if(k % 3 == 0){
             			texCoords.push_back(0.0);
                     	texCoords.push_back(0.0);}
@@ -203,9 +232,9 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 
         if(AI_SUCCESS == mtl->GetTexture(aiTextureType_DIFFUSE, 0, &texPath)){
 
-//        		texManager->createTextureHandle(RESOURCES_PATH + string("/") + texPath.C_Str());
-        		tex_temp = new Texture(RESOURCES_PATH + string("/") + texPath.C_Str());
-        		cout << RESOURCES_PATH + string("/") + texPath.C_Str() << endl;
+
+        	cout << "Try to find Texture: " << texPath.C_Str() << endl;
+        		tex_temp = new Texture(directory + texPath.C_Str());
             }
 
         aMat->setDiffuseMap(tex_temp);
@@ -265,6 +294,8 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 
 		//Mesh und Material wird gelesen und in neuer GraphicsComponent gespeichert
 		GraphicsComponent* gc=new GraphicsComponent(aMesh, aMat);
+		gc->setBoundingBox(aabbMin, aabbMax);
+
 
 		virtualObject->addGraphicsComponent(gc);
     }

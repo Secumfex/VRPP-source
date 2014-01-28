@@ -5,11 +5,8 @@
  *      Author: Batsi
  */
 
-#ifndef CONCRETESUBJECT_CPP_
-#define CONCRETESUBJECT_CPP_
-#include "Subject.h"
-#include "Listener.h"
-#include "ConcreteListener.h"
+
+#include "ConcreteSubject.h"
 
 using namespace std;
 
@@ -21,6 +18,5 @@ using namespace std;
 		return data;
 	}
 
-	ConcreteSubject::ConcreteSubject() : Subject() {}
+	ConcreteSubject::ConcreteSubject() {}
 
-#endif /* CONCRETESUBJECT_CPP_ */

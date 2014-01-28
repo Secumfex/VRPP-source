@@ -4,15 +4,28 @@
 #include "Patterns/State.h"
 //Base class of States specifically for the Application-Class
 class ApplicationState : public State{
-	virtual void setState(State* state, Context* context);
+
+protected: 
+	//Bind Objects to RenderManager and IOManager
+	virtual void bindObjects();
+public:
+	//Activate this State
+	virtual void activate();
 };
 
 class IdleState : public ApplicationState {
 };
 
+class MenuState : public ApplicationState {
+public:
+	MenuState(std::string name = "");
+};
+
 class VRState : public ApplicationState {
 public:
-	virtual void setState(State* state, Context* context);
+	VRState(std::string name = "");
+
+	void activate();
 
 	void initRenderer();
 	void initPhysics();

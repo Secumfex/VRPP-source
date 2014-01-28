@@ -14,8 +14,6 @@
 #include "Tools/TextureTools.h"
 #include "Tools/Geometry.h"
 
-#include "Application/Application.h"
-
 //global handles should be known by RenderManager 
 GLFWwindow* window;
 int width, height;
@@ -197,17 +195,11 @@ void renderLoop(){
 //The actual program
 int main() {
     //enter VRState
-    VRState* vr = new VRState();
-    Application* app = Application::getInstance();
-    app->setState(vr);
     
-    vr->initRenderer();
     initRenderer();
 
-    vr->initPhysics();
     initPhysics();
 
-    vr->initScene();
     initScene();
 
     renderLoop();

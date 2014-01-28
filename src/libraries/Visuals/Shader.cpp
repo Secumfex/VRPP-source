@@ -7,15 +7,35 @@
 
 #include <Visuals/Shader.h>
 
-Shader::Shader(string vertexShader, string fragmentShader) {
+Shader::Shader(std::string vertexShader, std::string fragmentShader) {
 
-	string vertexshader = vertexShader ;
-	string fragmentshader = fragmentShader ;
+	std::string vertexshader = vertexShader ;
+	std::string fragmentshader = fragmentShader ;
 
 	makeShader(vertexShader, fragmentShader);
+
+	int total = -1;
+
+	glGetProgramiv( mProgramHandle, GL_ACTIVE_UNIFORMS, &total );
+
+	unsigned int i= 0;
+
+	for(i=0; i<total; ++i)  {
+	    int name_len=-1, num=-1;
+	    GLenum type = GL_ZERO;
+	    char name[100];
+	    glGetActiveUniform( mProgramHandle, GLuint(i), sizeof(name)-1,
+	        &name_len, &num, &type, name );
+	    name[name_len] = 0;
+	    GLuint location = glGetUniformLocation( mProgramHandle, name );
+
+	    mUniformHandles.insert(pair<string, GLuint>(name, location));
+	    mUniformNames.push_back(name);
+	}
+
 }
 
-void Shader::makeShader(string vert, string frag){
+void Shader::makeShader(std::string vert, std::string frag){
 	mProgramHandle = ShaderTools::makeShaderProgram(vert.c_str(),
 			frag.c_str());
 	setShaderName(vert + frag);
@@ -23,7 +43,7 @@ void Shader::makeShader(string vert, string frag){
 
 Shader::~Shader() {}
 
-void Shader::setShaderName(string name){
+void Shader::setShaderName(std::string name){
 	mShaderName = name;
 }
 
@@ -37,63 +57,55 @@ GLuint Shader::getProgramHandle(){
 void Shader :: uploadUniforms(GraphicsComponent* graphcomp){
 }
 
-void Shader :: uploadUniform(glm::mat4 uniformMatrix, string uniformName){
-	GLuint modelHandle = glGetUniformLocation(mProgramHandle, uniformName.c_str());
-	if(modelHandle != -1)
-		glUniformMatrix4fv(modelHandle, 1, GL_FALSE, glm::value_ptr(uniformMatrix));
+bool Shader :: uploadUniform(glm::mat4 uniformMatrix, std::string uniformName){
+
+	if(mUniformHandles.find(uniformName)!=mUniformHandles.end()){
+		glUniformMatrix4fv(mUniformHandles[uniformName], 1, GL_FALSE, glm::value_ptr(uniformMatrix));
+		return true;
+	}else
+		return false;
 }
 
-void Shader :: uploadUniform(glm::vec3 uniformVector, string uniformName){
-	GLuint modelHandle = glGetUniformLocation(mProgramHandle, uniformName.c_str());
-	if(modelHandle != -1)
-	glUniform3f(modelHandle, uniformVector.x, uniformVector.y, uniformVector.z);
+bool Shader :: uploadUniform(glm::vec3 uniformVector, std::string uniformName){
+	if(mUniformHandles.find(uniformName)!=mUniformHandles.end()){
+	glUniform3f(mUniformHandles[uniformName], uniformVector.x, uniformVector.y, uniformVector.z);
+	return true;
+	}else
+		return false;
 }
-void Shader :: uploadUniform(GLfloat uniformVariable, string uniformName){
-	GLuint modelHandle = glGetUniformLocation(mProgramHandle, uniformName.c_str());
-	if(modelHandle != -1)
-	glUniform1f(modelHandle, uniformVariable);
+bool Shader::uploadUniform(GLfloat uniformVariable, std::string uniformName){
+	if(mUniformHandles.find(uniformName)!=mUniformHandles.end()){
+	glUniform1f(mUniformHandles[uniformName], uniformVariable);
+	return true;
+	}else
+		return false;
 }
-void Shader :: uploadUniform(GLint uniformVariable, string uniformName){
-	GLuint modelHandle = glGetUniformLocation(mProgramHandle, uniformName.c_str());
-	if(modelHandle != -1)
-	glUniform1i(modelHandle, uniformVariable);
-}
-
-void Shader :: uploadModelMatrix(glm::mat4 modelMatrix){
-	GLuint modelHandle = glGetUniformLocation(mProgramHandle, "uniformModel");
-	if(modelHandle != -1)
-		glUniformMatrix4fv(modelHandle, 1, GL_FALSE, glm::value_ptr(modelMatrix));
-
-	modelHandle = glGetUniformLocation(mProgramHandle, "uniformModel");
-		if(modelHandle != -1)
-			glUniformMatrix4fv(modelHandle, 1, GL_FALSE, glm::value_ptr(modelMatrix));
+bool Shader::uploadUniform(GLint uniformVariable, std::string uniformName){
+	if(mUniformHandles.find(uniformName)!=mUniformHandles.end()){
+	glUniform1i(mUniformHandles[uniformName], uniformVariable);
+	return true;
+	}else
+		return false;
 }
 
-void Shader :: uploadViewMatrix (glm::mat4 viewMatrix){
-	GLuint viewHandle = glGetUniformLocation(mProgramHandle, "viewModel");
-	if(viewHandle != -1)
-		glUniformMatrix4fv(viewHandle, 1, GL_FALSE, glm::value_ptr(viewMatrix));
-
-	viewHandle = glGetUniformLocation(mProgramHandle, "uniformView");
-		if(viewHandle != -1)
-	glUniformMatrix4fv(viewHandle, 1, GL_FALSE, glm::value_ptr(viewMatrix));
+void Shader::useProgram(){
+	glUseProgram(mProgramHandle);
 }
 
-void Shader :: uploadProjectionMatrix (glm::mat4 projectionMatrix){
-	GLuint projectionHandle = glGetUniformLocation(mProgramHandle, "projectionModel");
-	if(projectionHandle != -1)
-		glUniformMatrix4fv(projectionHandle, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-
-	projectionHandle = glGetUniformLocation(mProgramHandle, "uniformProjection");
-		if(projectionHandle != -1)
-			glUniformMatrix4fv(projectionHandle, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+void Shader::render(GraphicsComponent *gc){
+	glBindVertexArray(gc->getMesh()->getVAO());
+	glDrawElements(GL_TRIANGLES, gc->getMesh()->getNumIndices(), GL_UNSIGNED_INT, 0);
 }
 
-void Shader :: uploadInverseMatrix (glm::mat4 modelMatrix, glm::mat4 viewMatrix){
-	GLuint inverseHandle = glGetUniformLocation(mProgramHandle, "inverseModel");
-	if(inverseHandle != -1){
-		glm::mat4 inverseMatrix = glm::transpose(glm::inverse(modelMatrix * viewMatrix));
-		glUniformMatrix4fv(inverseHandle, 1, GL_FALSE, glm::value_ptr(inverseMatrix));
+bool Shader::hasUniform(string uniformName){
+	unsigned int i = 0;
+	for (i = 0; i < mUniformNames.size(); ++i) {
+		if(uniformName == mUniformNames[i])
+			return true;
 	}
+	return false;
 }
 
+vector<string> Shader::getUniformNames(){
+return vector<string>(mUniformNames);
+}

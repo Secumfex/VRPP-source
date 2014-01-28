@@ -67,8 +67,6 @@ VirtualObject* mCow;
 public:
 
 
-void set_float4(float f[4], float a, float b, float c, float d);
-void color4_to_float4(const aiColor4D *c, float f[4]);
 
 VirtualObject* createCow();
 
@@ -78,7 +76,10 @@ VirtualObject* createVirtualObject(std::string filename);
 VirtualObject* createVirtualObject(vector<GraphicsComponent*> graphcomps);
 VirtualObject* copyVirtualObject(VirtualObject vo);
 
+private:
 
+void set_float4(float f[4], float a, float b, float c, float d);
+void color4_to_float4(const aiColor4D *c, float f[4]);
 };
 
 #endif /* VIRTUALOBJECTFACTORY_H_ */

@@ -8,6 +8,8 @@
 #include <iostream>
 #include "ConcreteListener.h"
 
+ #include "ConcreteSubject.h"
+
 using namespace std;
 
 void ConcreteListener::update(){

@@ -19,6 +19,19 @@ public:
 	void setPivot(glm::vec3);
 	glm::vec3 getPivot();
 
+	void setEmission(bool value);
+	void setShadow(bool value);
+	void setTransparency(bool value);
+
+	bool hasEmission();
+	bool hasShadow();
+	bool hasTransparency();
+
+	void setBoundingBox(glm::vec3 min, glm::vec3 max);
+	glm::vec3 getBoundingBox_Min();
+	glm::vec3 getBoundingBox_Max();
+
+
 	GraphicsComponent();
 	GraphicsComponent(Mesh* mesh, Material* material);
 
@@ -30,6 +43,13 @@ private:
 	glm::mat4 modelMatrixGc;
 	glm::vec3 pivot;
 	
+	glm::vec3 mAABB_Min;
+	glm::vec3 mAABB_Max;
+
+	bool mEmission;
+	bool mShadow;
+	bool mTranparency;
+
 
 	};
 

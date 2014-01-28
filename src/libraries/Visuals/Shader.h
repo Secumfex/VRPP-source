@@ -14,7 +14,6 @@
 #include <vector>
 #include <glm/gtc/type_ptr.hpp>
 
-using namespace std;
 
 class Shader {
 
@@ -26,27 +25,32 @@ public:
 	void setShaderName(string name);
 	void uploadUniforms(GraphicsComponent* graphcomp);
 	void uploadUniforms(glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
-	std::string getShaderName();
+	string getShaderName();
 	GLuint getProgramHandle();
 
-	void uploadUniform(glm::mat4 uniformMatrix, string uniformName);
-	void uploadUniform(glm::vec3 uniformVector, string uniformName);
-	void uploadUniform(GLfloat uniformVariable, string uniformName);
-	void uploadUniform(GLint uniformVariable, string uniformName);
+	bool uploadUniform(glm::mat4 uniformMatrix, string uniformName);
+	bool uploadUniform(glm::vec3 uniformVector, string uniformName);
+	bool uploadUniform(GLfloat uniformVariable, string uniformName);
+	bool uploadUniform(GLint uniformVariable, string uniformName);
 
-	void uploadModelMatrix(glm::mat4 modelMatrix);
-	void uploadViewMatrix(glm::mat4 viewMatrix);
-	void uploadProjectionMatrix(glm::mat4 projectionMatrix);
-	void uploadInverseMatrix (glm::mat4 modelMatrix, glm::mat4 viewMatrix);
+	bool hasUniform(string uniformName);
 
-	static void setLights(vector<glm:: vec3> sources, vector<glm:: vec3> colors);
+	vector<string> getUniformNames();
+
+	void useProgram();
+
+	void render(GraphicsComponent *gc);
 
 private:
 	void makeShader(string vert, string frag);
 
 	//-----------------MEMBER VARIABLES-----------------
 protected:
-	std::string mShaderName;
+	std::map<string, GLuint> mUniformHandles;
+
+	vector<string> mUniformNames;
+
+	string mShaderName;
 	GLuint mProgramHandle;
 };
 
