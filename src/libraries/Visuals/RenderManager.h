@@ -14,19 +14,45 @@ protected:
 public:
     ~RenderManager ();
 	//RenderQueue renderQueue;
+
+    void errorCallback(int error, const char* description);
+    void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+
 	void setRenderQueue(RenderQueue* currentRQ);
-	VirtualObject getCurrentVO();
-	GraphicsComponent getCurrentGC();
-	void setCurrentVO(VirtualObject* vo);
+	void setCurrentVO();
 	void setCurrentGC(GraphicsComponent* gc);
+	void setCurrentShader(Shader* shader);
+	void setProjectionMatrix(glm::mat4 _projectionMatrix);
+	void setDefaultProjectionMatrix();
+
+	VirtualObject* getCurrentVO();
+	GraphicsComponent* getCurrentGC();
+	Shader* getCurrentShader();
+	Camera* getCamera();
+	glm::mat4 getProjectionMatrix();
+
 	void libInit();
 	void manageShaderProgram();
 	void renderLoop();
 	void attachListenerOnNewFrame(Listener* listener);	        //!< attach a listener that will be called at the beginning of a frameloop
 	void attachListenerOnWindowShouldClose(Listener* listener); //!< attach a listener that will be called at the closure of the GLFW window
-	glm::mat4 getProjectionMatrix();
-	void setProjectionMatrix(glm::mat4 _projectionMatrix);
-	void setDefaultProjectionMatrix();
+
+
+private:
+	GLuint vbo;
+	GLuint MVPHandle;
+	GLuint shaderProgramHandle;
+
+	glm::mat4 projectionMatrix;
+
+	GLFWwindow* window;
+
+	RenderQueue* rq;
+	Shader* currentShader;
+	GraphicsComponent* currentGC;
+	VirtualObject* currentVO;
+
+
 };
 
 #endif /* RENDERMANAGER_H */

@@ -22,17 +22,6 @@
 
 using namespace glm;
 
-GLuint vbo;
-GLuint MVPHandle;
-GLuint shaderProgramHandle;
-
-mat4 projectionMatrix;
-
-GLFWwindow* window; 
-
-RenderQueue* rq;
-GraphicsComponent* currentGC;
-VirtualObject* currentVO;
 
 void RenderManager::setRenderQueue(RenderQueue* currentRQ){
     rq = currentRQ;
@@ -48,7 +37,7 @@ mat4 RenderManager::getProjectionMatrix(){
 und eine getCurrentGC()
 die auf eine globale Pointer-variable im RenderManager zugreifen
 sowas wie GraphicsComponent* currentGC
-gesetzt wird der shit in der renderLoop, aber das machen wir später
+gesetzt wird der shit in der renderLoop, aber das machen wir spï¿½ter
 erstmal wollen wir nur den Access haben
 
 WENN wir das geschafft haben kommt Step2
@@ -60,25 +49,31 @@ setCurrentGC aufgerufen werden sobald die GC global gesetzt wurde
 */
 
 
-VirtualObject* getCurrentVO(){
+VirtualObject* RenderManager::getCurrentVO(){
 	return currentVO;
 }
 
-void setCurrentVO(){
+void RenderManager::setCurrentVO(){
 	map<GraphicsComponent*, VirtualObject* > gc2voMap = rq->getGc2VoMap();
     currentVO = gc2voMap[currentGC];
 }
 
-GraphicsComponent* getCurrentGC(){
+GraphicsComponent* RenderManager::getCurrentGC(){
 	return currentGC;
 }
 
-void setCurrentGC(GraphicsComponent* gc){
+void RenderManager::setCurrentGC(GraphicsComponent* gc){
 	currentGC = gc;
     setCurrentVO();
 }
 
-
+Shader* RenderManager::getCurrentShader(){
+	return currentShader;
+}
+Camera* RenderManager::getCamera(){
+	//TODO: ordentlich Kamera uebergeben
+	return new Camera;
+}
 
 
 void RenderManager::setProjectionMatrix(mat4 _projectionMatrix){
@@ -90,12 +85,12 @@ void RenderManager::setDefaultProjectionMatrix(){
 }
 
 //glfw error-callback function
-void errorCallback(int error, const char* description){
+void RenderManager::errorCallback(int error, const char* description){
     fputs(description, stderr);
 }
 
 //key callback, will be removed when there is I/O functionality
-void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods){
+void RenderManager::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods){
     if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS){
         
         glfwSetWindowShouldClose(window, GL_TRUE);
