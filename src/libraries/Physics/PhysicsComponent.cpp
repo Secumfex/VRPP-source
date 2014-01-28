@@ -32,7 +32,7 @@ PhysicsComponent::PhysicsComponent(float width, float height, float depth, float
 
 PhysicsComponent::~PhysicsComponent() {
 
-	PhysicWorld::getInstance()->dynamicsWorld->removeCollisionObject(rigidBody);		//TODO muss noch der welt zugeordnet werden
+	PhysicWorld::getInstance()->dynamicsWorld->removeCollisionObject(rigidBody);
 	btMotionState* motionState = rigidBody->getMotionState();
 	btCollisionShape* shape = rigidBody->getCollisionShape();
 	delete shape;
@@ -62,7 +62,7 @@ btRigidBody* PhysicsComponent::addSphere(float radius, float x, float y, float z
 	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,sphere);
 	btRigidBody* body = new btRigidBody(info);
 
-	//dynamicsWorld->addRigidBody(body);		//TODO muss noch der welt zugeordnet werden
+	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(body);
 
 	return body;
 }
@@ -84,7 +84,7 @@ btRigidBody* PhysicsComponent::addBox(float width, float height, float depth, fl
 	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,box);
 	btRigidBody* body = new btRigidBody(info);
 
-	//dynamicsWorld->addRigidBody(body);		//TODO muss noch der welt zugeordnet werden
+	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(body);
 
 	return body;
 }
