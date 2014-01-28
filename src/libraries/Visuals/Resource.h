@@ -13,7 +13,6 @@
 #include <vector>
 #include <Visuals/Texture.h>
 
-
 #include <iostream>
 #include <fstream>
 

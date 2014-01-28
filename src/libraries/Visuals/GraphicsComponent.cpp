@@ -26,3 +26,23 @@ Material* GraphicsComponent::getMaterial(){
 	return mMaterial;
 }
 
+void GraphicsComponent::setDynamic(bool dyn){
+dynamic=dyn;
+}
+	
+bool GraphicsComponent::getDynamic(){
+return dynamic;}
+
+	void GraphicsComponent::setModelMatrixGc(glm::mat4 matrix){
+	modelMatrixGc=matrix;
+	}
+
+	glm::mat4 GraphicsComponent::getModelMatrix(){
+	return modelMatrixGc;}
+
+	void GraphicsComponent::setPivot(glm::vec3 piv){
+	pivot=piv;}
+
+
+	glm::vec3 GraphicsComponent::getPivot(){
+	return pivot;}
