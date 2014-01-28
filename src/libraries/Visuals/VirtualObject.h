@@ -15,12 +15,8 @@ class VirtualObject{
 
 	vector<GraphicsComponent*> mGraphComponent;
 
-
 public:
 
-	glm::mat4 getModelMatrix();
-
-	PhysicsComponent *physicsComponent; 			/**< pointer to the physics component of the VO */
 //	vector<GraphicsComponent> graphicsComponent;	/**< pointer to the graphics Component of the VO*/
 
 	/** \brief constructor
@@ -53,13 +49,54 @@ public:
 	*
 	* 	@todo detailed description
 	*/
-	vector<GraphicsComponent*> getGraphicsComponent();
+	void addGraphicsComponent(GraphicsComponent *graphcomp);
 
 	/** \brief
 	*
 	* 	@todo detailed description
 	*/
-	void addGraphicsComponent(GraphicsComponent *graphcomp);
+	vector<GraphicsComponent*> getGraphicsComponent();
+
+	/** \brief sets PhysicsComponent
+	 *
+	 * creates PhysicComponent with no values (default Constructor of PhysicsComponent class)
+	 */
+	void setPhysicsComponent();
+
+	/** \brief sets PhysicsComponent
+	 *
+	 * creates PhysicComponent with given modelmatrix
+	 */
+	void setPhysicsComponent(glm::mat4 modelMatrix);
+
+	/** \brief sets PhysicsComponent
+	 *
+	 * creates PhysicComponent (box shaped rigid Body)
+	 * @param modelmatrix given modelmatrix of VO
+	 */
+	void setPhysicsComponent(glm::vec3 min, glm::vec3 max);
+
+	/** \brief sets PhysicsComponent
+	 *
+	 * creates PhysicComponent (sphere shaped rigid Body)
+	 * @param radius dimension of the sphere
+	 * @param x,y,z origin position in physics world
+	 * @mass defines the behavior of the rigid body in the physics world
+	 */
+	void setPhysicsComponent(float radius, float x, float y, float z, float mass);
+
+	/** \brief sets PhysicsComponent
+	 *
+	 * creates PhysicComponent (box shaped rigid Body)
+	 * @param width,height,depth dimension of the box
+	 * @param x,y,z origin position in physics world
+	 * @mass defines the behavior of the rigid body in the physics world
+	 */
+	void setPhysicsComponent(float width, float height, float depth, float x, float y, float z, float mass);			//TODO: Dokumentation
+
+	glm::mat4 getModelMatrix();
+
+	PhysicsComponent *physicsComponent; 			/**< pointer to the physics component of the VO */
 };
 
 
