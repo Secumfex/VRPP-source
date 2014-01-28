@@ -43,5 +43,23 @@ class UploadUniformModelMatrixListener : public Listener{
  	 	void update();
  };
 
+ class UploadUniformDepthMapListener : public Listener{
+
+ 	public:
+ 	 	void update();
+ };
+
+ class UploadUniformDiffuseMapListener : public Listener{
+
+  	public:
+  	 	void update();
+  };
+
+ class UploadUniformBumpMapListener : public Listener{
+
+  	public:
+  	 	void update();
+  };
+
 
 #endif /* UPLOADUNIFORMLISTENERS_H_ */

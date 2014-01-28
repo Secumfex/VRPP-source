@@ -56,3 +56,14 @@
 	 //TODO: implementieren (GBUFFER)
  }
 
+ void UploadUniformDepthMapListener::update(){
+	 //TODO: implementieren (GBUFFER)
+ }
+
+ void UploadUniformDiffuseMapListener::update(){
+	 //TODO: implementieren (GBUFFER)
+ }
+
+ void UploadUniformBumpMapListener::update(){
+	 //TODO: implementieren (GBUFFER)
+ }
