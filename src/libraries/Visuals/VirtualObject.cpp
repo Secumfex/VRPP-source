@@ -49,3 +49,7 @@ void VirtualObject::updateModelMatrix() {
 vector<GraphicsComponent*> VirtualObject:: getGraphicsComponent(){
 	return mGraphComponent;
 }
+
+glm::mat4 VirtualObject::getModelMatrix(){
+	return modelMatrix;
+}

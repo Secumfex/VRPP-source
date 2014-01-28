@@ -7,6 +7,11 @@
 
 #include "Visuals/UploadUniformListeners.h"
 
+#include "Visuals/RenderManager.h"
+
+UploadUniformModelMatrixListener::UploadUniformModelMatrixListener(std::string name){
+	setName(name);
+}
 
  void UploadUniformModelMatrixListener::update(){
  	Shader* shader = RenderManager::getInstance()->getCurrentShader();
@@ -16,6 +21,10 @@
  	shader->uploadUniform(model, "uniformModel");
  }
 
+UploadUniformViewMatrixListener::UploadUniformViewMatrixListener(std::string name){
+	setName(name);
+}
+
  void UploadUniformViewMatrixListener::update(){
  	Shader* shader = RenderManager::getInstance()->getCurrentShader();
  	Camera* activeCamera = RenderManager::getInstance()->getCamera();
@@ -24,12 +33,20 @@
  	shader->uploadUniform(view, "uniformView");
  }
 
+UploadUniformProjectionMatrixListener::UploadUniformProjectionMatrixListener(std::string name){
+	setName(name);
+}
+
  void UploadUniformProjectionMatrixListener::update(){
  	Shader* shader = RenderManager::getInstance()->getCurrentShader();
 
  	glm::mat4 model = RenderManager::getInstance()->getProjectionMatrix();
  	shader->uploadUniform(model, "uniformProjection");
  }
+
+UploadUniformInverseModelViewMatrixListener::UploadUniformInverseModelViewMatrixListener(std::string  name){
+	setName(name);
+}
 
  void UploadUniformInverseModelViewMatrixListener::update(){
  	Shader* shader = RenderManager::getInstance()->getCurrentShader();
@@ -44,13 +61,25 @@
  	shader->uploadUniform(transposeInverseModelView, "uniformInverse");
  }
 
+UploadUniformPositionMapListener::UploadUniformPositionMapListener(std::string name){
+	setName(name);
+}
+
  void UploadUniformPositionMapListener::update(){
 	 //TODO: implementieren (GBUFFER)
  }
 
+UploadUniformNormalMapListener::UploadUniformNormalMapListener(std::string name){
+	setName(name);
+}
+
  void UploadUniformNormalMapListener::update(){
 	 //TODO: implementieren (GBUFFER)
  }
+
+UploadUniformColorMapListener::UploadUniformColorMapListener(std::string name){
+	setName(name);
+}
 
  void UploadUniformColorMapListener::update(){
 	 //TODO: implementieren (GBUFFER)

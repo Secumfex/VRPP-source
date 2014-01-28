@@ -120,19 +120,19 @@ return std::vector<std::string>(mUniformNames);
 void Shader::attachUniformListener(std::string uniform){
 
 	if(uniform == "uniformModel"){
-		attach(new UploadUniformModelMatrixListener("UNIFORMUPLOADLISTENER"));}
+		attach(new UploadUniformModelMatrixListener(std::string("UNIFORMUPLOADLISTENER")));}
 	else if(uniform == "uniformView"){
-		attach(new UploadUniformViewMatrixListener("UNIFORMUPLOADLISTENER"));}
+		attach(new UploadUniformViewMatrixListener(std::string("UNIFORMUPLOADLISTENER")));}
 	else if(uniform == "uniformProjection"){
-		attach(new UploadUniformProjectionMatrixListener("UNIFORMUPLOADLISTENER"));}
+		attach(new UploadUniformProjectionMatrixListener(std::string("UNIFORMUPLOADLISTENER")));}
 	else if(uniform == "uniformInverse"){
-		attach(new UploadUniformInverseModelViewMatrixListener("UNIFORMUPLOADLISTENER"));}
+		attach(new UploadUniformInverseModelViewMatrixListener(std::string("UNIFORMUPLOADLISTENER")));}
 	else if(uniform == "positionMap"){
-		attach(new UploadUniformPositionMapListener("UNIFORMUPLOADLISTENER"));}
+		attach(new UploadUniformPositionMapListener(std::string("UNIFORMUPLOADLISTENER")));}
 	else if(uniform == "normalMap"){
-		attach(new UploadUniformNormalMapListener("UNIFORMUPLOADLISTENER"));}
+		attach(new UploadUniformNormalMapListener(std::string("UNIFORMUPLOADLISTENER")));}
 	else if(uniform == "colorMap"){
-		attach(new UploadUniformColorMapListener("UNIFORMUPLOADLISTENER"));}
+		attach(new UploadUniformColorMapListener(std::string("UNIFORMUPLOADLISTENER")));}
 	else {
 		std::cout << "ERROR: Uniform \"" << uniform << "\" is not a valid uniform name." << std:: endl;
 	}

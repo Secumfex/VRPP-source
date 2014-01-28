@@ -2,6 +2,7 @@
 #define STATE_H
 
 #include <string>
+#include "Subject.h"
 
 class State : public Subject{	//a state of a context
 

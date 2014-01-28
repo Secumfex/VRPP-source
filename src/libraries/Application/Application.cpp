@@ -12,6 +12,11 @@ Application::Application(std::string label){
 
 	this->label = label;
 	currentState = 0;
+
+	// Init RenderManager and open window
+	RenderManager* rm = RenderManager::getInstance();
+	rm->libInit();
+
 }
 
 void Application::setLabel(std::string label){
@@ -19,9 +24,8 @@ void Application::setLabel(std::string label){
 }
 
 void Application::initialize(){
-	// Init RenderManager and open window
 	RenderManager* rm = RenderManager::getInstance();
-	rm->libInit();
+
 	rm->manageShaderProgram();
 
 	rm->attachListenerOnWindowShouldClose(new TerminateApplicationListener(this));	//Application will close when Window is closed

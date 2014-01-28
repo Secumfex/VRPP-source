@@ -26,6 +26,7 @@ public:
 	bool setState(State* state);	//!< calls statechange listeners @return true if successful @return false if unsuccessful
 	bool setState(std::string state);	//!<returns true if successful, false if unsuccessful, calls statechange listeners
 
+	/*Constructor initializes GLFW Window and GLEW for further functionality*/
 	Application(std::string label = "");
 
 	/*! @brief sets the label.
