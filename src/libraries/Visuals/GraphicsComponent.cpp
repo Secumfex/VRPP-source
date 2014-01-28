@@ -36,12 +36,12 @@ Material* GraphicsComponent::getMaterial(){
 	return mMaterial;
 }
 
-void GraphicsComponent::setDynamic(bool dyn){
-dynamic=dyn;
+void GraphicsComponent::setDynamic(bool value){
+mDynamic=value;
 }
 	
-bool GraphicsComponent::getDynamic(){
-return dynamic;}
+bool GraphicsComponent::isDynamic(){
+return mDynamic;}
 
 	void GraphicsComponent::setModelMatrixGc(glm::mat4 matrix){
 	modelMatrixGc=matrix;
@@ -50,8 +50,11 @@ return dynamic;}
 	glm::mat4 GraphicsComponent::getModelMatrix(){
 	return modelMatrixGc;}
 
-	void GraphicsComponent::setPivot(glm::vec3 piv){
-	pivot=piv;}
+	void GraphicsComponent::setPivot(){
+	pivot.x=getBoundingBox_Max().x - getBoundingBox_Min().x;
+	pivot.y=getBoundingBox_Max().y - getBoundingBox_Min().y;
+	pivot.z=getBoundingBox_Max().z - getBoundingBox_Min().z;
+	}
 
 
 	glm::vec3 GraphicsComponent::getPivot(){

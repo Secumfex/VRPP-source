@@ -10,13 +10,13 @@ public:
 	Mesh* getMesh();
 	Material* getMaterial();
 
-	void setDynamic(bool dyn);
-	bool getDynamic();
+	void setDynamic(bool value);
+	bool isDynamic();
 
 	void setModelMatrixGc(glm::mat4 matrix);
 	glm::mat4 getModelMatrix();
 
-	void setPivot(glm::vec3);
+	void setPivot();
 	glm::vec3 getPivot();
 
 	void setEmission(bool value);
@@ -39,13 +39,15 @@ private:
 	Mesh *mMesh;
 	Material *mMaterial;
 	
-	bool dynamic;
+
 	glm::mat4 modelMatrixGc;
 	glm::vec3 pivot;
 	
 	glm::vec3 mAABB_Min;
 	glm::vec3 mAABB_Max;
 
+
+	bool mDynamic;
 	bool mEmission;
 	bool mShadow;
 	bool mTranparency;
