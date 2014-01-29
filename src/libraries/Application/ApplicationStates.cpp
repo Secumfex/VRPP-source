@@ -29,6 +29,7 @@ void ApplicationState::bindObjects(){
 	
 	rm->setProjectionMatrix(projectionMatrix);
 	rm->setRenderQueue(renderQueue);
+	rm->setCamera(camera);
 
 	// @todo IOManager muss window Pointer kennen usw sonst NULL-Pointer im Konstruktor 
 	// IOManager* io = IOManager::getInstance();

@@ -72,6 +72,9 @@ Camera* RenderManager::getCamera(){
 	return mCamera;
 }
 
+void RenderManager::setCamera(Camera* camera){
+    mCamera = camera;
+}
 
 void RenderManager::setProjectionMatrix(mat4 _projectionMatrix){
     projectionMatrix = _projectionMatrix;
@@ -170,6 +173,8 @@ RenderManager::~RenderManager(){
 }
 
 RenderManager::RenderManager(){
+    mCamera = 0;
+    mRenderqueue = 0;   //must be set from outside
 }
 
 void RenderManager::attachListenerOnNewFrame(Listener* listener){
