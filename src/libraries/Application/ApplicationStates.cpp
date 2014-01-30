@@ -31,9 +31,8 @@ void ApplicationState::bindObjects(){
 	rm->setRenderQueue(renderQueue);
 	rm->setCamera(camera);
 
-	// @todo IOManager muss window Pointer kennen usw sonst NULL-Pointer im Konstruktor 
-	// IOManager* io = IOManager::getInstance();
-	// io->setCameraObject(camera);
+	IOManager* io = IOManager::getInstance();
+	io->setCameraObject(camera);
 	// io->setInputHandler(inputHandler);
 
 	notify("BINDING_OBJECTS_LISTENER");

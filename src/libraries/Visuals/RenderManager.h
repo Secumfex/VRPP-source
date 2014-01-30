@@ -29,6 +29,7 @@ public:
 	GraphicsComponent* getCurrentGC();
 	Shader* getCurrentShader();
 	Camera* getCamera();
+	GLFWwindow* getWindow();
 	glm::mat4 getProjectionMatrix();
 
 	void libInit();

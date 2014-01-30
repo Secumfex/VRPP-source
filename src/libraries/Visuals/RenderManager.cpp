@@ -72,6 +72,10 @@ Camera* RenderManager::getCamera(){
 	return mCamera;
 }
 
+GLFWwindow* RenderManager::getWindow(){
+    return window;
+}
+
 void RenderManager::setCamera(Camera* camera){
     mCamera = camera;
 }
@@ -115,7 +119,6 @@ void RenderManager::libInit(){
 	#endif
 
     window = glfwCreateWindow(800, 600, "GLFW TUT", NULL, NULL);
-    glfwSetKeyCallback(window, keyCallback);
 
     if(!window){
         glfwTerminate();

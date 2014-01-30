@@ -29,7 +29,7 @@ private:
 
 	glm::mat4 mViewMatrix;	 /**<4*4-Matrix*/
 
-	static double lastTime;		/**<Double for lastTime*/
+	double lastTime;		/**<Double for lastTime*/
 	double currentTime;			/**<Double for currentTime*/
 	float deltaTime;			/**<Float for time bewteen lastTime and CurrentTime*/
 
@@ -40,6 +40,7 @@ private:
 
 	IOManager();
 public:
+	void setWindow(GLFWwindow* window);
 
 	void setCameraObject(Camera* camera);	/**< set camera pointer */
 	Camera* getCameraObject();				/**< get camera pointer */
@@ -68,6 +69,15 @@ public:
 	 */
 	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	//void computeFoV();
+	
+	/**
+	 * @brief method to register at glfwKeyCallback
+	 * @details GLFW needs to use a static method which cannot be provided by instance methods
+	 */
+	static void staticKey_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+
+	/// register KeyCallback method by binding the static Key callback method
+	void bindCallbackFuncs();
 };
 
 #endif

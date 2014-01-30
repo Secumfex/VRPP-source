@@ -4,6 +4,18 @@
 
 #include "IOManager.h"
 
+void IOManager::bindCallbackFuncs(){
+	if (window != 0){
+		glfwSetKeyCallback(window, staticKey_callback);
+		// @todo: mouse callback function in the same way
+	}
+}
+
+void IOManager::staticKey_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
+	// to be replaced by IOHandler->keyCallback (or call IOHandler in called method)
+	IOManager::getInstance()->key_callback(window,key,scancode,action,mods);
+}	 
+
 IOManager::IOManager(){
 	/* @todo	implement state check and change
 	 * 			discuss if implement here or get from Rendermanager -> initialFoV = 45.0f;
@@ -13,8 +25,12 @@ IOManager::IOManager(){
 	speed_walk = 3.0f; // 3 units / second
 	speed_run = 6.0f;
 	mouseSpeed = 0.005f;
-	glfwGetCursorPos(window, &xPos, &yPos);
+	window = 0;
 	// Get mouse position
+}
+
+void IOManager::setWindow(GLFWwindow* window){
+	this->window = window;
 }
 
 /*
@@ -32,6 +48,7 @@ Camera* IOManager::getCameraObject(){
 	}
 
 void IOManager::computeFrameTimeDifference(){
+	// @todo this doesnt work yet
 	// glfwGetTime is called only once, the first time this function is called
 	lastTime = glfwGetTime();
 
