@@ -4,6 +4,34 @@
 
 #include "IOManager.h"
 
+void IOManager::bindCallbackFuncs(){
+	if (window != 0){
+		glfwSetKeyCallback(window, staticKey_callback);
+		glfwSetCursorPosCallback(window, staticCursorPos_callback);
+		glfwSetMouseButtonCallback(window, staticMouseButton_callback);
+	}
+}
+
+void IOManager::staticKey_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
+	IOManager::getInstance()->key_callback(window,key,scancode,action,mods);
+}	 
+
+void IOManager::staticCursorPos_callback(GLFWwindow* window, double xpos, double ypos){
+	IOManager::getInstance()->cursorPos_callback(window, xpos, ypos);
+}
+
+void IOManager::staticMouseButton_callback(GLFWwindow* window, int button, int action, int mods){
+	IOManager::getInstance()->mouseButton_callback(window, button, action, mods);
+}
+
+void IOManager::cursorPos_callback(GLFWwindow* window, double xpos, double ypos){
+	// @todo call IOHandler cursorPos func
+}
+
+void IOManager::mouseButton_callback(GLFWwindow* window, int button, int action, int mods){
+	// @todo call IOHandler mouseButton func
+}
+
 IOManager::IOManager(){
 	/* @todo	implement state check and change
 	 * 			discuss if implement here or get from Rendermanager -> initialFoV = 45.0f;
@@ -13,8 +41,12 @@ IOManager::IOManager(){
 	speed_walk = 3.0f; // 3 units / second
 	speed_run = 6.0f;
 	mouseSpeed = 0.005f;
-	glfwGetCursorPos(window, &xPos, &yPos);
+	window = 0;
 	// Get mouse position
+}
+
+void IOManager::setWindow(GLFWwindow* window){
+	this->window = window;
 }
 
 /*
@@ -32,6 +64,7 @@ Camera* IOManager::getCameraObject(){
 	}
 
 void IOManager::computeFrameTimeDifference(){
+	// @todo this doesnt work yet
 	// glfwGetTime is called only once, the first time this function is called
 	lastTime = glfwGetTime();
 

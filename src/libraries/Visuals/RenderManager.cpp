@@ -72,6 +72,13 @@ Camera* RenderManager::getCamera(){
 	return mCamera;
 }
 
+GLFWwindow* RenderManager::getWindow(){
+    return window;
+}
+
+void RenderManager::setCamera(Camera* camera){
+    mCamera = camera;
+}
 
 void RenderManager::setProjectionMatrix(mat4 _projectionMatrix){
     projectionMatrix = _projectionMatrix;
@@ -112,7 +119,6 @@ void RenderManager::libInit(){
 	#endif
 
     window = glfwCreateWindow(800, 600, "GLFW TUT", NULL, NULL);
-    glfwSetKeyCallback(window, keyCallback);
 
     if(!window){
         glfwTerminate();
@@ -170,6 +176,8 @@ RenderManager::~RenderManager(){
 }
 
 RenderManager::RenderManager(){
+    mCamera = 0;
+    mRenderqueue = 0;   //must be set from outside
 }
 
 void RenderManager::attachListenerOnNewFrame(Listener* listener){

@@ -19,6 +19,7 @@ public:
 	//RenderQueue renderQueue;
 
 	void setRenderQueue(RenderQueue* currentRQ);
+	void setCamera(Camera* camera);
 	void setCurrentGC(GraphicsComponent* gc);
 	void setCurrentShader(Shader* shader);
 	void setProjectionMatrix(glm::mat4 _projectionMatrix);
@@ -28,6 +29,7 @@ public:
 	GraphicsComponent* getCurrentGC();
 	Shader* getCurrentShader();
 	Camera* getCamera();
+	GLFWwindow* getWindow();
 	glm::mat4 getProjectionMatrix();
 
 	void libInit();

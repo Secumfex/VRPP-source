@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "Visuals/RenderManager.h"
+#include "IO/IOManager.h"
 
 #include "ApplicationListeners.h"
 //Application starts in the Idle State
@@ -24,9 +25,12 @@ void Application::setLabel(std::string label){
 }
 
 void Application::initialize(){
-	RenderManager* rm = RenderManager::getInstance();
+	RenderManager* rm 	= RenderManager::getInstance();
+	rm->manageShaderProgram();	// compile default Shader Program
 
-	rm->manageShaderProgram();
+	IOManager* io 		= IOManager::getInstance();
+	io->setWindow(rm->getWindow());	// set window reference of IO Manager
+	io->bindCallbackFuncs();		// bind callback methods
 
 	rm->attachListenerOnWindowShouldClose(new TerminateApplicationListener(this));	//Application will close when Window is closed
 
