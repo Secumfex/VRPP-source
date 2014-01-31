@@ -147,3 +147,47 @@ UploadUniformColorMapListener::UploadUniformColorMapListener(std::string name){
 	 gc->getMaterial()->getNormalMap()->unbindTexture();
 	 glActiveTexture(GL_TEXTURE0);
  }
+
+ UploadUniformShininessListener::UploadUniformShininessListener(std::string name){
+ 	setName(name);
+ }
+
+ void UploadUniformShininessListener::update(){
+	 Shader* shader = RenderManager::getInstance()->getCurrentShader();
+	 GraphicsComponent* gc = RenderManager::getInstance()->getCurrentGC();
+
+	 shader->uploadUniform(gc->getMaterial()->getSpecularTerm(), "uniformShininess");
+ }
+
+ UploadUniformDiffuseColorListener::UploadUniformDiffuseColorListener(std::string name){
+ 	setName(name);
+ }
+
+ void UploadUniformDiffuseColorListener::update(){
+	 Shader* shader = RenderManager::getInstance()->getCurrentShader();
+	 GraphicsComponent* gc = RenderManager::getInstance()->getCurrentGC();
+
+	 shader->uploadUniform(gc->getMaterial()->getDiffuse(), "uniformDiffuseColor");
+ }
+
+ UploadUniformAmbientColorListener::UploadUniformAmbientColorListener(std::string name){
+ 	setName(name);
+ }
+
+ void UploadUniformAmbientColorListener::update(){
+	 Shader* shader = RenderManager::getInstance()->getCurrentShader();
+	 GraphicsComponent* gc = RenderManager::getInstance()->getCurrentGC();
+
+	 shader->uploadUniform(gc->getMaterial()->getAmbient(), "uniformAmbientColor");
+ }
+
+ UploadUniformSpecularColorListener::UploadUniformSpecularColorListener(std::string name){
+ 	setName(name);
+ }
+
+ void UploadUniformSpecularColorListener::update(){
+	 Shader* shader = RenderManager::getInstance()->getCurrentShader();
+	 GraphicsComponent* gc = RenderManager::getInstance()->getCurrentGC();
+
+	 shader->uploadUniform(gc->getMaterial()->getSpecular(), "uniformSpecularColor");
+ }

@@ -73,5 +73,32 @@ class UploadUniformModelMatrixListener : public Listener{
   	 	void update();
   };
 
+ class UploadUniformShininessListener : public Listener{
+
+  	public:
+	 UploadUniformShininessListener(std::string name);
+  	 	void update();
+  };
+
+ class UploadUniformDiffuseColorListener : public Listener{
+
+  	public:
+	 UploadUniformDiffuseColorListener(std::string name);
+  	 	void update();
+  };
+
+ class UploadUniformAmbientColorListener : public Listener{
+
+  	public:
+	 UploadUniformAmbientColorListener(std::string name);
+  	 	void update();
+  };
+
+ class UploadUniformSpecularColorListener : public Listener{
+
+  	public:
+	 UploadUniformSpecularColorListener(std::string name);
+  	 	void update();
+  };
 
 #endif /* UPLOADUNIFORMLISTENERS_H_ */
