@@ -6,7 +6,7 @@
 #include "Patterns/Subject.h"
 #include "IO/Camera.h"
 #include "Visuals/Shader.h"
-
+#include "Visuals/FrameBufferObject.h"
 
 
 // RenderManager is a Singleton and can be called by getInstance(), it is also a Subject
@@ -52,7 +52,7 @@ private:
 	Shader* mCurrentShader;
 	GraphicsComponent* mCurrentGC;
 	VirtualObject* mCurrentVO;
-
+	FrameBufferObject* mCurrentFBO;
 
 };
 
