@@ -48,32 +48,12 @@ setCurrentGC aufgerufen werden sobald die GC global gesetzt wurde
 
 */
 
-
-VirtualObject* RenderManager::getCurrentVO(){
-	map<GraphicsComponent*, VirtualObject* > gc2voMap = mRenderqueue->getGc2VoMap();
-    VirtualObject* myCurrentVO = gc2voMap[mCurrentGC];
-
-	return myCurrentVO;
-}
-
-GraphicsComponent* RenderManager::getCurrentGC(){
-	return mCurrentGC;
-}
-
 void RenderManager::setCurrentGC(GraphicsComponent* gc){
 	mCurrentGC = gc;
 }
 
-Shader* RenderManager::getCurrentShader(){
-	return mCurrentShader;
-}
-Camera* RenderManager::getCamera(){
-	//TODO: ordentlich Kamera uebergeben
-	return mCamera;
-}
-
-GLFWwindow* RenderManager::getWindow(){
-    return window;
+void RenderManager::setCurrentFBO(FrameBufferObject* fbo){
+	mCurrentFBO = fbo;
 }
 
 void RenderManager::setCamera(Camera* camera){
@@ -86,6 +66,34 @@ void RenderManager::setProjectionMatrix(mat4 _projectionMatrix){
 
 void RenderManager::setDefaultProjectionMatrix(){
     projectionMatrix = perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
+}
+
+VirtualObject* RenderManager::getCurrentVO(){
+	map<GraphicsComponent*, VirtualObject* > gc2voMap = mRenderqueue->getGc2VoMap();
+    VirtualObject* myCurrentVO = gc2voMap[mCurrentGC];
+
+	return myCurrentVO;
+}
+
+FrameBufferObject* RenderManager::getCurrentFBO(){
+	return mCurrentFBO;
+}
+
+
+GraphicsComponent* RenderManager::getCurrentGC(){
+	return mCurrentGC;
+}
+
+Shader* RenderManager::getCurrentShader(){
+	return mCurrentShader;
+}
+Camera* RenderManager::getCamera(){
+	//TODO: ordentlich Kamera uebergeben
+	return mCamera;
+}
+
+GLFWwindow* RenderManager::getWindow(){
+    return window;
 }
 
 //glfw error-callback function

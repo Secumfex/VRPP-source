@@ -22,6 +22,7 @@ public:
 	void setCamera(Camera* camera);
 	void setCurrentGC(GraphicsComponent* gc);
 	void setCurrentShader(Shader* shader);
+	void setCurrentFBO(FrameBufferObject* fbo);
 	void setProjectionMatrix(glm::mat4 _projectionMatrix);
 	void setDefaultProjectionMatrix();
 
@@ -29,6 +30,7 @@ public:
 	GraphicsComponent* getCurrentGC();
 	Shader* getCurrentShader();
 	Camera* getCamera();
+	FrameBufferObject* getCurrentFBO();
 	GLFWwindow* getWindow();
 	glm::mat4 getProjectionMatrix();
 

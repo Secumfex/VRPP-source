@@ -66,7 +66,12 @@ UploadUniformPositionMapListener::UploadUniformPositionMapListener(std::string n
 }
 
  void UploadUniformPositionMapListener::update(){
-	 //TODO: implementieren (GBUFFER)
+//	 FrameBufferObject* fbo = RenderManager::getInstance()->getCurrentFBO();
+
+	 glActiveTexture(GL_TEXTURE1);
+glEnable(GL_TEXTURE_2D);
+//glBindTexture(GL_TEXTURE_2D, positionTextureHandle);
+//glUniform1i(positionMapHandle, 0);
  }
 
 UploadUniformNormalMapListener::UploadUniformNormalMapListener(std::string name){
