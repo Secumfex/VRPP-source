@@ -66,12 +66,15 @@ UploadUniformPositionMapListener::UploadUniformPositionMapListener(std::string n
 }
 
  void UploadUniformPositionMapListener::update(){
-//	 FrameBufferObject* fbo = RenderManager::getInstance()->getCurrentFBO();
+	 FrameBufferObject* fbo = RenderManager::getInstance()->getCurrentFBO();
+	 Shader* shader = RenderManager::getInstance()->getCurrentShader();
 
-	 glActiveTexture(GL_TEXTURE1);
-glEnable(GL_TEXTURE_2D);
-//glBindTexture(GL_TEXTURE_2D, positionTextureHandle);
-//glUniform1i(positionMapHandle, 0);
+	 glActiveTexture(GL_TEXTURE4);
+	 glEnable(GL_TEXTURE_2D);
+	 fbo->bindPositionTexture();
+	 shader->uploadUniform(4,"positionMap");
+	 fbo->unbindTexture();
+	 glActiveTexture(GL_TEXTURE0);
  }
 
 UploadUniformNormalMapListener::UploadUniformNormalMapListener(std::string name){
@@ -79,7 +82,15 @@ UploadUniformNormalMapListener::UploadUniformNormalMapListener(std::string name)
 }
 
  void UploadUniformNormalMapListener::update(){
-	 //TODO: implementieren (GBUFFER)
+	 FrameBufferObject* fbo = RenderManager::getInstance()->getCurrentFBO();
+	 Shader* shader = RenderManager::getInstance()->getCurrentShader();
+
+	 glActiveTexture(GL_TEXTURE5);
+	 glEnable(GL_TEXTURE_2D);
+	 fbo->bindNormalTexture();
+	 shader->uploadUniform(5,"normalMap");
+	 fbo->unbindTexture();
+	 glActiveTexture(GL_TEXTURE0);
  }
 
 UploadUniformColorMapListener::UploadUniformColorMapListener(std::string name){
@@ -87,7 +98,15 @@ UploadUniformColorMapListener::UploadUniformColorMapListener(std::string name){
 }
 
  void UploadUniformColorMapListener::update(){
-	 //TODO: implementieren (GBUFFER)
+	 FrameBufferObject* fbo = RenderManager::getInstance()->getCurrentFBO();
+	 Shader* shader = RenderManager::getInstance()->getCurrentShader();
+
+	 glActiveTexture(GL_TEXTURE6);
+	 glEnable(GL_TEXTURE_2D);
+	 fbo->bindColorTexture();
+	 shader->uploadUniform(6,"colorMap");
+	 fbo->unbindTexture();
+	 glActiveTexture(GL_TEXTURE0);
  }
 
  UploadUniformDepthMapListener::UploadUniformDepthMapListener(std::string name){
@@ -103,7 +122,14 @@ UploadUniformColorMapListener::UploadUniformColorMapListener(std::string name){
  }
 
  void UploadUniformDiffuseMapListener::update(){
-	 //TODO: implementieren (GBUFFER)
+	 Shader* shader = RenderManager::getInstance()->getCurrentShader();
+	 GraphicsComponent* gc = RenderManager::getInstance()->getCurrentGC();
+
+	 glActiveTexture(GL_TEXTURE0);
+	 glEnable(GL_TEXTURE_2D);
+	 gc->getMaterial()->getDiffuseMap()->bindTexture();
+	 shader->uploadUniform(0,"diffuseMap");
+	 gc->getMaterial()->getDiffuseMap()->unbindTexture();
  }
 
  UploadUniformBumpMapListener::UploadUniformBumpMapListener(std::string name){
@@ -111,5 +137,13 @@ UploadUniformColorMapListener::UploadUniformColorMapListener(std::string name){
  }
 
  void UploadUniformBumpMapListener::update(){
-	 //TODO: implementieren (GBUFFER)
+	 Shader* shader = RenderManager::getInstance()->getCurrentShader();
+	 GraphicsComponent* gc = RenderManager::getInstance()->getCurrentGC();
+
+	 glActiveTexture(GL_TEXTURE1);
+	 glEnable(GL_TEXTURE_2D);
+	 gc->getMaterial()->getNormalMap()->bindTexture();
+	 shader->uploadUniform(1,"normalMap");
+	 gc->getMaterial()->getNormalMap()->unbindTexture();
+	 glActiveTexture(GL_TEXTURE0);
  }
