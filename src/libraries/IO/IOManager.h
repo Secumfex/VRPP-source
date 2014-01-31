@@ -70,13 +70,19 @@ public:
 	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	//void computeFoV();
 	
+	void cursorPos_callback(GLFWwindow* window, double xpos, double ypos);	//!< cursor position callback (movement)
+	void mouseButton_callback(GLFWwindow* window, int button, int action, int mods); //!< mouse button callback (press / release)
+
+
 	/**
 	 * @brief method to register at glfwKeyCallback
 	 * @details GLFW needs to use a static method which cannot be provided by instance methods
 	 */
-	static void staticKey_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+	static void staticKey_callback(GLFWwindow* window, int key, int scancode, int action, int mods); //!< static method to be registered at GLFW
+	static void staticCursorPos_callback(GLFWwindow* window, double xpos, double ypos);	//!< static method to be registered at GLFW
+	static void staticMouseButton_callback(GLFWwindow* window, int button, int action, int mods); //!< static method to be registerted at GLFW
 
-	/// register KeyCallback method by binding the static Key callback method
+	/// register callback method by binding the static callback methods
 	void bindCallbackFuncs();
 };
 

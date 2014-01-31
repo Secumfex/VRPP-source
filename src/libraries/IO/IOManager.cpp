@@ -7,14 +7,30 @@
 void IOManager::bindCallbackFuncs(){
 	if (window != 0){
 		glfwSetKeyCallback(window, staticKey_callback);
-		// @todo: mouse callback function in the same way
+		glfwSetCursorPosCallback(window, staticCursorPos_callback);
+		glfwSetMouseButtonCallback(window, staticMouseButton_callback);
 	}
 }
 
 void IOManager::staticKey_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
-	// to be replaced by IOHandler->keyCallback (or call IOHandler in called method)
 	IOManager::getInstance()->key_callback(window,key,scancode,action,mods);
 }	 
+
+void IOManager::staticCursorPos_callback(GLFWwindow* window, double xpos, double ypos){
+	IOManager::getInstance()->cursorPos_callback(window, xpos, ypos);
+}
+
+void IOManager::staticMouseButton_callback(GLFWwindow* window, int button, int action, int mods){
+	IOManager::getInstance()->mouseButton_callback(window, button, action, mods);
+}
+
+void IOManager::cursorPos_callback(GLFWwindow* window, double xpos, double ypos){
+	// @todo call IOHandler cursorPos func
+}
+
+void IOManager::mouseButton_callback(GLFWwindow* window, int button, int action, int mods){
+	// @todo call IOHandler mouseButton func
+}
 
 IOManager::IOManager(){
 	/* @todo	implement state check and change
