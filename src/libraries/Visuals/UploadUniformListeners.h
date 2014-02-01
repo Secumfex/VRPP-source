@@ -100,5 +100,11 @@ class UploadUniformModelMatrixListener : public Listener{
 	 UploadUniformSpecularColorListener(std::string name);
   	 	void update();
   };
+ class UploadUniformEmissiveColorListener : public Listener{
+
+  	public:
+	 UploadUniformEmissiveColorListener(std::string name);
+  	 	void update();
+  };
 
 #endif /* UPLOADUNIFORMLISTENERS_H_ */

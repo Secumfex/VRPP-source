@@ -156,7 +156,7 @@ UploadUniformColorMapListener::UploadUniformColorMapListener(std::string name){
 	 Shader* shader = RenderManager::getInstance()->getCurrentShader();
 	 GraphicsComponent* gc = RenderManager::getInstance()->getCurrentGC();
 
-	 shader->uploadUniform(gc->getMaterial()->getSpecularTerm(), "uniformShininess");
+	 shader->uploadUniform(gc->getMaterial()->getSpecularTerm(), "shininess");
  }
 
  UploadUniformDiffuseColorListener::UploadUniformDiffuseColorListener(std::string name){
@@ -167,7 +167,7 @@ UploadUniformColorMapListener::UploadUniformColorMapListener(std::string name){
 	 Shader* shader = RenderManager::getInstance()->getCurrentShader();
 	 GraphicsComponent* gc = RenderManager::getInstance()->getCurrentGC();
 
-	 shader->uploadUniform(gc->getMaterial()->getDiffuse(), "uniformDiffuseColor");
+	 shader->uploadUniform(gc->getMaterial()->getDiffuse(), "diffuseColor");
  }
 
  UploadUniformAmbientColorListener::UploadUniformAmbientColorListener(std::string name){
@@ -178,7 +178,7 @@ UploadUniformColorMapListener::UploadUniformColorMapListener(std::string name){
 	 Shader* shader = RenderManager::getInstance()->getCurrentShader();
 	 GraphicsComponent* gc = RenderManager::getInstance()->getCurrentGC();
 
-	 shader->uploadUniform(gc->getMaterial()->getAmbient(), "uniformAmbientColor");
+	 shader->uploadUniform(gc->getMaterial()->getAmbient(), "ambientColor");
  }
 
  UploadUniformSpecularColorListener::UploadUniformSpecularColorListener(std::string name){
@@ -189,5 +189,16 @@ UploadUniformColorMapListener::UploadUniformColorMapListener(std::string name){
 	 Shader* shader = RenderManager::getInstance()->getCurrentShader();
 	 GraphicsComponent* gc = RenderManager::getInstance()->getCurrentGC();
 
-	 shader->uploadUniform(gc->getMaterial()->getSpecular(), "uniformSpecularColor");
+	 shader->uploadUniform(gc->getMaterial()->getSpecular(), "specularColor");
+ }
+
+ UploadUniformEmissiveColorListener::UploadUniformEmissiveColorListener(std::string name){
+ 	setName(name);
+ }
+
+ void UploadUniformEmissiveColorListener::update(){
+	 Shader* shader = RenderManager::getInstance()->getCurrentShader();
+	 GraphicsComponent* gc = RenderManager::getInstance()->getCurrentGC();
+
+	 shader->uploadUniform(gc->getMaterial()->getEmission(), "specularEmissive");
  }

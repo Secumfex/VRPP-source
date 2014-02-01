@@ -247,7 +247,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 
 
 		//memcpy(aMat.diffuse, c, sizeof(c));
-		aMat->setDiffuse(glm::vec4(diffuse.r,diffuse.g, diffuse.b, diffuse.a));
+		aMat->setDiffuse(glm::vec3(diffuse.r,diffuse.g, diffuse.b));
 
 
         set_float4(c, 0.2f, 0.2f, 0.2f, 1.0f);
@@ -258,7 +258,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 
 
         //memcpy(aMat.ambient, c, sizeof(c));
-		aMat->setAmbient(glm::vec4(ambient.r, ambient.g, ambient.b, ambient.a));
+		aMat->setAmbient(glm::vec3(ambient.r, ambient.g, ambient.b));
 
 
 
@@ -270,7 +270,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 
 
         //memcpy(aMat.specular, c, sizeof(c));
-		aMat->setSpecular(glm::vec4(specular.r, specular.g, specular.b, specular.a));
+		aMat->setSpecular(glm::vec3(specular.r, specular.g, specular.b));
 
 
 
@@ -281,7 +281,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 
 
 		//memcpy(aMat.emissive, c, sizeof(c));
-		aMat->setEmission(glm::vec4(emission.r, emission.g, emission.b, emission.a));
+		aMat->setEmission(glm::vec3(emission.r, emission.g, emission.b));
 
 
 

@@ -93,6 +93,9 @@ glm::vec3 Material ::getSpecular(){
 glm::vec3 Material ::getEmission(){
 	return mEmissColor;
 }
+GLfloat Material::getSpecularTerm(){
+	return mSpecCoeff;
+}
 
 //---------------MESH SCOPE--------------------
 
