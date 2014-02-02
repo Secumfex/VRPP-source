@@ -12,7 +12,7 @@
 
 #include "Tools/ShaderTools.h"
 #include "Tools/TextureTools.h"
-#include "Tools/Geometry.h"
+//#include "Tools/Geometry.h"
 
 #include "Visuals/Shader.h"
 #include "Visuals/FrameBufferObject.h"

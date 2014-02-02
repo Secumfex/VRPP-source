@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "Visuals/RenderManager.h"
+#include "IO/IOManager.h"
 
 #include "ApplicationListeners.h"
 //Application starts in the Idle State
@@ -12,6 +13,11 @@ Application::Application(std::string label){
 
 	this->label = label;
 	currentState = 0;
+
+	// Init RenderManager and open window
+	RenderManager* rm = RenderManager::getInstance();
+	rm->libInit();
+
 }
 
 void Application::setLabel(std::string label){
@@ -19,10 +25,12 @@ void Application::setLabel(std::string label){
 }
 
 void Application::initialize(){
-	// Init RenderManager and open window
-	RenderManager* rm = RenderManager::getInstance();
-	rm->libInit();
-	rm->manageShaderProgram();
+	RenderManager* rm 	= RenderManager::getInstance();
+	rm->manageShaderProgram();	// compile default Shader Program
+
+	IOManager* io 		= IOManager::getInstance();
+	io->setWindow(rm->getWindow());	// set window reference of IO Manager
+	io->bindCallbackFuncs();		// bind callback methods
 
 	rm->attachListenerOnWindowShouldClose(new TerminateApplicationListener(this));	//Application will close when Window is closed
 
@@ -48,6 +56,7 @@ std::string Application::getLabel(){
 bool Application::setState(State* state){
 	if (StateMachine::setState(state)){
 		notify("STATECHANGELISTENER");
+		currentState->notify("STATECHANGELISTENER");
 		return true;
 	}
 	return false;
@@ -56,6 +65,7 @@ bool Application::setState(State* state){
 bool Application::setState(std::string state){
 	if (StateMachine::setState(state)){
 		notify("STATECHANGELISTENER");
+		currentState->notify("STATECHANGELISTENER");
 		return true;
 	}
 	return false;
