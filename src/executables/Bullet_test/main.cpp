@@ -6,7 +6,6 @@
 #include "Physics/PhysicsComponent.h"
 #include "Visuals/GraphicsComponent.h"
 #include "Visuals/VirtualObject.h"
-#include "Physics/StaticCollisionCallback.h"
 
 using namespace std;
 

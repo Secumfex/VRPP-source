@@ -11,12 +11,14 @@ using namespace std;
 PhysicsComponent::PhysicsComponent(){
 	rigidBody = 0;
 	modelMatrix = glm::mat4();
+	hit = false;
 }
 
 PhysicsComponent::PhysicsComponent(glm::mat4 modelMatrix) {
 
 	this-> modelMatrix = modelMatrix;
 	rigidBody =  0;
+	hit = false;
 }
 
 PhysicsComponent::PhysicsComponent(glm::vec3 min, glm::vec3 max) {
@@ -33,6 +35,8 @@ PhysicsComponent::PhysicsComponent(glm::vec3 min, glm::vec3 max) {
 
 	int mass = 0;
 
+	hit = false;
+
 	rigidBody = addBox(width, height, depth, x, y, z, mass);
 	addCollisionFlag(4);
 	update();
@@ -40,6 +44,8 @@ PhysicsComponent::PhysicsComponent(glm::vec3 min, glm::vec3 max) {
 }
 
 PhysicsComponent::PhysicsComponent(float radius, float x, float y, float z, float mass) {
+
+	hit = false;
 
 	rigidBody = addSphere(radius,x,y,z,mass);
 	addCollisionFlag(4);
@@ -49,6 +55,7 @@ PhysicsComponent::PhysicsComponent(float radius, float x, float y, float z, floa
 
 PhysicsComponent::PhysicsComponent(float width, float height, float depth, float x, float y, float z, float mass) {
 
+	hit = false;
 	rigidBody = addBox(width,height,depth,x,y,z,mass);
 	addCollisionFlag(4);
 	update();
@@ -115,6 +122,21 @@ btRigidBody* PhysicsComponent::addSphere(float radius, float x, float y, float z
 glm::mat4 PhysicsComponent::getModelMatrix(){
 
 	return modelMatrix;
+}
+
+btRigidBody* PhysicsComponent::getRigidBody(){
+
+	return rigidBody;
+}
+
+bool PhysicsComponent::getHit(){
+
+	return hit;
+}
+
+void PhysicsComponent::setHit(bool hitState){
+
+	hit = hitState;
 }
 
 void PhysicsComponent::update(){

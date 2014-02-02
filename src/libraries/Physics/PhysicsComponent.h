@@ -17,6 +17,8 @@ private:
 
 	btRigidBody *rigidBody;	/**< bullet rigid body */
 
+	bool hit;	/**< true if it is hit by an other object, else false */
+
 public:
 
 	/** \brief constructor
@@ -97,6 +99,24 @@ public:
 	 * returns current modelMatrix
 	 */
 	glm::mat4 getModelMatrix();
+
+	/** \brief getter
+	 *
+	 * returns current rigidBody
+	 */
+	btRigidBody* getRigidBody();
+
+	/** \brief getter
+	 *
+	 * returns current hit state
+	 */
+	bool getHit();
+
+	/** \brief setter
+	 *
+	 * sets current hit state
+	 */
+	void setHit(bool);
 
 	/** \brief updates the model matrix
 	*
