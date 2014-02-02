@@ -35,8 +35,10 @@ VirtualObject* test2;
 
 PhysicWorld* world;
 
+//GLUquadricObj* quad;
+
 /*
- * init of glfw and handles
+ * init of glfw window and handles
  */
 void initWindow(){
 
@@ -81,22 +83,57 @@ void initPhysics(){
 }
 
 /*
+ * renders a sphere
+ */
+void renderSphere(VirtualObject* vo){
+
+	btRigidBody* sphere=vo->physicsComponent->getRigidBody();
+
+	//hit test
+	if(!vo->physicsComponent->getHit()){
+
+		glColor3f(1,0,0);
+	}
+	else {
+
+		glColor3f(0,1,0);
+	}
+
+	//aktuelle modelMatrix holen. spaeter anders, da glm::mat4 und nicht float[]
+	float r=((btSphereShape*)sphere->getCollisionShape())->getRadius();
+	btTransform t;
+	sphere->getMotionState()->getWorldTransform(t);
+	float mat[16];
+	t.getOpenGLMatrix(mat);
+
+	//TODO sphere zeichnen, mit radius
+	glPushMatrix();
+		glMultMatrixf(mat);
+		//gluSphere(quad,r,20,20);		//geht nicht, da ja kein glu/glut mehr
+	glPopMatrix();
+}
+
+/*
  * init of VOs and its components
  */
 void initScene(){
 
+	//2 VOs
 	test1 = new VirtualObject();
 	test2 = new VirtualObject();
 
+	//with sphere rigidBodies
 	test1->setPhysicsComponent(20.0,2.0,2.0,2.0,2.0);
 	test2->setPhysicsComponent(30.0,1.0,1.0,1.0,1.0);
 
 	cout << "hit1: " << test1->physicsComponent->getHit() << endl;
 	cout << "hit2: " << test2->physicsComponent->getHit() << endl;
 
+	//setter test
 	test1->physicsComponent->setHit(true);
 	cout << "hit1: " << test1->physicsComponent->getHit() << endl;
 
+	//how much collisionObjects are in the physics-world
 	int objNum = PhysicWorld::getInstance()->dynamicsWorld->getNumCollisionObjects();
 	cout << objNum << endl;
 }
@@ -108,8 +145,14 @@ void loop(){
 
 	while(!glfwWindowShouldClose(window)){
 
+		//TODO VOs kollidieren lassen
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glViewport(0, 0, width, height);
+
+        //render the 2 VOs
+        renderSphere(test1);
+        renderSphere(test2);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
