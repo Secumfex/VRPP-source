@@ -16,6 +16,7 @@
 
 using namespace std;
 
+//global handles
 GLFWwindow* window;
 int width, height;
 
@@ -28,11 +29,15 @@ GLuint inverseHandle;
 
 GLuint lightPositionHandle;
 
+//VOs and physic-world
 VirtualObject* test1;
 VirtualObject* test2;
 
 PhysicWorld* world;
 
+/*
+ * init of glfw and handles
+ */
 void initWindow(){
 
 	glfwInit();
@@ -66,12 +71,18 @@ void initWindow(){
     glUseProgram(programHandle);
 }
 
+/*
+ * init of physic-world
+ */
 void initPhysics(){
 
 	world = new PhysicWorld;
 	cout << "world created" << endl;
 }
 
+/*
+ * init of VOs and its components
+ */
 void initScene(){
 
 	test1 = new VirtualObject();
@@ -85,8 +96,14 @@ void initScene(){
 
 	test1->physicsComponent->setHit(true);
 	cout << "hit1: " << test1->physicsComponent->getHit() << endl;
+
+	int objNum = PhysicWorld::getInstance()->dynamicsWorld->getNumCollisionObjects();
+	cout << objNum << endl;
 }
 
+/*
+ * render the scene
+ */
 void loop(){
 
 	while(!glfwWindowShouldClose(window)){
@@ -99,6 +116,9 @@ void loop(){
 	}
 }
 
+/*
+ * main
+ */
 int main() {
 
 	initWindow();
