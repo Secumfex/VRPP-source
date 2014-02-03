@@ -18,7 +18,7 @@
 
 #include "Tools/ShaderTools.h"
 #include "Tools/TextureTools.h"
-#include "Tools/Geometry.h"
+//#include "Tools/Geometry.h"
 
 using namespace glm;
 

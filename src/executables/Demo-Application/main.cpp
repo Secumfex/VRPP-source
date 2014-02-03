@@ -3,8 +3,11 @@
 
 #include "Application/ApplicationListeners.h"
 #include "Tools/UtilityListeners.h"
+#include "Tools/NoAssimpVirtualObjectFactory.h"
 
 Application* myApp;
+
+NoAssimpVirtualObjectFactory no_assimp_factory;
 
 /**
 *proposed way to work with our Libraries (?????)
@@ -32,8 +35,11 @@ void configureMyApp(){
 		myVRState->addVirtualObject(myCubeObject);	//add the Virtual Object to VRState
 	*/
 
-	VirtualObject* myCubeObject = myVRState->createVirtualObject(RESOURCES_PATH "/barrel.obj");	
+	myVRState->attachListenerOnAddingVirtualObject(new PrintMessageListener(string("Added a VirtualObject to RenderQueue")));
 
+	//VirtualObject* myCubeObject = myVRState->createVirtualObject(RESOURCES_PATH "/barrel.obj");	
+		VirtualObject* myCubeObject = no_assimp_factory.createCubeObject();
+		myVRState->addVirtualObject(myCubeObject);
 	/*
 		VirtualObjectFactory aufrufen
 			Create VBO
@@ -49,6 +55,7 @@ void configureMyApp(){
 	myApp->attachListenerOnBeginningProgramCycle(new TimedTriggerListener(new SetStateListener(myApp, "LOADING_SCREEN"), 5000.0));
 	myApp->attachListenerOnBeginningProgramCycle(new TimedTriggerListener(new SetStateListener(myApp, "VRSTATE"), 10000.0));
 
+	
 	myApp->addState(myMenu);	//add the Main Menu to Application
 	myApp->addState(myLoadingMenu);	//add the Loading Screen to Application
 	myApp->addState(myVRState);	//add the VR State to Application
@@ -60,9 +67,6 @@ int main() {
 	configureMyApp();
 
 	myApp->run();
-	myApp->setState("MAINMENU");
-	myApp->setState("LOADING_SCREEN");
-	myApp->setState("VRSTATE");
 
 	std::cout<<"_____________________________"<<std::endl;
 	////////////////////////////////////////////////////////////////////////////////

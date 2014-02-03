@@ -2,7 +2,7 @@
 
 namespace CubeGeometry {
     
-    const float size = 0.1;
+    const float size = 0.5;
     
     GLfloat positions[] = {
         // Front face
