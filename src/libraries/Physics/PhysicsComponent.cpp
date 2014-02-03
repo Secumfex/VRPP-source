@@ -150,7 +150,12 @@ glm::vec3 PhysicsComponent::getPosition(){
 	btRigidBody* body = rigidBody;
 	body->getMotionState()->getWorldTransform(t);
 
-	btVector3 pos = t.getOrigin();
+	btVector3 origin = t.getOrigin();
+
+	glm::vec3 pos;
+	pos.x = origin.getX();
+	pos.y = origin.getY();
+	pos.z = origin.getZ();
 
 	return pos;
 }

@@ -106,7 +106,7 @@ public:
 	 */
 	btRigidBody* getRigidBody();
 
-	/** \sets position of a PC
+	/** \brief sets position of a PC
 	*
 	* sets/changes the position of a PhysicsComponent
 	* @param x,y,z new position in physics world
