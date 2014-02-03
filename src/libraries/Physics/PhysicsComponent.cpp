@@ -129,6 +129,32 @@ btRigidBody* PhysicsComponent::getRigidBody(){
 	return rigidBody;
 }
 
+void PhysicsComponent::setPosition(float x, float y, float z){
+
+	btVector3 pos;
+	pos.setX(x);
+	pos.setY(y);
+	pos.setZ(z);
+
+	btTransform t;
+	btRigidBody* body = rigidBody;
+	body->getMotionState()->getWorldTransform(t);
+
+	t.setOrigin(pos);
+	body->getMotionState()->setWorldTransform(t);
+}
+
+glm::vec3 PhysicsComponent::getPosition(){
+
+	btTransform t;
+	btRigidBody* body = rigidBody;
+	body->getMotionState()->getWorldTransform(t);
+
+	btVector3 pos = t.getOrigin();
+
+	return pos;
+}
+
 bool PhysicsComponent::getHit(){
 
 	return hit;
