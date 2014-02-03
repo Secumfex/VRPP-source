@@ -68,8 +68,7 @@ VirtualObject* NoAssimpVirtualObjectFactory::createCubeObject(){
 	cube_gc->setBoundingBox(glm::vec3((-1.0) * CubeGeometry::size,(-1.0) *CubeGeometry::size,(-1.0) *CubeGeometry::size) ,glm::vec3(CubeGeometry::size,CubeGeometry::size,CubeGeometry::size));
 	cube->addGraphicsComponent(cube_gc);	//add GraphicsComponent
 
-	// @todo comment in when Bullet_2 branch is merged
-	// cube->setPhysicsComponent(cube_gc->getBoundingBox_Min(), cube_gc->getBoundingBox_Max());
+	 cube->setPhysicsComponent(cube_gc->getBoundingBox_Min(), cube_gc->getBoundingBox_Max());
 
 	//return cube
 	return cube;
