@@ -67,3 +67,7 @@ void VirtualObject::setPhysicsComponent(float width, float height, float depth, 
 	physicsComponent = new PhysicsComponent(width, height, depth, x, y, z, mass);
 
 }
+
+glm::mat4 VirtualObject::getModelMatrix(){
+	return modelMatrix;
+}

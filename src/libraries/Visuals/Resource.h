@@ -42,10 +42,10 @@ public:
 
 
 	void setName(std::string name);
-	void setAmbient(glm::vec4 ambient);
-	void setDiffuse(glm::vec4 diffuse);
-	void setSpecular(glm::vec4 specular);
-	void setEmission(glm::vec4 specular);
+	void setAmbient(glm::vec3 ambient);
+	void setDiffuse(glm::vec3 diffuse);
+	void setSpecular(glm::vec3 specular);
+	void setEmission(glm::vec3 emission);
 	void setShininess(GLfloat term);
 
 	void setAmbientMap(Texture* tex);
@@ -62,9 +62,10 @@ public:
 	Texture* getHeightMap();
 	Texture* getShadowMap();
 
-	glm::vec3* getAmbient();
-	glm::vec3* getDiffuse();
-	glm::vec3* getSpecular();
+	glm::vec3 getAmbient();
+	glm::vec3 getDiffuse();
+	glm::vec3 getSpecular();
+	glm::vec3 getEmission();
 	GLfloat getSpecularTerm();
 
 	//---------------MEMBER VARIABLES--------------------
@@ -75,6 +76,7 @@ private:
 	glm::vec3 mAmbColor;
 	glm::vec3 mDiffColor;
 	glm::vec3 mSpecColor;
+	glm::vec3 mEmissColor;
 	GLfloat mSpecCoeff;
 
 

@@ -1,10 +1,3 @@
-/*
- * Subject.h
- *
- *  Created on: 16.11.2013
- *      Author: Batsi
- */
-
 #ifndef SUBJECT_H_
 #define SUBJECT_H_
 #include <list>

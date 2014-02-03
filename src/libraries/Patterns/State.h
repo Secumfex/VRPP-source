@@ -2,8 +2,9 @@
 #define STATE_H
 
 #include <string>
+#include "Subject.h"
 
-class State{	//a state of a context
+class State : public Subject{	//a state of a context
 
 protected:
 
@@ -11,6 +12,7 @@ private:
 	std::string name;
 
 public:
+	virtual ~State(){};
 	State(std::string name = "");
 	std::string getName();
 	void setName(std::string name);

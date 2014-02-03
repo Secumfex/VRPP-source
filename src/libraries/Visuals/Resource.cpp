@@ -24,6 +24,7 @@
 		mDiffColor = glm::vec3(1,1,1);
 		mName = "";
 		mSpecCoeff = 0;
+		mEmissColor = mAmbColor;
 }
 	Material :: ~Material(){}
 
@@ -49,10 +50,16 @@ void Material ::setShadowMap(Texture* tex){
 void Material :: setName(std::string name){
 	mName = name;
 }
-void Material :: setAmbient(glm::vec4 ambient){}
-void Material :: setDiffuse(glm::vec4 diffuse){}
-void Material :: setSpecular(glm::vec4 specular){}
-void Material :: setEmission(glm::vec4 specular){}
+void Material :: setAmbient(glm::vec3 ambient){
+	mAmbColor = ambient;
+}
+void Material :: setDiffuse(glm::vec3 diffuse){
+	mDiffColor = diffuse;
+}
+void Material :: setSpecular(glm::vec3 specular){
+	mSpecColor = specular;
+}
+void Material :: setEmission(glm::vec3 emission){}
 void Material :: setShininess(GLfloat term){}
 
 Texture* Material ::getAmbientMap(){
@@ -74,6 +81,21 @@ Texture* Material ::getShadowMap(){
 	return mTextures[5];
 }
 
+glm::vec3 Material ::getAmbient(){
+	return mAmbColor;
+}
+glm::vec3 Material ::getDiffuse(){
+	return mDiffColor;
+}
+glm::vec3 Material ::getSpecular(){
+	return mSpecColor;
+}
+glm::vec3 Material ::getEmission(){
+	return mEmissColor;
+}
+GLfloat Material::getSpecularTerm(){
+	return mSpecCoeff;
+}
 
 //---------------MESH SCOPE--------------------
 

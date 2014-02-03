@@ -48,7 +48,7 @@ int input = 0;
 	std::cout<<"_____________________________"<<std::endl;
 
 	////////////////////////////////////////////////////////////////////////////////
-	/*Endlosschleife, damit das Fenster aufbleibt, wenn man nicht aus Eclipse startet oder so*/
+	/*Endlosschleife, damit das Fenster aufbleibt*/
 	int terminate;
 	std::cout<<"enter any value to terminate."<<std::endl;
 	std::cin>>terminate;
