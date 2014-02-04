@@ -11,12 +11,12 @@ PhysicWorld::PhysicWorld() {
 	broadphase = new btDbvtBroadphase();
 	collisionConfiguration = new btDefaultCollisionConfiguration();
 	dispatcher = new btCollisionDispatcher(collisionConfiguration);
-	solver = new btSequentialImpulseConstraintSolver;
+	solver = new btSequentialImpulseConstraintSolver();
 	dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher,broadphase,solver,collisionConfiguration);
 
 	dynamicsWorld->setGravity(btVector3(0,-10,0));
 
-	cout<<dynamicsWorld<<endl;
+//	cout<<dynamicsWorld<<endl;
 
 	//gContactAddedCallback = collisionCallbackFunc;
 }
