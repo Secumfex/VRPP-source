@@ -49,17 +49,29 @@ public:
 
 	void setAmbientMap(Texture* tex);
 	void setDiffuseMap(Texture* tex);
-	void setSpecularMap(Texture* tex);
+	void setEmissiveMap(Texture* tex);
 	void setNormalMap(Texture* tex);
 	void setHeightMap(Texture* tex);
-	void setShadowMap(Texture* tex);
+	void setOpacityMap(Texture* tex);
+
+	void setSpecularMap(Texture* tex);
+	void setReflectionMap(Texture* tex);
+	void setShininessMap(Texture* tex);
+	void setDisplacementMap(Texture* tex);
+	void setLightMap(Texture* tex);
 
 	Texture* getAmbientMap();
 	Texture* getDiffuseMap();
-	Texture* getSpecularMap();
+	Texture* getEmissiveMap();
 	Texture* getNormalMap();
 	Texture* getHeightMap();
-	Texture* getShadowMap();
+	Texture* getOpacityMap();
+
+	Texture* getSpecularMap();
+	Texture* getReflectionMap();
+	Texture* getShininessMap();
+	Texture* getDisplacementMap();
+	Texture* getLightMap();
 
 	glm::vec3* getAmbient();
 	glm::vec3* getDiffuse();

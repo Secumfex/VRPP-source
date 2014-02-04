@@ -230,14 +230,121 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
         aiString texPath;   //contains filename of texture
         Texture *tex_temp = new Texture();
 
+
+
         if(AI_SUCCESS == mtl->GetTexture(aiTextureType_DIFFUSE, 0, &texPath)){
 
 
         	cout << "Try to find Texture: " << texPath.C_Str() << endl;
         		tex_temp = new Texture(directory + texPath.C_Str());
-            }
+			aMat->setDiffuseMap(tex_temp);
+		}
 
-        aMat->setDiffuseMap(tex_temp);
+
+
+
+
+		  if(AI_SUCCESS == mtl->GetTexture(aiTextureType_AMBIENT, 0, &texPath)){
+
+
+        	cout << "Try to find Texture: " << texPath.C_Str() << endl;
+        		tex_temp = new Texture(directory + texPath.C_Str());
+			aMat->setAmbientMap(tex_temp);
+		}
+
+
+
+
+
+		    if(AI_SUCCESS == mtl->GetTexture(aiTextureType_OPACITY, 0, &texPath)){
+
+
+        	cout << "Try to find Texture: " << texPath.C_Str() << endl;
+        		tex_temp = new Texture(directory + texPath.C_Str());
+			aMat->setOpacityMap(tex_temp);
+		}
+
+
+
+
+
+			  if(AI_SUCCESS == mtl->GetTexture(aiTextureType_NORMALS, 0, &texPath)){
+
+
+        	cout << "Try to find Texture: " << texPath.C_Str() << endl;
+        		tex_temp = new Texture(directory + texPath.C_Str());
+			aMat->setNormalMap(tex_temp);
+		}
+
+
+
+
+			    if(AI_SUCCESS == mtl->GetTexture(aiTextureType_HEIGHT, 0, &texPath)){
+
+
+        	cout << "Try to find Texture: " << texPath.C_Str() << endl;
+        		tex_temp = new Texture(directory + texPath.C_Str());
+			aMat->setHeightMap(tex_temp);
+		}
+				
+
+				
+				if(AI_SUCCESS == mtl->GetTexture(aiTextureType_EMISSIVE, 0, &texPath)){
+
+        	cout << "Try to find Texture: " << texPath.C_Str() << endl;
+        		tex_temp = new Texture(directory + texPath.C_Str());
+			aMat->setEmissiveMap(tex_temp);
+		}
+        
+
+
+
+				if(AI_SUCCESS == mtl->GetTexture(aiTextureType_SPECULAR, 0, &texPath)){
+
+        	cout << "Try to find Texture: " << texPath.C_Str() << endl;
+        		tex_temp = new Texture(directory + texPath.C_Str());
+			aMat->setSpecularMap(tex_temp);
+		}
+
+
+
+				if(AI_SUCCESS == mtl->GetTexture(aiTextureType_REFLECTION, 0, &texPath)){
+
+        	cout << "Try to find Texture: " << texPath.C_Str() << endl;
+        		tex_temp = new Texture(directory + texPath.C_Str());
+			aMat->setReflectionMap(tex_temp);
+		}
+
+
+
+				if(AI_SUCCESS == mtl->GetTexture(aiTextureType_SHININESS, 0, &texPath)){
+
+        	cout << "Try to find Texture: " << texPath.C_Str() << endl;
+        		tex_temp = new Texture(directory + texPath.C_Str());
+			aMat->setShininessMap(tex_temp);
+		}
+
+
+
+
+				if(AI_SUCCESS == mtl->GetTexture(aiTextureType_DISPLACEMENT, 0, &texPath)){
+
+        	cout << "Try to find Texture: " << texPath.C_Str() << endl;
+        		tex_temp = new Texture(directory + texPath.C_Str());
+			aMat->setDisplacementMap(tex_temp);
+		}
+
+
+
+
+				if(AI_SUCCESS == mtl->GetTexture(aiTextureType_LIGHTMAP, 0, &texPath)){
+
+        	cout << "Try to find Texture: " << texPath.C_Str() << endl;
+        		tex_temp = new Texture(directory + texPath.C_Str());
+			aMat->setLightMap(tex_temp);
+		}
+	
+
 
         float c[4];
         set_float4(c, 0.8f, 0.8f, 0.8f, 1.0f);

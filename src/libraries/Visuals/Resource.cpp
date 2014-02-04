@@ -27,13 +27,13 @@
 }
 	Material :: ~Material(){}
 
-void Material ::setAmbientMap(Texture* tex){
+void Material ::setAmbientMap(Texture* tex){ //ändern
 	mTextures[0] = tex;
 }
 void Material ::setDiffuseMap(Texture* tex){
 	mTextures[1] = tex;
 }
-void Material ::setSpecularMap(Texture* tex){
+void Material ::setEmissiveMap(Texture* tex){  //ändern
 	mTextures[2] = tex;
 }
 void Material ::setNormalMap(Texture* tex){
@@ -42,9 +42,27 @@ void Material ::setNormalMap(Texture* tex){
 void Material ::setHeightMap(Texture* tex){
 	mTextures[4] = tex;
 }
-void Material ::setShadowMap(Texture* tex){
+void Material ::setOpacityMap(Texture* tex){
 	mTextures[5] = tex;
 }
+void Material ::setSpecularMap(Texture* tex){
+	mTextures[6] = tex;
+}
+void Material ::setReflectionMap(Texture* tex){
+	mTextures[7] = tex;
+}
+void Material ::setShininessMap(Texture* tex){
+	mTextures[8] = tex;
+}
+void Material ::setDisplacementMap(Texture* tex){
+	mTextures[9] = tex;
+}
+void Material ::setLightMap(Texture* tex){
+	mTextures[10] = tex;
+}
+
+
+
 
 void Material :: setName(std::string name){
 	mName = name;
@@ -61,7 +79,7 @@ Texture* Material ::getAmbientMap(){
 Texture* Material ::getDiffuseMap(){
 	return mTextures[1];
 }
-Texture* Material ::getSpecularMap(){
+Texture* Material ::getEmissiveMap(){
 	return mTextures[2];
 }
 Texture* Material ::getNormalMap(){
@@ -70,10 +88,24 @@ Texture* Material ::getNormalMap(){
 Texture* Material ::getHeightMap(){
 	return mTextures[4];
 }
-Texture* Material ::getShadowMap(){
+Texture* Material ::getOpacityMap(){
 	return mTextures[5];
 }
-
+Texture* Material ::getSpecularMap(){
+	return mTextures[6];
+}
+Texture* Material ::getReflectionMap(){
+	return mTextures[7];
+}
+Texture* Material ::getShininessMap(){
+	return mTextures[8];
+}
+Texture* Material ::getDisplacementMap(){
+	return mTextures[9];
+}
+Texture* Material ::getLightMap(){
+	return mTextures[10];
+}
 
 //---------------MESH SCOPE--------------------
 
