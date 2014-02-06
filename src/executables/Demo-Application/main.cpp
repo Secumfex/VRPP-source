@@ -5,6 +5,8 @@
 #include "Tools/UtilityListeners.h"
 #include "Tools/NoAssimpVirtualObjectFactory.h"
 
+#include "SomeListeners.h" // until missing functionality is added
+
 Application* myApp;
 
 NoAssimpVirtualObjectFactory no_assimp_factory;
@@ -25,7 +27,7 @@ void configureMyApp(){
 		myMenu->addButton(myButton);	//add Button to Main Menu
 	*/
 	MenuState* myLoadingMenu = new MenuState("LOADING_SCREEN");	//create a MenuState labled LOADING_SCREEN
-
+	myLoadingMenu->attachListenerOnBeginningProgramCycle(new AnimateClearColorListener());
 	/*
 	myLoadingMenu->addLoadingFinishedListener(new StateChangeListener("VRSTATE"));	//add a state changing listener to be notified upon the end of loading
 	*/
@@ -36,10 +38,11 @@ void configureMyApp(){
 	*/
 
 	myVRState->attachListenerOnAddingVirtualObject(new PrintMessageListener(string("Added a VirtualObject to RenderQueue")));
+	myVRState->attachListenerOnActivation(new SetClearColorListener(0.2,0.2,8.0));
 
-	//VirtualObject* myCubeObject = myVRState->createVirtualObject(RESOURCES_PATH "/barrel.obj");	
-		VirtualObject* myCubeObject = no_assimp_factory.createCubeObject();
-		myVRState->addVirtualObject(myCubeObject);
+	VirtualObject* myCowObject = myVRState->createVirtualObject(RESOURCES_PATH "/cow.obj");	
+	//	VirtualObject* myCubeObject = no_assimp_factory.createCubeObject();
+	//	myVRState->addVirtualObject(myCubeObject);
 	/*
 		VirtualObjectFactory aufrufen
 			Create VBO
@@ -52,10 +55,17 @@ void configureMyApp(){
 	myApp->attachListenerOnProgramTermination(new PrintMessageListener(string("Application is terminating")));
 	myApp->attachListenerOnStateChange( new PrintCurrentStateListener(myApp) );
 
-	myApp->attachListenerOnBeginningProgramCycle(new TimedTriggerListener(new SetStateListener(myApp, "LOADING_SCREEN"), 5000.0));
-	myApp->attachListenerOnBeginningProgramCycle(new TimedTriggerListener(new SetStateListener(myApp, "VRSTATE"), 10000.0));
+	myApp->attachListenerOnBeginningProgramCycle(new TimedTriggerListener(new SetStateListener(myApp, "LOADING_SCREEN"), 2500.0));
+	myApp->attachListenerOnBeginningProgramCycle(new TimedTriggerListener(new SetStateListener(myApp, "VRSTATE"), 5000.0));
+
+	// attach a listener which overrides the rendermanager's current Shader
+	myApp->attachListenerOnProgramInitialization(new SetAlternativeDefaultRenderManagerPointersListener());
+	// attach a listener which serves as renderloop by using the rendermanagers current RenderQueue and Shader
+	myApp->attachListenerOnRenderManagerFrameLoop(new AlternativeRenderloopListener());
 
 	
+
+
 	myApp->addState(myMenu);	//add the Main Menu to Application
 	myApp->addState(myLoadingMenu);	//add the Loading Screen to Application
 	myApp->addState(myVRState);	//add the VR State to Application
@@ -70,8 +80,6 @@ int main() {
 
 	std::cout<<"_____________________________"<<std::endl;
 	////////////////////////////////////////////////////////////////////////////////
-	int terminate;
-	std::cout<<"enter any value to terminate."<<std::endl;
-	std::cin>>terminate;
+
 	return 0;
 }

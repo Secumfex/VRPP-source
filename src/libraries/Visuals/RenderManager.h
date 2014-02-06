@@ -32,6 +32,7 @@ public:
 	Camera* getCamera();
 	FrameBufferObject* getCurrentFBO();
 	GLFWwindow* getWindow();
+	RenderQueue* getRenderQueue();
 	glm::mat4 getProjectionMatrix();
 
 	void libInit();

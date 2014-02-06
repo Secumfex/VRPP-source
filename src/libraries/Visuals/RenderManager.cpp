@@ -52,6 +52,10 @@ void RenderManager::setCurrentGC(GraphicsComponent* gc){
 	mCurrentGC = gc;
 }
 
+void RenderManager::setCurrentShader(Shader* shader){
+    mCurrentShader = shader;
+}
+
 void RenderManager::setCurrentFBO(FrameBufferObject* fbo){
 	mCurrentFBO = fbo;
 }
@@ -92,6 +96,9 @@ Camera* RenderManager::getCamera(){
 	return mCamera;
 }
 
+RenderQueue* RenderManager::getRenderQueue(){
+    return mRenderqueue;
+}
 GLFWwindow* RenderManager::getWindow(){
     return window;
 }
@@ -163,12 +170,11 @@ void RenderManager::renderLoop(){
     MVPHandle = glGetUniformLocation(shaderProgramHandle, "uniformMVP");
 
     if(!glfwWindowShouldClose(window)){ //if window is not about to close
+        glfwMakeContextCurrent(window);
+        glClear(GL_COLOR_BUFFER_BIT);
 
         notify("FRAMELISTENER");      //notify all listeners labeled FRAMELISTENER
 
-        glfwMakeContextCurrent(window);
-        glClear(GL_COLOR_BUFFER_BIT);
-        
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -186,6 +192,9 @@ RenderManager::~RenderManager(){
 RenderManager::RenderManager(){
     mCamera = 0;
     mRenderqueue = 0;   //must be set from outside
+    mCurrentGC = 0;
+    mCurrentFBO = 0;
+    mCurrentShader = 0;
 }
 
 void RenderManager::attachListenerOnNewFrame(Listener* listener){

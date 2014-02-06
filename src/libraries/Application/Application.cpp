@@ -83,8 +83,7 @@ void Application::run(){
 	while (!shouldTerminate){
 		notify("BEGINNINGPROGRAMCYCLELISTENER");	// notify listeners of beginning program cycle
 
-// @todo enable states to notify listeners (make subject of some sort)
-//		currentState->notify("BEGINNINGPROGRAMCYCLELISTENER");		// notify listeners of active state of beginning program cycle
+		currentState->notify("BEGINNINGPROGRAMCYCLELISTENER");		// notify listeners of active state of beginning program cycle
 
 		RenderManager::getInstance()->renderLoop();
 	}
@@ -111,4 +110,8 @@ void Application::attachListenerOnProgramTermination(Listener* listener){
 void Application::attachListenerOnProgramInitialization(Listener* listener){
 	listener->setName("PROGRAMINITIALIZATIONLISTENER");
 	attach(listener);
+}
+
+void Application::attachListenerOnRenderManagerFrameLoop(Listener* listener){
+	RenderManager::getInstance()->attachListenerOnNewFrame(listener);
 }

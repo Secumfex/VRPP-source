@@ -3,16 +3,19 @@
 #define PI 3.14159265f
 
 Camera::Camera(){
-	xPosition = 0;
-	yPosition = 0;
-	zPosition = 5;
+	xPosition = 0.0;
+	yPosition = 0.0;
+	zPosition = -5.0;
 
 	// Initial position : on +Z
-	position = glm::vec3(xPosition, yPosition, yPosition);
+	position = glm::vec3(xPosition, yPosition, zPosition);
 	// Initial horizontal angle : toward -Z
 	float phi = PI;
 	// Initial vertical angle : none
 	float theta = 0.0f;
+
+	//compute initial View Direction vector
+	updateViewDirection();
 }
 
 Camera::~Camera(){}
@@ -71,6 +74,7 @@ void Camera::setPosition(float x, float y, float z){
 	xPosition = x;
 	yPosition = y;
 	zPosition = z;
+	position = glm::vec3(x,y,z);
 }
 
 void Camera::setPosition(glm::vec3 newPos){

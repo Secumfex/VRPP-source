@@ -35,6 +35,7 @@ public:
 	void attachListenerOnCreatingVirtualObject(Listener* listener); //!< attach Listener on creating a new object
 	void attachListenerOnAddingVirtualObject(Listener* listener); //!< attach Listener on adding a new object
 	void attachListenerOnButton(Listener* listener); //!< attach Listener on button press or button release
+	void attachListenerOnBeginningProgramCycle(Listener* listener); //!< attach Listener on beginning Program Cycle
 };
 
 class IdleState : public ApplicationState {

@@ -42,6 +42,8 @@ IOManager::IOManager(){
 	speed_run = 6.0f;
 	mouseSpeed = 0.005f;
 	window = 0;
+
+	deltaTime = 0.1f; //default deltaTime value: 100ms
 	// Get mouse position
 }
 

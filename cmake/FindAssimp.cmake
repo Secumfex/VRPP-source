@@ -13,7 +13,7 @@ IF (MINGW)
 	)
 
     FIND_LIBRARY( ASSIMP_LIBRARY
-        NAMES assimp
+        NAMES assimp.dll
         PATHS
         ${DEPENDENCIES_PATH}/assimp/mingw/lib/
     )
@@ -25,10 +25,10 @@ IF (MINGW)
     )
 
     SET(ASSIMP_LIBRARY ${ZLIB_LIBRARY} ${ASSIMP_LIBRARY})
-#    execute_process(COMMAND ${CMAKE_COMMAND}  -E  copy_if_different
-#        ${DEPENDENCIES_PATH}/assimp/mingw/bin/libassimp.dll
-#        ${PROJECT_BINARY_DIR}/bin/libassimp.dll
-#    )
+    execute_process(COMMAND ${CMAKE_COMMAND}  -E  copy_if_different
+        ${DEPENDENCIES_PATH}/assimp/mingw/bin/libassimp.dll
+        ${PROJECT_BINARY_DIR}/bin/libassimp.dll
+    )
 
 ELSEIF (MSVC)
     FIND_PATH( ASSIMP_INCLUDE_PATH assimp/ai_assert.h
