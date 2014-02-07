@@ -34,6 +34,7 @@ public:
 	void bindColorTexture();
 	void bindDepthTexture();
 	void unbindTexture();
+	void unbindAllTextures();
 
 
 protected:

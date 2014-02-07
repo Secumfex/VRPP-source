@@ -73,8 +73,6 @@ UploadUniformPositionMapListener::UploadUniformPositionMapListener(std::string n
 	 glEnable(GL_TEXTURE_2D);
 	 fbo->bindPositionTexture();
 	 shader->uploadUniform(4,"positionMap");
-	 fbo->unbindTexture();
-	 glActiveTexture(GL_TEXTURE0);
  }
 
 UploadUniformNormalMapListener::UploadUniformNormalMapListener(std::string name){
@@ -89,8 +87,7 @@ UploadUniformNormalMapListener::UploadUniformNormalMapListener(std::string name)
 	 glEnable(GL_TEXTURE_2D);
 	 fbo->bindNormalTexture();
 	 shader->uploadUniform(5,"normalMap");
-	 fbo->unbindTexture();
-	 glActiveTexture(GL_TEXTURE0);
+
  }
 
 UploadUniformColorMapListener::UploadUniformColorMapListener(std::string name){
@@ -105,8 +102,6 @@ UploadUniformColorMapListener::UploadUniformColorMapListener(std::string name){
 	 glEnable(GL_TEXTURE_2D);
 	 fbo->bindColorTexture();
 	 shader->uploadUniform(6,"colorMap");
-	 fbo->unbindTexture();
-	 glActiveTexture(GL_TEXTURE0);
  }
 
  UploadUniformDepthMapListener::UploadUniformDepthMapListener(std::string name){
@@ -128,8 +123,8 @@ UploadUniformColorMapListener::UploadUniformColorMapListener(std::string name){
 	 glActiveTexture(GL_TEXTURE0);
 	 glEnable(GL_TEXTURE_2D);
 	 gc->getMaterial()->getDiffuseMap()->bindTexture();
+
 	 shader->uploadUniform(0,"diffuseTexture");
-	 gc->getMaterial()->getDiffuseMap()->unbindTexture();
  }
 
  UploadUniformNormalTextureListener::UploadUniformNormalTextureListener(std::string name){

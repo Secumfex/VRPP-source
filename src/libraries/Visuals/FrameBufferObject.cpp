@@ -107,3 +107,17 @@ void FrameBufferObject::bindDepthTexture(){
 void FrameBufferObject::unbindTexture(){
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
+
+void FrameBufferObject::unbindAllTextures(){
+
+    glActiveTexture(GL_TEXTURE4);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    glActiveTexture(GL_TEXTURE5);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    glActiveTexture(GL_TEXTURE6);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    glActiveTexture(GL_TEXTURE0);
+}

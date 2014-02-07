@@ -47,8 +47,8 @@ public:
 
 	void attachUniformListener(std::string uniform);
 
-	void setBlurStrength(float strength);
-	GLfloat getBlurStrength();
+	void setBlurStrength(int strength);
+	GLint getBlurStrength();
 
 private:
 	void makeShader(std::string vert, std::string frag);
@@ -64,7 +64,7 @@ protected:
 
 	GLuint mProgramHandle;
 
-	GLfloat blurStrength;
+	GLint blurStrength;
 
 };
 

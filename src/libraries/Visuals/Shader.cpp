@@ -119,11 +119,11 @@ return std::vector<std::string>(mUniformNames);
 
 }
 
-void Shader::setBlurStrength(float strength){
+void Shader::setBlurStrength(int strength){
 	blurStrength = strength;
 }
 
-GLfloat Shader::getBlurStrength(){
+GLint Shader::getBlurStrength(){
 	return blurStrength;
 }
 

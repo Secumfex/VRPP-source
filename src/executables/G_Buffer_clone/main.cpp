@@ -54,7 +54,7 @@ int main() {
     
     //load, compile and link simple texture rendering program for a screen filling plane
     
-    Shader *simpeTexShader = new Shader(SHADERS_PATH "/GBuffer/screenFill.vert",
+    Shader *simpleTexShader = new Shader(SHADERS_PATH "/GBuffer/screenFill.vert",
             							SHADERS_PATH "/GBuffer/simpleTexture.frag");
     
     Shader *finalCompShader = new Shader(	SHADERS_PATH "/GBuffer/screenFill.vert",
@@ -114,8 +114,7 @@ int main() {
 	VirtualObject *object02 = voFactory->createVirtualObject(RESOURCES_PATH "/cow.obj");
     
 
-	rq->addVirtualObject(object01);
-	rm->setRenderQueue(rq);
+
     
     //--------------------------------------------//
     //         Create a Framebuffer Object        //
@@ -147,8 +146,23 @@ int main() {
     //rotation of the cube
     float angle = 0.0f;
     float rotationSpeed = 1.0f;
-	int blurStrength = 4;
     
+	//Statisches "binden" unserer Uniforms/Objekte
+	//Muss man also nur einmal machen
+
+	gbufferShader->setBlurStrength(4);
+
+	rq->addVirtualObject(object01);
+	rq->addVirtualObject(object02);
+
+	rm->setRenderQueue(rq);
+	rm->setCurrentFBO(fbo);
+    rm->setProjectionMatrix(glm::perspective(40.0f, 4.0f / 3.0f, 0.1f, 100.f));
+    rm->setCamera(cam);
+
+    cam->setPosition(glm::vec3(0.0f, 1.0f, -6.0f));
+    cam->setCenter(glm::vec3(0.0f, 0.0f, 0.0f));
+
     while(!glfwWindowShouldClose(window)) {
         
         glfwMakeContextCurrent(window);
@@ -164,14 +178,7 @@ int main() {
         
         //nice rotation of a small cube
         mat4 modelCube_2 = scale(translate(rotate(mat4(1.0f), degrees(angle), vec3(1.0f, 1.0f, 0.0f)), vec3(0.0f, 0.5f, -0.5f)), vec3(0.6f, 0.6f, 0.6f));
-        
-        //setting up the camera parameters
-        mat4 viewMatrix = lookAt(vec3(0.0f, 1.0f, -6.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
-        mat4 projectionMatrix = perspective(40.0f, 4.0f / 3.0f, 0.1f, 100.f);
-        
-        cam->setPosition(vec3(0.0f, 1.0f, -6.0f));
-        cam->setCenter(vec3(0.0f, 0.0f, 0.0f));
-        rm->setProjectionMatrix(projectionMatrix);
+
         object01->setModelMatrix(modelCube_1);
         object02->setModelMatrix(modelCube_2);
 
@@ -190,31 +197,26 @@ int main() {
         
 
         gbufferShader->useProgram();
+        rm->setCurrentShader(gbufferShader);
         
         glViewport(0, 0, width, (height/4)*3);
         
-        
 
-        gbufferShader->uploadUniform(viewMatrix,"uniformView");
-        gbufferShader->uploadUniform(projectionMatrix,"uniformProjection");
-        gbufferShader->uploadUniform(modelCube_1,"uniformModel");
-
-        object01->getGraphicsComponent()[0]->getMaterial()->getDiffuseMap()->bindTexture();
-        gbufferShader->render(object01->getGraphicsComponent()[0]);
-        
-        
-        gbufferShader->uploadUniform(modelCube_2,"uniformModel");
-
+        list<VirtualObject*> vo_list = rm->getRenderQueue()->getVirtualObjectList();
         unsigned int i= 0;
-        for (i = 0; i < object02->getGraphicsComponent().size(); ++i) {
-        	object02->getGraphicsComponent()[i]->getMaterial()->getDiffuseMap()->bindTexture();
-            gbufferShader->render(object02->getGraphicsComponent()[i]);
+        while (!vo_list.empty()) {
+        	unsigned int j= 0;
+        	VirtualObject* vo_temp = vo_list.front();
+        	for (j = 0; j < vo_temp->getGraphicsComponent().size(); ++j) {
+        		vo_list.pop_front();
+        		rm->setCurrentGC(vo_temp->getGraphicsComponent()[j]);
+        		gbufferShader->uploadAllUniforms();
+        		gbufferShader->render(vo_temp->getGraphicsComponent()[j]);
+			}
 		}
         
-        
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        fbo->unbindFBO();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
         
         
         //--------------------------------------------//
@@ -228,36 +230,13 @@ int main() {
         finalCompShader->useProgram();
         rm->setCurrentShader(finalCompShader);
 
-	    finalCompShader->uploadUniform(blurStrength,"blurStrength");
-        glViewport(0, 0, width, (height/4)*3);
-        
-        glActiveTexture(GL_TEXTURE0);
-        glEnable(GL_TEXTURE_2D);
-        fbo->bindPositionTexture();
-	    finalCompShader->uploadUniform(0,"positionMap");
-        
-        glActiveTexture(GL_TEXTURE1);
-        glEnable(GL_TEXTURE_2D);
-        fbo->bindNormalTexture();
-	    finalCompShader->uploadUniform(1,"normalMap");
-        
-        glActiveTexture(GL_TEXTURE2);
-        glEnable(GL_TEXTURE_2D);
-        fbo->bindColorTexture();
-	    finalCompShader->uploadUniform(2,"colorMap");
-        
+        glViewport(0, 0, width, height);
+
+        finalCompShader->uploadAllUniforms();
+
         glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO MAIN FRAME
-        
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, 0);
-        
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, 0);
-        
-        glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, 0);
-        
-        glActiveTexture(GL_TEXTURE0);
+
+        fbo->unbindAllTextures();
         
         //--------------------------------------------//
         //       Render small views at the top to     //
@@ -265,21 +244,21 @@ int main() {
         //--------------------------------------------//
         glDisable(GL_DEPTH_TEST);
         
-        glBindVertexArray(screenFillVertexArrayHandle);
-        simpeTexShader->useProgram();
-        rm->setCurrentShader(simpeTexShader);
-        
-        glViewport(0, (height/4)*3, width/3, height/4);
-        glBindTexture(GL_TEXTURE_2D, fbo->getPositionTextureHandle());
-        glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-LEFT VIEWPORT
-        
-        glViewport(width/3, (height/4)*3, width/3, height/4);
-        glBindTexture(GL_TEXTURE_2D, fbo->getNormalTextureHandle());
-        glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-CENTER VIEWPORT
-        
-        glViewport((width/3)*2, (height/4)*3, width/3, height/4);
-        glBindTexture(GL_TEXTURE_2D, fbo->getColorTextureHandle());
-        glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-RIGHT VIEWPORT
+//        glBindVertexArray(screenFillVertexArrayHandle);
+//        simpleTexShader->useProgram();
+//        rm->setCurrentShader(simpleTexShader);
+//
+//        glViewport(0, (height/4)*3, width/3, height/4);
+//        glBindTexture(GL_TEXTURE_2D, fbo->getPositionTextureHandle());
+//        glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-LEFT VIEWPORT
+//
+//        glViewport(width/3, (height/4)*3, width/3, height/4);
+//        glBindTexture(GL_TEXTURE_2D, fbo->getNormalTextureHandle());
+//        glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-CENTER VIEWPORT
+//
+//        glViewport((width/3)*2, (height/4)*3, width/3, height/4);
+//        glBindTexture(GL_TEXTURE_2D, fbo->getColorTextureHandle());
+//        glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-RIGHT VIEWPORT
         
         //show what's been drawn
         glfwSwapBuffers(window);
