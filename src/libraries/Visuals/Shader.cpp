@@ -14,6 +14,8 @@ Shader::Shader(std::string vertexShader, std::string fragmentShader) {
 
 	makeShader(vertexShader, fragmentShader);
 
+	blurStrength = 0.0f;
+
 	int total = -1;
 
 	glGetProgramiv( mProgramHandle, GL_ACTIVE_UNIFORMS, &total );
@@ -115,6 +117,14 @@ bool Shader::hasUniform(std::string uniformName){
 std::vector<std::string> Shader::getUniformNames(){
 return std::vector<std::string>(mUniformNames);
 
+}
+
+void Shader::setBlurStrength(float strength){
+	blurStrength = strength;
+}
+
+GLfloat Shader::getBlurStrength(){
+	return blurStrength;
 }
 
 void Shader::attachUniformListener(std::string uniform){

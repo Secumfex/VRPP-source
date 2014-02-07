@@ -112,3 +112,13 @@ glm::mat4 Camera::getViewMatrix(){
 		getUp()                  // Head is up (set to 0,-1,0 to look upside-down)
 		);
 	}
+
+void Camera::setDirection(glm::vec3 dir){
+	direction = dir;
+	glm::normalize(direction);
+}
+
+void Camera::setCenter(glm::vec3 center){
+	direction = center - position;
+	glm::normalize(direction);
+}

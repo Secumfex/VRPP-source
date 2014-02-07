@@ -17,7 +17,7 @@
 #include "Visuals/Shader.h"
 #include "Visuals/FrameBufferObject.h"
 #include "Visuals/VirtualObjectFactory.h"
-
+#include "Visuals/RenderManager.h"
 
 
 int main() {
@@ -63,9 +63,10 @@ int main() {
     Shader *gbufferShader = new Shader(		SHADERS_PATH "/GBuffer/GBuffer.vert",
 											SHADERS_PATH "/GBuffer/GBuffer.frag");
 
-
+    RenderQueue* rq = new RenderQueue();
+    RenderManager* rm = RenderManager::getInstance();
+    Camera* cam = new Camera();
     
-    std::cout << "GBufferHandle " << gbufferShader->getProgramHandle() << std::endl;
     
 
     //--------------------------------------------//
@@ -107,12 +108,14 @@ int main() {
     //             to render a cube               //
     //--------------------------------------------//
     
-VirtualObjectFactory *voFactory = VirtualObjectFactory::getInstance();
+    VirtualObjectFactory *voFactory = VirtualObjectFactory::getInstance();
 
-VirtualObject *cube = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj");
+	VirtualObject *object01 = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj");
+	VirtualObject *object02 = voFactory->createVirtualObject(RESOURCES_PATH "/cow.obj");
     
 
-	std::cout << "So viele GCs: "<<cube->getGraphicsComponent().size() << std::endl;
+	rq->addVirtualObject(object01);
+	rm->setRenderQueue(rq);
     
     //--------------------------------------------//
     //         Create a Framebuffer Object        //
@@ -166,6 +169,14 @@ VirtualObject *cube = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj
         mat4 viewMatrix = lookAt(vec3(0.0f, 1.0f, -6.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
         mat4 projectionMatrix = perspective(40.0f, 4.0f / 3.0f, 0.1f, 100.f);
         
+        cam->setPosition(vec3(0.0f, 1.0f, -6.0f));
+        cam->setCenter(vec3(0.0f, 0.0f, 0.0f));
+        rm->setProjectionMatrix(projectionMatrix);
+        object01->setModelMatrix(modelCube_1);
+        object02->setModelMatrix(modelCube_2);
+
+
+
         //--------------------------------------------//
         //        Render the scene into the FBO       //
         //--------------------------------------------//
@@ -188,16 +199,16 @@ VirtualObject *cube = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj
         gbufferShader->uploadUniform(projectionMatrix,"uniformProjection");
         gbufferShader->uploadUniform(modelCube_1,"uniformModel");
 
-        cube->getGraphicsComponent()[0]->getMaterial()->getDiffuseMap()->bindTexture();
-        gbufferShader->render(cube->getGraphicsComponent()[0]);
+        object01->getGraphicsComponent()[0]->getMaterial()->getDiffuseMap()->bindTexture();
+        gbufferShader->render(object01->getGraphicsComponent()[0]);
         
         
         gbufferShader->uploadUniform(modelCube_2,"uniformModel");
 
         unsigned int i= 0;
-        for (i = 0; i < cube->getGraphicsComponent().size(); ++i) {
-            cube->getGraphicsComponent()[i]->getMaterial()->getDiffuseMap()->bindTexture();
-            gbufferShader->render(cube->getGraphicsComponent()[i]);
+        for (i = 0; i < object02->getGraphicsComponent().size(); ++i) {
+        	object02->getGraphicsComponent()[i]->getMaterial()->getDiffuseMap()->bindTexture();
+            gbufferShader->render(object02->getGraphicsComponent()[i]);
 		}
         
         
@@ -215,7 +226,7 @@ VirtualObject *cube = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj
         glBindVertexArray(screenFillVertexArrayHandle);
         
         finalCompShader->useProgram();
-        
+        rm->setCurrentShader(finalCompShader);
 
 	    finalCompShader->uploadUniform(blurStrength,"blurStrength");
         glViewport(0, 0, width, (height/4)*3);
@@ -256,6 +267,7 @@ VirtualObject *cube = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj
         
         glBindVertexArray(screenFillVertexArrayHandle);
         simpeTexShader->useProgram();
+        rm->setCurrentShader(simpeTexShader);
         
         glViewport(0, (height/4)*3, width/3, height/4);
         glBindTexture(GL_TEXTURE_2D, fbo->getPositionTextureHandle());

@@ -2,10 +2,10 @@
 
 in vec2 passUV;
 
-uniform sampler2D tex;
+uniform sampler2D diffuseTexture;
 
 out vec4 fragmentColor;
 
 void main() {
-    fragmentColor = texture(tex, passUV);
+    fragmentColor = texture(diffuseTexture, passUV);
 }

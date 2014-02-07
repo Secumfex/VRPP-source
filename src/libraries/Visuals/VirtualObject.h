@@ -92,6 +92,8 @@ public:
 
 	glm::mat4 getModelMatrix();
 
+	void setModelMatrix(glm::mat4 modelmatrix);
+
 	PhysicsComponent *physicsComponent; 			/**< pointer to the physics component of the VO */
 };
 

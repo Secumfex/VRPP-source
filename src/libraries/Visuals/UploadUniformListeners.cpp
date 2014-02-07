@@ -202,3 +202,13 @@ UploadUniformColorMapListener::UploadUniformColorMapListener(std::string name){
 
 	 shader->uploadUniform(gc->getMaterial()->getEmission(), "specularEmissive");
  }
+
+ UploadUniformBlurStrengthListener::UploadUniformBlurStrengthListener(std::string name){
+ 	setName(name);
+ }
+
+ void UploadUniformBlurStrengthListener::update(){
+	 Shader* shader = RenderManager::getInstance()->getCurrentShader();
+
+	 shader->uploadUniform(shader->getBlurStrength(), "blurStrength");
+ }

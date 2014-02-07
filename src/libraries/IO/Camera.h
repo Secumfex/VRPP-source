@@ -48,6 +48,9 @@ public:
 	glm::vec3 getPosition();
 	void setPosition(float x, float y, float z);
 	void setPosition(glm::vec3 newPos);
+
+	void setDirection(glm::vec3 dir);
+	void setCenter(glm::vec3 center);
 	/* GETTER AND SETTER END */
 
 
