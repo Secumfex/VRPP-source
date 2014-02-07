@@ -135,10 +135,10 @@ void Shader::attachUniformListener(std::string uniform){
 		attach(new UploadUniformColorMapListener("UNIFORMUPLOADLISTENER"));}
 	else if(uniform == "depthMap"){
 		attach(new UploadUniformDepthMapListener("UNIFORMUPLOADLISTENER"));}
-	else if(uniform == "diffuseMap"){
-		attach(new UploadUniformDiffuseMapListener("UNIFORMUPLOADLISTENER"));}
-	else if(uniform == "bumpMap"){
-		attach(new UploadUniformBumpMapListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "diffuseTexture"){
+		attach(new UploadUniformDiffuseTextureListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "normalTexture"){
+		attach(new UploadUniformNormalTextureListener("UNIFORMUPLOADLISTENER"));}
 	else if(uniform == "ambientColor"){
 		attach(new UploadUniformAmbientColorListener("UNIFORMUPLOADLISTENER"));}
 	else if(uniform == "diffuseColor"){

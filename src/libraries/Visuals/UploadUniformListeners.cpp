@@ -117,33 +117,33 @@ UploadUniformColorMapListener::UploadUniformColorMapListener(std::string name){
 	 //TODO: implementieren (GBUFFER)
  }
 
- UploadUniformDiffuseMapListener::UploadUniformDiffuseMapListener(std::string name){
+ UploadUniformDiffuseTextureListener::UploadUniformDiffuseTextureListener(std::string name){
  	setName(name);
  }
 
- void UploadUniformDiffuseMapListener::update(){
+ void UploadUniformDiffuseTextureListener::update(){
 	 Shader* shader = RenderManager::getInstance()->getCurrentShader();
 	 GraphicsComponent* gc = RenderManager::getInstance()->getCurrentGC();
 
 	 glActiveTexture(GL_TEXTURE0);
 	 glEnable(GL_TEXTURE_2D);
 	 gc->getMaterial()->getDiffuseMap()->bindTexture();
-	 shader->uploadUniform(0,"diffuseMap");
+	 shader->uploadUniform(0,"diffuseTexture");
 	 gc->getMaterial()->getDiffuseMap()->unbindTexture();
  }
 
- UploadUniformBumpMapListener::UploadUniformBumpMapListener(std::string name){
+ UploadUniformNormalTextureListener::UploadUniformNormalTextureListener(std::string name){
  	setName(name);
  }
 
- void UploadUniformBumpMapListener::update(){
+ void UploadUniformNormalTextureListener::update(){
 	 Shader* shader = RenderManager::getInstance()->getCurrentShader();
 	 GraphicsComponent* gc = RenderManager::getInstance()->getCurrentGC();
 
 	 glActiveTexture(GL_TEXTURE1);
 	 glEnable(GL_TEXTURE_2D);
 	 gc->getMaterial()->getNormalMap()->bindTexture();
-	 shader->uploadUniform(1,"normalMap");
+	 shader->uploadUniform(1,"normalTexture");
 	 gc->getMaterial()->getNormalMap()->unbindTexture();
 	 glActiveTexture(GL_TEXTURE0);
  }

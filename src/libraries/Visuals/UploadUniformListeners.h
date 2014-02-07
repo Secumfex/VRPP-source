@@ -59,17 +59,17 @@ class UploadUniformModelMatrixListener : public Listener{
  	 	void update();
  };
 
- class UploadUniformDiffuseMapListener : public Listener{
+ class UploadUniformDiffuseTextureListener : public Listener{
 
   	public:
-	 UploadUniformDiffuseMapListener(std::string name);
+	 UploadUniformDiffuseTextureListener(std::string name);
   	 	void update();
   };
 
- class UploadUniformBumpMapListener : public Listener{
+ class UploadUniformNormalTextureListener : public Listener{
 
   	public:
-	 UploadUniformBumpMapListener(std::string name);
+	 UploadUniformNormalTextureListener(std::string name);
   	 	void update();
   };
 
