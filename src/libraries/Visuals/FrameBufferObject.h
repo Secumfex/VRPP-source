@@ -14,7 +14,7 @@
 
 class FrameBufferObject {
 public:
-	FrameBufferObject();
+	FrameBufferObject(int width=800, int height=800);
 	virtual ~FrameBufferObject();
 
 	void createPositionTexture();
@@ -36,10 +36,12 @@ public:
 	void bindPositionTexture();
 	void bindNormalTexture();
 	void bindColorTexture();
-	void bindDepthTexture();
+	void bindShadowMap();
+	void bindDepthBuffer();
 	void unbindTexture();
 	void unbindAllTextures();
 	void makeDrawBuffers();
+	void resize(int width, int height);
 
 
 protected:

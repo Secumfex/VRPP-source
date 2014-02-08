@@ -85,7 +85,7 @@ int main() {
 	//         Create a Framebuffer Object        //
 	//--------------------------------------------//
 
-	FrameBufferObject *fbo = new FrameBufferObject();
+	FrameBufferObject *fbo = new FrameBufferObject(width, height);
 
 	fbo->bindFBO();
 
@@ -121,6 +121,8 @@ int main() {
 	while(!glfwWindowShouldClose(window)) {
 
 		glfwMakeContextCurrent(window);
+		glfwGetFramebufferSize(window, &width, &height);
+		fbo->resize(width, height);
 
 		using namespace glm;
 
