@@ -30,6 +30,7 @@ GraphicsComponent* VirtualObjectFactory::getTriangle(){
 
 		Mesh *triangle = new Mesh;
 		Material *mat = new Material();
+		mat->setName("screenfill_triangle");
 	    GLuint screenFillVertexArrayHandle;
 
 	        glGenVertexArrays(1, &screenFillVertexArrayHandle);
@@ -151,8 +152,6 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 			incidesCounter++;
             }
         }
-        cout << "Counter" << incidesCounter << endl;
-        cout << "Indices " << indices.size() << endl;
 
         aMesh->setNumVertices(mesh->mNumVertices);
         aMesh->setNumIndices(mesh->mNumFaces * 3);
@@ -167,7 +166,6 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 		glGenVertexArrays(1,&temp);
 		aMesh->setVAO(temp);
 		glBindVertexArray(aMesh->getVAO());
-		cout << "VAO " << temp << endl;
 
 
         // buffer for faces
@@ -314,6 +312,9 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
         if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_EMISSIVE, &emission))
             color4_to_float4(&emission, c);
 
+        aiString name;
+        if(AI_SUCCESS == aiGetMaterialString(mtl, AI_MATKEY_NAME, &name))
+        	aMat->setName(name.C_Str());
 
 		//memcpy(aMat.emissive, c, sizeof(c));
 		aMat->setEmission(glm::vec3(emission.r, emission.g, emission.b));
