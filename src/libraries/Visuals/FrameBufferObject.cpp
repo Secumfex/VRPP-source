@@ -17,12 +17,12 @@ FrameBufferObject::FrameBufferObject(int width, int height) {
 	mWidth = width;
 	mHeight = height;
 
-	mColorTextureHandle = 0;
-	mDepthbufferHandle = 0;
-	mNormalTextureHandle = 0;
-	mPositionTextureHandle = 0;
+	mColorTextureHandle = -1;
+	mDepthbufferHandle = -1;
+	mNormalTextureHandle = -1;
+	mPositionTextureHandle = -1;
 
-	createDepthTexture();
+	createDepthBuffer();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
@@ -37,6 +37,8 @@ void FrameBufferObject::createPositionTexture(){
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, mWidth, mHeight, 0, GL_RGBA, GL_FLOAT, 0);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mPositionTextureHandle, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -50,6 +52,8 @@ void FrameBufferObject::createNormalTexture(){
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, mWidth, mHeight, 0, GL_RGBA, GL_FLOAT, 0);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, mNormalTextureHandle, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -63,6 +67,8 @@ void FrameBufferObject::createColorTexture(){
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWidth, mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, mColorTextureHandle, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -82,7 +88,7 @@ void FrameBufferObject::createShadowMap(){
 
 	mDrawBuffers.push_back(GL_DEPTH_ATTACHMENT);
 }
-void FrameBufferObject::createDepthTexture(){
+void FrameBufferObject::createDepthBuffer(){
 	glBindFramebuffer(GL_FRAMEBUFFER, mFramebufferHandle);
 	glGenRenderbuffers(1, &mDepthbufferHandle);
 	glBindRenderbuffer(GL_RENDERBUFFER, mDepthbufferHandle);
@@ -106,7 +112,7 @@ GLuint FrameBufferObject::getColorTextureHandle(){
 GLuint FrameBufferObject::getShadowMapHandle(){
 	return mShadowMapHandle;
 }
-GLuint FrameBufferObject::getDepthTextureHandle(){
+GLuint FrameBufferObject::getDepthBufferHandle(){
 	return mDepthbufferHandle;
 }
 
@@ -156,21 +162,29 @@ void FrameBufferObject::makeDrawBuffers(){
 
 void FrameBufferObject::resize(int width, int height){
 
-//	if(mNormalTextureHandle != 0){
-//		bindNormalTexture();
-//		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, width, height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
-//	}
-//	if(mColorTextureHandle != 0){
-//		bindColorTexture();
-//		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, width, height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
-//	}
-//	if(mShadowMapHandle != 0){
-//		bindShadowMap();
-//		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, width, height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
-//	}
-//	if(mDepthbufferHandle != 0){
-//		bindDepthBuffer();
-//		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
-//	}
-//	unbindTexture();
+	mWidth = width;
+	mHeight = height;
+
+	std::vector <GLuint> texsToBeDeleted;
+
+	if(mPositionTextureHandle != -1){
+		texsToBeDeleted.push_back(getPositionTextureHandle());
+		createPositionTexture();
+	}
+	if(mNormalTextureHandle != -1){
+		texsToBeDeleted.push_back(getNormalTextureHandle());
+		createNormalTexture();
+	}
+	if(mColorTextureHandle != -1){
+		texsToBeDeleted.push_back(getColorTextureHandle());
+		createColorTexture();
+	}
+	if(mShadowMapHandle != -1){
+		texsToBeDeleted.push_back(getShadowMapHandle());
+		createShadowMap();
+	}
+
+	glDeleteTextures(texsToBeDeleted.size(), &texsToBeDeleted[0]);
+
+	makeDrawBuffers();
 }

@@ -110,7 +110,7 @@ int main() {
 
 	rm->setRenderQueue(rq);
 	rm->setCurrentFBO(fbo);
-	rm->setProjectionMatrix(glm::perspective(40.0f, 4.0f / 3.0f, 0.1f, 100.f));
+	rm->setProjectionMatrix(glm::perspective(40.0f, 1.0f, 0.1f, 100.f));
 	rm->setCamera(cam);
 
 	cam->setPosition(glm::vec3(0.0f, 1.0f, -6.0f));
@@ -121,8 +121,16 @@ int main() {
 	while(!glfwWindowShouldClose(window)) {
 
 		glfwMakeContextCurrent(window);
-		glfwGetFramebufferSize(window, &width, &height);
-		fbo->resize(width, height);
+
+		int newwidth, newheight;
+		glfwGetFramebufferSize(window, &newwidth, &newheight);
+		if(newwidth != width || newheight != height){
+		fbo->resize(newwidth, newheight);
+//		rm->setProjectionMatrix(glm::perspective(40.0f, (newwidth * 1.0f) / newheight , 0.1f, 100.f));
+		width = newwidth;
+		height = newheight;
+		std:: cout << "resizing to: " << width << " * " << height << std:: endl;
+		}
 
 		using namespace glm;
 

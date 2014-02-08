@@ -21,14 +21,14 @@ public:
 	void createNormalTexture();
 	void createColorTexture();
 	void createShadowMap();
-	void createDepthTexture();
+	void createDepthBuffer();
 
 	GLuint getFboHandle();
 	GLuint getPositionTextureHandle();
 	GLuint getNormalTextureHandle();
 	GLuint getColorTextureHandle();
 	GLuint getShadowMapHandle();
-	GLuint getDepthTextureHandle();
+	GLuint getDepthBufferHandle();
 
 
 	void bindFBO();
