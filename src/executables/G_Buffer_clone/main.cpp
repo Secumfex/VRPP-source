@@ -12,7 +12,6 @@
 
 #include "Tools/ShaderTools.h"
 #include "Tools/TextureTools.h"
-//#include "Tools/Geometry.h"
 
 #include "Visuals/Shader.h"
 #include "Visuals/FrameBufferObject.h"
@@ -82,7 +81,6 @@ int main() {
 	GraphicsComponent* triangle = voFactory->getTriangle();
 
 
-
 	//--------------------------------------------//
 	//         Create a Framebuffer Object        //
 	//--------------------------------------------//
@@ -91,15 +89,12 @@ int main() {
 
 	fbo->bindFBO();
 
-
 	fbo->createPositionTexture();
 	fbo->createNormalTexture();
 	fbo->createColorTexture();
-	fbo->bindFBO();
 
 	//set the list of draw buffers.
 	fbo->makeDrawBuffers();
-
 
 	//rotation of the cube
 	float angle = 0.0f;
@@ -190,7 +185,7 @@ int main() {
 		finalCompShader->useProgram();
 		rm->setCurrentShader(finalCompShader);
 
-		glViewport(0, 0, width, height);
+//		glViewport(0, 0, width, height);
 
 		finalCompShader->uploadAllUniforms();
 		finalCompShader->render(triangle);
