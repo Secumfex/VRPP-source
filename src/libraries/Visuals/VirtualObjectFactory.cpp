@@ -25,6 +25,44 @@ f[2] = c->b;
 f[3] = c->a;
 }
 
+GraphicsComponent* VirtualObjectFactory::getTriangle(){
+	if(mScreenFillTriangle == NULL){
+
+		Mesh *triangle = new Mesh;
+		Material *mat = new Material();
+	    GLuint screenFillVertexArrayHandle;
+
+	        glGenVertexArrays(1, &screenFillVertexArrayHandle);
+	        glBindVertexArray(screenFillVertexArrayHandle);
+
+	        GLuint indexBufferHandle;
+	        glGenBuffers(1, &indexBufferHandle);
+	        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferHandle);
+
+	        GLint indices[] = {0, 1, 2};
+	        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	        GLuint vertexBufferHandle;
+	        glGenBuffers(1, &vertexBufferHandle);
+	        glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandle);
+
+	        GLfloat vertices[] = {-1, -1,   3, -1,   -1,  3};
+	        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	        glEnableVertexAttribArray(0);
+	        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+	        triangle->setVAO(screenFillVertexArrayHandle);
+	        triangle->setNumIndices(3);
+	        triangle->setNumVertices(3);
+	        triangle->setNumFaces(1);
+
+	        GraphicsComponent *gc = new GraphicsComponent(triangle, mat);
+	        mScreenFillTriangle = gc;
+
+	} return mScreenFillTriangle;
+}
+
 VirtualObject* VirtualObjectFactory::createCow(){
 
 	if(mCow == NULL)
@@ -136,7 +174,6 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
         glGenBuffers(1, &buffer);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), &indices[0], GL_STATIC_DRAW);
-        cout << "Index Buffer " << buffer << endl;
 
         // buffer for vertex positions
         if (mesh->HasPositions()) {
@@ -145,7 +182,6 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
             glBufferData(GL_ARRAY_BUFFER, sizeof(aiVector3D) * mesh->mNumVertices, mesh->mVertices, GL_STATIC_DRAW);
 
 
-            cout << "Vertex Buffer " << buffer << endl;
 
 			//vertexLoc wurde hier ersetzt
             glEnableVertexAttribArray(0);
@@ -164,7 +200,6 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 			glEnableVertexAttribArray(2);
             glVertexAttribPointer(2, 3, GL_FLOAT, 0, 0, 0);
 
-            cout << "Normal Buffer " << buffer << endl;
 
         }
 
@@ -219,7 +254,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
             //und texCoordLoc wurde dann auch ersetzt
 			glEnableVertexAttribArray(1);
             glVertexAttribPointer(1, 2, GL_FLOAT, 0, 0, 0);
-            cout << "UV Buffer " << buffer << endl;
+
 
         // unbind buffers
         glBindVertexArray(0);

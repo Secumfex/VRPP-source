@@ -8,6 +8,7 @@
 #ifndef FRAMEBUFFEROBJECT_H_
 #define FRAMEBUFFEROBJECT_H_
 
+#include <vector>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
@@ -19,13 +20,16 @@ public:
 	void createPositionTexture();
 	void createNormalTexture();
 	void createColorTexture();
+	void createShadowMap();
 	void createDepthTexture();
 
 	GLuint getFboHandle();
 	GLuint getPositionTextureHandle();
 	GLuint getNormalTextureHandle();
 	GLuint getColorTextureHandle();
+	GLuint getShadowMapHandle();
 	GLuint getDepthTextureHandle();
+
 
 	void bindFBO();
 	void unbindFBO();
@@ -35,6 +39,7 @@ public:
 	void bindDepthTexture();
 	void unbindTexture();
 	void unbindAllTextures();
+	void makeDrawBuffers();
 
 
 protected:
@@ -46,8 +51,10 @@ protected:
     GLuint mPositionTextureHandle;
     GLuint mNormalTextureHandle;
     GLuint mColorTextureHandle;
+    GLuint mShadowMapHandle;
     GLuint mDepthbufferHandle;
 
+    std::vector <GLenum> mDrawBuffers;
 
 };
 

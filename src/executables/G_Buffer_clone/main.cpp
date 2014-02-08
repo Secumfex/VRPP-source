@@ -21,132 +21,90 @@
 
 
 int main() {
-    
-    // render window
-    glfwInit();
-    
+
+	// render window
+	glfwInit();
+
 #ifdef __APPLE__
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glewExperimental= GL_TRUE;
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glewExperimental= GL_TRUE;
 #endif
-    
-    GLFWwindow* window = glfwCreateWindow(800, 800, "Compositing", NULL, NULL);
-    glfwMakeContextCurrent(window);
-    glClearColor(1,1,1,0);
-    
-    // get framebuffer size
-    int width, height;
-    glfwGetFramebufferSize(window, &width, &height);
-    
-    //init opengl 3 extension
-    glewInit();
-    
-    // print out some info about the graphics drivers
-    std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
-    std::cout << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
-    std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
-    std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
-    
-    
-    
-    //load, compile and link simple texture rendering program for a screen filling plane
-    
-    Shader *simpleTexShader = new Shader(SHADERS_PATH "/GBuffer/screenFill.vert",
-            							SHADERS_PATH "/GBuffer/simpleTexture.frag");
-    
-    Shader *finalCompShader = new Shader(	SHADERS_PATH "/GBuffer/screenFill.vert",
-    										SHADERS_PATH "/GBuffer/finalCompositing.frag");
-    
-    Shader *gbufferShader = new Shader(		SHADERS_PATH "/GBuffer/GBuffer.vert",
-											SHADERS_PATH "/GBuffer/GBuffer.frag");
 
-    RenderQueue* rq = new RenderQueue();
-    RenderManager* rm = RenderManager::getInstance();
-    Camera* cam = new Camera();
-    
-    
+	GLFWwindow* window = glfwCreateWindow(800, 800, "Compositing", NULL, NULL);
+	glfwMakeContextCurrent(window);
+	glClearColor(1,1,1,0);
 
-    //--------------------------------------------//
-    //        Create a Vertex Array Object        //
-    //         to render a triangle that          //
-    //           fills the whole screen           //
-    //--------------------------------------------//
-    
-    GLuint screenFillVertexArrayHandle;
-    {
-        glGenVertexArrays(1, &screenFillVertexArrayHandle);
-        glBindVertexArray(screenFillVertexArrayHandle);
-        
-        GLuint vertexBufferHandle;
-        glGenBuffers(1, &vertexBufferHandle);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandle);
-        
-        //        3 :.
-        //          :   .
-        //          :      .
-        //        1 :_________.
-        //          |         |  .
-        //          |    +    |     .
-        //          |_________|........
-        //       -1/-1        1        3
-        
-        GLfloat vertices[] = {-1, -1,   3, -1,   -1,  3};
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-        
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
-    }
-    
-    
-    
-    //--------------------------------------------//
-    //        Create a Vertex Array Object        //
-    //         containing several buffers         //
-    //             to render a cube               //
-    //--------------------------------------------//
-    
-    VirtualObjectFactory *voFactory = VirtualObjectFactory::getInstance();
+	// get framebuffer size
+	int width, height;
+	glfwGetFramebufferSize(window, &width, &height);
+
+	//init opengl 3 extension
+	glewInit();
+
+	// print out some info about the graphics drivers
+	std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
+	std::cout << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+	std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
+	std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
+
+
+
+	//load, compile and link simple texture rendering program for a screen filling plane
+
+	Shader *simpleTexShader = new Shader(SHADERS_PATH "/GBuffer_clone/screenFill.vert",
+			SHADERS_PATH "/GBuffer_clone/simpleTexture.frag");
+
+	Shader *finalCompShader = new Shader(	SHADERS_PATH "/GBuffer_clone/screenFill.vert",
+			SHADERS_PATH "/GBuffer_clone/finalCompositing.frag");
+
+	Shader *gbufferShader = new Shader(		SHADERS_PATH "/GBuffer_clone/GBuffer.vert",
+			SHADERS_PATH "/GBuffer_clone/GBuffer.frag");
+
+	RenderQueue* rq = new RenderQueue();
+	RenderManager* rm = RenderManager::getInstance();
+	Camera* cam = new Camera();
+
+
+	//--------------------------------------------//
+	//        Create a Vertex Array Object        //
+	//         containing several buffers         //
+	//             to render a cube               //
+	//--------------------------------------------//
+
+	VirtualObjectFactory *voFactory = VirtualObjectFactory::getInstance();
 
 	VirtualObject *object01 = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj");
 	VirtualObject *object02 = voFactory->createVirtualObject(RESOURCES_PATH "/cow.obj");
-    
+
+	GraphicsComponent* triangle = voFactory->getTriangle();
 
 
-    
-    //--------------------------------------------//
-    //         Create a Framebuffer Object        //
-    //--------------------------------------------//
-    
+
+	//--------------------------------------------//
+	//         Create a Framebuffer Object        //
+	//--------------------------------------------//
+
 	FrameBufferObject *fbo = new FrameBufferObject();
 
-    GLuint depthbufferHandle;
-    {
-        fbo->bindFBO();
+	fbo->bindFBO();
 
 
-        fbo->createPositionTexture();
-        fbo->createNormalTexture();
-        fbo->createColorTexture();
-        fbo->bindFBO();
+	fbo->createPositionTexture();
+	fbo->createNormalTexture();
+	fbo->createColorTexture();
+	fbo->bindFBO();
 
-        //the depth buffer
-        glGenRenderbuffers(1, &depthbufferHandle);
-        glBindRenderbuffer(GL_RENDERBUFFER, depthbufferHandle);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, (height/4.0)*3); //800x600
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthbufferHandle);
+	//set the list of draw buffers.
+	fbo->makeDrawBuffers();
 
-        //set the list of draw buffers.
-        GLenum drawBufferHandles[3] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2};
-        glDrawBuffers(3, drawBufferHandles);
-    }
-    
-    //rotation of the cube
-    float angle = 0.0f;
-    float rotationSpeed = 1.0f;
-    
+
+	//rotation of the cube
+	float angle = 0.0f;
+	float rotationSpeed = 1.0f;
+
 	//Statisches "binden" unserer Uniforms/Objekte
 	//Muss man also nur einmal machen
 
@@ -157,116 +115,116 @@ int main() {
 
 	rm->setRenderQueue(rq);
 	rm->setCurrentFBO(fbo);
-    rm->setProjectionMatrix(glm::perspective(40.0f, 4.0f / 3.0f, 0.1f, 100.f));
-    rm->setCamera(cam);
+	rm->setProjectionMatrix(glm::perspective(40.0f, 4.0f / 3.0f, 0.1f, 100.f));
+	rm->setCamera(cam);
 
-    cam->setPosition(glm::vec3(0.0f, 1.0f, -6.0f));
-    cam->setCenter(glm::vec3(0.0f, 0.0f, 0.0f));
-
-    while(!glfwWindowShouldClose(window)) {
-        
-        glfwMakeContextCurrent(window);
-        
-        using namespace glm;
-        
-        //rotation angle
-        angle = fmod((float)(angle+rotationSpeed*glfwGetTime()), (float)(pi<float>()*2.0f));
-        glfwSetTime(0.0);
-        
-        //scale a cube into a flat plane
-        mat4 modelCube_1 = scale(translate(mat4(1.0f), vec3(0.0f, -1.0f, 0.0f)), vec3(2.5f, 0.2f, 2.5f));
-        
-        //nice rotation of a small cube
-        mat4 modelCube_2 = scale(translate(rotate(mat4(1.0f), degrees(angle), vec3(1.0f, 1.0f, 0.0f)), vec3(0.0f, 0.5f, -0.5f)), vec3(0.6f, 0.6f, 0.6f));
-
-        object01->setModelMatrix(modelCube_1);
-        object02->setModelMatrix(modelCube_2);
+	cam->setPosition(glm::vec3(0.0f, 1.0f, -6.0f));
+	cam->setCenter(glm::vec3(0.0f, 0.0f, 0.0f));
 
 
 
-        //--------------------------------------------//
-        //        Render the scene into the FBO       //
-        //--------------------------------------------//
-        
-        fbo->bindFBO();
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
-        
-        glEnable(GL_DEPTH_TEST);
+	while(!glfwWindowShouldClose(window)) {
 
-        
+		glfwMakeContextCurrent(window);
 
-        gbufferShader->useProgram();
-        rm->setCurrentShader(gbufferShader);
-        
-        glViewport(0, 0, width, (height/4)*3);
-        
+		using namespace glm;
 
-        list<VirtualObject*> vo_list = rm->getRenderQueue()->getVirtualObjectList();
-        unsigned int i= 0;
-        while (!vo_list.empty()) {
-        	unsigned int j= 0;
-        	VirtualObject* vo_temp = vo_list.front();
-        	for (j = 0; j < vo_temp->getGraphicsComponent().size(); ++j) {
-        		vo_list.pop_front();
-        		rm->setCurrentGC(vo_temp->getGraphicsComponent()[j]);
-        		gbufferShader->uploadAllUniforms();
-        		gbufferShader->render(vo_temp->getGraphicsComponent()[j]);
+		glEnable(GL_DEPTH_TEST);
+
+		//rotation angle
+		angle = fmod((float)(angle+rotationSpeed*glfwGetTime()), (float)(pi<float>()*2.0f));
+		glfwSetTime(0.0);
+
+		//scale a cube into a flat plane
+		mat4 modelMatrix01 = scale(translate(mat4(1.0f), vec3(0.0f, -1.0f, 0.0f)), vec3(2.5f, 0.2f, 2.5f));
+
+		//nice rotation of a small cube
+		mat4 modelMatrix02 = scale(translate(rotate(mat4(1.0f), degrees(angle), vec3(1.0f, 1.0f, 0.0f)), vec3(0.0f, 0.5f, -0.5f)), vec3(0.9f, 0.9f, 0.9f));
+
+		object01->setModelMatrix(modelMatrix01);
+		object02->setModelMatrix(modelMatrix02);
+
+		//--------------------------------------------//
+		//        Render the scene into the FBO       //
+		//--------------------------------------------//
+
+		fbo->bindFBO();
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		//beim Programm wechseln, muss nurnoch das hier gemacht werden
+		gbufferShader->useProgram();
+		rm->setCurrentShader(gbufferShader);
+
+		//        glViewport(0, 0, width, (height/4)*3);
+
+
+		//----------------------------------------------------------------------------------------//
+		//        This is da Main-Renderloop. Hier werden alle GC für den GBuffer gerendert       //
+		//----------------------------------------------------------------------------------------//
+
+		list<VirtualObject*> vo_list = rm->getRenderQueue()->getVirtualObjectList();
+		unsigned int i= 0;
+		while (!vo_list.empty()) {
+			unsigned int j= 0;
+			VirtualObject* vo_temp = vo_list.front();
+			for (j = 0; j < vo_temp->getGraphicsComponent().size(); ++j) {
+				vo_list.pop_front();
+				rm->setCurrentGC(vo_temp->getGraphicsComponent()[j]);
+				gbufferShader->uploadAllUniforms();
+				gbufferShader->render(vo_temp->getGraphicsComponent()[j]);
 			}
 		}
-        
-        fbo->unbindFBO();
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
-        
-        //--------------------------------------------//
-        //       Take the textures from the FBO       //
-        //      to compose them on an image plane     //
-        //--------------------------------------------//
-        
-        glDisable(GL_DEPTH_TEST);
-        glBindVertexArray(screenFillVertexArrayHandle);
-        
-        finalCompShader->useProgram();
-        rm->setCurrentShader(finalCompShader);
 
-        glViewport(0, 0, width, height);
+		fbo->unbindFBO();
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glDisable(GL_DEPTH_TEST);
 
-        finalCompShader->uploadAllUniforms();
 
-        glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO MAIN FRAME
+		//--------------------------------------------//
+		//       Take the textures from the FBO       //
+		//      to compose them on an image plane     //
+		//--------------------------------------------//
 
-        fbo->unbindAllTextures();
-        
-        //--------------------------------------------//
-        //       Render small views at the top to     //
-        //      show all the components of the FBO    //
-        //--------------------------------------------//
-        glDisable(GL_DEPTH_TEST);
-        
-//        glBindVertexArray(screenFillVertexArrayHandle);
-//        simpleTexShader->useProgram();
-//        rm->setCurrentShader(simpleTexShader);
-//
-//        glViewport(0, (height/4)*3, width/3, height/4);
-//        glBindTexture(GL_TEXTURE_2D, fbo->getPositionTextureHandle());
-//        glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-LEFT VIEWPORT
-//
-//        glViewport(width/3, (height/4)*3, width/3, height/4);
-//        glBindTexture(GL_TEXTURE_2D, fbo->getNormalTextureHandle());
-//        glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-CENTER VIEWPORT
-//
-//        glViewport((width/3)*2, (height/4)*3, width/3, height/4);
-//        glBindTexture(GL_TEXTURE_2D, fbo->getColorTextureHandle());
-//        glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-RIGHT VIEWPORT
-        
-        //show what's been drawn
-        glfwSwapBuffers(window);
-        glfwPollEvents();
-    }
-    
-    glfwDestroyWindow(window);
-    glfwTerminate();
-    return 0;
-    
+		//      Hier findet das Compositing statt :) ist schon einiges kürzer, nicht wahr?
+
+		finalCompShader->useProgram();
+		rm->setCurrentShader(finalCompShader);
+
+		glViewport(0, 0, width, height);
+
+		finalCompShader->uploadAllUniforms();
+		finalCompShader->render(triangle);
+
+		fbo->unbindAllTextures();
+
+		//--------------------------------------------//
+		//       Render small views at the top to     //
+		//      show all the components of the FBO    //
+		//--------------------------------------------//
+
+		//        glBindVertexArray(screenFillVertexArrayHandle);
+		//        simpleTexShader->useProgram();
+		//        rm->setCurrentShader(simpleTexShader);
+		//
+		//        glViewport(0, (height/4)*3, width/3, height/4);
+		//        glBindTexture(GL_TEXTURE_2D, fbo->getPositionTextureHandle());
+		//        glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-LEFT VIEWPORT
+		//
+		//        glViewport(width/3, (height/4)*3, width/3, height/4);
+		//        glBindTexture(GL_TEXTURE_2D, fbo->getNormalTextureHandle());
+		//        glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-CENTER VIEWPORT
+		//
+		//        glViewport((width/3)*2, (height/4)*3, width/3, height/4);
+		//        glBindTexture(GL_TEXTURE_2D, fbo->getColorTextureHandle());
+		//        glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-RIGHT VIEWPORT
+
+		//show what's been drawn
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+	}
+
+	glfwDestroyWindow(window);
+	glfwTerminate();
+	return 0;
+
 };
