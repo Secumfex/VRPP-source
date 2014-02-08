@@ -129,7 +129,6 @@ int main() {
 //		rm->setProjectionMatrix(glm::perspective(40.0f, (newwidth * 1.0f) / newheight , 0.1f, 100.f));
 		width = newwidth;
 		height = newheight;
-		std:: cout << "resizing to: " << width << " * " << height << std:: endl;
 		}
 
 		using namespace glm;

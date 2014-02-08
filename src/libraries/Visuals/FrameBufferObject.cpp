@@ -165,6 +165,8 @@ void FrameBufferObject::resize(int width, int height){
 	mWidth = width;
 	mHeight = height;
 
+	std:: cout << "resizing to: " << width << " * " << height << std:: endl;
+
 	std::vector <GLuint> texsToBeDeleted;
 
 	if(mPositionTextureHandle != -1){
