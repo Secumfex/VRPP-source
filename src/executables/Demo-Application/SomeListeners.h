@@ -46,3 +46,24 @@ public:
 	SetClearColorListener(float r = 0.0, float g = 0.0, float b = 0.0, float a = 1.0);
 	void update();
 };
+
+/// Listener which rotates the Model Matrix by a tiny bit on every update
+class AnimateRotatingModelMatrixListener : public Listener{
+private:
+	VirtualObject* vo;
+	float angle;
+public:
+	AnimateRotatingModelMatrixListener(VirtualObject* vo);
+	void update();
+};
+
+/// Listener which moves the Model Matrix on a sinus curve by a tiny bit on every update
+class AnimateSinusModelMatrixListener : public Listener{
+private:
+	VirtualObject* vo;
+	float old_sinus;
+	float t;
+public:
+	AnimateSinusModelMatrixListener(VirtualObject* vo);
+	void update();
+};

@@ -45,6 +45,8 @@ VirtualObject* ApplicationState::createVirtualObject(std::string path){
 //	std::cout<< " This feature has been deactivated until assimp is fixed." <<endl;
 
 	notify("CREATE_VIRTUAL_OBJECT_LISTENER");	//in case someone cares
+
+	return vo;
 }
 
 void ApplicationState::addVirtualObject(VirtualObject* vo){

@@ -84,3 +84,35 @@ SetClearColorListener::SetClearColorListener(float r, float g, float b, float a)
 void SetClearColorListener::update(){
 		glClearColor(r,g,b,a);
 }
+
+AnimateRotatingModelMatrixListener::AnimateRotatingModelMatrixListener(VirtualObject* vo){
+	this->vo = vo;
+	angle = 0.0;
+}
+
+void AnimateRotatingModelMatrixListener::update(){
+        //rotation angle
+        angle = fmod((float)(angle+0.001), (float)(pi<float>()*2.0f));
+
+		glm::mat4 new_modelMatrix = glm::translate(glm::rotate(glm::mat4(1.0f), glm::degrees(angle), glm::vec3(1.0f, 1.0f, 0.0f)), glm::vec3(0.0f, 0.5f, -0.5f));
+       
+		vo->setModelMatrix(new_modelMatrix);
+}
+
+AnimateSinusModelMatrixListener::AnimateSinusModelMatrixListener(VirtualObject* vo){
+	this->vo = vo;
+	t = 0.0;
+	old_sinus = 0.0;
+}
+
+void AnimateSinusModelMatrixListener::update(){
+		t+= 0.001;
+		float new_sinus = std::sin(t);
+		float delta_sinus = new_sinus - old_sinus;
+
+		glm::mat4 new_modelMatrix = glm::translate(vo->getModelMatrix(), glm::vec3(delta_sinus*1.5, 0.0, 0.0));
+       	
+		vo->setModelMatrix(new_modelMatrix);
+
+       	old_sinus = new_sinus;
+	}

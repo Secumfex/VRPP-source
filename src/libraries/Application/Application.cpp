@@ -22,6 +22,7 @@ Application::Application(std::string label){
 
 void Application::setLabel(std::string label){
 	this->label = label;
+	glfwSetWindowTitle(RenderManager::getInstance()->getWindow(),label.c_str());
 }
 
 void Application::initialize(){

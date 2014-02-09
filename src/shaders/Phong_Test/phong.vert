@@ -13,7 +13,7 @@ out vec3 passLightPosition;
 out vec3 passPosition;
 
 void main() {
-    passLightPosition = (uniformView * vec4(-3,3,2,1)).xyz;
+    passLightPosition = (uniformView * vec4(-3,3,-3,1)).xyz;
 
     gl_Position = uniformProjection * uniformView * uniformModel * positionAttribute;
 
