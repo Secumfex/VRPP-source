@@ -15,6 +15,6 @@ layout(location = 2) out vec4 colorOutput;
  
 void main(){  
     positionOutput = passPosition;
-    normalOutput = texture(normalTexture, passUVCoord);
+    normalOutput = normalize(texture(normalTexture, passUVCoord));
     colorOutput = texture(diffuseTexture, passUVCoord);
 }

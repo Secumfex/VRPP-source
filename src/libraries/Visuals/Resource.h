@@ -79,6 +79,9 @@ public:
 	glm::vec3 getEmission();
 	GLfloat getSpecularTerm();
 
+	std::string getName();
+
+	bool hasNormalMap();
 	//---------------MEMBER VARIABLES--------------------
 private:
 	std::string mName;
@@ -89,6 +92,7 @@ private:
 	glm::vec3 mSpecColor;
 	glm::vec3 mEmissColor;
 	GLfloat mSpecCoeff;
+
 
 
 

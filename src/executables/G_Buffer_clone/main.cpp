@@ -107,7 +107,8 @@ int main() {
 	//Statisches "binden" unserer Uniforms/Objekte
 	//Muss man also nur einmal machen
 
-	gbufferShader->setBlurStrength(4);
+	gbufferShader->setBlurStrength(0);
+	gbuffer_normalMap_Shader->setBlurStrength(0);
 
 	rq->addVirtualObject(object01);
 	rq->addVirtualObject(object02);
@@ -131,10 +132,10 @@ int main() {
 		int newwidth, newheight;
 		glfwGetFramebufferSize(window, &newwidth, &newheight);
 		if(newwidth != width || newheight != height){
-		fbo->resize(newwidth, newheight);
-//		rm->setProjectionMatrix(glm::perspective(40.0f, (newwidth * 1.0f) / newheight , 0.1f, 100.f));
-		width = newwidth;
-		height = newheight;
+			fbo->resize(newwidth, newheight);
+			//		rm->setProjectionMatrix(glm::perspective(40.0f, (newwidth * 1.0f) / newheight , 0.1f, 100.f));
+			width = newwidth;
+			height = newheight;
 		}
 
 		using namespace glm;
@@ -164,13 +165,11 @@ int main() {
 		fbo->bindFBO();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		//beim Programm wechseln, muss nurnoch das hier gemacht werden
-		gbufferShader->useProgram();
-		rm->setCurrentShader(gbufferShader);
 
 		//        glViewport(0, 0, width, (height/4)*3);
 
-
+		gbufferShader->useProgram();
+		rm->setCurrentShader(gbufferShader);
 		//----------------------------------------------------------------------------------------//
 		//        This is da Main-Renderloop. Hier werden alle GC für den GBuffer gerendert       //
 		//----------------------------------------------------------------------------------------//
@@ -180,11 +179,22 @@ int main() {
 		while (!vo_list.empty()) {
 			unsigned int j= 0;
 			VirtualObject* vo_temp = vo_list.front();
+			vo_list.pop_front();
 			for (j = 0; j < vo_temp->getGraphicsComponent().size(); ++j) {
-				vo_list.pop_front();
-				rm->setCurrentGC(vo_temp->getGraphicsComponent()[j]);
-				gbufferShader->uploadAllUniforms();
-				gbufferShader->render(vo_temp->getGraphicsComponent()[j]);
+				GraphicsComponent *gc_temp = vo_temp->getGraphicsComponent()[j];
+				rm->setCurrentGC(gc_temp);
+
+				if(gc_temp->getMaterial()->hasNormalMap()){
+					gbuffer_normalMap_Shader->useProgram();
+					rm->setCurrentShader(gbuffer_normalMap_Shader);
+					gbuffer_normalMap_Shader->uploadAllUniforms();
+				}else{
+					gbufferShader->useProgram();
+					rm->setCurrentShader(gbufferShader);
+					gbufferShader->uploadAllUniforms();
+				}
+
+				gbufferShader->render(gc_temp);
 			}
 		}
 
@@ -203,7 +213,7 @@ int main() {
 		finalCompShader->useProgram();
 		rm->setCurrentShader(finalCompShader);
 
-//		glViewport(0, 0, width, height);
+				glViewport(0, 0, width, height);
 
 		finalCompShader->uploadAllUniforms();
 		finalCompShader->render(triangle);
@@ -215,21 +225,21 @@ int main() {
 		//      show all the components of the FBO    //
 		//--------------------------------------------//
 
-		//        glBindVertexArray(screenFillVertexArrayHandle);
-		//        simpleTexShader->useProgram();
-		//        rm->setCurrentShader(simpleTexShader);
-		//
-		//        glViewport(0, (height/4)*3, width/3, height/4);
-		//        glBindTexture(GL_TEXTURE_2D, fbo->getPositionTextureHandle());
-		//        glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-LEFT VIEWPORT
-		//
-		//        glViewport(width/3, (height/4)*3, width/3, height/4);
-		//        glBindTexture(GL_TEXTURE_2D, fbo->getNormalTextureHandle());
-		//        glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-CENTER VIEWPORT
-		//
-		//        glViewport((width/3)*2, (height/4)*3, width/3, height/4);
-		//        glBindTexture(GL_TEXTURE_2D, fbo->getColorTextureHandle());
-		//        glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-RIGHT VIEWPORT
+//		        glBindVertexArray(triangle->getMesh()->getVAO());
+//		        simpleTexShader->useProgram();
+//		        rm->setCurrentShader(simpleTexShader);
+//
+//		        glViewport(0, (height/4)*3, width/3, height/4);
+//		        glBindTexture(GL_TEXTURE_2D, fbo->getPositionTextureHandle());
+//		        glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-LEFT VIEWPORT
+//
+//		        glViewport(width/3, (height/4)*3, width/3, height/4);
+//		        glBindTexture(GL_TEXTURE_2D, fbo->getNormalTextureHandle());
+//		        glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-CENTER VIEWPORT
+//
+//		        glViewport((width/3)*2, (height/4)*3, width/3, height/4);
+//		        glBindTexture(GL_TEXTURE_2D, fbo->getColorTextureHandle());
+//		        glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-RIGHT VIEWPORT
 
 		//show what's been drawn
 		glfwSwapBuffers(window);

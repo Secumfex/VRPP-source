@@ -79,6 +79,7 @@ bool GraphicsComponent:: hasShadow(){
 bool GraphicsComponent:: hasTransparency(){
 	return mTranparency;
 }
+
 void GraphicsComponent:: setBoundingBox(glm::vec3 min, glm::vec3 max){
 	mAABB_Min = min;
 	mAABB_Max = max;

@@ -6,6 +6,11 @@ uniform sampler2D positionMap;
 uniform sampler2D normalMap;
 uniform sampler2D colorMap;
 
+uniform float shininess;
+
+uniform float resX;
+uniform float resY;
+
 out vec4 fragmentColor;
 
 void main() {
@@ -18,6 +23,8 @@ void main() {
     
     //calculate lighting with given position, normal and lightposition
     vec3 nPosToLight = normalize(vec3(lightPos.xyz - position.xyz));
+
+	//shininess = 50.0;
 
     vec3  reflection = normalize(reflect(-nPosToLight,normal.xyz));
     float ambient = 0.1;

@@ -190,3 +190,10 @@ void FrameBufferObject::resize(int width, int height){
 
 	makeDrawBuffers();
 }
+
+GLfloat FrameBufferObject::getWidth(){
+	return mWidth;
+}
+GLfloat FrameBufferObject::getHeight(){
+	return mHeight;
+}

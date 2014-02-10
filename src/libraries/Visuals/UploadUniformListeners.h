@@ -112,5 +112,17 @@ class UploadUniformModelMatrixListener : public Listener{
 	 UploadUniformBlurStrengthListener(std::string name);
   	 	void update();
   };
+ class UploadUniformResolutionXListener : public Listener{
+
+  	public:
+	 UploadUniformResolutionXListener(std::string name);
+  	 	void update();
+  };
+ class UploadUniformResolutionYListener : public Listener{
+
+  	public:
+	 UploadUniformResolutionYListener(std::string name);
+  	 	void update();
+  };
 
 #endif /* UPLOADUNIFORMLISTENERS_H_ */

@@ -44,6 +44,9 @@ public:
 	void makeDrawBuffers();
 	void resize(int width, int height);
 
+	GLfloat getWidth();
+	GLfloat getHeight();
+
 
 protected:
 

@@ -139,7 +139,6 @@ UploadUniformColorMapListener::UploadUniformColorMapListener(std::string name){
 	 glEnable(GL_TEXTURE_2D);
 	 gc->getMaterial()->getNormalMap()->bindTexture();
 	 shader->uploadUniform(1,"normalTexture");
-	 gc->getMaterial()->getNormalMap()->unbindTexture();
 	 glActiveTexture(GL_TEXTURE0);
  }
 
@@ -206,4 +205,25 @@ UploadUniformColorMapListener::UploadUniformColorMapListener(std::string name){
 	 Shader* shader = RenderManager::getInstance()->getCurrentShader();
 
 	 shader->uploadUniform(shader->getBlurStrength(), "blurStrength");
+ }
+
+ UploadUniformResolutionXListener::UploadUniformResolutionXListener(std::string name){
+ 	setName(name);
+ }
+
+ void UploadUniformResolutionXListener::update(){
+	 Shader* shader = RenderManager::getInstance()->getCurrentShader();
+	 FrameBufferObject* fbo = RenderManager::getInstance()->getCurrentFBO();
+
+	 shader->uploadUniform(fbo->getWidth(), "resX");
+ }
+ UploadUniformResolutionYListener::UploadUniformResolutionYListener(std::string name){
+ 	setName(name);
+ }
+
+ void UploadUniformResolutionYListener::update(){
+	 Shader* shader = RenderManager::getInstance()->getCurrentShader();
+	 FrameBufferObject* fbo = RenderManager::getInstance()->getCurrentFBO();
+
+	 shader->uploadUniform(fbo->getHeight(), "resY");
  }
