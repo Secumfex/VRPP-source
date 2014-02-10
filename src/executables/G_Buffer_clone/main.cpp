@@ -62,6 +62,9 @@ int main() {
 	Shader *gbufferShader = new Shader(		SHADERS_PATH "/GBuffer_clone/GBuffer.vert",
 			SHADERS_PATH "/GBuffer_clone/GBuffer.frag");
 
+	Shader *gbuffer_normalMap_Shader = new Shader(		SHADERS_PATH "/GBuffer_clone/GBuffer.vert",
+			SHADERS_PATH "/GBuffer_clone/GBuffer_normalTexture.frag");
+
 	RenderQueue* rq = new RenderQueue();
 	RenderManager* rm = RenderManager::getInstance();
 	Camera* cam = new Camera();
@@ -77,6 +80,7 @@ int main() {
 
 	VirtualObject *object01 = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj");
 	VirtualObject *object02 = voFactory->createVirtualObject(RESOURCES_PATH "/cow.obj");
+	VirtualObject *object03 = voFactory->createVirtualObject(RESOURCES_PATH "/cube.obj");
 
 	GraphicsComponent* triangle = voFactory->getTriangle();
 
@@ -107,6 +111,8 @@ int main() {
 
 	rq->addVirtualObject(object01);
 	rq->addVirtualObject(object02);
+	rq->addVirtualObject(object03);
+
 
 	rm->setRenderQueue(rq);
 	rm->setCurrentFBO(fbo);
@@ -145,8 +151,11 @@ int main() {
 		//nice rotation of a small cube
 		mat4 modelMatrix02 = scale(translate(rotate(mat4(1.0f), degrees(angle), vec3(1.0f, 1.0f, 0.0f)), vec3(0.0f, 0.5f, -0.5f)), vec3(0.9f, 0.9f, 0.9f));
 
+		mat4 modelMatrix03 = scale(translate(rotate(mat4(1.0f), degrees(angle), vec3(0.0f, 1.0f, 1.0f)), vec3(0.0f, 0.5f, -0.5f)), vec3(0.3f, 0.3f, 0.3f));
+
 		object01->setModelMatrix(modelMatrix01);
 		object02->setModelMatrix(modelMatrix02);
+		object03->setModelMatrix(modelMatrix03);
 
 		//--------------------------------------------//
 		//        Render the scene into the FBO       //
