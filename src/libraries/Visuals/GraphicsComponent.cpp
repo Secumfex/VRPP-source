@@ -36,6 +36,30 @@ Material* GraphicsComponent::getMaterial(){
 	return mMaterial;
 }
 
+void GraphicsComponent::setDynamic(bool value){
+mDynamic=value;
+}
+	
+bool GraphicsComponent::isDynamic(){
+return mDynamic;}
+
+	void GraphicsComponent::setModelMatrixGc(glm::mat4 matrix){
+	modelMatrixGc=matrix;
+	}
+
+	glm::mat4 GraphicsComponent::getModelMatrix(){
+	return modelMatrixGc;}
+
+	void GraphicsComponent::setPivot(){
+	pivot.x=getBoundingBox_Max().x - getBoundingBox_Min().x;
+	pivot.y=getBoundingBox_Max().y - getBoundingBox_Min().y;
+	pivot.z=getBoundingBox_Max().z - getBoundingBox_Min().z;
+	}
+
+
+	glm::vec3 GraphicsComponent::getPivot(){
+	return pivot;}
+
 void GraphicsComponent:: setEmission(bool value){
 	mEmission = value;
 }
@@ -65,4 +89,5 @@ glm::vec3 GraphicsComponent:: getBoundingBox_Min(){
 glm::vec3 GraphicsComponent:: getBoundingBox_Max(){
 	return mAABB_Max;
 }
+
 
