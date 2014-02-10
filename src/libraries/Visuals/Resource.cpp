@@ -23,7 +23,7 @@ Material :: Material(){
 	mAmbColor = glm::vec3(1,1,1);
 	mDiffColor = glm::vec3(1,1,1);
 	mName = "";
-	mSpecCoeff = 0;
+	mShininess = 0;
 	mEmissColor = mAmbColor;
 
 }
@@ -76,7 +76,9 @@ void Material :: setSpecular(glm::vec3 specular){
 	mSpecColor = specular;
 }
 void Material :: setEmission(glm::vec3 emission){}
-void Material :: setShininess(GLfloat term){}
+void Material :: setShininess(GLfloat term){
+	mShininess = term;
+}
 
 Texture* Material ::getAmbientMap(){
 	return mTextures[0];
@@ -108,8 +110,8 @@ glm::vec3 Material ::getSpecular(){
 glm::vec3 Material ::getEmission(){
 	return mEmissColor;
 }
-GLfloat Material::getSpecularTerm(){
-	return mSpecCoeff;
+GLfloat Material::getShininess(){
+	return mShininess;
 }
 Texture* Material ::getSpecularMap(){
 	return mTextures[6];

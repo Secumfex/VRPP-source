@@ -77,7 +77,7 @@ public:
 	glm::vec3 getDiffuse();
 	glm::vec3 getSpecular();
 	glm::vec3 getEmission();
-	GLfloat getSpecularTerm();
+	GLfloat getShininess();
 
 	std::string getName();
 
@@ -91,7 +91,8 @@ private:
 	glm::vec3 mDiffColor;
 	glm::vec3 mSpecColor;
 	glm::vec3 mEmissColor;
-	GLfloat mSpecCoeff;
+
+	GLfloat mShininess;
 
 
 

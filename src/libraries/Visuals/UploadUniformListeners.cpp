@@ -150,7 +150,7 @@ UploadUniformColorMapListener::UploadUniformColorMapListener(std::string name){
 	 Shader* shader = RenderManager::getInstance()->getCurrentShader();
 	 GraphicsComponent* gc = RenderManager::getInstance()->getCurrentGC();
 
-	 shader->uploadUniform(gc->getMaterial()->getSpecularTerm(), "shininess");
+	 shader->uploadUniform(gc->getMaterial()->getShininess(), "shininess");
  }
 
  UploadUniformDiffuseColorListener::UploadUniformDiffuseColorListener(std::string name){
@@ -214,7 +214,6 @@ UploadUniformColorMapListener::UploadUniformColorMapListener(std::string name){
  void UploadUniformResolutionXListener::update(){
 	 Shader* shader = RenderManager::getInstance()->getCurrentShader();
 	 FrameBufferObject* fbo = RenderManager::getInstance()->getCurrentFBO();
-
 	 shader->uploadUniform(fbo->getWidth(), "resX");
  }
  UploadUniformResolutionYListener::UploadUniformResolutionYListener(std::string name){
@@ -224,6 +223,5 @@ UploadUniformColorMapListener::UploadUniformColorMapListener(std::string name){
  void UploadUniformResolutionYListener::update(){
 	 Shader* shader = RenderManager::getInstance()->getCurrentShader();
 	 FrameBufferObject* fbo = RenderManager::getInstance()->getCurrentFBO();
-
 	 shader->uploadUniform(fbo->getHeight(), "resY");
  }

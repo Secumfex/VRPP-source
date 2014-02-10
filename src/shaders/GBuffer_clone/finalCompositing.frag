@@ -5,6 +5,7 @@ in vec2 passUV;
 uniform sampler2D positionMap;
 uniform sampler2D normalMap;
 uniform sampler2D colorMap;
+uniform sampler2D specularMap;
 
 uniform float shininess;
 
@@ -29,17 +30,17 @@ void main() {
     vec3  reflection = normalize(reflect(-nPosToLight,normal.xyz));
     float ambient = 0.1;
     float diffuse = max(dot(normal.xyz, nPosToLight), 0);
-    float specular = pow(max(dot(reflection, -normalize(position.xyz)),0),50);
+    float specular = pow(max(dot(reflection, -normalize(position.xyz)),0),shininess);
 
-    float resX = 1.0/800.0;
-    float resY = 1.0/600.0;
+    float resX_temp = 1.0/resX;
+    float resY_temp = 1.0/resY;
 
     int strength = 5;
 
     vec4 glow = vec4(0,0,0,1);
     for(int i = -strength; i < strength; i++) {
         for(int j = -strength; j < strength; j++) {
-            vec4 c = texture(colorMap, passUV + vec2(resX * i, resY * j));
+            vec4 c = texture(colorMap, passUV + vec2(resX_temp * i, resY_temp * j));
             if(c.r + c.g + c.b > 2.0) {                
                 glow += c;
             }

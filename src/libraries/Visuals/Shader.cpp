@@ -159,6 +159,10 @@ void Shader::attachUniformListener(std::string uniform){
 		attach(new UploadUniformShininessListener("UNIFORMUPLOADLISTENER"));}
 	else if(uniform == "emissiveColor"){
 		attach(new UploadUniformEmissiveColorListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "resX"){
+			attach(new UploadUniformResolutionXListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "resY"){
+			attach(new UploadUniformResolutionYListener("UNIFORMUPLOADLISTENER"));}
 	else {
 		std::cout << "ERROR: Uniform \"" << uniform << "\" is not a valid uniform name." << std:: endl;
 	}
