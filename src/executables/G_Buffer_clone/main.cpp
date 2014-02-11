@@ -213,7 +213,7 @@ int main() {
 		finalCompShader->useProgram();
 		rm->setCurrentShader(finalCompShader);
 
-				glViewport(0, 0, width, height);
+//				glViewport(0, 0, width, height);
 
 		finalCompShader->uploadAllUniforms();
 		finalCompShader->render(triangle);

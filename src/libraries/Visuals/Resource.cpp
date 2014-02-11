@@ -135,7 +135,7 @@ std::string Material::getName(){
 
 bool Material::hasNormalMap(){
 Texture *tex = new Texture();
-return getDiffuseMap()->getTextureHandle() != tex->getTextureHandle();
+return getNormalMap()->getTextureHandle() != tex->getTextureHandle();
 }
 
 //---------------MESH SCOPE--------------------
