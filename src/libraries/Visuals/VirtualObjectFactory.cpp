@@ -200,6 +200,18 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 
 
 		}
+		if (mesh->HasTangentsAndBitangents()) {
+			glGenBuffers(1, &buffer);
+			glBindBuffer(GL_ARRAY_BUFFER, buffer);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(float)*3*mesh->mNumVertices, mesh->mTangents, GL_STATIC_DRAW);
+
+			// normalLoc wurde hier ersetzt
+
+			glEnableVertexAttribArray(3);
+			glVertexAttribPointer(2, 3, GL_FLOAT, 0, 0, 0);
+
+
+		}
 
 		// buffer for vertex texture coordinates
 
