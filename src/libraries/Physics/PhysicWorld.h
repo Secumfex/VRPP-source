@@ -40,6 +40,18 @@ public:
 	 */
 	static bool staticCollisionCallbackFunc(btManifoldPoint& collisionPoint, const btCollisionObjectWrapper* obj1, int id1, int index1, const btCollisionObjectWrapper* obj2, int id2, int index2);
 
+	/** \brief ray-picking
+	 *
+	 * @param mouseX,mouseY current mouse position
+	 * @param screenWidth,screenHeight screen resolution
+	 * @param viewMatrix camera position and orientation
+	 * @param projectionMatrix camera parameters
+	 * @param outOrigin
+	 * @param outDirection
+	 * @return void
+	 */
+	void ScreenPosToWorldRay(int mouseX, int mouseY, int screenWidth, int screenHeight, glm::mat4 viewMatrix, glm::mat4 projectionMatrix, glm::vec3& outOrigin, glm::vec3& outDirection);
+
 };
 
 
