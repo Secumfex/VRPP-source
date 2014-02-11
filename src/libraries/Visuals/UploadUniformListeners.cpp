@@ -87,7 +87,6 @@ UploadUniformNormalMapListener::UploadUniformNormalMapListener(std::string name)
 	 glEnable(GL_TEXTURE_2D);
 	 fbo->bindNormalTexture();
 	 shader->uploadUniform(5,"normalMap");
-
  }
 
 UploadUniformColorMapListener::UploadUniformColorMapListener(std::string name){
@@ -111,6 +110,7 @@ UploadUniformColorMapListener::UploadUniformColorMapListener(std::string name){
  void UploadUniformDepthMapListener::update(){
 	 //TODO: implementieren (GBUFFER)
  }
+
 
  UploadUniformDiffuseTextureListener::UploadUniformDiffuseTextureListener(std::string name){
  	setName(name);

@@ -7,7 +7,9 @@
 using namespace std;
 
 #include "Visuals/RenderManager.h"
-	#include "Visuals/VirtualObjectFactory.h"
+
+#include "Visuals/VirtualObjectFactory.h"
+
 #include "IO/IOManager.h"
 
 ApplicationState::ApplicationState(){
@@ -52,7 +54,6 @@ VirtualObject* ApplicationState::createVirtualObject(std::string path){
 void ApplicationState::addVirtualObject(VirtualObject* vo){
 	renderQueue->addVirtualObject(vo);
 	notify("ADD_VIRTUAL_OBJECT_LISTENER");	//in case someone cares
-
 }
 
 VRState::VRState(std::string name){

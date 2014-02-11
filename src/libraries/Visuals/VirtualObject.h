@@ -13,7 +13,7 @@ class VirtualObject{
 	glm::mat4 modelMatrix;							/**< 4x4Matrix */
 	int id;											/**< identification number */
 
-	vector<GraphicsComponent*> mGraphComponent;
+	vector<GraphicsComponent*> mGraphComponent;		/**< vector of graphic-components */
 
 public:
 

@@ -396,6 +396,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 
 
 		//memcpy(aMat.ambient, c, sizeof(c));
+
 		aMat->setAmbient(glm::vec3(ambient.r, ambient.g, ambient.b));
 
 
@@ -408,6 +409,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 
 
 		//memcpy(aMat.specular, c, sizeof(c));
+
 		aMat->setSpecular(glm::vec3(specular.r, specular.g, specular.b));
 
 
