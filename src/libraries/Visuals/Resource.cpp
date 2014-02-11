@@ -20,12 +20,12 @@ Material :: Material(){
 	mTextures.push_back(tex);
 	mTextures.push_back(tex);
 	mTextures.push_back(tex);
+
 	mAmbColor = glm::vec3(1,1,1);
 	mDiffColor = glm::vec3(1,1,1);
 	mName = "";
 	mShininess = 0;
 	mEmissColor = mAmbColor;
-
 }
 Material :: ~Material(){}
 void Material ::setAmbientMap(Texture* tex){ //ändern
@@ -135,7 +135,8 @@ std::string Material::getName(){
 
 bool Material::hasNormalMap(){
 Texture *tex = new Texture();
-return getDiffuseMap()->getTextureHandle() != tex->getTextureHandle();
+return getNormalMap()->getTextureHandle() != tex->getTextureHandle();
+
 }
 
 //---------------MESH SCOPE--------------------

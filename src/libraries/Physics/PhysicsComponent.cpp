@@ -11,12 +11,14 @@ using namespace std;
 PhysicsComponent::PhysicsComponent(){
 	rigidBody = 0;
 	modelMatrix = glm::mat4();
+	hit = false;
 }
 
 PhysicsComponent::PhysicsComponent(glm::mat4 modelMatrix) {
 
 	this-> modelMatrix = modelMatrix;
 	rigidBody =  0;
+	hit = false;
 }
 
 PhysicsComponent::PhysicsComponent(glm::vec3 min, glm::vec3 max) {
@@ -33,6 +35,8 @@ PhysicsComponent::PhysicsComponent(glm::vec3 min, glm::vec3 max) {
 
 	int mass = 0;
 
+	hit = false;
+
 	rigidBody = addBox(width, height, depth, x, y, z, mass);
 	addCollisionFlag(4);
 	update();
@@ -40,6 +44,8 @@ PhysicsComponent::PhysicsComponent(glm::vec3 min, glm::vec3 max) {
 }
 
 PhysicsComponent::PhysicsComponent(float radius, float x, float y, float z, float mass) {
+
+	hit = false;
 
 	rigidBody = addSphere(radius,x,y,z,mass);
 	addCollisionFlag(4);
@@ -49,6 +55,7 @@ PhysicsComponent::PhysicsComponent(float radius, float x, float y, float z, floa
 
 PhysicsComponent::PhysicsComponent(float width, float height, float depth, float x, float y, float z, float mass) {
 
+	hit = false;
 	rigidBody = addBox(width,height,depth,x,y,z,mass);
 	addCollisionFlag(4);
 	update();
@@ -115,6 +122,52 @@ btRigidBody* PhysicsComponent::addSphere(float radius, float x, float y, float z
 glm::mat4 PhysicsComponent::getModelMatrix(){
 
 	return modelMatrix;
+}
+
+btRigidBody* PhysicsComponent::getRigidBody(){
+
+	return rigidBody;
+}
+
+void PhysicsComponent::setPosition(float x, float y, float z){
+
+	btVector3 pos;
+	pos.setX(x);
+	pos.setY(y);
+	pos.setZ(z);
+
+	btTransform t;
+	btRigidBody* body = rigidBody;
+	body->getMotionState()->getWorldTransform(t);
+
+	t.setOrigin(pos);
+	body->getMotionState()->setWorldTransform(t);
+}
+
+glm::vec3 PhysicsComponent::getPosition(){
+
+	btTransform t;
+	btRigidBody* body = rigidBody;
+	body->getMotionState()->getWorldTransform(t);
+
+	btVector3 origin = t.getOrigin();
+
+	glm::vec3 pos;
+	pos.x = origin.getX();
+	pos.y = origin.getY();
+	pos.z = origin.getZ();
+
+	return pos;
+}
+
+bool PhysicsComponent::getHit(){
+
+	return hit;
+}
+
+void PhysicsComponent::setHit(bool hitState){
+
+	hit = hitState;
 }
 
 void PhysicsComponent::update(){

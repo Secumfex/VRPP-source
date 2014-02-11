@@ -17,6 +17,8 @@ private:
 
 	btRigidBody *rigidBody;	/**< bullet rigid body */
 
+	bool hit;	/**< true if it is hit by an other object, else false */
+
 public:
 
 	/** \brief constructor
@@ -97,6 +99,38 @@ public:
 	 * returns current modelMatrix
 	 */
 	glm::mat4 getModelMatrix();
+
+	/** \brief getter
+	 *
+	 * returns current rigidBody
+	 */
+	btRigidBody* getRigidBody();
+
+	/** \brief sets position of a PC
+	*
+	* sets/changes the position of a PhysicsComponent
+	* @param x,y,z new position in physics world
+	*/
+	void setPosition(float x, float y, float z);
+
+	/** \returns the PC position
+	*
+	* returns the position of the PhysicsComponent
+	* @return a glm vec 3
+	*/
+	glm::vec3 getPosition();
+
+	/** \brief getter
+	 *
+	 * returns current hit state
+	 */
+	bool getHit();
+
+	/** \brief setter
+	 *
+	 * sets current hit state
+	 */
+	void setHit(bool);
 
 	/** \brief updates the model matrix
 	*

@@ -31,7 +31,6 @@ mat4 RenderManager::getProjectionMatrix(){
     return projectionMatrix;
 }
 
-
 //TODO
 /*wir brauchen eine setCurrentGC(GraphicsComponent* gc)
 und eine getCurrentGC()
@@ -99,6 +98,7 @@ Camera* RenderManager::getCamera(){
 RenderQueue* RenderManager::getRenderQueue(){
     return mRenderqueue;
 }
+
 GLFWwindow* RenderManager::getWindow(){
     return window;
 }
@@ -192,9 +192,11 @@ RenderManager::~RenderManager(){
 RenderManager::RenderManager(){
     mCamera = 0;
     mRenderqueue = 0;   //must be set from outside
+
     mCurrentGC = 0;
     mCurrentFBO = 0;
     mCurrentShader = 0;
+
 }
 
 void RenderManager::attachListenerOnNewFrame(Listener* listener){
