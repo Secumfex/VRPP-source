@@ -91,12 +91,12 @@ AnimateRotatingModelMatrixListener::AnimateRotatingModelMatrixListener(VirtualOb
 }
 
 void AnimateRotatingModelMatrixListener::update(){
-        //rotation angle
-        angle = fmod((float)(angle+0.001), (float)(pi<float>()*2.0f));
+    //rotation angle
+    angle = fmod((float)(angle+0.001), (float)(pi<float>()*2.0f));
 
-		glm::mat4 new_modelMatrix = glm::translate(glm::rotate(glm::mat4(1.0f), glm::degrees(angle), glm::vec3(1.0f, 1.0f, 0.0f)), glm::vec3(0.0f, 0.5f, -0.5f));
+	glm::mat4 new_modelMatrix = glm::translate(glm::rotate(glm::mat4(1.0f), glm::degrees(angle), glm::vec3(1.0f, 1.0f, 0.0f)), glm::vec3(0.0f, 0.5f, -0.5f));
        
-		vo->setModelMatrix(new_modelMatrix);
+	vo->setModelMatrix(new_modelMatrix);
 }
 
 AnimateSinusModelMatrixListener::AnimateSinusModelMatrixListener(VirtualObject* vo){
@@ -106,13 +106,29 @@ AnimateSinusModelMatrixListener::AnimateSinusModelMatrixListener(VirtualObject* 
 }
 
 void AnimateSinusModelMatrixListener::update(){
-		t+= 0.001;
-		float new_sinus = std::sin(t);
-		float delta_sinus = new_sinus - old_sinus;
+	t+= 0.001;
+	float new_sinus = std::sin(t);
+	float delta_sinus = new_sinus - old_sinus;
 
-		glm::mat4 new_modelMatrix = glm::translate(vo->getModelMatrix(), glm::vec3(delta_sinus*1.5, 0.0, 0.0));
+	glm::mat4 new_modelMatrix = glm::translate(vo->getModelMatrix(), glm::vec3(delta_sinus*1.5, 0.0, 0.0));
        	
-		vo->setModelMatrix(new_modelMatrix);
+	vo->setModelMatrix(new_modelMatrix);
 
-       	old_sinus = new_sinus;
-	}
+    old_sinus = new_sinus;
+}
+
+UpdateVirtualObjectModelMatrixListener::UpdateVirtualObjectModelMatrixListener(VirtualObject* vo){
+	this->vo = vo;
+}
+
+void UpdateVirtualObjectModelMatrixListener::update(){
+	vo->updateModelMatrix();
+}
+#include "Physics/PhysicWorld.h"
+UpdatePhysicsWorldListener::UpdatePhysicsWorldListener(){
+}
+
+void UpdatePhysicsWorldListener::update(){
+	PhysicWorld* pw = PhysicWorld::getInstance();
+	pw->dynamicsWorld->stepSimulation(0.1,5,0.02);
+}

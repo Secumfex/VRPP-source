@@ -4,6 +4,7 @@
 
 #include "Application/ApplicationListeners.h"
 #include "Tools/UtilityListeners.h"
+#include "Physics/UpdatePhysicsComponentListener.h"
 
 #include "SomeListeners.h" // until missing functionality is added
 
@@ -42,8 +43,11 @@ void configureMyApp(){
 
 	/*	load some virtual objects into vr state scene*/
 	VirtualObject* 	myCowObject1 = 		myVRState->			createVirtualObject(RESOURCES_PATH "/cow.obj");	 		// create a Virtual Object by reading an .obj file and add it to VRState automatically
-	myVRState->		attachListenerOnBeginningProgramCycle(	new AnimateRotatingModelMatrixListener(myCowObject1));	// animate cow through listener
-	
+	PhysicsComponent* myCowObject1PhysicsComponent = 		myCowObject1->getPhysicsComponent();					// get PhysicsComponent pointer
+	myVRState->		attachListenerOnBeginningProgramCycle( 	new UpdatePhysicsWorldListener());
+	myVRState->		attachListenerOnBeginningProgramCycle(  new UpdatePhysicsComponentListener(			myCowObject1PhysicsComponent));	// update PhysicsComponent on every program cycle iteration
+	myVRState->		attachListenerOnBeginningProgramCycle(  new UpdateVirtualObjectModelMatrixListener(	myCowObject1));	// update VirtualObject Model Matrix on every program cycle iteration
+
 	VirtualObject* 	myCubeObject1 = 	VirtualObjectFactory::getInstance()->createVirtualObject(RESOURCES_PATH "/cube.obj");	// create a Virtual Object by using the VirtualObject-Factory and add it to VRState manually
 	myVRState->		addVirtualObject(	myCubeObject1);		// add to VRState manually
 	VirtualObject* 	myCubeObject2 = 	myVRState->	createVirtualObject(RESOURCES_PATH "/cube.obj");	// create another Virtual Object from the same geometry 

@@ -75,3 +75,7 @@ glm::mat4 VirtualObject::getModelMatrix(){
 void VirtualObject::setModelMatrix(glm::mat4 modelmatrix){
 	modelMatrix = modelmatrix;
 }
+
+PhysicsComponent* VirtualObject::getPhysicsComponent(){
+	return physicsComponent;
+}
