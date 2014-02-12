@@ -147,6 +147,9 @@ void loop(){
 
 		//TODO VOs kollidieren lassen
 
+		//simulation in physics world laufen lassen
+		PhysicWorld::getInstance()->dynamicsWorld->stepSimulation(1/120.f,10);
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glViewport(0, 0, width, height);
 

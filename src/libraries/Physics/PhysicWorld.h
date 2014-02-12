@@ -1,6 +1,7 @@
 #ifndef PHYSICWORLD_H_
 #define PHYSICWORLD_H_
 
+#include <glm/glm.hpp>
 #include "Patterns/Singleton.h"
 #include "btBulletDynamicsCommon.h"
 

@@ -2,6 +2,7 @@
 	 * @author Sanèr, Oliver
 	 */
 
+#include <glm/glm.hpp>
 #include "IOManager.h"
 
 void IOManager::bindCallbackFuncs(){
@@ -196,6 +197,20 @@ void IOManager::key_callback(GLFWwindow* window, int key, int scancode, int acti
 			gotPosition -= camObject->getRight() * deltaTime * speed;
 			camObject->setPosition(gotPosition);
 			break;
+	}
+}
+*/
+
+ /*
+void IOManager::mouseButton_callback(GLFWwindow* window, int button, int action, int mods){
+
+	//if left button clicked do ray-picking
+	if(){
+
+		glm:vec3 outOrigin;
+		glm:vec3 outDirection;
+
+		PhysicWorld::getInstance()->ScreenPosToWorldRay();
 	}
 }
 */

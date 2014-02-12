@@ -1,4 +1,5 @@
 #include <iostream>
+#include <glm/glm.hpp>
 #include "PhysicWorld.h"
 #include "btBulletDynamicsCommon.h"
 
@@ -43,8 +44,8 @@ void PhysicWorld::ScreenPosToWorldRay(int mouseX, int mouseY, int screenWidth, i
 			1.0f
 	);
 
-	glm::mat4 InverseProjectionMatrix = glm::inverse(ProjectionMatrix);
-	glm::mat4 InverseViewMatrix = glm::inverse(ViewMatrix);
+	glm::mat4 InverseProjectionMatrix = glm::inverse(projectionMatrix);
+	glm::mat4 InverseViewMatrix = glm::inverse(viewMatrix);
 
 	glm::vec4 rayStart_camera = InverseProjectionMatrix * rayStart_NDC;
 	rayStart_camera = rayStart_camera.w / rayStart_camera;
@@ -61,7 +62,7 @@ void PhysicWorld::ScreenPosToWorldRay(int mouseX, int mouseY, int screenWidth, i
 	outDirection = outDirection*1000.0f;
 
 	btCollisionWorld::ClosestRayResultCallback RayCallback(btVector3(outOrigin.x, outOrigin.y, outOrigin.z), btVector3(outDirection.x, outDirection.y, outDirection.z));
-	PhysicWorld::getInstance()->dynamicsWorld->rayTest(btVector3(outOrigin.x, outOrigin.y, outOrigin.z), btVector3(out_direction.x, out_direction.y, out_direction.z), RayCallback);
+	PhysicWorld::getInstance()->dynamicsWorld->rayTest(btVector3(outOrigin.x, outOrigin.y, outOrigin.z), btVector3(outDirection.x, outDirection.y, outDirection.z), RayCallback);
 
 	if(RayCallback.hasHit()) {
 	    cout << "mesh: " << (int)RayCallback.m_collisionObject->getUserPointer() << endl;
