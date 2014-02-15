@@ -5,8 +5,6 @@
 
 using namespace std;
 
-//gContactAddedCallback = collisionCallbackFunc;
-
 PhysicWorld::PhysicWorld() {
 
 	broadphase = new btDbvtBroadphase();

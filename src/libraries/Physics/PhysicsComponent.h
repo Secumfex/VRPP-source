@@ -59,11 +59,20 @@ public:
 	*/
 	PhysicsComponent(float width, float height, float depth, float x, float y, float z, float mass);
 
+	/** \brief constructor
+	 *
+	 * @param x,y,z start position in the world
+	 * @param u,v,w normal vector of the plane
+	 * @param mass defines the behavior of the rigid body in the physics world
+	 */
+	PhysicsComponent(float x, float y, float z, float u, float v, float w, float mass);
+
 	/** \brief destructor
 	*
 	* clears the allocated memory. deletes shape, motionState and rigidBody.
 	*/
 	~PhysicsComponent();
+
 
 	/** \brief changes the collision flag of the rigid body
 	*
@@ -72,7 +81,6 @@ public:
 	* @return nothing
 	*/
 	void addCollisionFlag(int flag);
-
 
 	/** \brief defines the rigid body as a box
 	*
@@ -93,6 +101,17 @@ public:
 	* @return a bullet rigid body
 	*/
 	btRigidBody* addSphere(float radius, float x, float y, float z, float mass);
+
+	/** \brief defines the rigid body as plane
+	 *
+	 * creates a plane shaped rigid body with all necessary parts.
+	 * @param x,y,z start position in the world
+	 * @param u,v,w normal vector of the plane
+	 * @param mass defines the behavior of the rigid body in the physics world
+	 * @return a bullet rigid body
+	 */
+	btRigidBody* addPlane(float x, float y, float z, float u, float v, float w, float mass);
+
 
 	/** \brief getter
 	 *
@@ -131,6 +150,7 @@ public:
 	 * sets current hit state
 	 */
 	void setHit(bool);
+
 
 	/** \brief updates the model matrix
 	*
