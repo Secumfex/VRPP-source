@@ -211,6 +211,10 @@ void IOManager::mouseButton_callback(GLFWwindow* window, int button, int action,
 		glm::vec3 outDirection;
 
 		PhysicWorld::getInstance()->ScreenPosToWorldRay(xPos,yPos,WIDTH,HEIGHT,mViewMatrix,!projmatx!,outOrigin,outDirection);	//projectionMatrix fehlt noch
+		return;
+	}
+	else{
+		return;
 	}
 }
 */
