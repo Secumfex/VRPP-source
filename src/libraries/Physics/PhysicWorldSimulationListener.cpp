@@ -11,5 +11,5 @@ PhysicWorldSimulationListener::PhysicWorldSimulationListener(){
 void PhysicWorldSimulationListener::update(){
 
 	PhysicWorld* physicWorld = PhysicWorld::getInstance();
-	physicWorld->dynamicsWorld->stepSimulation(0.1,5,0.02);
+	physicWorld->dynamicsWorld->stepSimulation(0.1,5,0.02);	//werte muessen noch auf entsprechende framerate angepasst werden
 }

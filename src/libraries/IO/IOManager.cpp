@@ -201,16 +201,16 @@ void IOManager::key_callback(GLFWwindow* window, int key, int scancode, int acti
 }
 */
 
- /*
+/*
 void IOManager::mouseButton_callback(GLFWwindow* window, int button, int action, int mods){
 
 	//if left button clicked do ray-picking
-	if(){
+	if(button == 0 && action == GLFW_PRESS){	//GLFW_MOUSE_BUTTON_1 = 0 (?)
 
-		glm:vec3 outOrigin;
-		glm:vec3 outDirection;
+		glm::vec3 outOrigin;
+		glm::vec3 outDirection;
 
-		PhysicWorld::getInstance()->ScreenPosToWorldRay();
+		PhysicWorld::getInstance()->ScreenPosToWorldRay(xPos,yPos,WIDTH,HEIGHT,mViewMatrix,!projmatx!,outOrigin,outDirection);	//projectionMatrix fehlt noch
 	}
 }
 */
