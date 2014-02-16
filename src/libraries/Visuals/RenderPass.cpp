@@ -5,16 +5,13 @@
  *      Author: Dirk Diggler
  */
 
-#include <Visuals/GraphicsComponent.h>
 #include <Visuals/RenderPass.h>
-#include <Visuals/RenderQueue.h>
-#include <Visuals/Shader.h>
 
 RenderPass::RenderPass() {
 
 	}
 
-void RenderPass::addRenderPass(Shader shader, FrameBufferObject fbo, list<GraphicsComponent> gcList){
+void RenderPass::addRenderPass(Shader shader, FrameBufferObject fbo, vector<GraphicsComponent*> gcVector){
 
 	/*
 	 * iwo muss auch noch das ViewFrustumCulling hin

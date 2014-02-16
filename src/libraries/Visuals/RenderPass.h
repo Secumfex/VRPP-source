@@ -8,11 +8,17 @@
 #ifndef RENDERPASS_H_
 #define RENDERPASS_H_
 
+#include <Visuals/GraphicsComponent.h>
+#include <Visuals/RenderPass.h>
+#include <Visuals/RenderQueue.h>
+#include <Visuals/Shader.h>
+#include <Visuals/FrameBufferObject.h>
+
 class RenderPass {
 public:
 	RenderPass();
 	virtual ~RenderPass();
-	void addRenderPass(Shader shader);
+	void addRenderPass(Shader shader, FrameBufferObject fbo, vector<GraphicsComponent*> gcVector);
 };
 
 #endif /* RENDERPASS_H_ */

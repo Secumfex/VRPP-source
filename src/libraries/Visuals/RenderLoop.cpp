@@ -85,13 +85,14 @@ sodass klar definiert ist, in welchen Schritten das Bild gerendert wird.
 
 vector<GraphicsComponent*> gcVector;
 
-RenderLoop::fillLoop(){
+void RenderLoop::fillLoop(){
 
-	 //soll den Vektor der Objekte erhalten, die im 1. Pass gerendert werden
-	vector<GraphicsComponent*> gcVector = RenderQueue::getGcShaderStorage("pass1");
-	for(GraphicsComponent gc : gcVector){
-		gc.render();
-	}
+	//soll den Vektor der Objekte erhalten, die im 1. Pass gerendert werden
+	//map<string, vector<GraphicsComponent*> > gcShaderStorage = RenderQueue::getGcShaderStorage();
+	//vector<GraphicsComponent*> gcVector = gcShaderStorage[pass1];
+	/*for(GraphicsComponent gc : gcVector){
+		//gc.render();
+	}*/
 
 }
 

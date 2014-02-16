@@ -12,6 +12,7 @@ class RenderLoop {
 public:
 	RenderLoop();
 	virtual ~RenderLoop();
+	void fillLoop();
 
 };
 
