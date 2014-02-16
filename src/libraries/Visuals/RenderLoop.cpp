@@ -20,6 +20,7 @@
 #include "Tools/TextureTools.h"
 
 #include "Visuals/Shader.h"
+#include "Visuals/RenderQueue.h"
 #include "Visuals/FrameBufferObject.h"
 #include "Visuals/VirtualObjectFactory.h"
 #include "Visuals/RenderLoop.h"
@@ -88,12 +89,16 @@ vector<GraphicsComponent*> gcVector;
 void RenderLoop::fillLoop(){
 
 	//soll den Vektor der Objekte erhalten, die im 1. Pass gerendert werden
-	//map<string, vector<GraphicsComponent*> > gcShaderStorage = RenderQueue::getGcShaderStorage();
-	//vector<GraphicsComponent*> gcVector = gcShaderStorage[pass1];
-	/*for(GraphicsComponent gc : gcVector){
-		//gc.render();
-	}*/
+	map<string, vector<GraphicsComponent*> > gcShaderStorage = mRenderQueue->getGcShaderStorage();
+	vector<GraphicsComponent*> gcVector = gcShaderStorage["pass1"];
+	//for(GraphicsComponent* gc : gcVector){ <-- wtf?
+		//gc.render(); <--- ?
+	//}
 
+}
+
+void RenderLoop::setCurrentRenderQueue(RenderQueue* rq){
+	mRenderQueue = rq;
 }
 
 RenderLoop::RenderLoop() {

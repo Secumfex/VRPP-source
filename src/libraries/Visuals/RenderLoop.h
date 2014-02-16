@@ -13,6 +13,9 @@ public:
 	RenderLoop();
 	virtual ~RenderLoop();
 	void fillLoop();
+	void setCurrentRenderQueue(RenderQueue* rq);
+private:
+	RenderQueue* mRenderQueue;
 
 };
 
