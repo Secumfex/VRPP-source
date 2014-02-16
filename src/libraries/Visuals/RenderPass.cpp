@@ -8,9 +8,15 @@
 #include <Visuals/RenderPass.h>
 
 RenderPass::RenderPass() {
+	
+}
 
-	}
+//Variante statt addRenderPass:
+RenderPass::RenderPass(Shader shader, FrameBufferObject fbo, vector<GraphicsComponent*> gcVector){
+	//via Membervariablen? Sonstwie?
+}
 
+//wir KÖNNTEN statt einer addRenderPass Funktion auch einfach den Konstruktor überladen, wie ihr wollt. -Saschalex
 void RenderPass::addRenderPass(Shader shader, FrameBufferObject fbo, vector<GraphicsComponent*> gcVector){
 
 	/*

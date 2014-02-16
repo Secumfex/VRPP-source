@@ -17,6 +17,7 @@
 class RenderPass {
 public:
 	RenderPass();
+	RenderPass(Shader shader, FrameBufferObject fbo, vector<GraphicsComponent*> gcVector);
 	virtual ~RenderPass();
 	void addRenderPass(Shader shader, FrameBufferObject fbo, vector<GraphicsComponent*> gcVector);
 };
