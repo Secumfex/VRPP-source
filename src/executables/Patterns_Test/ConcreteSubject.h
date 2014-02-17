@@ -5,7 +5,7 @@
  *      Author: Batsi
  */
 
-#ifndef CONCRETESUBJECT_H_
+/*#ifndef CONCRETESUBJECT_H_
 #define CONCRETESUBJECT_H_
 #include <Patterns/Subject.h>
 #include <string>
@@ -24,3 +24,4 @@ public:
 };
 
 #endif /* CONCRETESUBJECT_H_ */
+*/

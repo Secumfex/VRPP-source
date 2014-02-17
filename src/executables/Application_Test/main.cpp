@@ -1,4 +1,4 @@
-/*#include <GL/glew.h>
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
 #include <iostream>
@@ -48,7 +48,7 @@ glm::mat4 inverseModel_2;
 *        the GLFW Window
 *        the Shader Program Handles
 */
-/*void initRenderer(){
+void initRenderer(){
     // Init GLFW
     glfwInit();
     
@@ -90,7 +90,7 @@ glm::mat4 inverseModel_2;
 *        start Physics-Engine
 *        gravity, etc.
 */
-/*void initPhysics(){
+void initPhysics(){
     rotationSpeed = 1.0f;
 }
 
@@ -100,7 +100,7 @@ glm::mat4 inverseModel_2;
 *        Init Model-Matrices of Virtual Objects (via PhysicsComponent)
 *        
 */
-/*void initScene(){ 
+void initScene(){ 
     using namespace glm;
     //////////////////////// Load used Materials to VRAM /////////////////
     {  
@@ -155,7 +155,7 @@ glm::mat4 inverseModel_2;
 /*renders the scene
 *        update virtual objects
 *        render RenderQueue Objects*/
-/*void renderLoop(){
+void renderLoop(){
     using namespace glm;
     while(!glfwWindowShouldClose(window)) {
         ///////////////  Update Objects via Physics Engine//////////////////
@@ -208,4 +208,3 @@ int main() {
     glfwTerminate();
     return 0;
 };
-*/

@@ -24,7 +24,6 @@
 #include "Visuals/FrameBufferObject.h"
 #include "Visuals/VirtualObjectFactory.h"
 #include "Visuals/RenderLoop.h"
-#include "Visuals/RenderQueue.h"
 
 /*RenderLoop:
  *
@@ -139,9 +138,4 @@ RenderLoop::RenderLoop() {
 
 RenderLoop::~RenderLoop() {
 	// TODO Auto-generated destructor stub
-}
-
-
-int main(){
-
 }

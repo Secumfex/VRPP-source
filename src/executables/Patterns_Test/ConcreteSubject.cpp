@@ -6,7 +6,7 @@
  */
 
 
-#include "ConcreteSubject.h"
+/*#include "ConcreteSubject.h"
 
 using namespace std;
 
@@ -19,4 +19,4 @@ using namespace std;
 	}
 
 	ConcreteSubject::ConcreteSubject() {}
-
+*/

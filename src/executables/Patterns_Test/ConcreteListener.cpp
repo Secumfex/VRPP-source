@@ -5,7 +5,7 @@
  *      Author: Batsi
  */
 
-#include <iostream>
+/*#include <iostream>
 #include "ConcreteListener.h"
 
  #include "ConcreteSubject.h"
@@ -30,3 +30,4 @@ ConcreteListener::ConcreteListener(ConcreteSubject* s, string n){
 	setName(n);	//Private Variable von Listener-Interface setzen
 	subject = s;
 }
+*/

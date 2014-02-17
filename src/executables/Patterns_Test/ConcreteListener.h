@@ -5,7 +5,7 @@
  *      Author: Batsi
  */
 
-#ifndef CONCRETELISTENER_H_
+/*#ifndef CONCRETELISTENER_H_
 #define CONCRETELISTENER_H_
 #include <string>
 #include <Patterns/Listener.h>
@@ -29,3 +29,4 @@ public:
 };
 
 #endif /* CONCRETELISTENER_H_ */
+*/
