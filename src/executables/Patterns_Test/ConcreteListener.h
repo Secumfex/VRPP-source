@@ -29,4 +29,3 @@ public:
 };
 
 #endif /* CONCRETELISTENER_H_ */
-*/
