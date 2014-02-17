@@ -219,6 +219,8 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 		// buffer for vertex texture coordinates
 
 		vector <float>texCoords;
+		float uv_steps = 1.0 / mesh->mNumVertices;
+
 		if (mesh->HasTextureCoords(0))
 			for (unsigned int k = 0; k < mesh->mNumVertices; ++k) {
 				if(aabbMax.x < mesh->mVertices[k].x)
@@ -236,7 +238,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 				texCoords.push_back(mesh->mTextureCoords[0][k].x);
 				texCoords.push_back(mesh->mTextureCoords[0][k].y);
 			}else
-				for(unsigned int k = 0; k < mesh->mNumVertices; k++){
+				for(unsigned int k = 0; k < mesh->mNumVertices; ++k){
 					if(aabbMax.x < mesh->mVertices[k].x)
 						aabbMax.x = mesh->mVertices[k].x;
 					if(aabbMax.y < mesh->mVertices[k].y)
@@ -249,15 +251,10 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 						aabbMin.y = mesh->mVertices[k].y;
 					if(aabbMin.z > mesh->mVertices[k].z)
 						aabbMin.z = mesh->mVertices[k].z;
-					if(k % 3 == 0){
-						texCoords.push_back(0.0);
-						texCoords.push_back(0.0);}
-					else if(k % 3 == 1){
-						texCoords.push_back(1.0);
-						texCoords.push_back(0.0);}
-					else{
-						texCoords.push_back(0.0);
-						texCoords.push_back(1.0);}
+
+					texCoords.push_back(k * uv_steps);
+					texCoords.push_back(k * uv_steps);
+
 				}
 
 		glGenBuffers(1, &buffer);
@@ -448,6 +445,15 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 		unsigned int max;
 		aiGetMaterialFloatArray(mtl, AI_MATKEY_SHININESS, &shininess, &max);
 		aMat->setShininess(shininess);
+
+		std:: cout << "SHININESS: " << shininess << std:: endl;
+
+		float what = 0.0;
+		aiGetMaterialFloatArray(mtl, AI_MATKEY_REFLECTIVITY, &what, &max);
+
+
+		std:: cout << "REFLECTIVITY: " << what << std:: endl;
+
 
 		//Mesh und Material wird gelesen und in neuer GraphicsComponent gespeichert
 		GraphicsComponent* gc=new GraphicsComponent(aMesh, aMat);

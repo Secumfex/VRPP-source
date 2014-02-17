@@ -102,6 +102,19 @@ UploadUniformColorMapListener::UploadUniformColorMapListener(std::string name){
 	 fbo->bindColorTexture();
 	 shader->uploadUniform(6,"colorMap");
  }
+UploadUniformMaterialMapListener::UploadUniformMaterialMapListener(std::string name){
+	setName(name);
+}
+
+ void UploadUniformMaterialMapListener::update(){
+	 FrameBufferObject* fbo = RenderManager::getInstance()->getCurrentFBO();
+	 Shader* shader = RenderManager::getInstance()->getCurrentShader();
+
+	 glActiveTexture(GL_TEXTURE7);
+	 glEnable(GL_TEXTURE_2D);
+	 fbo->bindMaterialTexture();
+	 shader->uploadUniform(7,"materialMap");
+ }
 
  UploadUniformDepthMapListener::UploadUniformDepthMapListener(std::string name){
  	setName(name);
@@ -151,6 +164,7 @@ UploadUniformColorMapListener::UploadUniformColorMapListener(std::string name){
 	 GraphicsComponent* gc = RenderManager::getInstance()->getCurrentGC();
 
 	 shader->uploadUniform(gc->getMaterial()->getShininess(), "shininess");
+		std:: cout << "SO SEHR GLÄNZ ES: " << gc->getMaterial()->getShininess() << std:: endl;
  }
 
  UploadUniformDiffuseColorListener::UploadUniformDiffuseColorListener(std::string name){

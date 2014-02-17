@@ -96,6 +96,7 @@ int main() {
 	fbo->createPositionTexture();
 	fbo->createNormalTexture();
 	fbo->createColorTexture();
+	fbo->createMaterialTexture();
 
 	//set the list of draw buffers.
 	fbo->makeDrawBuffers();
@@ -123,7 +124,9 @@ int main() {
 	cam->setPosition(glm::vec3(0.0f, 1.0f, -6.0f));
 	cam->setCenter(glm::vec3(0.0f, 0.0f, 0.0f));
 
+	float banana = glm::vec3(11,22,33).y;
 
+	std:: cout << "BANANA: " << banana << std:: endl;
 
 	while(!glfwWindowShouldClose(window)) {
 
@@ -229,17 +232,21 @@ int main() {
 		        simpleTexShader->useProgram();
 		        rm->setCurrentShader(simpleTexShader);
 
-		        glViewport(0, (height/4)*3, width/3, height/4);
+		        glViewport(0, (height/4)*3, width/4, height/4);
 		        glBindTexture(GL_TEXTURE_2D, fbo->getPositionTextureHandle());
-		        glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-LEFT VIEWPORT
+		        glDrawArrays(GL_TRIANGLES, 0, 3);
 
-		        glViewport(width/3, (height/4)*3, width/3, height/4);
+		        glViewport(width/4, (height/4)*3, width/4, height/4);
 		        glBindTexture(GL_TEXTURE_2D, fbo->getNormalTextureHandle());
-		        glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-CENTER VIEWPORT
+		        glDrawArrays(GL_TRIANGLES, 0, 3);
 
-		        glViewport((width/3)*2, (height/4)*3, width/3, height/4);
+		        glViewport((width/4)*2, (height/4)*3, width/4, height/4);
 		        glBindTexture(GL_TEXTURE_2D, fbo->getColorTextureHandle());
-		        glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-RIGHT VIEWPORT
+		        glDrawArrays(GL_TRIANGLES, 0, 3);
+
+		        glViewport((width/4)*3, (height/4)*3, width/4, height/4);
+		        glBindTexture(GL_TEXTURE_2D, fbo->getMaterialTextureHandle());
+		        glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		//show what's been drawn
 		glfwSwapBuffers(window);

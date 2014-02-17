@@ -5,9 +5,7 @@ in vec2 passUV;
 uniform sampler2D positionMap;
 uniform sampler2D normalMap;
 uniform sampler2D colorMap;
-uniform sampler2D specularMap;
-
-uniform float shininess;
+uniform sampler2D materialMap;
 
 uniform float resX;
 uniform float resY;
@@ -18,6 +16,7 @@ void main() {
     vec4 position = texture(positionMap, passUV);
     vec4 normal = texture(normalMap, passUV);
     vec4 color = texture(colorMap, passUV);
+	float shininess = texture(materialMap, passUV).x;
 
     //lightPosition from camera system
     vec4 lightPos = vec4(5,2,-2,1);
@@ -25,12 +24,11 @@ void main() {
     //calculate lighting with given position, normal and lightposition
     vec3 nPosToLight = normalize(vec3(lightPos.xyz - position.xyz));
 
-	//shininess = 50.0;
 
     vec3  reflection = normalize(reflect(-nPosToLight,normal.xyz));
     float ambient = 0.1;
     float diffuse = max(dot(normal.xyz, nPosToLight), 0);
-    float specular = pow(max(dot(reflection, -normalize(position.xyz)),0),shininess);
+    float specular = pow(max(dot(reflection, -normalize(position.xyz)),0), shininess);
 
     float resX_temp = 1.0/resX;
     float resY_temp = 1.0/resY;

@@ -15,7 +15,7 @@ out vec3 passNormal;
 out vec3 passTangent;
 
 
- 
+
 void main(){
     passUVCoord = uvCoordAttribute;
 

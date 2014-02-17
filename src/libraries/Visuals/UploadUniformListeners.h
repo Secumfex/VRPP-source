@@ -73,6 +73,13 @@ class UploadUniformModelMatrixListener : public Listener{
   	 	void update();
   };
 
+ class UploadUniformMaterialMapListener : public Listener{
+
+  	public:
+	 UploadUniformMaterialMapListener(std::string name);
+  	 	void update();
+  };
+
  class UploadUniformShininessListener : public Listener{
 
   	public:

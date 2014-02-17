@@ -74,6 +74,20 @@ void FrameBufferObject::createColorTexture(){
 
 	mDrawBuffers.push_back(GL_COLOR_ATTACHMENT2);
 }
+void FrameBufferObject::createMaterialTexture(){
+	glBindFramebuffer(GL_FRAMEBUFFER, mFramebufferHandle);
+	glGenTextures(1, &mMaterialTextureHandle);
+	glBindTexture(GL_TEXTURE_2D, mMaterialTextureHandle);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWidth, mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, mMaterialTextureHandle, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	mDrawBuffers.push_back(GL_COLOR_ATTACHMENT3);
+}
 void FrameBufferObject::createShadowMap(){
 	glBindFramebuffer(GL_FRAMEBUFFER, mFramebufferHandle);
 	glGenTextures(1, &mShadowMapHandle);
@@ -109,6 +123,9 @@ GLuint FrameBufferObject::getNormalTextureHandle(){
 GLuint FrameBufferObject::getColorTextureHandle(){
 	return mColorTextureHandle;
 }
+GLuint FrameBufferObject::getMaterialTextureHandle(){
+	return mMaterialTextureHandle;
+}
 GLuint FrameBufferObject::getShadowMapHandle(){
 	return mShadowMapHandle;
 }
@@ -131,6 +148,9 @@ void FrameBufferObject::bindNormalTexture(){
 }
 void FrameBufferObject::bindColorTexture(){
 	glBindTexture(GL_TEXTURE_2D, mColorTextureHandle);
+}
+void FrameBufferObject::bindMaterialTexture(){
+	glBindTexture(GL_TEXTURE_2D, mMaterialTextureHandle);
 }
 void FrameBufferObject::bindShadowMap(){
 	glBindTexture(GL_TEXTURE_2D, mShadowMapHandle);
@@ -184,6 +204,10 @@ void FrameBufferObject::resize(int width, int height){
 	if(mShadowMapHandle != -1){
 		texsToBeDeleted.push_back(getShadowMapHandle());
 		createShadowMap();
+	}
+	if(mMaterialTextureHandle != -1){
+		texsToBeDeleted.push_back(getMaterialTextureHandle());
+		createMaterialTexture();
 	}
 
 	glDeleteTextures(texsToBeDeleted.size(), &texsToBeDeleted[0]);
