@@ -1,4 +1,4 @@
-#include "Application/Application.h"
+/*#include "Application/Application.h"
 #include "Application/ApplicationStates.h"
 
 #include "Application/ApplicationListeners.h"
@@ -9,7 +9,7 @@ Application* myApp;
 /**
 *proposed way to work with our Libraries (?????)
 */
-void configureMyApp(){
+/*void configureMyApp(){
 
 	//myApp = new Application("PROJEKT PRAKTIKUM");	//create an Application labled PROJEKT PRAKTIKUM
 	myApp = Application::getInstance();
@@ -21,18 +21,18 @@ void configureMyApp(){
 		myButton->addListenerOnButtonPress(new SetStateListener(myApp, "LOADING_SCREEN")); //add a state changing listener to be notified upon a button press
 		myMenu->addButton(myButton);	//add Button to Main Menu
 	*/
-	MenuState* myLoadingMenu = new MenuState("LOADING_SCREEN");	//create a MenuState labled LOADING_SCREEN
+	/*MenuState* myLoadingMenu = new MenuState("LOADING_SCREEN");	//create a MenuState labled LOADING_SCREEN
 
 	/*
 	myLoadingMenu->addLoadingFinishedListener(new StateChangeListener("VRSTATE"));	//add a state changing listener to be notified upon the end of loading
 	*/
-	VRState* myVRState = new VRState("VRSTATE"); //create a VRState labled VRSTATE
+	/*VRState* myVRState = new VRState("VRSTATE"); //create a VRState labled VRSTATE
 	/*
 		 = new VirtualObject("cube.obj");	//create a Virtual Object by reading an .obj file
 		myVRState->addVirtualObject(myCubeObject);	//add the Virtual Object to VRState
 	*/
 
-	VirtualObject* myCubeObject = myVRState->createVirtualObject(RESOURCES_PATH "/barrel.obj");	
+	/*VirtualObject* myCubeObject = myVRState->createVirtualObject(RESOURCES_PATH "/barrel.obj");	
 
 	/*
 		VirtualObjectFactory aufrufen
@@ -42,7 +42,7 @@ void configureMyApp(){
 		gewonnenes Object in eigene RenderQueue hinzufügen
 	*/
 
-	myApp->attachListenerOnProgramInitialization(new PrintMessageListener(string("Application is booting")));
+	/*myApp->attachListenerOnProgramInitialization(new PrintMessageListener(string("Application is booting")));
 	myApp->attachListenerOnProgramTermination(new PrintMessageListener(string("Application is terminating")));
 	myApp->attachListenerOnStateChange( new PrintCurrentStateListener(myApp) );
 
@@ -71,3 +71,4 @@ int main() {
 	std::cin>>terminate;
 	return 0;
 }
+*/

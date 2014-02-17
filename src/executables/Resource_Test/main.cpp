@@ -4,7 +4,7 @@
  *  Created on: 17.12.2013
  *      Author: Raphimulator
  */
-#include <GL/glew.h>
+/*#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
 #include <iostream>
@@ -130,7 +130,7 @@ int main() {
     	    glfwDestroyWindow(window);
     	    glfwTerminate();
     	    return 0;
-}
+}*/
 
 
 

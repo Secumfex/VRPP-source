@@ -1,4 +1,4 @@
-#include <iostream>
+/*#include <iostream>
 #include <glm/glm.hpp>
 
 #include "btBulletDynamicsCommon.h"
@@ -30,3 +30,4 @@ int main() {
 
 	return 0;
 };
+*/

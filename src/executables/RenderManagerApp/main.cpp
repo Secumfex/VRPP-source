@@ -1,4 +1,4 @@
-#include <iostream>
+/*#include <iostream>
 #include <string.h>
 
 #include "Application/Application.h"
@@ -47,4 +47,4 @@ int main() {
 	myApp->run();
 
 	return 0;
-};
+};*/

@@ -1,4 +1,4 @@
-#include <iostream>
+/*#include <iostream>
 #include <string.h>
 
 #include "Patterns/Singleton.h"
@@ -67,25 +67,25 @@ int main() {
 
 	////////////////////////////////////////////////////////////////////////////////
 	/*Singleton Pattern - Test*/
-	testSingletonPattern();
+	/*testSingletonPattern();
 
 	std::cout<<"_____________________________"<<std::endl;
 
 	////////////////////////////////////////////////////////////////////////////////
 	/*Listener / Subject Pattern - Test*/
-	testListenerSubjectPattern();
+	/*testListenerSubjectPattern();
 
 	std::cout<<"_____________________________"<<std::endl;
 
 	////////////////////////////////////////////////////////////////////////////////
 	/*Context / State Pattern - Test*/
 	
-	std::cout<<"_____________________________"<<std::endl;
+	/*std::cout<<"_____________________________"<<std::endl;
 
 	////////////////////////////////////////////////////////////////////////////////
 	/*Endlosschleife, damit das Fenster aufbleibt, wenn man nicht aus Eclipse startet oder so*/
-	int terminate;
+	/*int terminate;
 	std::cout<<"enter any value to terminate."<<std::endl;
 	std::cin>>terminate;
 	return 0;
-};
+};*/

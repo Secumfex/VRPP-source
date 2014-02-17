@@ -1,4 +1,4 @@
-#include <iostream>
+/*#include <iostream>
 #include <string.h>
 
 #include "SomeListeners.h"
@@ -49,7 +49,7 @@ int input = 0;
 
 	////////////////////////////////////////////////////////////////////////////////
 	/*Endlosschleife, damit das Fenster aufbleibt*/
-	int terminate;
+	/*int terminate;
 	std::cout<<"enter any value to terminate."<<std::endl;
 	std::cin>>terminate;
-};
+};*/
