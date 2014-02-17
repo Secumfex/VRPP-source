@@ -188,12 +188,10 @@ int main() {
 					gbuffer_normalMap_Shader->useProgram();
 					rm->setCurrentShader(gbuffer_normalMap_Shader);
 					gbuffer_normalMap_Shader->uploadAllUniforms();
-					std::cout << "hat normalmap" << std:: endl;
 				}else{
 					gbufferShader->useProgram();
 					rm->setCurrentShader(gbufferShader);
 					gbufferShader->uploadAllUniforms();
-					std::cout << "hat keine normalmap" << std:: endl;
 				}
 
 				gbufferShader->render(gc_temp);

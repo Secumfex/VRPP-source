@@ -210,7 +210,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 			// normalLoc wurde hier ersetzt
 
 			glEnableVertexAttribArray(3);
-			glVertexAttribPointer(2, 3, GL_FLOAT, 0, 0, 0);
+			glVertexAttribPointer(3, 3, GL_FLOAT, 0, 0, 0);
 
 			std:: cout << "HAT TANGENT SPACE" << std:: endl;
 

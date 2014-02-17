@@ -21,14 +21,13 @@ void main(){
     vec3 binormal = cross(tangent, normal);
 
 		mat3 tangentSpace = mat3(
-        tangent.x, binormal.x, normal.x,
-        tangent.y, binormal.y, normal.y,
-        tangent.z, binormal.z, normal.z
-    );
+        tangent.x, tangent.y, tangent.z,
+        binormal.x, binormal.y, binormal.z,
+        normal.x, normal.y, normal.z
+   		);
 
-	tangentSpace = transpose(inverse(tangentSpace));
 
     positionOutput = passPosition;
-    normalOutput = vec4((tangentSpace * (texture(normalTexture, passUVCoord).rgb * 2.0 - 1.0)), 0.0);
+    normalOutput = normalize(vec4((tangentSpace * (texture(normalTexture, passUVCoord).rgb * 2.0 - 1.0)), 0.0));
     colorOutput = texture(diffuseTexture, passUVCoord);
 }
