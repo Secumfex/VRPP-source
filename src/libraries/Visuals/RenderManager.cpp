@@ -12,12 +12,17 @@
 
 #include "Visuals/RenderQueue.h"
 #include "Visuals/RenderManager.h"
+#include "Visuals/RenderLoop.h"
 
 #include "Tools/ShaderTools.h"
 #include "Tools/TextureTools.h"
 #include "Tools/Geometry.h"
 
 using namespace glm;
+
+void RenderManager::createRenderLoop(){
+    RenderLoop* currentRL = new RenderLoop();
+}
 
 void RenderManager::setRenderQueue(RenderQueue* currentRQ){
     mRenderqueue = currentRQ;

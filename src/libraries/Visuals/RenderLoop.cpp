@@ -122,9 +122,9 @@ void RenderLoop::fillLoop(){
 	//soll den Vektor der Objekte erhalten, die im 1. Pass gerendert werden
 	map<string, vector<GraphicsComponent*> > gcShaderStorage = mRenderQueue->getGcShaderStorage();
 	vector<GraphicsComponent*> gcVector = gcShaderStorage["pass1"];
-	for(unsigned int i = 0; i < gcVector.size(); i++){
+	/*for(unsigned int i = 0; i < gcVector.size(); i++){
 		//gc.render(); <--- ? wie soll'n das aussehen? Funktion in RenderLoop? Oder in GC? Or wut?
-	}
+	}*/ //delete soon
 
 }
 

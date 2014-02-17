@@ -17,9 +17,14 @@
 class RenderPass {
 public:
 	RenderPass();
-	RenderPass(Shader shader, FrameBufferObject fbo, vector<GraphicsComponent*> gcVector);
+	RenderPass(Shader* shader, FrameBufferObject fbo, vector<GraphicsComponent*> gcVector);
 	virtual ~RenderPass();
-	void addRenderPass(Shader shader, FrameBufferObject fbo, vector<GraphicsComponent*> gcVector);
+	void addRenderPass(Shader* shader, FrameBufferObject fbo, vector<GraphicsComponent*> gcVector);
+	void render();
+private:
+	FrameBufferObject mFBO;
+	vector<GraphicsComponent*> mGcVector;
+	Shader *mShader = new Shader(SHADERS_PATH "/GBuffer_clone/screenFill.vert", "/GBuffer_clone/simpleTexture.frag");
 };
 
 #endif /* RENDERPASS_H_ */
