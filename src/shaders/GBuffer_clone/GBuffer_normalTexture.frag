@@ -16,8 +16,8 @@ layout(location = 2) out vec4 colorOutput;
  
 void main(){  
 
-	vec3 normal = normalize((uniformNormal * normalAttribute).xyz);
-    vec3 tangent = normalize((uniformNormal * tangentAttribute).xyz);
+	vec3 normal = normalize(passNormal.xyz);
+    vec3 tangent = normalize(passTangent.xyz);
     vec3 binormal = cross(tangent, normal);
 
 		mat3 tangentSpace = mat3(
@@ -26,7 +26,9 @@ void main(){
         tangent.z, binormal.z, normal.z
     );
 
+	tangentSpace = transpose(inverse(tangentSpace));
+
     positionOutput = passPosition;
-    normalOutput = normalize(texture(normalTexture, passUVCoord));
+    normalOutput = vec4((tangentSpace * (texture(normalTexture, passUVCoord).rgb * 2.0 - 1.0)), 0.0);
     colorOutput = texture(diffuseTexture, passUVCoord);
 }

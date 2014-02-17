@@ -112,7 +112,9 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 			aiProcess_GenUVCoords |
 			aiProcess_FlipUVs|
 			aiProcess_FlipUVs |
-			aiProcess_PreTransformVertices
+			aiProcess_PreTransformVertices |
+			aiProcess_CalcTangentSpace
+
 	);
 
 	// Melden, falls der Import nicht funktioniert hat
@@ -210,6 +212,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 			glEnableVertexAttribArray(3);
 			glVertexAttribPointer(2, 3, GL_FLOAT, 0, 0, 0);
 
+			std:: cout << "HAT TANGENT SPACE" << std:: endl;
 
 		}
 

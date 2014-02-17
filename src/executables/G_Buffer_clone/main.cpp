@@ -166,7 +166,7 @@ int main() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-		//        glViewport(0, 0, width, (height/4)*3);
+		        glViewport(0, 0, width, (height/4)*3);
 
 		gbufferShader->useProgram();
 		rm->setCurrentShader(gbufferShader);
@@ -188,10 +188,12 @@ int main() {
 					gbuffer_normalMap_Shader->useProgram();
 					rm->setCurrentShader(gbuffer_normalMap_Shader);
 					gbuffer_normalMap_Shader->uploadAllUniforms();
+					std::cout << "hat normalmap" << std:: endl;
 				}else{
 					gbufferShader->useProgram();
 					rm->setCurrentShader(gbufferShader);
 					gbufferShader->uploadAllUniforms();
+					std::cout << "hat keine normalmap" << std:: endl;
 				}
 
 				gbufferShader->render(gc_temp);
@@ -213,7 +215,7 @@ int main() {
 		finalCompShader->useProgram();
 		rm->setCurrentShader(finalCompShader);
 
-//				glViewport(0, 0, width, height);
+				glViewport(0, 0, width, height);
 
 		finalCompShader->uploadAllUniforms();
 		finalCompShader->render(triangle);
@@ -225,21 +227,21 @@ int main() {
 		//      show all the components of the FBO    //
 		//--------------------------------------------//
 
-//		        glBindVertexArray(triangle->getMesh()->getVAO());
-//		        simpleTexShader->useProgram();
-//		        rm->setCurrentShader(simpleTexShader);
-//
-//		        glViewport(0, (height/4)*3, width/3, height/4);
-//		        glBindTexture(GL_TEXTURE_2D, fbo->getPositionTextureHandle());
-//		        glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-LEFT VIEWPORT
-//
-//		        glViewport(width/3, (height/4)*3, width/3, height/4);
-//		        glBindTexture(GL_TEXTURE_2D, fbo->getNormalTextureHandle());
-//		        glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-CENTER VIEWPORT
-//
-//		        glViewport((width/3)*2, (height/4)*3, width/3, height/4);
-//		        glBindTexture(GL_TEXTURE_2D, fbo->getColorTextureHandle());
-//		        glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-RIGHT VIEWPORT
+		        glBindVertexArray(triangle->getMesh()->getVAO());
+		        simpleTexShader->useProgram();
+		        rm->setCurrentShader(simpleTexShader);
+
+		        glViewport(0, (height/4)*3, width/3, height/4);
+		        glBindTexture(GL_TEXTURE_2D, fbo->getPositionTextureHandle());
+		        glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-LEFT VIEWPORT
+
+		        glViewport(width/3, (height/4)*3, width/3, height/4);
+		        glBindTexture(GL_TEXTURE_2D, fbo->getNormalTextureHandle());
+		        glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-CENTER VIEWPORT
+
+		        glViewport((width/3)*2, (height/4)*3, width/3, height/4);
+		        glBindTexture(GL_TEXTURE_2D, fbo->getColorTextureHandle());
+		        glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-RIGHT VIEWPORT
 
 		//show what's been drawn
 		glfwSwapBuffers(window);

@@ -23,5 +23,5 @@ void main(){
     gl_Position =  uniformProjection * uniformView * uniformModel * positionAttribute;
 
     passNormal = vec3(transpose(inverse(uniformView * uniformModel)) * normalAttribute);
-    passTengent = vec3(transpose(inverse(uniformView * uniformModel)) * tengentAttribute);
+    passTangent = vec3(transpose(inverse(uniformView * uniformModel)) * tangentAttribute);
 }
