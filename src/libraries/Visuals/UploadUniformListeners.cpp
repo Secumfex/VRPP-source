@@ -164,7 +164,6 @@ UploadUniformMaterialMapListener::UploadUniformMaterialMapListener(std::string n
 	 GraphicsComponent* gc = RenderManager::getInstance()->getCurrentGC();
 
 	 shader->uploadUniform(gc->getMaterial()->getShininess(), "shininess");
-		std:: cout << "SO SEHR GLÄNZ ES: " << gc->getMaterial()->getShininess() << std:: endl;
  }
 
  UploadUniformDiffuseColorListener::UploadUniformDiffuseColorListener(std::string name){

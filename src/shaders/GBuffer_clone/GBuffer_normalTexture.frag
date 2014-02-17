@@ -33,5 +33,5 @@ void main(){
     positionOutput = passPosition;
     normalOutput = normalize(vec4((tangentSpace * (texture(normalTexture, passUVCoord).rgb * 2.0 - 1.0)), 0.0));
     colorOutput = texture(diffuseTexture, passUVCoord);
-    materialOutput = vec4(shininess, 0.0, 0.0, 0.0);
+    materialOutput = vec4(shininess , 0.0, 0.0, 0.0);
 }

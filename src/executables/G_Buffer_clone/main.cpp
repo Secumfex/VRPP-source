@@ -124,9 +124,14 @@ int main() {
 	cam->setPosition(glm::vec3(0.0f, 1.0f, -6.0f));
 	cam->setCenter(glm::vec3(0.0f, 0.0f, 0.0f));
 
-	float banana = glm::vec3(11,22,33).y;
+	std::string satz = "hallo peter du oller kneter";
+	size_t found01 = satz.find("peter");
+	size_t found02 = satz.find("abudabi");
 
-	std:: cout << "BANANA: " << banana << std:: endl;
+	if (found01!=std::string::npos)
+	std::cout << "find01: " << found01 << std::endl ;
+	if (found02!=std::string::npos)
+	std:: cout << "find02: " << found02 << std::endl;
 
 	while(!glfwWindowShouldClose(window)) {
 

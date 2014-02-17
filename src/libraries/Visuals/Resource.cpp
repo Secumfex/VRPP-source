@@ -79,6 +79,9 @@ void Material :: setEmission(glm::vec3 emission){}
 void Material :: setShininess(GLfloat term){
 	mShininess = term;
 }
+void Material :: setReflectivity(GLfloat term){
+	mReflectivity = term;
+}
 
 Texture* Material ::getAmbientMap(){
 	return mTextures[0];
@@ -112,6 +115,9 @@ glm::vec3 Material ::getEmission(){
 }
 GLfloat Material::getShininess(){
 	return mShininess;
+}
+GLfloat Material::getReflectivity(){
+	return mReflectivity;
 }
 Texture* Material ::getSpecularMap(){
 	return mTextures[6];

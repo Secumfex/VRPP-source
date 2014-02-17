@@ -432,8 +432,13 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 			color4_to_float4(&emission, c);
 
 		aiString name;
-		if(AI_SUCCESS == aiGetMaterialString(mtl, AI_MATKEY_NAME, &name))
-			aMat->setName(name.C_Str());
+		if(AI_SUCCESS == aiGetMaterialString(mtl, AI_MATKEY_NAME, &name)){
+			std::string matName = name.C_Str();
+			matName = matName.substr( matName.find_last_of( '/' ) + 1 );
+
+			aMat->setName(matName);
+		}else
+			aMat->setName("genericMaterial");
 
 		//memcpy(aMat.emissive, c, sizeof(c));
 		aMat->setEmission(glm::vec3(emission.r, emission.g, emission.b));
@@ -443,16 +448,12 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 
 		float shininess = 0.0;
 		unsigned int max;
-		aiGetMaterialFloatArray(mtl, AI_MATKEY_SHININESS, &shininess, &max);
+
+		if(AI_SUCCESS != mtl->Get(AI_MATKEY_SHININESS, shininess))
+			shininess = 50.0;
+
 		aMat->setShininess(shininess);
 
-		std:: cout << "SHININESS: " << shininess << std:: endl;
-
-		float what = 0.0;
-		aiGetMaterialFloatArray(mtl, AI_MATKEY_REFLECTIVITY, &what, &max);
-
-
-		std:: cout << "REFLECTIVITY: " << what << std:: endl;
 
 
 		//Mesh und Material wird gelesen und in neuer GraphicsComponent gespeichert
