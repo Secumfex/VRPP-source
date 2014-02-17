@@ -8,14 +8,18 @@
 #ifndef RENDERLOOP_H_
 #define RENDERLOOP_H_
 
+#include "Visuals/RenderManager.h"
+
 class RenderLoop {
 public:
 	RenderLoop();
 	virtual ~RenderLoop();
 	void fillLoop();
 	void setCurrentRenderQueue(RenderQueue* rq);
+	void setCurrentRenderManager(RenderManager* rm);
 private:
 	RenderQueue* mRenderQueue;
+	RenderManager* mRenderManager;
 
 };
 
