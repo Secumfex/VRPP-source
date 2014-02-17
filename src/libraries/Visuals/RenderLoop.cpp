@@ -26,6 +26,37 @@
 #include "Visuals/RenderLoop.h"
 #include "Visuals/RenderQueue.h"
 
+/*RenderLoop:
+ *
+ * 1) aktiviere renderstate
+ * 2) setRenderStateCurrent
+ * 3) UploadUniform
+ * 4) render
+ *
+ * --->aktiviere GBuffer
+ * 		Mache GBuffer als Current Renderstate
+ * 		Erstelle neuen RenderPass *
+ * 		Gib an Renderpass alle Objekte für den Shader
+ * 		Gib an Renderpass alle Uniforma Variablen
+ *
+ * 		--> Check dazu Raphis GBuffer (
+ * 			gbuffer_normalMap_Shader->useProgram();
+ * 			rm->setCurrentShader(gbuffer_normalMap_Shader();
+ *
+ * 			for(j=0; j< vo_temp  -> getGraphicsComponent().size(); ++j{
+ * 				GraphicsComponent *gc_temp = vo_temp->getGraphicsComponent()[j];
+ * 				rm->setCurrentGC(gc_temp);
+ *
+ * 				gbuffer_normalMap_Shader->uploadAllUniforms();
+ *
+ * 				gbufferShader->render(gc_temp);
+ *
+ *
+ *Für transparency: Shader, hast du Uniform isTransparent (o.ä,)
+ *über glGetUniformLocation
+ *
+ */
+
 /*
  * Mögliche Verwendung:
 RenderManager::renderloop() called "RENDERLOOP" Listener
