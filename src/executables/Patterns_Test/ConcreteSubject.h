@@ -24,4 +24,3 @@ public:
 };
 
 #endif /* CONCRETESUBJECT_H_ */
-*/
