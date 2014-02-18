@@ -29,7 +29,7 @@ private:
 
 	glm::mat4 mViewMatrix;	 /**<4*4-Matrix*/
 
-	static double lastTime;		/**<Double for lastTime*/
+	double lastTime;		/**<Double for lastTime*/
 	double currentTime;			/**<Double for currentTime*/
 	float deltaTime;			/**<Float for time bewteen lastTime and CurrentTime*/
 
@@ -40,6 +40,7 @@ private:
 
 	IOManager();
 public:
+	void setWindow(GLFWwindow* window);
 
 	void setCameraObject(Camera* camera);	/**< set camera pointer */
 	Camera* getCameraObject();				/**< get camera pointer */
@@ -68,6 +69,21 @@ public:
 	 */
 	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	//void computeFoV();
+	
+	void cursorPos_callback(GLFWwindow* window, double xpos, double ypos);	//!< cursor position callback (movement)
+	void mouseButton_callback(GLFWwindow* window, int button, int action, int mods); //!< mouse button callback (press / release)
+
+
+	/**
+	 * @brief method to register at glfwKeyCallback
+	 * @details GLFW needs to use a static method which cannot be provided by instance methods
+	 */
+	static void staticKey_callback(GLFWwindow* window, int key, int scancode, int action, int mods); //!< static method to be registered at GLFW
+	static void staticCursorPos_callback(GLFWwindow* window, double xpos, double ypos);	//!< static method to be registered at GLFW
+	static void staticMouseButton_callback(GLFWwindow* window, int button, int action, int mods); //!< static method to be registerted at GLFW
+
+	/// register callback method by binding the static callback methods
+	void bindCallbackFuncs();
 };
 
 #endif

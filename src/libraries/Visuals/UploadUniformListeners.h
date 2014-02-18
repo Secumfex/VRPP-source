@@ -59,19 +59,77 @@ class UploadUniformModelMatrixListener : public Listener{
  	 	void update();
  };
 
- class UploadUniformDiffuseMapListener : public Listener{
+ class UploadUniformDiffuseTextureListener : public Listener{
 
   	public:
-	 UploadUniformDiffuseMapListener(std::string name);
+	 UploadUniformDiffuseTextureListener(std::string name);
   	 	void update();
   };
 
- class UploadUniformBumpMapListener : public Listener{
+ class UploadUniformNormalTextureListener : public Listener{
 
   	public:
-	 UploadUniformBumpMapListener(std::string name);
+	 UploadUniformNormalTextureListener(std::string name);
   	 	void update();
   };
 
+ class UploadUniformMaterialMapListener : public Listener{
+
+  	public:
+	 UploadUniformMaterialMapListener(std::string name);
+  	 	void update();
+  };
+
+ class UploadUniformShininessListener : public Listener{
+
+  	public:
+	 UploadUniformShininessListener(std::string name);
+  	 	void update();
+  };
+
+ class UploadUniformDiffuseColorListener : public Listener{
+
+  	public:
+	 UploadUniformDiffuseColorListener(std::string name);
+  	 	void update();
+  };
+
+ class UploadUniformAmbientColorListener : public Listener{
+
+  	public:
+	 UploadUniformAmbientColorListener(std::string name);
+  	 	void update();
+  };
+
+ class UploadUniformSpecularColorListener : public Listener{
+
+  	public:
+	 UploadUniformSpecularColorListener(std::string name);
+  	 	void update();
+  };
+ class UploadUniformEmissiveColorListener : public Listener{
+
+  	public:
+	 UploadUniformEmissiveColorListener(std::string name);
+  	 	void update();
+  };
+ class UploadUniformBlurStrengthListener : public Listener{
+
+  	public:
+	 UploadUniformBlurStrengthListener(std::string name);
+  	 	void update();
+  };
+ class UploadUniformResolutionXListener : public Listener{
+
+  	public:
+	 UploadUniformResolutionXListener(std::string name);
+  	 	void update();
+  };
+ class UploadUniformResolutionYListener : public Listener{
+
+  	public:
+	 UploadUniformResolutionYListener(std::string name);
+  	 	void update();
+  };
 
 #endif /* UPLOADUNIFORMLISTENERS_H_ */

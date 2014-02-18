@@ -30,7 +30,15 @@ public:
 	 */
 	~PhysicWorld();
 
-	//bool collisionCallbackFunc(btManifoldPoint& collisionPoint, const btCollisionObjectWrapper* obj1, int id1, int index1, const btCollisionObjectWrapper* obj2, int id2, int index2);
+	/** \brief collision callback function
+	 *
+	 * @param collisionPoint point where a collision is detected
+	 * @param obj1,obj2 objects which are involved in the collision
+	 * @param id1,id2 currently not used
+	 * @param index1,index2 currently not used
+	 * @return true,false currently not used
+	 */
+	static bool staticCollisionCallbackFunc(btManifoldPoint& collisionPoint, const btCollisionObjectWrapper* obj1, int id1, int index1, const btCollisionObjectWrapper* obj2, int id2, int index2);
 
 };
 

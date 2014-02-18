@@ -14,6 +14,8 @@ Shader::Shader(std::string vertexShader, std::string fragmentShader) {
 
 	makeShader(vertexShader, fragmentShader);
 
+	blurStrength = 0.0f;
+
 	int total = -1;
 
 	glGetProgramiv( mProgramHandle, GL_ACTIVE_UNIFORMS, &total );
@@ -30,7 +32,7 @@ Shader::Shader(std::string vertexShader, std::string fragmentShader) {
 	    GLuint location = glGetUniformLocation( mProgramHandle, name );
 
 
-	    mUniformHandles.insert(pair<std::string, GLuint>(name, location));
+	    mUniformHandles.insert(std::pair<std::string, GLuint>(name, location));
 	    mUniformNames.push_back(name);
 	    attachUniformListener(name);
 	}
@@ -117,6 +119,14 @@ return std::vector<std::string>(mUniformNames);
 
 }
 
+void Shader::setBlurStrength(int strength){
+	blurStrength = strength;
+}
+
+GLint Shader::getBlurStrength(){
+	return blurStrength;
+}
+
 void Shader::attachUniformListener(std::string uniform){
 
 	if(uniform == "uniformModel"){
@@ -133,12 +143,28 @@ void Shader::attachUniformListener(std::string uniform){
 		attach(new UploadUniformNormalMapListener(std::string("UNIFORMUPLOADLISTENER")));}
 	else if(uniform == "colorMap"){
 		attach(new UploadUniformColorMapListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "materialMap"){
+		attach(new UploadUniformMaterialMapListener("UNIFORMUPLOADLISTENER"));}
 	else if(uniform == "depthMap"){
 		attach(new UploadUniformDepthMapListener("UNIFORMUPLOADLISTENER"));}
-	else if(uniform == "diffuseMap"){
-		attach(new UploadUniformDiffuseMapListener("UNIFORMUPLOADLISTENER"));}
-	else if(uniform == "bumpMap"){
-		attach(new UploadUniformBumpMapListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "diffuseTexture"){
+		attach(new UploadUniformDiffuseTextureListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "normalTexture"){
+		attach(new UploadUniformNormalTextureListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "ambientColor"){
+		attach(new UploadUniformAmbientColorListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "diffuseColor"){
+		attach(new UploadUniformDiffuseColorListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "specularColor"){
+		attach(new UploadUniformSpecularColorListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "shininess"){
+		attach(new UploadUniformShininessListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "emissiveColor"){
+		attach(new UploadUniformEmissiveColorListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "resX"){
+			attach(new UploadUniformResolutionXListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "resY"){
+			attach(new UploadUniformResolutionYListener("UNIFORMUPLOADLISTENER"));}
 	else {
 		std::cout << "ERROR: Uniform \"" << uniform << "\" is not a valid uniform name." << std:: endl;
 	}

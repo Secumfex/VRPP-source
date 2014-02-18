@@ -42,7 +42,8 @@ public:
 	void attachListenerOnBeginningProgramCycle(Listener* listener); //!< attach a listener that will be called at a beginning program cycle (run()-method)
 	void attachListenerOnProgramTermination(Listener* listener);    //!< attach a listener that will be called at program termination
 	void attachListenerOnProgramInitialization(Listener* listener);    //!< attach a listener that will be called at program initialization
-	
+	void attachListenerOnRenderManagerFrameLoop(Listener* listener);	//!< attach a listener to RenderManager through Application, will be called at beginning Frame Rendering Process
+
 	void run(); //!< enter program cycle loop
 
 

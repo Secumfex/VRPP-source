@@ -27,12 +27,15 @@ public:
 	virtual void activate(); //!< activation of state --> binding objects
 
 	VirtualObject* createVirtualObject(std::string path); //!< create Object from path and add it to renderQueue
+	void addVirtualObject(VirtualObject* vo); //!< add existing VO to renderQueue
 
 	/*Application State Listeners*/
 	void attachListenerOnActivation(Listener* listener); //!< attach Listener on Activation
 	void attachListenerOnBindingObjects(Listener* listener); //!< attach Listener on binding objects 
 	void attachListenerOnCreatingVirtualObject(Listener* listener); //!< attach Listener on creating a new object
+	void attachListenerOnAddingVirtualObject(Listener* listener); //!< attach Listener on adding a new object
 	void attachListenerOnButton(Listener* listener); //!< attach Listener on button press or button release
+	void attachListenerOnBeginningProgramCycle(Listener* listener); //!< attach Listener on beginning Program Cycle
 };
 
 class IdleState : public ApplicationState {

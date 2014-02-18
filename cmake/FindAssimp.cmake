@@ -18,6 +18,13 @@ IF (MINGW)
         ${DEPENDENCIES_PATH}/assimp/mingw/lib/
     )
 
+    FIND_LIBRARY( ZLIB_LIBRARY
+        NAMES zlibstatic
+        PATHS
+        ${DEPENDENCIES_PATH}/assimp/mingw/lib/
+    )
+
+    SET(ASSIMP_LIBRARY ${ZLIB_LIBRARY} ${ASSIMP_LIBRARY})
     execute_process(COMMAND ${CMAKE_COMMAND}  -E  copy_if_different
         ${DEPENDENCIES_PATH}/assimp/mingw/bin/libassimp.dll
         ${PROJECT_BINARY_DIR}/bin/libassimp.dll

@@ -18,7 +18,7 @@
 
 #include "Tools/ShaderTools.h"
 #include "Tools/TextureTools.h"
-#include "Tools/Geometry.h"
+//#include "Tools/Geometry.h"
 
 using namespace glm;
 
@@ -30,7 +30,6 @@ void RenderManager::setRenderQueue(RenderQueue* currentRQ){
 mat4 RenderManager::getProjectionMatrix(){
     return projectionMatrix;
 }
-
 
 //TODO
 /*wir brauchen eine setCurrentGC(GraphicsComponent* gc)
@@ -48,6 +47,29 @@ setCurrentGC aufgerufen werden sobald die GC global gesetzt wurde
 
 */
 
+void RenderManager::setCurrentGC(GraphicsComponent* gc){
+	mCurrentGC = gc;
+}
+
+void RenderManager::setCurrentShader(Shader* shader){
+    mCurrentShader = shader;
+}
+
+void RenderManager::setCurrentFBO(FrameBufferObject* fbo){
+	mCurrentFBO = fbo;
+}
+
+void RenderManager::setCamera(Camera* camera){
+    mCamera = camera;
+}
+
+void RenderManager::setProjectionMatrix(mat4 _projectionMatrix){
+    projectionMatrix = _projectionMatrix;
+}
+
+void RenderManager::setDefaultProjectionMatrix(){
+    projectionMatrix = perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
+}
 
 VirtualObject* RenderManager::getCurrentVO(){
 	map<GraphicsComponent*, VirtualObject* > gc2voMap = mRenderqueue->getGc2VoMap();
@@ -56,12 +78,13 @@ VirtualObject* RenderManager::getCurrentVO(){
 	return myCurrentVO;
 }
 
-GraphicsComponent* RenderManager::getCurrentGC(){
-	return mCurrentGC;
+FrameBufferObject* RenderManager::getCurrentFBO(){
+	return mCurrentFBO;
 }
 
-void RenderManager::setCurrentGC(GraphicsComponent* gc){
-	mCurrentGC = gc;
+
+GraphicsComponent* RenderManager::getCurrentGC(){
+	return mCurrentGC;
 }
 
 Shader* RenderManager::getCurrentShader(){
@@ -72,13 +95,12 @@ Camera* RenderManager::getCamera(){
 	return mCamera;
 }
 
-
-void RenderManager::setProjectionMatrix(mat4 _projectionMatrix){
-    projectionMatrix = _projectionMatrix;
+RenderQueue* RenderManager::getRenderQueue(){
+    return mRenderqueue;
 }
 
-void RenderManager::setDefaultProjectionMatrix(){
-    projectionMatrix = perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
+GLFWwindow* RenderManager::getWindow(){
+    return window;
 }
 
 //glfw error-callback function
@@ -112,7 +134,6 @@ void RenderManager::libInit(){
 	#endif
 
     window = glfwCreateWindow(800, 600, "GLFW TUT", NULL, NULL);
-    glfwSetKeyCallback(window, keyCallback);
 
     if(!window){
         glfwTerminate();
@@ -149,12 +170,11 @@ void RenderManager::renderLoop(){
     MVPHandle = glGetUniformLocation(shaderProgramHandle, "uniformMVP");
 
     if(!glfwWindowShouldClose(window)){ //if window is not about to close
+        glfwMakeContextCurrent(window);
+        glClear(GL_COLOR_BUFFER_BIT);
 
         notify("FRAMELISTENER");      //notify all listeners labeled FRAMELISTENER
 
-        glfwMakeContextCurrent(window);
-        glClear(GL_COLOR_BUFFER_BIT);
-        
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -170,6 +190,13 @@ RenderManager::~RenderManager(){
 }
 
 RenderManager::RenderManager(){
+    mCamera = 0;
+    mRenderqueue = 0;   //must be set from outside
+
+    mCurrentGC = 0;
+    mCurrentFBO = 0;
+    mCurrentShader = 0;
+
 }
 
 void RenderManager::attachListenerOnNewFrame(Listener* listener){
