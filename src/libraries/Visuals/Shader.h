@@ -15,6 +15,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "Visuals/UploadUniformListeners.h"
 #include "Patterns/Subject.h"
+#include "Tools/GBuffer.h"
 
 
 class Shader : public Subject{
@@ -22,6 +23,7 @@ class Shader : public Subject{
 	//-----------------MEMBER FUNCTIONS-----------------
 public:
 
+	Shader();
 	Shader(std::string vertexShader, std::string fragmentShader);
 	virtual ~Shader();
 	void setShaderName(std::string name);
