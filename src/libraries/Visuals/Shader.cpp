@@ -7,6 +7,50 @@
 
 #include <Visuals/Shader.h>
 
+Shader::Shader(){
+
+	const char* vert = GBuffer::vertexShader.c_str();
+	const char* frag = GBuffer::fragmentShader.c_str();
+
+    const GLint vs_source_size = strlen(vert);
+    GLuint vertexShaderHandle = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertexShaderHandle, 1, &vert, &vs_source_size);
+    glCompileShader(vertexShaderHandle);
+
+    const GLint fs_source_size = strlen(frag);
+    GLuint fragmentShaderHandle = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fragmentShaderHandle, 1, &frag, &fs_source_size);
+    glCompileShader(fragmentShaderHandle);
+
+    GLuint programHandle = glCreateProgram();
+    glAttachShader(programHandle, vertexShaderHandle);
+    glAttachShader(programHandle, fragmentShaderHandle);
+
+    mProgramHandle = programHandle;
+
+	blurStrength = 0.0f;
+
+	int total = -1;
+
+	glGetProgramiv( mProgramHandle, GL_ACTIVE_UNIFORMS, &total );
+
+	unsigned int i= 0;
+
+	for(i=0; i<total; ++i)  {
+	    int name_len=-1, num=-1;
+	    GLenum type = GL_ZERO;
+	    char name[100];
+	    glGetActiveUniform( mProgramHandle, GLuint(i), sizeof(name)-1,
+	        &name_len, &num, &type, name );
+	    name[name_len] = 0;
+	    GLuint location = glGetUniformLocation( mProgramHandle, name );
+
+
+	    mUniformHandles.insert(std::pair<std::string, GLuint>(name, location));
+	    mUniformNames.push_back(name);
+	    attachUniformListener(name);
+}
+}
 Shader::Shader(std::string vertexShader, std::string fragmentShader) {
 
 	std::string vertexshader = vertexShader ;
