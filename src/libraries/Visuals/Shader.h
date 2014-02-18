@@ -15,7 +15,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "Visuals/UploadUniformListeners.h"
 #include "Patterns/Subject.h"
-#include "Tools/GBuffer.h"
+
 
 
 class Shader : public Subject{

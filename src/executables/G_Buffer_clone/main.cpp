@@ -62,6 +62,8 @@ int main() {
 	Shader *gbufferShader = new Shader(		SHADERS_PATH "/GBuffer_clone/GBuffer.vert",
 			SHADERS_PATH "/GBuffer_clone/GBuffer.frag");
 
+//	Shader *gbufferShader = new Shader();
+
 	Shader *gbuffer_normalMap_Shader = new Shader(		SHADERS_PATH "/GBuffer_clone/GBuffer.vert",
 			SHADERS_PATH "/GBuffer_clone/GBuffer_normalTexture.frag");
 

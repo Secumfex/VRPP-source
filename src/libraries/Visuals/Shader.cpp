@@ -11,6 +11,7 @@ Shader::Shader(){
 
 
 	mProgramHandle = ShaderTools::makeShaderProgram();
+	setShaderName("DefaultShader");
 
 	blurStrength = 0.0f;
 
