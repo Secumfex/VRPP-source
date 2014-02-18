@@ -20,7 +20,6 @@ public:
 private:
 	RenderQueue* mRenderQueue;
 	RenderManager* mRenderManager;
-
 };
 
 #endif /* RENDERLOOP_H_ */
