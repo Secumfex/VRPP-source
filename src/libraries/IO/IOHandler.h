@@ -28,6 +28,8 @@ private:
 
 		Camera* camObject;
 public:
+	IOHandler();
+	
 	/**\brief getter
 	 * returns current ViewMatrix
 	 */

@@ -9,7 +9,7 @@ IOHandler::IOHandler(){
 	speed_walk = 3.0f; // 3 units / second
 	speed_run = 6.0f;
 	mouseSpeed = 0.005f;
-	glfwGetCursorPos(window, &xPos, &yPos);
+//	glfwGetCursorPos(window, &xPos, &yPos);
 	// Get mouse position
 }
 
@@ -17,7 +17,7 @@ IOHandler::IOHandler(){
 void IOHandler::setOrientation(){
 	// Reset mouse position for next frame
 	//////TODO ERSETZE ZAHLEN DURCH WINDOW KOORDINATEN!!!!!
-	glfwSetCursorPos(window, 100, 100);
+//	glfwSetCursorPos(window, 100, 100);
 
 	float gotPhi = camObject->getPhi();
 	float gotTheta = camObject->getTheta();
