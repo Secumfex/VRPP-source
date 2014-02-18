@@ -24,11 +24,12 @@ void main() {
     //calculate lighting with given position, normal and lightposition
     vec3 nPosToLight = normalize(vec3(lightPos.xyz - position.xyz));
 
+	vec4 lightColor = vec4(1.0, 1.0, 1.0, 1.0);
 
     vec3  reflection = normalize(reflect(-nPosToLight,normal.xyz));
     float ambient = 0.1;
     float diffuse = max(dot(normal.xyz, nPosToLight), 0);
-    float specular = pow(max(dot(reflection, -normalize(position.xyz)),0), shininess);
+    float specular = pow(max(dot(reflection, -normalize(position.xyz)),0), shininess * 1000.0);
 
     float resX_temp = 1.0/resX;
     float resY_temp = 1.0/resY;
@@ -46,6 +47,6 @@ void main() {
     }
     glow /= strength * strength * 4;
 
-    fragmentColor = color * ambient + color * diffuse + vec4(1,1,1,1) * specular;
+    fragmentColor = color * ambient + (color * diffuse + color * specular) * lightColor;
     fragmentColor += glow;
 }

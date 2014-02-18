@@ -64,12 +64,14 @@ GraphicsComponent* VirtualObjectFactory::getTriangle(){
 	} return mScreenFillTriangle;
 }
 
-VirtualObject* VirtualObjectFactory::createCow(){
+VirtualObject* VirtualObjectFactory::createNonAssimpVO(){
 
-	if(mCow == NULL)
-		mCow = createVirtualObject(RESOURCES_PATH "/cow.obj");
+	if(mCube == NULL){
+	NoAssimpVirtualObjectFactory *voFactory = new NoAssimpVirtualObjectFactory();
+	VirtualObject *cube = voFactory->createCubeObject();
+	}
 
-	return mCow;
+	return mCube;
 }
 
 
@@ -103,7 +105,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 		cout<<Importer.GetErrorString()<<endl;
 		cout<<"Have a cow instead!"<<endl;
 
-		return createCow();
+		return createNonAssimpVO();
 	}
 
 	const aiScene* pScene = Importer.ReadFile( filename,
@@ -121,7 +123,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 	if( !pScene)
 	{
 		cout<<Importer.GetErrorString()<<endl;
-		return createCow();
+		return createNonAssimpVO();
 	}
 
 
@@ -452,7 +454,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 		if(AI_SUCCESS != mtl->Get(AI_MATKEY_SHININESS, shininess))
 			shininess = 50.0;
 
-		aMat->setShininess(shininess);
+		aMat->setShininess(shininess/1000.0);
 
 
 
@@ -481,5 +483,5 @@ VirtualObject* VirtualObjectFactory::copyVirtualObject(VirtualObject vo){
 	VirtualObject* virtualObject = new VirtualObject();
 	//TODO: variable wird überfuehrt
 
-	return createCow();
+	return createNonAssimpVO();
 }
