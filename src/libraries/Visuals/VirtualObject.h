@@ -53,6 +53,8 @@ public:
 
 	vector<GraphicsComponent*> getGraphicsComponent();
 
+	vector<GraphicsComponent*> getGraphicsComponent(std::string tag);
+
 	/** \brief sets PhysicsComponent
 	 *
 	 * creates PhysicComponent with no values (default Constructor of PhysicsComponent class)
