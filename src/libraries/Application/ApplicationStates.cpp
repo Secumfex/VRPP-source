@@ -15,8 +15,26 @@ using namespace std;
 ApplicationState::ApplicationState(){
 	camera = new Camera();
 	renderQueue = new RenderQueue();
-//	InputHandler = new InputHandler();
+	iOHandler = new IOHandler();
+	iOHandler->setCameraObject(camera);
+	
 	projectionMatrix = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
+}
+
+Camera* ApplicationState::getCamera(){
+	return camera;
+}
+
+RenderQueue* ApplicationState::getRenderQueue(){
+	return renderQueue;
+}
+
+IOHandler* ApplicationState::getIOHandler(){
+	return iOHandler;
+}
+
+glm::mat4 ApplicationState::getProjectionMatrix(){
+	return projectionMatrix;
 }
 
 void ApplicationState::activate(){
@@ -34,8 +52,7 @@ void ApplicationState::bindObjects(){
 	rm->setCamera(camera);
 
 	IOManager* io = IOManager::getInstance();
-	io->setCameraObject(camera);
-	// io->setInputHandler(inputHandler);
+	io->setCurrentIOHandler(iOHandler);
 
 	notify("BINDING_OBJECTS_LISTENER");
 }

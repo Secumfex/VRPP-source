@@ -5,15 +5,15 @@
 Camera::Camera(){
 	xPosition = 0.0;
 	yPosition = 0.0;
-	zPosition = -5.0;
+	zPosition = 5.0;
 
 	// Initial position : on +Z
 	position = glm::vec3(xPosition, yPosition, zPosition);
 
 	// Initial horizontal angle : toward -Z
-	float phi = PI;
+	phi = PI;
 	// Initial vertical angle : none
-	float theta = 0.0f;
+	theta = 0.0f;
 
 	//compute initial View Direction vector
 	updateViewDirection();

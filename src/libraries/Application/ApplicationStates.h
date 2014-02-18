@@ -6,6 +6,7 @@
 
 #include "Patterns/State.h"
 #include "Patterns/Subject.h"
+#include "IO/IOHandler.h"
 
 class Camera; class RenderQueue; class VirtualObject;
 
@@ -17,12 +18,17 @@ protected:
 	/*Member variables*/
 	Camera* camera;
 	RenderQueue* renderQueue;
-//	InputHandler* InputHandler;
+	IOHandler* iOHandler;
 	glm::mat4 projectionMatrix;
 
 	virtual void bindObjects(); //!< bind objects to RenderManager, IOManager, PhysicsWorld etc.
 public:
 	ApplicationState();
+
+	Camera* 		getCamera();
+	RenderQueue* 	getRenderQueue();
+	IOHandler* 		getIOHandler();
+	glm::mat4 		getProjectionMatrix();
 
 	virtual void activate(); //!< activation of state --> binding objects
 

@@ -1,10 +1,11 @@
 #ifndef IOHANDLER_H_
 #define IOHANDLER_H_
 
-#include "Camera.h"
-#include "IOManager.h"
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+
+#include "Camera.h"
 
 class IOHandler{
 private:
@@ -29,7 +30,10 @@ private:
 		Camera* camObject;
 public:
 	IOHandler();
-	
+
+	void setCameraObject(Camera* camera);
+	Camera* getCameraObject();
+
 	/**\brief getter
 	 * returns current ViewMatrix
 	 */

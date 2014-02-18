@@ -9,6 +9,8 @@ IOHandler::IOHandler(){
 	speed_walk = 3.0f; // 3 units / second
 	speed_run = 6.0f;
 	mouseSpeed = 0.005f;
+	deltaTime = 0.1f;	//default value
+
 //	glfwGetCursorPos(window, &xPos, &yPos);
 	// Get mouse position
 }
@@ -98,4 +100,12 @@ void IOHandler::key_callback(GLFWwindow* window, int key, int scancode, int acti
 			//placeholder
 		}
 	}
+}
+
+void IOHandler::setCameraObject(Camera* camera){
+	camObject = camera;
+}
+
+Camera* IOHandler::getCameraObject(){
+	return camObject;
 }

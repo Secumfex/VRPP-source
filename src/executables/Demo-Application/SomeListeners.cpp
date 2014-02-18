@@ -132,3 +132,15 @@ void UpdatePhysicsWorldListener::update(){
 	PhysicWorld* pw = PhysicWorld::getInstance();
 	pw->dynamicsWorld->stepSimulation(0.1,5,0.02);
 }
+
+PrintCameraStatusListener :: PrintCameraStatusListener(Camera* cam){
+	this->cam = cam;
+}
+
+void PrintCameraStatusListener::update(){
+	glm::vec3 pos = cam->getPosition();
+	glm::vec3 dir = cam->getViewDirection();
+
+	std::cout << "Cam pos : " << pos.x << " , " << pos.y << " , " << pos.z << std::endl;
+	std::cout << "Cam dir : " << dir.x << " , " << dir.y << " , " << dir.z << std::endl;
+}
