@@ -7,13 +7,9 @@
 using namespace std;
 
 #include "Visuals/RenderManager.h"
-<<<<<<< HEAD
-//#include "Visuals/VirtualObjectFactory.h"
-=======
 
 #include "Visuals/VirtualObjectFactory.h"
 
->>>>>>> c336a55f3d5c7d6117487d6fc740f136dcd9333f
 #include "IO/IOManager.h"
 
 ApplicationState::ApplicationState(){
@@ -45,10 +41,9 @@ void ApplicationState::bindObjects(){
 }
 
 VirtualObject* ApplicationState::createVirtualObject(std::string path){
-//	VirtualObject* vo = VirtualObjectFactory::getInstance()->createVirtualObject(path);
-//	renderQueue->addVirtualObject(vo);
+	VirtualObject* vo = VirtualObjectFactory::getInstance()->createVirtualObject(path);
+	renderQueue->addVirtualObject(vo);
 
-//	std::cout<< " This feature has been deactivated until assimp is fixed." <<endl;
 
 	notify("CREATE_VIRTUAL_OBJECT_LISTENER");	//in case someone cares
 
@@ -95,8 +90,7 @@ void ApplicationState::attachListenerOnButton(Listener* listener){
 	listener->setName("BUTTON_LISTENER");
 	attach(listener);
 }
-<<<<<<< HEAD
-=======
+
 
 void ApplicationState::attachListenerOnAddingVirtualObject(Listener* listener){
 	listener->setName("ADD_VIRTUAL_OBJECT_LISTENER");
@@ -107,4 +101,3 @@ void ApplicationState::attachListenerOnBeginningProgramCycle(Listener* listener)
 	listener->setName("BEGINNINGPROGRAMCYCLELISTENER");
 	attach(listener);
 }
->>>>>>> c336a55f3d5c7d6117487d6fc740f136dcd9333f
