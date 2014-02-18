@@ -35,7 +35,7 @@ VirtualObject* test2;
 
 PhysicWorld* world;
 
-//GLUquadricObj* quad;
+//unsere Camera verwenden wenn moeglich (also den vom i/o-team)
 
 /*
  * init of glfw window and handles
@@ -87,6 +87,8 @@ void initPhysics(){
  */
 void renderSphere(VirtualObject* vo){
 
+	//unseren renderManager benutzen wenn moeglich (also den vom renter-team)
+
 	btRigidBody* sphere=vo->physicsComponent->getRigidBody();
 
 	//hit test
@@ -119,6 +121,7 @@ void renderSphere(VirtualObject* vo){
 void initScene(){
 
 	//2 VOs
+	//VOs per ressourceManager erstellen (also graphicComponent)
 	test1 = new VirtualObject();
 	test2 = new VirtualObject();
 
@@ -146,8 +149,10 @@ void loop(){
 	while(!glfwWindowShouldClose(window)){
 
 		//TODO VOs kollidieren lassen
+		//eig egal, fallen ja so auch einfach nach unten
 
 		//simulation in physics world laufen lassen
+		//TODO stepSimulation per listener (PhysicWorldSimulationListener)
 		PhysicWorld::getInstance()->dynamicsWorld->stepSimulation(1/120.f,10);
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
