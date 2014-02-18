@@ -5,6 +5,8 @@
 #include <map>
 
 #include "VirtualObject.h"
+#include "Shader.h"
+#include "FrameBufferObject.h"
 
 using namespace std;
 
@@ -19,6 +21,8 @@ public:
 	~RenderQueue();
 	RenderQueue* getRenderQueue(); 
 	void resetQueue();	//resetting iterator to list begin
+
+	//void createRenderPass(Shader* shader, FrameBufferObject fbo, vector<GraphicsComponent*> gcVector_);
 
 	void addVirtualObject(VirtualObject* vo); //add VO to VO list
 	void removeVirtualObject(VirtualObject* vo); //remove VO from list

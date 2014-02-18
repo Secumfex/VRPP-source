@@ -127,14 +127,6 @@ void RenderLoop::fillLoop(){
 
 }
 
-void RenderLoop::setCurrentRenderManager(RenderManager* rm){
-	mRenderManager = rm;
-}
-
-void RenderLoop::setCurrentRenderQueue(RenderQueue* rq){
-	mRenderQueue = rq;
-}
-
 RenderLoop::RenderLoop() {
 	// TODO Auto-generated constructor stub
 

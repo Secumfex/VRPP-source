@@ -12,15 +12,14 @@ RenderPass::RenderPass() {
 }
 
 //Variante statt addRenderPass:
-RenderPass::RenderPass(Shader* shader, FrameBufferObject fbo, vector<GraphicsComponent*> gcVector, RenderManager* rm){
+RenderPass::RenderPass(Shader* shader, FrameBufferObject fbo, vector<GraphicsComponent*> gcVector){
 	mFBO = fbo;
 	mGcVector = gcVector;
 	mShader = shader;
-	mRenderManager = rm;
 }
 
 //wir KÖNNTEN statt einer addRenderPass Funktion auch einfach den Konstruktor überladen, wie ihr wollt. -Saschalex
-void RenderPass::addRenderPass(Shader* shader, FrameBufferObject fbo, vector<GraphicsComponent*> gcVector, RenderManager* rm){
+void RenderPass::addRenderPass(Shader* shader, FrameBufferObject fbo, vector<GraphicsComponent*> gcVector){
 
 	/*
 	 * iwo muss auch noch das ViewFrustumCulling hin

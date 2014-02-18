@@ -16,6 +16,10 @@ RenderQueue* RenderQueue::getRenderQueue(){
 	return this;
 }
 
+/*void RenderQueue::createRenderPass(Shader shader, FrameBufferObject fbo, vector<GraphicsComponent*> gcVector_){
+	RenderPass mRenderPass = new RenderPass(Shader* shader, FrameBufferObject fbo, vector<GraphicsComponent*> gcVector_);
+}*/
+
 /** \brief adds a VO to the member list of VOs, also maps GC->VO and vice versa
 */
 		//TODO VOs bzw GCs direkt in die passenden Maps eintrage

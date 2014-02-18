@@ -33,7 +33,6 @@ public:
 	void renderLoop();
 	void attachListenerOnNewFrame(Listener* listener);	        //!< attach a listener that will be called at the beginning of a frameloop
 	void attachListenerOnWindowShouldClose(Listener* listener); //!< attach a listener that will be called at the closure of the GLFW window
-	void createRenderLoop();
 
 
 private:

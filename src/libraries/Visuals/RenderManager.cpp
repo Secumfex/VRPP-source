@@ -20,11 +20,6 @@
 
 using namespace glm;
 
-void RenderManager::createRenderLoop(){
-    RenderLoop* currentRL = new RenderLoop();
-    currentRL->setCurrentRenderManager(this);
-}
-
 void RenderManager::setRenderQueue(RenderQueue* currentRQ){
     mRenderqueue = currentRQ;
 }

@@ -15,8 +15,6 @@ public:
 	RenderLoop();
 	virtual ~RenderLoop();
 	void fillLoop();
-	void setCurrentRenderQueue(RenderQueue* rq);
-	void setCurrentRenderManager(RenderManager* rm);
 private:
 	RenderQueue* mRenderQueue;
 	RenderManager* mRenderManager;
