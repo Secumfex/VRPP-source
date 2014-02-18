@@ -84,3 +84,12 @@ public:
 	UpdatePhysicsWorldListener();
 	void update();
 };
+
+// Listener which prints the current configuration of the given Camera Object
+class PrintCameraStatusListener : public Listener {
+private:
+	Camera* cam;
+public:
+	PrintCameraStatusListener(Camera* cam);
+	void update();
+};

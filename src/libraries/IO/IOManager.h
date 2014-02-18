@@ -6,57 +6,34 @@
 
 #include <glm/glm.hpp>
 #include "Patterns\Singleton.h"
-#include "Camera.h"
-
+#include "IO\IOHandler.h"
 
 class IOManager : public Singleton<IOManager>{
 	friend class Singleton<IOManager>;
 
 private:
-	// TODO get window size from rendermanager
-	int WIDTH, HEIGHT; /**<Size for window*/
-
-	// TODO implement state check and change
-	bool isMenuState; /**<Boolean for changing State between Menu und InGame*/
-
-	//TODO discuss if implement here or get from Rendermanager
-	//float initialFoV;
-
+	int WIDTH, HEIGHT; /**<Size for window, is set when window pointer is set, else 0*/
 	double xPos, yPos; 	/**<*Mouse Position*/
-	float speed_walk; 	 /**<Float for adding to Position*/
-	float speed_run;  	 /**<Float for adding to Position*/
-	float mouseSpeed; 	 /**<Float for adding to Theta, Phi*/
-
-	glm::mat4 mViewMatrix;	 /**<4*4-Matrix*/
 
 	double lastTime;		/**<Double for lastTime*/
 	double currentTime;			/**<Double for currentTime*/
 	float deltaTime;			/**<Float for time bewteen lastTime and CurrentTime*/
 
-	inline void setOrientation();
-	inline void computeFrameTimeDifference();
-
-	Camera* camObject;
+	IOHandler* currentIOHandler; /**<* active IOHandler Object */
 
 	IOManager();
 public:
 	void setWindow(GLFWwindow* window);
 
-	void setCameraObject(Camera* camera);	/**< set camera pointer */
-	Camera* getCameraObject();				/**< get camera pointer */
-
-	//float FoV;
 	GLFWwindow* window;
 
-	/**\brief getter
-	 * returns current ViewMatrix
-	 */
-	glm::mat4 getViewMatrix();
+	void setCurrentIOHandler(IOHandler* iOHandler);
+	IOHandler* getCurrentIOHandler();
 
-	/**\brief Update
-		 * Get a DeltaTime and set an orientation for camera witch mouse
-		 */
-	void computeIO();
+	float getDeltaTime();	/**< get time difference with which IOManager is working	*/
+	float getLastTime ();	/**< get last time on which computeFrameTimeDifference was called */
+
+	void computeFrameTimeDifference();	/**< compute time difference since last call of this method */
 
 	/**\
 	 * @param window where the callback is used
@@ -68,7 +45,6 @@ public:
 	 *
 	 */
 	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-	//void computeFoV();
 	
 	void cursorPos_callback(GLFWwindow* window, double xpos, double ypos);	//!< cursor position callback (movement)
 	void mouseButton_callback(GLFWwindow* window, int button, int action, int mods); //!< mouse button callback (press / release)
@@ -82,7 +58,7 @@ public:
 	static void staticCursorPos_callback(GLFWwindow* window, double xpos, double ypos);	//!< static method to be registered at GLFW
 	static void staticMouseButton_callback(GLFWwindow* window, int button, int action, int mods); //!< static method to be registerted at GLFW
 
-	/// register callback method by binding the static callback methods
+	/// register callback methods by binding the static callback methods
 	void bindCallbackFuncs();
 };
 
