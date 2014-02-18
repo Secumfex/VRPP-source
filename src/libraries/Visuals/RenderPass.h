@@ -25,7 +25,7 @@ public:
 private:
 	FrameBufferObject mFBO;
 	vector<GraphicsComponent*> mGcVector;
-	Shader *mShader = new Shader(SHADERS_PATH "/GBuffer_clone/screenFill.vert", "/GBuffer_clone/simpleTexture.frag");
+	Shader *mShader;
 };
 
 #endif /* RENDERPASS_H_ */

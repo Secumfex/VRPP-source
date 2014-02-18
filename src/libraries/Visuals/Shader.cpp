@@ -9,24 +9,8 @@
 
 Shader::Shader(){
 
-	const char* vert = GBuffer::vertexShader.c_str();
-	const char* frag = GBuffer::fragmentShader.c_str();
 
-    const GLint vs_source_size = strlen(vert);
-    GLuint vertexShaderHandle = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShaderHandle, 1, &vert, &vs_source_size);
-    glCompileShader(vertexShaderHandle);
-
-    const GLint fs_source_size = strlen(frag);
-    GLuint fragmentShaderHandle = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShaderHandle, 1, &frag, &fs_source_size);
-    glCompileShader(fragmentShaderHandle);
-
-    GLuint programHandle = glCreateProgram();
-    glAttachShader(programHandle, vertexShaderHandle);
-    glAttachShader(programHandle, fragmentShaderHandle);
-
-    mProgramHandle = programHandle;
+	mProgramHandle = ShaderTools::makeShaderProgram();
 
 	blurStrength = 0.0f;
 
