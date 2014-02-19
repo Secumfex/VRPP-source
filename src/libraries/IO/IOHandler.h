@@ -4,10 +4,12 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+#include <sstream>
 
 #include "Camera.h"
+#include "Patterns/Subject.h"
 
-class IOHandler{
+class IOHandler : public Subject{
 private:
 
 		// TODO implement state check and change
@@ -28,6 +30,8 @@ private:
 		inline void computeFrameTimeDifference();
 
 		Camera* camObject;
+
+		std	::	stringstream sstream; /**<* mostly used to convert ints to strings */
 public:
 	IOHandler();
 
@@ -52,6 +56,9 @@ public:
 	 *
 	 */
 	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+
+	void notify(int key);	//!< notify Listeners attached to a key pess by using the GLFW integer definitions for keys
+	void attachListenerOnKeyPress(Listener* listener, int key);//!< attach a Listener to a key by using the GLFW integer definitions for keys
 };
 
 

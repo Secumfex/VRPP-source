@@ -53,6 +53,13 @@ void configureMyApp(){
 	myVRState->		addVirtualObject(	myCubeObject1);		// add to VRState manually
 	VirtualObject* 	myCubeObject2 = 	myVRState->	createVirtualObject(RESOURCES_PATH "/cube.obj");	// create another Virtual Object from the same geometry 
 
+	IOHandler* myVRStateIOHandler = myVRState-> getIOHandler();
+	// attach some listeners to keyboard key presses
+	myVRStateIOHandler->attachListenerOnKeyPress(new TerminateApplicationListener(myApp), 	GLFW_KEY_ESCAPE);	// Terminate Application by pressing Escape
+	myVRStateIOHandler->attachListenerOnKeyPress(new SetClearColorListener(0.0,0.0,0.0),	GLFW_KEY_1);		// pressing '1' : black background
+	myVRStateIOHandler->attachListenerOnKeyPress(new SetClearColorListener(1.0,1.0,1.0), 	GLFW_KEY_2);		// pressing '2' : white background
+	myVRStateIOHandler->attachListenerOnKeyPress(new SetClearColorListener(0.44,0.5,0.56), 	GLFW_KEY_3);		// pressing '3' : default greyish-blue background
+
 	/*	customize virtual objects*/
 	glm::mat4		myModelMatrix1 = 	glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.0f, 0.0f)), glm::vec3(2.5f, 0.2f, 2.5f));	//floor
 	myCubeObject1-> setModelMatrix(		myModelMatrix1); 	// override default Model Matrix
@@ -74,7 +81,6 @@ void configureMyApp(){
 	// attach a listener which serves as renderloop by using the rendermanagers current RenderQueue and Shader
 	myApp->attachListenerOnRenderManagerFrameLoop(	new AlternativeRenderloopListener());
 
-	
 
 	/*	add customized states to application state pool*/
 	myApp->addState(	myMenu);		//add the Main Menu to Application

@@ -5,10 +5,13 @@
 #include <GLFW/glfw3.h>
 
 #include <glm/glm.hpp>
+#include <sstream>
+
 #include "Patterns\Singleton.h"
 #include "IO\IOHandler.h"
+#include "Patterns/Subject.h"
 
-class IOManager : public Singleton<IOManager>{
+class IOManager : public Singleton<IOManager>, Subject{
 	friend class Singleton<IOManager>;
 
 private:
@@ -20,6 +23,8 @@ private:
 	float deltaTime;			/**<Float for time bewteen lastTime and CurrentTime*/
 
 	IOHandler* currentIOHandler; /**<* active IOHandler Object */
+
+	std	::	stringstream sstream; /**<* mostly used to convert ints to strings */
 
 	IOManager();
 public:
@@ -60,6 +65,10 @@ public:
 
 	/// register callback methods by binding the static callback methods
 	void bindCallbackFuncs();
+
+
+	void notify(int key);	//!< notify Listeners attached to a key pess by using the GLFW integer definitions for keys
+	void attachListenerOnKeyPress(Listener* listener, int key);//!< attach a Listener to a key by using the GLFW integer definitions for keys
 };
 
 #endif

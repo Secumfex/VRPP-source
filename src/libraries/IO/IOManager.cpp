@@ -47,13 +47,18 @@ void IOManager::key_callback(GLFWwindow* window, int key, int scancode, int acti
 	if (currentIOHandler != 0){
 		currentIOHandler->key_callback(window, key, scancode, action, mods);
 	}
+	notify(key);	// notify listeners attached to key
 }
 
 IOManager::IOManager(){
 	currentIOHandler 	= 0;
 	window 				= 0;
 	deltaTime 			= 0.1f; //default deltaTime value: 100ms
-	lastTime 			= 0.0f;
+	lastTime 			= 0.0;
+	currentTime = 0.0;
+
+	xPos = 0;
+	yPos = 0;
 
 	WIDTH 	= 0;
 	HEIGHT 	= 0;
@@ -67,13 +72,13 @@ void IOManager::setWindow(GLFWwindow* window){
 
 void IOManager::computeFrameTimeDifference(){
 	if (window != 0){
-		if (lastTime 	= 0.0f){ 			// if glfwGetTime() has never been called before	
+		if (lastTime 	== 0.0f){ 			// if glfwGetTime() has never been called before
 			lastTime 	= glfwGetTime();	// last time is current time
 			deltaTime 	= 0.1f;				// time since last call is assumed 100ms 
 		}
 		else{	// Compute time difference between current and last frame	
 			currentTime = glfwGetTime();	// get current time
-			deltaTime 	= float(currentTime - lastTime);	//compute time difference since last call
+			deltaTime 	= float(currentTime - lastTime);	// compute time difference since last call
 			lastTime = currentTime;			// save current time for next call
 		}
 	}
@@ -89,4 +94,19 @@ float IOManager::getLastTime(){
 
 void IOManager::setCurrentIOHandler(IOHandler* iOHandler){
 	currentIOHandler = iOHandler;
+}
+
+void IOManager::attachListenerOnKeyPress(Listener* listener, int key){
+	sstream	<<	key;	// convert int to string
+	listener->setName( sstream.str()	);
+	attach(listener);
+	sstream.str("");	// clear stringstream
+	sstream.clear();
+}
+
+void IOManager::notify(int key){
+	sstream << key;		// convert int to string
+	Subject :: notify( sstream.str() );
+	sstream.str("");	// clear stringstream
+	sstream.clear();
 }

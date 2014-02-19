@@ -10,7 +10,9 @@ IOHandler::IOHandler(){
 	speed_run = 6.0f;
 	mouseSpeed = 0.005f;
 	deltaTime = 0.1f;	//default value
-
+	currentTime = 0.0;
+	xPos = 0;
+	yPos = 0;
 //	glfwGetCursorPos(window, &xPos, &yPos);
 	// Get mouse position
 }
@@ -34,7 +36,6 @@ void IOHandler::key_callback(GLFWwindow* window, int key, int scancode, int acti
 			//not exit but enter menu state
 			//glfwSetWindowShouldClose(window, GL_TRUE);
 			isMenuState = true;
-			return;
 		}
 
 		glm::vec3 gotPosition = camObject->getPosition();
@@ -93,12 +94,14 @@ void IOHandler::key_callback(GLFWwindow* window, int key, int scancode, int acti
 			//not exit but enter menu state
 			//glfwSetWindowShouldClose(window, GL_TRUE);
 			isMenuState = false;
-			return;
 		}
 
 		if (key == GLFW_KEY_F1 && action == GLFW_PRESS){
 			//placeholder
 		}
+	}
+	if (action != GLFW_RELEASE){	// 	so listeners are only called on pess event, not on release ( i.e. twice )
+		notify(key);				//	notify listeners
 	}
 }
 
@@ -108,4 +111,19 @@ void IOHandler::setCameraObject(Camera* camera){
 
 Camera* IOHandler::getCameraObject(){
 	return camObject;
+}
+
+void IOHandler::attachListenerOnKeyPress(Listener* listener, int key){
+	sstream	<<	key;	// convert int to string
+	listener->setName( sstream.str()	);
+	attach(listener);
+	sstream.str("");	// clear stringstream
+	sstream.clear();
+}
+
+void IOHandler::notify(int key){
+	sstream << key;		// convert int to string
+	Subject :: notify( sstream.str() );
+	sstream.str("");	// clear stringstream
+	sstream.clear();
 }
