@@ -2,8 +2,12 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
-#include <glm/glm.hpp>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/constants.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_inverse.hpp>
 #include "Tools/ShaderTools.h"
 #include "Tools/TextureTools.h"
 #include "Tools/Geometry.h"
@@ -28,6 +32,24 @@ GLuint projectionHandle;
 GLuint inverseHandle;
 
 GLuint lightPositionHandle;
+
+glm::mat4 viewMatrix;
+glm::mat4 projectionMatrix;
+
+// light
+glm::vec4 lightPosition;
+
+// Floor and 2 Cubes
+GLuint cubeVertexArrayHandle;
+
+glm::mat4 plane;
+glm::mat4 planeInverse;
+
+glm::mat4 cube1;
+glm::mat4 cube1Inverse;
+
+glm::mat4 cube2;
+glm::mat4 cube2Inverse;
 
 //VOs and physic-world
 VirtualObject* test1;
@@ -84,7 +106,7 @@ void initPhysics(){
 
 /*
  * renders a sphere
- */
+ */ /*
 void renderSphere(VirtualObject* vo){
 
 	//unseren renderManager benutzen wenn moeglich (also den vom renter-team)
@@ -113,21 +135,82 @@ void renderSphere(VirtualObject* vo){
 		glMultMatrixf(mat);
 		//gluSphere(quad,r,20,20);		//geht nicht, da ja kein glu/glut mehr
 	glPopMatrix();
-}
+} */
 
 /*
  * init of VOs and its components
  */
 void initScene(){
 
+	using namespace glm;
+
+    {
+        {   glGenVertexArrays(1, &cubeVertexArrayHandle);
+            glBindVertexArray(cubeVertexArrayHandle);
+
+            GLuint vertexBufferHandles[3];
+            glGenBuffers(3, vertexBufferHandles);
+
+            glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandles[0]);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(CubeGeometry::positions), CubeGeometry::positions, GL_STATIC_DRAW);
+            glEnableVertexAttribArray(0);
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+            glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandles[1]);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(CubeGeometry::uvCoordinates), CubeGeometry::uvCoordinates, GL_STATIC_DRAW);
+            glEnableVertexAttribArray(1);
+            glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+            glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandles[2]);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(CubeGeometry::normals), CubeGeometry::normals, GL_STATIC_DRAW);
+            glEnableVertexAttribArray(2);
+            glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
+        }
+    }
+
+    {
+            viewMatrix = lookAt(vec3(0.0f, 1.0f, -6.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
+            projectionMatrix = perspective(40.0f, 1.0f, 0.1f, 100.f);
+        }
+
+    {
+            plane = scale(translate(mat4(1.0f), vec3(0.0f, -1.0f, 0.0f)), vec3(2.5f, 0.2f, 2.5f));
+            planeInverse = transpose(inverse(viewMatrix * plane));
+      }
+
+    { // Cube1
+
+            cube1 = scale(translate(mat4(1.0f), vec3(0.0f, 0.5f, -0.5f)), vec3(0.6f, 0.6f, 0.6f));
+            cube1Inverse = transpose(inverse(viewMatrix * cube1));
+            }
+
+    { // Cube2
+
+            cube2 = scale(translate(mat4(1.0f), vec3(0.2f, 0.5f, -0.5f)), vec3(0.6f, 0.6f, 0.6f));
+            cube2Inverse = transpose(inverse(viewMatrix * cube2));
+            }
+
+    lightPosition = vec4(0, 10, 0, 1);
+
 	//2 VOs
 	//VOs per ressourceManager erstellen (also graphicComponent)
 	test1 = new VirtualObject();
 	test2 = new VirtualObject();
 
-	//with sphere rigidBodies
-	test1->setPhysicsComponent(20.0,2.0,2.0,2.0,2.0);
-	test2->setPhysicsComponent(30.0,1.0,1.0,1.0,1.0);
+	//with box rigidBodies
+
+	float *fm1 = value_ptr(cube1);
+	float x1 = fm1[12];
+	float y1 = fm1[13];
+	float z1 = fm1[14];
+
+	float *fm2 = value_ptr(cube2);
+	float x2 = fm2[12];
+	float y2 = fm2[13];
+	float z2 = fm2[14];
+
+	test1->setPhysicsComponent(x1, y1, z1, 0.5, 0.5, 0.5, 2.0);
+	test2->setPhysicsComponent(x2, y2, z2, 0.5, 0.5, 0.5, 1.0);
 
 	cout << "hit1: " << test1->physicsComponent->getHit() << endl;
 	cout << "hit2: " << test2->physicsComponent->getHit() << endl;
@@ -146,6 +229,8 @@ void initScene(){
  */
 void loop(){
 
+	using namespace glm;
+
 	while(!glfwWindowShouldClose(window)){
 
 		//TODO VOs kollidieren lassen
@@ -155,12 +240,38 @@ void loop(){
 		//TODO stepSimulation per listener (PhysicWorldSimulationListener)
 		PhysicWorld::getInstance()->dynamicsWorld->stepSimulation(1/120.f,10);
 
+		test1->physicsComponent->update();
+		cube1 = test1->physicsComponent->getModelMatrix();
+		cube1Inverse = transpose(inverse(viewMatrix * cube1));
+
+		test2->physicsComponent->update();
+		cube2 = test2->physicsComponent->getModelMatrix();
+		cube2Inverse = transpose(inverse(viewMatrix * cube2));
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glViewport(0, 0, width, height);
+        glUniformMatrix4fv(projectionHandle, 1, GL_FALSE, value_ptr(projectionMatrix));
 
-        //render the 2 VOs
-        renderSphere(test1);
-        renderSphere(test2);
+        glUniformMatrix4fv(viewHandle, 1, GL_FALSE, value_ptr(viewMatrix));
+        glUniformMatrix4fv(projectionHandle, 1, GL_FALSE, value_ptr(projectionMatrix));
+
+        ////////////////////////////////////////////////////////////////////////////
+
+        glBindVertexArray(cubeVertexArrayHandle);   //Using Cube-Materials from VRAM
+
+        glUniformMatrix4fv(modelHandle, 1, GL_FALSE, value_ptr(plane));
+        glUniformMatrix4fv(inverseHandle, 1, GL_FALSE, value_ptr(planeInverse));
+        glDrawArrays(GL_TRIANGLES, 0, 12*3); //DRAW FLOOR
+
+        glUniformMatrix4fv(modelHandle, 1, GL_FALSE, value_ptr(cube1));
+        glUniformMatrix4fv(inverseHandle, 1, GL_FALSE, value_ptr(cube1Inverse));
+        glDrawArrays(GL_TRIANGLES, 0, 12*3);
+
+        glUniformMatrix4fv(modelHandle, 1, GL_FALSE, value_ptr(cube2));
+        glUniformMatrix4fv(inverseHandle, 1, GL_FALSE, value_ptr(cube2Inverse));
+        glDrawArrays(GL_TRIANGLES, 0, 12*3);
+
+        ///////////////////////////////////////////////////////////////////////////
 
         glfwSwapBuffers(window);
         glfwPollEvents();
