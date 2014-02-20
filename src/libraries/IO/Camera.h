@@ -54,8 +54,8 @@ public:
 	/* GETTER AND SETTER END */
 
 
-	inline void updateViewDirection();		//!< compute ViewDirection
-
+	inline void updateViewDirection();		//!< compute ViewDirection from Phi and Theta
+	inline void updatePhiTheta();			//!< compute Phi and Theta from View Direction
 
 	glm::mat4 getViewMatrix();		//!< compute ViewMatrix
 };

@@ -38,9 +38,7 @@ void configureMyApp(){
 	VRState* myVRState = 	new VRState("VRSTATE"); // create a VRState labled VRSTATE
 	myVRState->		attachListenerOnAddingVirtualObject(new PrintMessageListener(string("Added a VirtualObject to RenderQueue")));	// console output when virtual object is added
 	myVRState->		attachListenerOnActivation(			new SetClearColorListener(0.44,0.5,0.56));					// custom background color
-
-	myVRState-> 	attachListenerOnActivation(			new PrintCameraStatusListener(myVRState->getCamera()));
-
+	myVRState-> 	attachListenerOnActivation(			new PrintCameraStatusListener( myVRState->getCamera()));
 
 	/*	load some virtual objects into vr state scene*/
 	VirtualObject* 	myCowObject1 = 		myVRState->			createVirtualObject(RESOURCES_PATH "/cow.obj");	 		// create a Virtual Object by reading an .obj file and add it to VRState automatically
@@ -59,6 +57,12 @@ void configureMyApp(){
 	myVRStateIOHandler->attachListenerOnKeyPress(new SetClearColorListener(0.0,0.0,0.0),	GLFW_KEY_1);		// pressing '1' : black background
 	myVRStateIOHandler->attachListenerOnKeyPress(new SetClearColorListener(1.0,1.0,1.0), 	GLFW_KEY_2);		// pressing '2' : white background
 	myVRStateIOHandler->attachListenerOnKeyPress(new SetClearColorListener(0.44,0.5,0.56), 	GLFW_KEY_3);		// pressing '3' : default greyish-blue background
+	myVRStateIOHandler->attachListenerOnKeyPress(new SetCameraDirectionListener(myVRState->getCamera(), glm::vec3(-1.0f,0.0f,-1.0f)), 	GLFW_KEY_LEFT);		// pressing '<-' : view direction at an angle to the left
+	myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myVRState->getCamera()), 								GLFW_KEY_LEFT);
+	myVRStateIOHandler->attachListenerOnKeyPress(new SetCameraDirectionListener(myVRState->getCamera(), glm::vec3(1.0f,0.0f,-1.0f)), 	GLFW_KEY_RIGHT);	// pressing '->' : view direction at an angle to the right
+	myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myVRState->getCamera()), 								GLFW_KEY_RIGHT);	
+	myVRStateIOHandler->attachListenerOnKeyPress(new SetCameraDirectionListener(myVRState->getCamera(), glm::vec3(0.0f,0.0f,-1.0f)), 	GLFW_KEY_UP);		// pressing '<-' : view direction straight ahead
+	myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myVRState->getCamera()), 								GLFW_KEY_UP);
 
 	/*	customize virtual objects*/
 	glm::mat4		myModelMatrix1 = 	glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.0f, 0.0f)), glm::vec3(2.5f, 0.2f, 2.5f));	//floor
