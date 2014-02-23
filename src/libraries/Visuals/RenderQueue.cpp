@@ -18,6 +18,7 @@ RenderQueue* RenderQueue::getRenderQueue(){
 }
 
 void RenderQueue::addShader(Shader* sh){
+	cout<<"Adding Shader to shaderList."<<endl;
 	shaderList.push_back(sh);
 }
 
@@ -36,6 +37,7 @@ void RenderQueue::addVirtualObject(VirtualObject* vo){
 
 		vo2gcMap[vo].push_back(gcVector[i]); /// VO --> GC
 		gc2voMap[gcVector[i]] = vo;
+		gcList.push_back(gcVector[i]);
 	}
 }
 

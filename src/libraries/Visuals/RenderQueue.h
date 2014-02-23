@@ -5,6 +5,7 @@
 #include <map>
 
 #include "VirtualObject.h"
+#include "Shader.h"
 
 using namespace std;
 
