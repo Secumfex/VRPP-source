@@ -117,15 +117,20 @@ void RenderQueue::sortByAttributes(){
 	GraphicsComponent* gc;
 	Shader* sh;
 
+	list<Shader* >::iterator sh_it = shaderList.begin(); //totally unintended.
+
+	for(sh_it =shaderList.begin(); sh_it != shaderList.end(); sh_it++){
+		cout<<"Filling the shaderList with keys"<<endl;
+		//sh = *sh_it;
+		shader2gcStorage[*sh_it];
+	}
+
 	for(unsigned int i = 0; i < gcList.size(); i++){
 		cout<<"Entering sortByAttributes loop"<<endl;
 		for(unsigned int j = 0; j < shaderList.size(); j++){
-			
+
 		}
 	}
-
-
-
 }
 
 void RenderQueue::sortByShaders(){

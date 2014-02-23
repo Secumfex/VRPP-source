@@ -46,6 +46,7 @@ private:
 	map<GraphicsComponent*, VirtualObject*> gc2voMap; ///< each VO is assigned to some GC
 	map<GraphicsComponent*, VirtualObject*> vo2gcTexMap; ///< each VO is assigned to some GC
 	map<string, vector<GraphicsComponent* > > gcFlagStorage; ///< GC map sorted by flags
+	map<Shader*, vector<GraphicsComponent* > > shader2gcStorage; //Shader pointers to gc pointers
 
 	list<Shader*> shaderList;
 	list<GraphicsComponent*> gcList;
