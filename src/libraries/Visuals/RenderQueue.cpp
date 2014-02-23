@@ -17,6 +17,10 @@ RenderQueue* RenderQueue::getRenderQueue(){
 	return this;
 }
 
+void RenderQueue::addShader(Shader* sh){
+	shaderList.push_back(sh);
+}
+
 /** \brief adds a VO to the member list of VOs, also maps GC->VO and vice versa
 */
 void RenderQueue::addVirtualObject(VirtualObject* vo){
@@ -103,6 +107,17 @@ map<VirtualObject*, vector<GraphicsComponent* > > RenderQueue::getVo2GcMap(){
 
 list<VirtualObject*> RenderQueue::getVirtualObjectList(){
 	return voList;
+}
+
+void RenderQueue::sortByAttributes(){
+	resetQueue();
+
+	vector<GraphicsComponent*> gcVector;
+	GraphicsComponent* gc;
+	Shader* sh;
+
+
+
 }
 
 void RenderQueue::sortByShaders(){
