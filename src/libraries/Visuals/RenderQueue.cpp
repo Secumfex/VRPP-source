@@ -114,9 +114,15 @@ list<VirtualObject*> RenderQueue::getVirtualObjectList(){
 void RenderQueue::sortByAttributes(){
 	resetQueue();
 
-	vector<GraphicsComponent*> gcVector;
 	GraphicsComponent* gc;
 	Shader* sh;
+
+	for(unsigned int i = 0; i < gcList.size(); i++){
+		cout<<"Entering sortByAttributes loop"<<endl;
+		for(unsigned int j = 0; j < shaderList.size(); j++){
+			
+		}
+	}
 
 
 
