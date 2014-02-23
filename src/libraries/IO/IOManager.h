@@ -5,7 +5,7 @@
 #include <GLFW/glfw3.h>
 
 #include <glm/glm.hpp>
-#include "Patterns\Singleton.h"
+#include "Patterns/Singleton.h"
 #include "Camera.h"
 
 

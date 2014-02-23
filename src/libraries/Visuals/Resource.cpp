@@ -75,7 +75,9 @@ void Material :: setDiffuse(glm::vec3 diffuse){
 void Material :: setSpecular(glm::vec3 specular){
 	mSpecColor = specular;
 }
-void Material :: setEmission(glm::vec3 emission){}
+void Material :: setEmission(glm::vec3 emission){
+    mEmissColor = emission;
+}
 void Material :: setShininess(GLfloat term){
 	mShininess = term;
 }
