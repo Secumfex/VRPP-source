@@ -29,7 +29,7 @@ public:
 	void update();
 };
 
-/// Listener which sets the Phont_Test Shader as the RenderManagers current Shader
+/// Listener which sets the Phong_Test Shader as the RenderManagers current Shader
 class SetAlternativeDefaultRenderManagerPointersListener : public Listener{
 private:
 	RenderManager* rm;

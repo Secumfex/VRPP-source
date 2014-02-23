@@ -12,30 +12,30 @@ Application* myApp;
 	/*How to build your own custom Application*/
 void configureMyApp(){
 	/*	customize application a little bit*/
-	myApp = 		Application::getInstance();	//create an Application labled PROJEKT PRAKTIKUM
+	myApp = 		Application::getInstance();	//create an Application labeled PROJEKT PRAKTIKUM
 	myApp->			setLabel("PROJEKT PRAKTIKUM");
 
 
 
 	/*   create some states to work with */	
-	MenuState* myMenu = 		new MenuState("MAINMENU");	//create a MenuState labled MAINMENU
+	MenuState* myMenu = 		new MenuState("MAINMENU");	//create a MenuState labeled MAINMENU
 	/*
-		Button* myButton = new Button("START_BUTTON");	//create a Button labled START_BUTTON
+		Button* myButton = new Button("START_BUTTON");	//create a Button labeled START_BUTTON
 		myButton->addListenerOnButtonPress(new SetStateListener(myApp, "LOADING_SCREEN")); //add a state changing listener to be notified upon a button press
 		myMenu->addButton(myButton);	//add Button to Main Menu
 	*/
 
 
 	/*	customize myLoadingScreen */
-	MenuState* myLoadingMenu = 	new MenuState("LOADING_SCREEN");	// create a MenuState labled LOADING_SCREEN
+	MenuState* myLoadingMenu = 	new MenuState("LOADING_SCREEN");	// create a MenuState labeled LOADING_SCREEN
 	
 	VirtualObject* myLoadingBarrel = 	myLoadingMenu->		createVirtualObject(RESOURCES_PATH "/barrel.obj"); 		// create and add virtual object to loading menu state
 	myLoadingBarrel->setModelMatrix(	glm::scale(			glm::mat4(1.0f), glm::vec3(1.0,0.125,1.0)));
 	myLoadingMenu->	attachListenerOnBeginningProgramCycle(	new AnimateSinusModelMatrixListener(myLoadingBarrel));	// animated loading barrel
 	myLoadingMenu->	attachListenerOnBeginningProgramCycle(	new AnimateClearColorListener());						// animated pseudo Loading_screen
 
-	/*	cutomize myVRState*/
-	VRState* myVRState = 	new VRState("VRSTATE"); // create a VRState labled VRSTATE
+	/*	customize myVRState*/
+	VRState* myVRState = 	new VRState("VRSTATE"); // create a VRState labeled VRSTATE
 	myVRState->		attachListenerOnAddingVirtualObject(new PrintMessageListener(string("Added a VirtualObject to RenderQueue")));	// console output when virtual object is added
 	myVRState->		attachListenerOnActivation(			new SetClearColorListener(0.44,0.5,0.56));					// custom background color
 	myVRState-> 	attachListenerOnActivation(			new PrintCameraStatusListener( myVRState->getCamera()));
@@ -91,7 +91,7 @@ void configureMyApp(){
 	myApp->addState(	myLoadingMenu);	//add the Loading Screen to Application
 	myApp->addState(	myVRState);		//add the VR State to Application
 
-	myApp->setState(	"MAINMENU"); 	//set initial state to the state labled MAINMENU
+	myApp->setState(	"MAINMENU"); 	//set initial state to the state labeled MAINMENU
 }
 
 int main() {
