@@ -117,17 +117,21 @@ void RenderQueue::sortByAttributes(){
 	GraphicsComponent* gc;
 	Shader* sh;
 
-	list<Shader* >::iterator sh_it = shaderList.begin(); //totally unintended.
+	list<Shader* >::iterator sh_it = shaderList.begin(); //name totally unintended.
+	list<GraphicsComponent* >::iterator gc_it = gcList.begin();
 
-	for(sh_it =shaderList.begin(); sh_it != shaderList.end(); sh_it++){
+	for(sh_it = shaderList.begin(); sh_it != shaderList.end(); sh_it++){
 		cout<<"Filling the shaderList with keys"<<endl;
-		//sh = *sh_it;
 		shader2gcStorage[*sh_it];
 	}
 
-	for(unsigned int i = 0; i < gcList.size(); i++){
+	for(gc_it = gcList.begin(); gc_it != gcList.end(); gc_it++){
 		cout<<"Entering sortByAttributes loop"<<endl;
-		for(unsigned int j = 0; j < shaderList.size(); j++){
+		for(sh_it = shaderList.begin(); sh_it != shaderList.end(); sh_it++){
+			//if s1.hasUniform("normalTexture?") NAND gc1.hasNormalMap() --> doStuff :
+			if(!((*sh_it)->hasUniform("normalTexture") && (*gc_it)->getMaterial()->hasNormalMap())){
+
+			}
 
 		}
 	}
