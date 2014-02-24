@@ -52,6 +52,7 @@ glm::mat4 cube2;
 glm::mat4 cube2Inverse;
 
 //VOs and physic-world
+VirtualObject* testPlane;
 VirtualObject* test1;
 VirtualObject* test2;
 
@@ -180,13 +181,13 @@ void initScene(){
 
     { // Cube1
 
-            cube1 = scale(translate(mat4(1.0f), vec3(0.0f, 0.5f, -0.5f)), vec3(0.6f, 0.6f, 0.6f));
+            cube1 = scale(translate(mat4(1.0f), vec3(0.2f, 0.5f, -0.5f)), vec3(0.6f, 0.6f, 0.6f));
             cube1Inverse = transpose(inverse(viewMatrix * cube1));
             }
 
-    { // Cube2
+     { // Cube2
 
-            cube2 = scale(translate(mat4(1.0f), vec3(0.2f, 0.5f, -0.5f)), vec3(0.6f, 0.6f, 0.6f));
+            cube2 = scale(translate(mat4(1.0f), vec3(0.4f, 0.5f, -0.5f)), vec3(0.6f, 0.6f, 0.6f));
             cube2Inverse = transpose(inverse(viewMatrix * cube2));
             }
 
@@ -194,23 +195,39 @@ void initScene(){
 
 	//2 VOs
 	//VOs per ressourceManager erstellen (also graphicComponent)
-	test1 = new VirtualObject();
-	test2 = new VirtualObject();
+    testPlane = new VirtualObject;
+	test1 = new VirtualObject;
+	test2 = new VirtualObject;
 
 	//with box rigidBodies
 
 	float *fm1 = value_ptr(cube1);
-	float x1 = fm1[12];
-	float y1 = fm1[13];
-	float z1 = fm1[14];
+	float width1 = fm1[0];
+	float height1 = fm1[5];
+	float depth1 = fm1[10];
+	float x1 = fm1[0];
+	float y1 = fm1[5];
+	float z1 = fm1[10];
 
 	float *fm2 = value_ptr(cube2);
-	float x2 = fm2[12];
-	float y2 = fm2[13];
-	float z2 = fm2[14];
+	float width2 = fm2[0];
+	float height2 = fm2[5];
+	float depth2 = fm2[10];
+	float x2 = fm2[0];
+	float y2 = fm2[5];
+	float z2 = fm2[10];
 
-	test1->setPhysicsComponent(x1, y1, z1, 0.5, 0.5, 0.5, 2.0);
-	test2->setPhysicsComponent(x2, y2, z2, 0.5, 0.5, 0.5, 1.0);
+	float *fm3 = value_ptr(plane);
+	float width3 = fm3[0];
+	float height3 = fm3[5];
+	float depth3 = fm3[10];
+	float x3 = fm3[12];
+	float y3 = fm3[13];
+	float z3 = fm3[14];
+
+	test1->setPhysicsComponent(width1, height1, depth1, x1, y1, z1, 0.3);
+	test2->setPhysicsComponent(width2, height2, depth2, x2, 100.0+y2, z1, 1.0);
+	testPlane->setPhysicsComponent(width3, height3, depth3, x3, y3, z3, 0.0);
 
 	cout << "hit1: " << test1->physicsComponent->getHit() << endl;
 	cout << "hit2: " << test2->physicsComponent->getHit() << endl;
