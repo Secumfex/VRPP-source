@@ -90,6 +90,7 @@ void Camera::setPosition(glm::vec3 newPos){
 
 // Direction : Spherical coordinates to Cartesian coordinates conversion
 void Camera::updateViewDirection(){
+	clampPhiTheta();
 	direction = glm::vec3(	cos(theta) * sin(phi),
 							sin(theta),
 							cos(phi) * cos(theta)	);
@@ -135,4 +136,15 @@ void Camera::setCenter(glm::vec3 center){
 	direction = center - position;
 	direction = glm::normalize(direction);
 	updatePhiTheta();	// update phi & theta by evaluating the new direction
+}
+
+void Camera::clampPhiTheta(){
+	phi = std::fmod (phi , 2.0*PI);
+
+	if (theta >= PI / 2.0){
+		theta =  PI / 2.0 - 0.001;
+	}
+	if (theta <= -PI / 2.0){
+		theta = -PI / 2.0 + 0.001;
+	}
 }

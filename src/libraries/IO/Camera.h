@@ -24,6 +24,7 @@ private:
 
 	glm::vec3 getUp();
 
+	inline void clampPhiTheta();	// clip Phi, Theta into [-PI; PI] and [0, 2*PI]
 
 public:
 	Camera();	//!< constructor
