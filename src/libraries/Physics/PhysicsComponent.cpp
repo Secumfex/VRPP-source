@@ -38,7 +38,7 @@ PhysicsComponent::PhysicsComponent(glm::vec3 min, glm::vec3 max) {
 	hit = false;
 
 	rigidBody = addBox(width, height, depth, x, y, z, mass);
-	addCollisionFlag(4);
+	addCollisionFlag(4);	//momentan noch fest, muesste eig auch zusaetzlicher input wert sein
 	update();
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
