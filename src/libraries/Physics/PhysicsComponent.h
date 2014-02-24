@@ -8,7 +8,7 @@ using namespace std;
 
 /*! @brief PhysicsComponent.
  *
- *	@todo detailed description pls
+ *	the physic component is one part of an virtual object. it contains all needed parts for the bullet physics simulation.
  */
 class PhysicsComponent{
 private:
@@ -65,7 +65,7 @@ public:
 	 * @param normal normal vector of the plane
 	 * @param mass defines the behavior of the rigid body in the physics world
 	 */
-	PhysicsComponent(float x, float y, float z, btVector3 normal, float mass);
+	PhysicsComponent(float x, float y, float z, btVector3 normal, float mass);	//todo: change the type of normal
 
 	/** \brief destructor
 	*
@@ -78,7 +78,7 @@ public:
 	*
 	* ORed current flag with the wanted one.
 	* @param flag number of the wanted flag, 1 for ..., 4 for CF_CUSTOM_MATERIAL_CALLBACK, ...
-	* @return nothing
+	* @return void
 	*/
 	void addCollisionFlag(int flag);
 

@@ -4,6 +4,8 @@
 
 #include <glm/glm.hpp>
 #include "IOManager.h"
+#include "Physics/PhysicWorld.h"
+#include "Visuals/RenderManager.h"
 
 void IOManager::bindCallbackFuncs(){
 	if (window != 0){
@@ -31,6 +33,21 @@ void IOManager::cursorPos_callback(GLFWwindow* window, double xpos, double ypos)
 
 void IOManager::mouseButton_callback(GLFWwindow* window, int button, int action, int mods){
 	// @todo call IOHandler mouseButton func
+
+	//if left button clicked do ray-picking
+	if(button == 0 && action == GLFW_PRESS){	//GLFW_MOUSE_BUTTON_1 = 0 (?)
+
+		glm::vec3 outOrigin;
+		glm::vec3 outDirection;
+		glm::mat4 projectionMatrix = RenderManager::getInstance()->getProjectionMatrix();
+
+		PhysicWorld::getInstance()->ScreenPosToWorldRay(xPos,yPos,WIDTH,HEIGHT,mViewMatrix,projectionMatrix,outOrigin,outDirection);
+		return;
+	}
+	else{
+		return;
+	}
+
 }
 
 IOManager::IOManager(){
@@ -201,23 +218,6 @@ void IOManager::key_callback(GLFWwindow* window, int key, int scancode, int acti
 }
 */
 
-/*
-void IOManager::mouseButton_callback(GLFWwindow* window, int button, int action, int mods){
-
-	//if left button clicked do ray-picking
-	if(button == 0 && action == GLFW_PRESS){	//GLFW_MOUSE_BUTTON_1 = 0 (?)
-
-		glm::vec3 outOrigin;
-		glm::vec3 outDirection;
-
-		PhysicWorld::getInstance()->ScreenPosToWorldRay(xPos,yPos,WIDTH,HEIGHT,mViewMatrix,!projmatx!,outOrigin,outDirection);	//projectionMatrix fehlt noch
-		return;
-	}
-	else{
-		return;
-	}
-}
-*/
 
 //this HAS TO BE put in rendermanager
 //glfwSetKeyCallback(window, key_callback);

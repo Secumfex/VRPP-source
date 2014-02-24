@@ -5,9 +5,10 @@
 #include "Patterns/Singleton.h"
 #include "btBulletDynamicsCommon.h"
 
-/** \brief
+/** \brief PhysicWorld
  *
- *  @todo detailed description
+ *  PhysicWorld is the shell for a bullet dynamic world. the real physic world which contains all rigid bodies of the virtual objects or rather
+ *  their physic components is PhysicWorld->dynamicsWorld. PhysicWorld is Singleton to ensure that there is only one physic world at a time.
  */
 class PhysicWorld : public Singleton<PhysicWorld> {
 friend class Singleton<PhysicWorld>;
@@ -33,6 +34,7 @@ public:
 
 	/** \brief collision callback function
 	 *
+	 * is called if a collition between two rigidBodies happens.
 	 * @param collisionPoint point where a collision is detected
 	 * @param obj1,obj2 objects which are involved in the collision
 	 * @param id1,id2 currently not used
@@ -43,6 +45,7 @@ public:
 
 	/** \brief function for ray-picking
 	 *
+	 * shoots a ray from mouse position into the world to find the first rigidBody which can be picked with the mouse.
 	 * @param mouseX,mouseY current mouse position
 	 * @param screenWidth,screenHeight screen resolution
 	 * @param viewMatrix camera position and orientation

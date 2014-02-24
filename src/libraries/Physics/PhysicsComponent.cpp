@@ -62,7 +62,7 @@ PhysicsComponent::PhysicsComponent(float width, float height, float depth, float
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
 
-PhysicsComponent::PhysicsComponent(float x, float y, float z, btVector3 normal, float mass){
+PhysicsComponent::PhysicsComponent(float x, float y, float z, btVector3 normal, float mass){	//todo: change the type of normal
 
 	hit = false;
 	rigidBody = addPlane(x,y,z,normal,mass);

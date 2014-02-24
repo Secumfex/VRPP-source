@@ -65,7 +65,10 @@ void VirtualObject::setPhysicsComponent(float radius, float x, float y, float z,
 
 void VirtualObject::setPhysicsComponent(float width, float height, float depth, float x, float y, float z, float mass){
 	physicsComponent = new PhysicsComponent(width, height, depth, x, y, z, mass);
+}
 
+void VirtualObject::setPhysicComponent(float x, float y, float z, btVector3 normal, float mass){	//todo: change the type of normal
+	physicsComponent = new PhysicsComponent(x,y,z,normal,mass);
 }
 
 glm::mat4 VirtualObject::getModelMatrix(){
