@@ -1,4 +1,5 @@
 #include "IOHandler.h"
+#include <math.h>
 
 IOHandler::IOHandler(){
 	/* @todo	implement state check and change
@@ -18,16 +19,26 @@ IOHandler::IOHandler(){
 }
 
 // Compute new orientation
-void IOHandler::setOrientation(){
-	// Reset mouse position for next frame
-	//////TODO ERSETZE ZAHLEN DURCH WINDOW KOORDINATEN!!!!!
-//	glfwSetCursorPos(window, 100, 100);
-
-	float gotPhi = camObject->getPhi();
-	float gotTheta = camObject->getTheta();
-	camObject->setPhi(gotPhi += mouseSpeed * float(100 / 2 - xPos));
-	camObject->setTheta(gotTheta += mouseSpeed * float(100 / 2 - yPos));
+void IOHandler::setOrientation(GLFWwindow* window, double xpos, double ypos){
+	// Reset mouse position for next frame						CHECK
+	//////TODO ERSETZE ZAHLEN DURCH WINDOW KOORDINATEN!!!!!		CHECK
+	double xpos1, ypos1;
+	glfwGetCursorPos(window, &xpos, &ypos);
+	int Width, Height;
+    glfwSetWindowSize(window, Width, Height);
+	glfwSetCursorPos(window, Width/2, Height/2);
+    float gotPhi = camObject->getPhi();
+    float gotTheta = camObject->getTheta();
+    camObject->setPhi(gotPhi += mouseSpeed * float(Width / 2 - xpos));			//Horizontal
+    camObject->setTheta(gotTheta += mouseSpeed * float(Height / 2 - ypos));		//Vertikal
 }
+
+void IOHandler::cursorPos_callback(GLFWwindow* window, int xpos, int ypos){
+	glm::vec3 direction(cos(camObject->getTheta()) * sin(camObject->getPhi()),sin(camObject->getTheta()),cos(camObject->getTheta()) * cos(camObject->getPhi()));
+	//Schauvektor :-)
+
+
+};
 
 void IOHandler::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {

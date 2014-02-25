@@ -32,10 +32,10 @@ void IOManager::cursorPos_callback(GLFWwindow* window, double xpos, double ypos)
 	xPos = xpos;
 	yPos = ypos;
 
-	// @todo call IOHandler cursorPos func
-	// if (currentIOHandler != 0){
-	// 	currentIOHandler->cursorPos_callback(window, xpos, ypos);
-	// }
+	// @todo call IOHandler cursorPos func							CHECK
+	 if (currentIOHandler != 0){
+		currentIOHandler->cursorPos_callback(window, xpos, ypos);
+	 }
 }
 
 void IOManager::mouseButton_callback(GLFWwindow* window, int button, int action, int mods){
