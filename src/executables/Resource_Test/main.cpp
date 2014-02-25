@@ -33,17 +33,17 @@ int main() {
 
 	//load, compile and link simple texture rendering program for a screen filling plane
 
-	Shader *simpleTexShader = new Shader(SHADERS_PATH "/GBuffer_clone/screenFill.vert",
-			SHADERS_PATH "/GBuffer_clone/simpleTexture.frag");
+	Shader *simpleTexShader = new Shader(SHADERS_PATH "/Resource_Test/screenFill.vert",
+			SHADERS_PATH "/Resource_Test/simpleTexture.frag");
 
-	Shader *finalCompShader = new Shader(	SHADERS_PATH "/GBuffer_clone/screenFill.vert",
-			SHADERS_PATH "/GBuffer_clone/finalCompositing.frag");
+	Shader *finalCompShader = new Shader(	SHADERS_PATH "/Resource_Test/screenFill.vert",
+			SHADERS_PATH "/Resource_Test/finalCompositing.frag");
 
-	Shader *gbufferShader = new Shader(		SHADERS_PATH "/GBuffer_clone/GBuffer.vert",
-			SHADERS_PATH "/GBuffer_clone/GBuffer.frag");
+	Shader *gbufferShader = new Shader(		SHADERS_PATH "/Resource_Test/GBuffer.vert",
+			SHADERS_PATH "/Resource_Test/GBuffer.frag");
 
-	Shader *gbuffer_normalMap_Shader = new Shader(		SHADERS_PATH "/GBuffer_clone/GBuffer.vert",
-			SHADERS_PATH "/GBuffer_clone/GBuffer_normalTexture.frag");
+	Shader *gbuffer_normalMap_Shader = new Shader(		SHADERS_PATH "/Resource_Test/GBuffer.vert",
+			SHADERS_PATH "/Resource_Test/GBuffer_normalTexture.frag");
     
 
 	//--------------------------------------------//
@@ -54,21 +54,12 @@ int main() {
 
 	VirtualObjectFactory *voFactory = VirtualObjectFactory::getInstance();
 
-	VirtualObject *object03 = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj");
-	VirtualObject *object02 = voFactory->createVirtualObject(RESOURCES_PATH "/Raumschiff.obj");
-	VirtualObject *object01 = voFactory->createVirtualObject(RESOURCES_PATH "/cube.obj");
+	VirtualObject *object01 = voFactory->createVirtualObject(RESOURCES_PATH "/soda_can1.obj");
+	VirtualObject *object02 = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj");
+	VirtualObject *object03 = voFactory->createVirtualObject(RESOURCES_PATH "/cube.obj");
+    VirtualObject *object04 = voFactory->createVirtualObject(RESOURCES_PATH "/cow.obj");
 
 	GraphicsComponent* triangle = voFactory->getTriangle();
-
-    	std::string satz = "abudabi hallo peter du oller kneter";
-     size_t found01 = satz.find("peter");
-     size_t found02 = satz.find("abudabi");
-     
-     if (found01!=std::string::npos)
-     std::cout << "find01: " << found01 << std::endl ;
-     if (found02!=std::string::npos)
-     std:: cout << "find02: " << found02 << std::endl;
-    
 
 	//--------------------------------------------//
 	//         Create a Framebuffer Object        //
@@ -85,7 +76,7 @@ int main() {
 	fbo->createPositionTexture();
 	fbo->createNormalTexture();
 	fbo->createColorTexture();
-	fbo->createMaterialTexture();
+	fbo->createSpecularTexture();
 
 	//set the list of draw buffers.
 	fbo->makeDrawBuffers();
@@ -102,12 +93,14 @@ int main() {
 
 	rq->addVirtualObject(object01);
 	rq->addVirtualObject(object02);
+    rq->addVirtualObject(object04);
 	rq->addVirtualObject(object03);
+    
 
 
 	rm->setRenderQueue(rq);
 	rm->setCurrentFBO(fbo);
-	rm->setProjectionMatrix(glm::perspective(40.0f, 1.0f, 0.1f, 100.f));
+	rm->setProjectionMatrix(glm::perspective(45.0f, 1.0f, 0.1f, 100.f));
 	rm->setCamera(cam);
 
 	cam->setPosition(glm::vec3(0.0f, 1.0f, -6.0f));
@@ -122,7 +115,7 @@ int main() {
 		glfwGetFramebufferSize(window, &newwidth, &newheight);
 		if(newwidth != width || newheight != height){
 			fbo->resize(newwidth, newheight);
-					rm->setProjectionMatrix(glm::perspective(40.0f, (newwidth * 1.0f) / newheight , 0.1f, 100.f));
+					rm->setProjectionMatrix(glm::perspective(45.0f, (newwidth * 1.0f) / newheight , 0.1f, 100.f));
 			width = newwidth;
 			height = newheight;
 		}
@@ -139,13 +132,16 @@ int main() {
 		mat4 modelMatrix01 = scale(translate(mat4(1.0f), vec3(0.0f, -1.0f, 0.0f)), vec3(2.5f, 0.2f, 2.5f));
 
 		//nice rotation of a small cube
-		mat4 modelMatrix02 = scale(translate(rotate(mat4(1.0f), degrees(angle), vec3(1.0f, 1.0f, 0.0f)), vec3(0.0f, 0.5f, -0.5f)), vec3(0.9f, 0.9f, 0.9f));
+		mat4 modelMatrix02 = scale(translate(rotate(mat4(1.0f), degrees(angle), vec3(1.0f, 1.0f, 0.0f)), vec3(2.0f, 0.8f, -0.5f)), vec3(0.9f, 0.9f, 0.9f));
 
-		mat4 modelMatrix03 = scale(translate(rotate(mat4(1.0f), degrees(angle), vec3(0.0f, 1.0f, 1.0f)), vec3(0.0f, 0.5f, -0.5f)), vec3(0.3f, 0.3f, 0.3f));
+		mat4 modelMatrix03 = scale(translate(rotate(mat4(1.0f), degrees(angle), vec3(0.0f, 1.0f, 1.0f)), vec3(-2.0f, 0.2f, -0.5f)), vec3(0.3f, 0.3f, 0.3f));
+        modelMatrix03=scale(mat4(1.0f), vec3(0.5f,0.5f,0.5f))*modelMatrix03;
+        mat4 modelMatrix04 = scale(translate(rotate(mat4(1.0f), degrees(angle), vec3(1.0f, 0.0f, 1.0f)), vec3(0.7f)),vec3(2.5f));
 
 		object03->setModelMatrix(modelMatrix01);
 		object02->setModelMatrix(modelMatrix02);
 		object01->setModelMatrix(modelMatrix03);
+        object04->setModelMatrix(modelMatrix04);
 
 		//--------------------------------------------//
 		//        Render the scene into the FBO       //
@@ -153,10 +149,7 @@ int main() {
 
 		fbo->bindFBO();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
-		        glViewport(0, 0, width, (height/4)*3);
-
+        glViewport(0, 0, width, (height/4)*3);
 		gbufferShader->useProgram();
 		rm->setCurrentShader(gbufferShader);
 		//----------------------------------------------------------------------------------------//
@@ -201,38 +194,38 @@ int main() {
 
 		finalCompShader->useProgram();
 		rm->setCurrentShader(finalCompShader);
-
-				glViewport(0, 0, width, height);
-
+        
+        glViewport(0, 0, width, height);
+        
 		finalCompShader->uploadAllUniforms();
 		finalCompShader->render(triangle);
-
+        
 		fbo->unbindAllTextures();
-
+        
 		//--------------------------------------------//
 		//       Render small views at the top to     //
 		//      show all the components of the FBO    //
 		//--------------------------------------------//
-
-		        glBindVertexArray(triangle->getMesh()->getVAO());
-		        simpleTexShader->useProgram();
-		        rm->setCurrentShader(simpleTexShader);
-
-		        glViewport(0, (height/4)*3, width/4, height/4);
-		        glBindTexture(GL_TEXTURE_2D, fbo->getPositionTextureHandle());
-		        glDrawArrays(GL_TRIANGLES, 0, 3);
-
-		        glViewport(width/4, (height/4)*3, width/4, height/4);
-		        glBindTexture(GL_TEXTURE_2D, fbo->getNormalTextureHandle());
-		        glDrawArrays(GL_TRIANGLES, 0, 3);
-
-		        glViewport((width/4)*2, (height/4)*3, width/4, height/4);
-		        glBindTexture(GL_TEXTURE_2D, fbo->getColorTextureHandle());
-		        glDrawArrays(GL_TRIANGLES, 0, 3);
-
-		        glViewport((width/4)*3, (height/4)*3, width/4, height/4);
-		        glBindTexture(GL_TEXTURE_2D, fbo->getMaterialTextureHandle());
-		        glDrawArrays(GL_TRIANGLES, 0, 3);
+        
+        glBindVertexArray(triangle->getMesh()->getVAO());
+        simpleTexShader->useProgram();
+        rm->setCurrentShader(simpleTexShader);
+        
+        glViewport(0, (height/4)*3, width/4, height/4);
+        glBindTexture(GL_TEXTURE_2D, fbo->getPositionTextureHandle());
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        
+        glViewport(width/4, (height/4)*3, width/4, height/4);
+        glBindTexture(GL_TEXTURE_2D, fbo->getNormalTextureHandle());
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        
+        glViewport((width/4)*2, (height/4)*3, width/4, height/4);
+        glBindTexture(GL_TEXTURE_2D, fbo->getColorTextureHandle());
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        
+        glViewport((width/4)*3, (height/4)*3, width/4, height/4);
+        glBindTexture(GL_TEXTURE_2D, fbo->getSpecularTextureHandle());
+        glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		//show what's been drawn
 		glfwSwapBuffers(window);

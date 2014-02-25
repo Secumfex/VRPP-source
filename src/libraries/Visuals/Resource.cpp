@@ -26,6 +26,7 @@ Material :: Material(){
 	mName = "";
 	mShininess = 0;
 	mEmissColor = mAmbColor;
+    mTransparency = 0.0f;
 }
 Material :: ~Material(){}
 void Material ::setAmbientMap(Texture* tex){ //ändern
@@ -84,6 +85,9 @@ void Material :: setShininess(GLfloat term){
 void Material :: setReflectivity(GLfloat term){
 	mReflectivity = term;
 }
+void Material:: setTransparency(GLfloat term){
+    mTransparency = term;
+}
 
 Texture* Material ::getAmbientMap(){
 	return mTextures[0];
@@ -117,6 +121,9 @@ glm::vec3 Material ::getEmission(){
 }
 GLfloat Material::getShininess(){
 	return mShininess;
+}
+GLfloat Material::getTransparency(){
+	return mTransparency;
 }
 GLfloat Material::getReflectivity(){
 	return mReflectivity;

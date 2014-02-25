@@ -5,7 +5,9 @@ in vec4 passPosition;
 in vec2 passUVCoord;
 in vec3 passNormal;
 
-uniform vec3 diffuseColor;
+uniform float shininess;
+uniform vec3 specularColor;
+
 
 uniform sampler2D diffuseTexture;
 
@@ -19,5 +21,5 @@ void main(){
     positionOutput = passPosition;
     normalOutput = vec4(normalize(passNormal), 0);
     colorOutput = texture(diffuseTexture, passUVCoord);
-    materialOutput = vec4(diffuseColor, 0.0);
+    materialOutput = vec4(shininess,specularColor);
 }

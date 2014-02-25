@@ -21,7 +21,7 @@ public:
 	void createPositionTexture();
 	void createNormalTexture();
 	void createColorTexture();
-	void createMaterialTexture();
+	void createSpecularTexture();
 	void createShadowMap();
 	void createDepthBuffer();
 
@@ -29,7 +29,7 @@ public:
 	GLuint getPositionTextureHandle();
 	GLuint getNormalTextureHandle();
 	GLuint getColorTextureHandle();
-	GLuint getMaterialTextureHandle();
+	GLuint getSpecularTextureHandle();
 	GLuint getShadowMapHandle();
 	GLuint getDepthBufferHandle();
 
@@ -39,7 +39,7 @@ public:
 	void bindPositionTexture();
 	void bindNormalTexture();
 	void bindColorTexture();
-	void bindMaterialTexture();
+	void bindSpecularTexture();
 	void bindShadowMap();
 	void bindDepthBuffer();
 	void unbindTexture();
@@ -60,7 +60,7 @@ protected:
     GLuint mPositionTextureHandle;
     GLuint mNormalTextureHandle;
     GLuint mColorTextureHandle;
-    GLuint mMaterialTextureHandle;
+    GLuint mSpecularTextureHandle;
     GLuint mShadowMapHandle;
     GLuint mDepthbufferHandle;
 

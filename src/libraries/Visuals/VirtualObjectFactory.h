@@ -13,6 +13,7 @@
 
 #include <Patterns/Singleton.h>
 #include <Visuals/VirtualObject.h>
+#include "MaterialManager.h"
 #include <vector>
 
 #include "assimp/Importer.hpp"
