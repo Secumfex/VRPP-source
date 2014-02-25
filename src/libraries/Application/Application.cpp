@@ -6,6 +6,7 @@
 #include "IO/IOManager.h"
 
 #include "ApplicationListeners.h"
+#include "IO/IOListeners.h"
 //Application starts in the Idle State
 Application::Application(std::string label){
 	initialized = false;
@@ -36,7 +37,8 @@ void Application::initialize(){
 	rm->attachListenerOnWindowShouldClose(new TerminateApplicationListener(this));	//Application will close when Window is closed
 
 	attachListenerOnStateChange(new ActivateStateListener(this));	// a new state will be activated upon being set
-	
+	attachListenerOnBeginningProgramCycle(new ComputeFrameTimeListener());
+
 	if (currentState != 0){
 		currentState->activate();	//activate the current state
 	}

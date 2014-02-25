@@ -55,3 +55,12 @@ void TimedTriggerListener::update(){
 	 	}
 	 }
 }
+
+PrintValueListener::PrintValueListener(float* value, std::string message){
+	this->value = value;
+	this->message = message;
+}
+
+void PrintValueListener::update(){
+	std::cout << message << *value << std::endl;
+}

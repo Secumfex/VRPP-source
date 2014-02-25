@@ -36,6 +36,7 @@ public:
 	IOHandler* getCurrentIOHandler();
 
 	float getDeltaTime();	/**< get time difference with which IOManager is working	*/
+	float* getDeltaTimePointer(); /**< get pointer to delta time variable, use with caution! */
 	float getLastTime ();	/**< get last time on which computeFrameTimeDifference was called */
 
 	void computeFrameTimeDifference();	/**< compute time difference since last call of this method */

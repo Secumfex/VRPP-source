@@ -3,6 +3,7 @@
 #include "Application/ApplicationListeners.h"
 #include "Tools/UtilityListeners.h"
 #include "PlaceHolderListeners.h"
+#include "IO/IOManager.h"
 
 /*
 *	This executable tests various Input/Output related functionalities
@@ -38,6 +39,8 @@ void configureInputHandler(){
 	testingInputHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( testingState->getCamera()), 				GLFW_KEY_UP   );
 	testingInputHandler->attachListenerOnKeyPress(new TurnCameraListener(		 testingState->getCamera(), 0.0f, -0.1f),	GLFW_KEY_DOWN );	// pressing 'down' : turn camera down by 0.1 radiens
 	testingInputHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( testingState->getCamera()), 				GLFW_KEY_DOWN );
+
+	testingInputHandler->attachListenerOnKeyPress(new PrintValueListener( IOManager::getInstance()->getDeltaTimePointer(), "d_t : "), GLFW_KEY_SPACE );
 
 }
 

@@ -8,12 +8,10 @@ IOHandler::IOHandler(){
 	camObject = new Camera();
 	speed_movement = 3.0f; // 3 units / second
 	mouseSpeed = 0.005f;
-	deltaTime = 0.1f;	//default value
-	currentTime = 0.0;
 	xPos = -1;
 	yPos = -1;
 
-//	glfwGetCursorPos(window, &xPos, &yPos);
+	//	glfwGetCursorPos(window, &xPos, &yPos);
 	// Get mouse position
 }
 

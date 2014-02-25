@@ -21,13 +21,6 @@ private:
 
 		glm::mat4 mViewMatrix;	 /**<4*4-Matrix*/
 
-		static double lastTime;		/**<Double for lastTime*/
-		double currentTime;			/**<Double for currentTime*/
-		float deltaTime;			/**<Float for time bewteen lastTime and CurrentTime*/
-
-
-		inline void computeFrameTimeDifference();
-
 		Camera* camObject;
 
 		std	::	stringstream sstream; /**<* mostly used to convert ints to strings */
@@ -41,10 +34,7 @@ public:
 	 * returns current ViewMatrix
 	 */
 	glm::mat4 getViewMatrix();
-	/**\
-	 * Get a DeltaTime and set an orientation for camera witch mouse
-	 */
-	void ComputeIO();
+
 	/**\
 	 * @param window where the callback is used
 	 * @param the keyboard key that was pressed or released

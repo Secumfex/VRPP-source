@@ -103,6 +103,10 @@ float IOManager::getDeltaTime(){
 	return deltaTime;
 }
 
+float* IOManager::getDeltaTimePointer(){
+	return &deltaTime;
+}
+
 float IOManager::getLastTime(){
 	return lastTime;
 }
