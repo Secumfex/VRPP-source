@@ -8,7 +8,7 @@ using namespace std;
 
 /*! @brief PhysicsComponent.
  *
- *	the physic component is one part of an virtual object. it contains all needed parts for the bullet physics simulation.
+ *	the physic component is one part of a virtual object. it contains all needed parts for the bullet physics simulation.
  */
 class PhysicsComponent{
 private:
@@ -17,7 +17,7 @@ private:
 
 	btRigidBody *rigidBody;	/**< bullet rigid body */
 
-	bool hit;	/**< true if it is hit by an other object, else false */
+	bool hit;	/**< true if hit by an other object, else false */
 
 public:
 
