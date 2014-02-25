@@ -57,38 +57,38 @@ void IOHandler::key_callback(GLFWwindow* window, int key, int scancode, int acti
 		glm::vec3 gotPosition = camObject->getPosition();
 
 		// Move forward
-		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
+		if (key == GLFW_KEY_W && action == GLFW_PRESS){
 			camObject->setSpeedForward(speed_movement);
 		}
 
 		// Move backward
-		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS){
+		if (key == GLFW_KEY_S && action == GLFW_PRESS){
 			camObject->setSpeedForward(-speed_movement);
 		}
 
 		// Strafe right
-		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS){
+		if (key == GLFW_KEY_D && action == GLFW_PRESS){
 			camObject->setSpeedRight(speed_movement);
 		}
 
 		// Strafe left
-		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){
+		if (key == GLFW_KEY_A && action == GLFW_PRESS){
 			camObject->setSpeedRight(-speed_movement);
 		}
 
-		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_RELEASE){
+		if (key == GLFW_KEY_W && action == GLFW_RELEASE){
 			camObject->setSpeedForward(0.0);
 		}
 
-		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_RELEASE){
+		if (key == GLFW_KEY_S && action == GLFW_RELEASE){
 			camObject->setSpeedForward(0.0);
 		}
 
-		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_RELEASE){
+		if (key == GLFW_KEY_D && action == GLFW_RELEASE){
 			camObject->setSpeedRight(0.0);
 		}
 
-		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_RELEASE){
+		if (key == GLFW_KEY_A && action == GLFW_RELEASE){
 			camObject->setSpeedRight(0.0);
 		}
 
@@ -96,8 +96,15 @@ void IOHandler::key_callback(GLFWwindow* window, int key, int scancode, int acti
 		if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_PRESS){
 			float currentSpeedRight = camObject->getSpeedRight();
 			float currentSpeedForward = camObject->getSpeedForward();
-			camObject->setSpeedRight(currentSpeedRight*2.0);
-			camObject->setSpeedForward(currentSpeedRight*2.0);
+			camObject->setSpeedRight(  currentSpeedRight*2.0);
+			camObject->setSpeedForward(currentSpeedForward*2.0);
+		}
+		// Fast movement
+		if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_RELEASE){
+			float currentSpeedRight = camObject->getSpeedRight();
+			float currentSpeedForward = camObject->getSpeedForward();
+			camObject->setSpeedRight(  currentSpeedRight / 2.0);
+			camObject->setSpeedForward(currentSpeedForward / 2.0);
 		}
 
 	}
