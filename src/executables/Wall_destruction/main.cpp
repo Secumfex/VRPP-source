@@ -7,15 +7,6 @@
 #include "Physics/UpdatePhysicsComponentListener.h"
 #include "Physics/PhysicWorldSimulationListener.h"
 
-#include <glm/glm.hpp>
-#include <glm/gtc/constants.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtc/matrix_inverse.hpp>
-#include "Tools/ShaderTools.h"
-#include "Tools/TextureTools.h"
-#include "Tools/Geometry.h"
-
 #include "SomeListeners.h" // until missing functionality is added
 
 Application* myApp;
