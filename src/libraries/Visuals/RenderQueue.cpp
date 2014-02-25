@@ -120,6 +120,7 @@ void RenderQueue::sortByAttributes() {
 	list<Shader*>::iterator sh_it = shaderList.begin(); //name totally unintended.
 	list<GraphicsComponent*>::iterator gc_it = gcList.begin();
 	list<Shader*>::iterator shAlt_it = shaderListAlternate.begin();
+	list<Shader*>::iterator shCop_it = shaderListCopy.begin();
 
 	bool isElement = false;
 
@@ -130,9 +131,12 @@ void RenderQueue::sortByAttributes() {
 
 	for (gc_it = gcList.begin(); gc_it != gcList.end(); gc_it++) {
 		cout << "Entering sortByAttributes loop" << endl;
+
+			//create copy of shaderList
 		for (sh_it = shaderList.begin(); sh_it != shaderList.end(); sh_it++) {
 			shaderListCopy.push_back(*sh_it);
 		}
+			//ShaderList 3 more uniforms then shader takes
 		shaderListAlternate.clear();
 
 		for (sh_it = shaderList.begin(); sh_it != shaderList.end(); sh_it++) {
@@ -277,8 +281,15 @@ void RenderQueue::sortByAttributes() {
 //				if(*shAlt_it == *sh_it)
 //					isElement = true;
 //			}
-			if(isElement == false) shaderListCopy.push_back(*sh_it);
+			if(isElement == false)
+				shaderListCopy.push_back(*sh_it);
 			isElement = false;
+		}
+		for (shCop_it = shaderListCopy.begin(); shCop_it != shaderListCopy.end(); shCop_it++) {
+			gc2shaderStorage[*gc_it].push_back(*shCop_it);
+		}
+		for (shAlt_it = shaderListAlternate.begin(); shAlt_it != shaderListAlternate.end(); shAlt_it++) {
+			gc2shaderStorage[*gc_it].push_back(*shAlt_it);
 		}
 
 	}
