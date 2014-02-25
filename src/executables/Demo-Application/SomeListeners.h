@@ -8,8 +8,9 @@
 class AnimateClearColorListener : public Listener{
 private:
 	float t;
+	float* delta_time_source;
 public:
-	AnimateClearColorListener();
+	AnimateClearColorListener(float* delta_time_source = 0);
 	void update();
 };
 

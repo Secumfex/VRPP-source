@@ -5,6 +5,9 @@
 #include "Application/ApplicationListeners.h"
 #include "Tools/UtilityListeners.h"
 #include "Physics/UpdatePhysicsComponentListener.h"
+#include "Physics/PhysicWorldSimulationListener.h"
+
+#include "IO/IOManager.h"
 
 #include "SomeListeners.h" // until missing functionality is added
 
@@ -39,17 +42,27 @@ void configureMyApp(){
 	myVRState->		attachListenerOnAddingVirtualObject(new PrintMessageListener(string("Added a VirtualObject to RenderQueue")));	// console output when virtual object is added
 	myVRState->		attachListenerOnActivation(			new SetClearColorListener(0.44,0.5,0.56));					// custom background color
 	myVRState-> 	attachListenerOnActivation(			new PrintCameraStatusListener( myVRState->getCamera()));
+	myVRState->		attachListenerOnBeginningProgramCycle( 	new PhysicWorldSimulationListener(				IOManager::getInstance()->getDeltaTimePointer()));
+	
+	Camera* cam = myVRState-> getCamera();
+	cam->setPosition(0.0,0.0,5.0);
 
 	/*	load some virtual objects into vr state scene*/
 	VirtualObject* 	myCowObject1 = 		myVRState->			createVirtualObject(RESOURCES_PATH "/cow.obj");	 		// create a Virtual Object by reading an .obj file and add it to VRState automatically
+	myCowObject1->	setPhysicsComponent(0.5,0.5,7.5,0.5,0.5);
 	PhysicsComponent* myCowObject1PhysicsComponent = 		myCowObject1->getPhysicsComponent();					// get PhysicsComponent pointer
-	myVRState->		attachListenerOnBeginningProgramCycle( 	new UpdatePhysicsWorldListener());
 	myVRState->		attachListenerOnBeginningProgramCycle(  new UpdatePhysicsComponentListener(			myCowObject1PhysicsComponent));	// update PhysicsComponent on every program cycle iteration
 	myVRState->		attachListenerOnBeginningProgramCycle(  new UpdateVirtualObjectModelMatrixListener(	myCowObject1));	// update VirtualObject Model Matrix on every program cycle iteration
 
+	VirtualObject* 	myCowObject2 = 		myVRState->			createVirtualObject(RESOURCES_PATH "/cow.obj");	 		// create a Virtual Object by reading an .obj file and add it to VRState automatically
+	myCowObject2->	setPhysicsComponent(0.5,0.75,15.0,0.75,0.5);
+	PhysicsComponent* myCowObject2PhysicsComponent = 		myCowObject2->getPhysicsComponent();					// get PhysicsComponent pointer
+	myVRState->		attachListenerOnBeginningProgramCycle(  new UpdatePhysicsComponentListener(			myCowObject2PhysicsComponent));	// update PhysicsComponent on every program cycle iteration
+	myVRState->		attachListenerOnBeginningProgramCycle(  new UpdateVirtualObjectModelMatrixListener(	myCowObject2));	// update VirtualObject Model Matrix on every program cycle iteration
+
 	VirtualObject* 	myCubeObject1 = 	VirtualObjectFactory::getInstance()->createVirtualObject(RESOURCES_PATH "/cube.obj");	// create a Virtual Object by using the VirtualObject-Factory and add it to VRState manually
+	myCubeObject1-> setPhysicsComponent(glm::vec3(-5.0,0.0,-5.0), glm::vec3(5.0,0.1,5.0));
 	myVRState->		addVirtualObject(	myCubeObject1);		// add to VRState manually
-	VirtualObject* 	myCubeObject2 = 	myVRState->	createVirtualObject(RESOURCES_PATH "/cube.obj");	// create another Virtual Object from the same geometry 
 
 	IOHandler* myVRStateIOHandler = myVRState-> getIOHandler();
 	// attach some listeners to keyboard key presses
@@ -63,14 +76,6 @@ void configureMyApp(){
 	myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myVRState->getCamera()), 								GLFW_KEY_RIGHT);	
 	myVRStateIOHandler->attachListenerOnKeyPress(new SetCameraDirectionListener(myVRState->getCamera(), glm::vec3(0.0f,0.0f,-1.0f)), 	GLFW_KEY_UP);		// pressing '<-' : view direction straight ahead
 	myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myVRState->getCamera()), 								GLFW_KEY_UP);
-
-	/*	customize virtual objects*/
-	glm::mat4		myModelMatrix1 = 	glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.0f, 0.0f)), glm::vec3(2.5f, 0.2f, 2.5f));	//floor
-	myCubeObject1-> setModelMatrix(		myModelMatrix1); 	// override default Model Matrix
-	
-	glm::mat4 myModelMatrix2 = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -2.5f)), glm::vec3(2.5f, 2.5f, 0.2f));	// wall
-	myCubeObject2-> setModelMatrix(		myModelMatrix2);	// override default Model Matrix
-
 
 	/*	further customize application functionality by adding various listeners */
 	myApp->attachListenerOnProgramInitialization(	new PrintMessageListener(		string("Application is booting")));

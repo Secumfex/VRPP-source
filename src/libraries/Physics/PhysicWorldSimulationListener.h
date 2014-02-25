@@ -6,14 +6,15 @@
 class PhysicWorld;
 
 class PhysicWorldSimulationListener : public Listener {
-
+private:
+	float* delta_time_source;
 public:
 
 	/** \brief listener
 	 *
 	 * currently not used
 	 */
-	PhysicWorldSimulationListener();
+	PhysicWorldSimulationListener(float* delta_time_source = 0);
 
 	/** \brief update
 	 *

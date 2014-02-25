@@ -2,7 +2,13 @@
 
 #include <iostream>
 
-AnimateClearColorListener::AnimateClearColorListener(){
+AnimateClearColorListener::AnimateClearColorListener(float* delta_time_source){
+	if(delta_time_source != 0){
+		this->delta_time_source == delta_time_source;
+	}
+	else{
+		this->delta_time_source = 0;
+	}
 	t = 0.0;
 }
 
@@ -11,7 +17,12 @@ void AnimateClearColorListener::update(){
 		float g = std::sin(2.0*t+0.3) * 0.5;
 		float b = std::sin(3.0*t+0.7) * 0.5;
 		glClearColor(r,g,b,1.0);
-		t+= 0.0001;
+		if (delta_time_source != 0){
+			t+= *delta_time_source;
+		}
+		else{
+			t+= 0.0001;
+		}
 	}
 
 AlternativeRenderloopListener::AlternativeRenderloopListener(){ 
