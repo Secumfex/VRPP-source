@@ -38,7 +38,7 @@ PhysicsComponent::PhysicsComponent(glm::vec3 min, glm::vec3 max) {
 	hit = false;
 
 	rigidBody = addBox(width, height, depth, x, y, z, mass);
-	addCollisionFlag(4);
+	addCollisionFlag(4);	//momentan noch fest, muesste eig auch zusaetzlicher input wert sein
 	update();
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
@@ -57,6 +57,15 @@ PhysicsComponent::PhysicsComponent(float width, float height, float depth, float
 
 	hit = false;
 	rigidBody = addBox(width,height,depth,x,y,z,mass);
+	addCollisionFlag(4);
+	update();
+	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
+}
+
+PhysicsComponent::PhysicsComponent(float x, float y, float z, btVector3 normal, float mass){	//todo: change the type of normal
+
+	hit = false;
+	rigidBody = addPlane(x,y,z,normal,mass);
 	addCollisionFlag(4);
 	update();
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
@@ -114,6 +123,22 @@ btRigidBody* PhysicsComponent::addSphere(float radius, float x, float y, float z
 
 	btMotionState* motion = new btDefaultMotionState(t);
 	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,sphere);
+	btRigidBody* body = new btRigidBody(info);
+
+	return body;
+}
+
+btRigidBody* PhysicsComponent::addPlane(float x, float y, float z, btVector3 normal, float mass){
+
+	btTransform t;
+	t.setIdentity();
+	t.setOrigin(btVector3(x,y,z));
+	//btVector3 normal = btVector3(u,v,w);
+
+	btStaticPlaneShape* plane = new btStaticPlaneShape(normal,0);
+
+	btMotionState* motion = new btDefaultMotionState(t);
+	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,plane);
 	btRigidBody* body = new btRigidBody(info);
 
 	return body;
@@ -190,6 +215,16 @@ void PhysicsComponent::update(){
 		t.getOpenGLMatrix(mat);
 
 		this-> modelMatrix = glm::make_mat4(mat);
+	}
+	if(body->getCollisionShape()->getShapeType() == STATIC_PLANE_PROXYTYPE) {
+
+		btTransform t;
+		body->getMotionState()->getWorldTransform(t);
+		float mat[16];
+		t.getOpenGLMatrix(mat);
+
+		this->modelMatrix = glm::make_mat4(mat);
+
 	}
 	else {
 		return;

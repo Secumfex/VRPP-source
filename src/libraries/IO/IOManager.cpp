@@ -2,7 +2,10 @@
 	 * @author Sanèr, Oliver
 	 */
 
+#include <glm/glm.hpp>
 #include "IOManager.h"
+#include "Physics/PhysicWorld.h"
+#include "Visuals/RenderManager.h"
 
 void IOManager::bindCallbackFuncs(){
 	if (window != 0){
@@ -40,6 +43,20 @@ void IOManager::mouseButton_callback(GLFWwindow* window, int button, int action,
 	// if (currentIOHandler != 0){
 	// 	currentIOHandler->mouseButton_callback(window, xpos, ypos);
 	// }
+
+	//if left button clicked do ray-picking
+	if(button == 0 && action == GLFW_PRESS && currentIOHandler != 0){	//GLFW_MOUSE_BUTTON_1 = 0 (?)
+
+		glm::vec3 outOrigin;
+		glm::vec3 outDirection;
+		glm::mat4 projectionMatrix = RenderManager::getInstance()->getProjectionMatrix();
+		glm::mat4 viewMatrix = currentIOHandler->getCameraObject()->getViewMatrix();
+		PhysicWorld::getInstance()->ScreenPosToWorldRay(xPos,yPos,WIDTH,HEIGHT,viewMatrix,projectionMatrix,outOrigin,outDirection);
+		return;
+	}
+	else{
+		return;
+	}
 }
 
 void IOManager::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
