@@ -156,3 +156,15 @@ SetCameraDirectionListener::SetCameraDirectionListener(Camera* cam, glm::vec3 di
 void SetCameraDirectionListener::update(){
 	cam->setDirection(direction);
 }
+TurnCameraListener::TurnCameraListener(Camera* cam, float phi, float theta){
+	this->cam 	= cam;
+	this->theta = theta;
+	this->phi 	= phi;
+}
+void TurnCameraListener::update(){
+	float old_phi   = cam->getPhi();
+	float old_theta = cam->getTheta();
+
+	cam->setPhi(  old_phi   + phi);
+	cam->setTheta(old_theta + theta);
+}

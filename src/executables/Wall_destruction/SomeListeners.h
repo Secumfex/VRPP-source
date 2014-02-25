@@ -103,3 +103,14 @@ public:
 	SetCameraDirectionListener(Camera* cam, glm::vec3 direction);
 	void update();
 };
+
+//Listener which turns the LookAt-Position of the given Camera Object
+class TurnCameraListener : public Listener {
+private:
+	Camera* 	cam;
+	float theta; // inlcination step
+	float phi;   // rotation step
+public:
+	TurnCameraListener(Camera* cam, float phi, float theta);
+	void update();
+};
