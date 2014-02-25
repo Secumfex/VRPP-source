@@ -32,6 +32,7 @@ int main() {
 	glewExperimental= GL_TRUE;
 #endif
 <<<<<<< HEAD
+<<<<<<< HEAD
     
     GLFWwindow* window = glfwCreateWindow(800, 800, "Compositing", NULL, NULL);
     glfwMakeContextCurrent(window);
@@ -201,6 +202,8 @@ VirtualObject *cube = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj
             cube->getGraphicsComponent()[i]->getMaterial()->getDiffuseMap()->bindTexture();
             gbufferShader->render(cube->getGraphicsComponent()[i]);
 =======
+=======
+>>>>>>> origin/Resource3.0_ira
 
 	GLFWwindow* window = glfwCreateWindow(800, 800, "Compositing", NULL, NULL);
 	glfwMakeContextCurrent(window);
@@ -314,6 +317,7 @@ VirtualObject *cube = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj
 			//		rm->setProjectionMatrix(glm::perspective(40.0f, (newwidth * 1.0f) / newheight , 0.1f, 100.f));
 			width = newwidth;
 			height = newheight;
+<<<<<<< HEAD
 		}
 
 		using namespace glm;
@@ -377,6 +381,70 @@ VirtualObject *cube = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj
 >>>>>>> origin/Resource3.0_ira
 		}
 
+=======
+		}
+
+		using namespace glm;
+
+		glEnable(GL_DEPTH_TEST);
+
+		//rotation angle
+		angle = fmod((float)(angle+rotationSpeed*glfwGetTime()), (float)(pi<float>()*2.0f));
+		glfwSetTime(0.0);
+
+		//scale a cube into a flat plane
+		mat4 modelMatrix01 = scale(translate(mat4(1.0f), vec3(0.0f, -1.0f, 0.0f)), vec3(2.5f, 0.2f, 2.5f));
+
+		//nice rotation of a small cube
+		mat4 modelMatrix02 = scale(translate(rotate(mat4(1.0f), degrees(angle), vec3(1.0f, 1.0f, 0.0f)), vec3(0.0f, 0.5f, -0.5f)), vec3(0.9f, 0.9f, 0.9f));
+
+		mat4 modelMatrix03 = scale(translate(rotate(mat4(1.0f), degrees(angle), vec3(0.0f, 1.0f, 1.0f)), vec3(0.0f, 0.5f, -0.5f)), vec3(0.3f, 0.3f, 0.3f));
+
+		object01->setModelMatrix(modelMatrix01);
+		object02->setModelMatrix(modelMatrix02);
+		object03->setModelMatrix(modelMatrix03);
+
+		//--------------------------------------------//
+		//        Render the scene into the FBO       //
+		//--------------------------------------------//
+
+		fbo->bindFBO();
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+		        glViewport(0, 0, width, (height/4)*3);
+
+		gbufferShader->useProgram();
+		rm->setCurrentShader(gbufferShader);
+		//----------------------------------------------------------------------------------------//
+		//        This is da Main-Renderloop. Hier werden alle GC für den GBuffer gerendert       //
+		//----------------------------------------------------------------------------------------//
+
+		list<VirtualObject*> vo_list = rm->getRenderQueue()->getVirtualObjectList();
+		unsigned int i= 0;
+		while (!vo_list.empty()) {
+			unsigned int j= 0;
+			VirtualObject* vo_temp = vo_list.front();
+			vo_list.pop_front();
+			for (j = 0; j < vo_temp->getGraphicsComponent().size(); ++j) {
+				GraphicsComponent *gc_temp = vo_temp->getGraphicsComponent()[j];
+				rm->setCurrentGC(gc_temp);
+
+				if(gc_temp->getMaterial()->hasNormalMap()){
+					gbuffer_normalMap_Shader->useProgram();
+					rm->setCurrentShader(gbuffer_normalMap_Shader);
+					gbuffer_normalMap_Shader->uploadAllUniforms();
+				}else{
+					gbufferShader->useProgram();
+					rm->setCurrentShader(gbufferShader);
+					gbufferShader->uploadAllUniforms();
+				}
+
+				gbufferShader->render(gc_temp);
+			}
+		}
+
+>>>>>>> origin/Resource3.0_ira
 		fbo->unbindFBO();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glDisable(GL_DEPTH_TEST);

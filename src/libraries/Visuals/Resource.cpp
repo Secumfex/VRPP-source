@@ -22,7 +22,10 @@ Material :: Material(){
 	mTextures.push_back(tex);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/Resource3.0_ira
 	mAmbColor = glm::vec3(1,1,1);
 	mDiffColor = glm::vec3(1,1,1);
 	mName = "";
@@ -31,6 +34,9 @@ Material :: Material(){
     mTransparency = 0.0f;
 }
 Material :: ~Material(){}
+<<<<<<< HEAD
+>>>>>>> origin/Resource3.0_ira
+=======
 >>>>>>> origin/Resource3.0_ira
 void Material ::setAmbientMap(Texture* tex){ //ändern
 	mTextures[0] = tex;
@@ -67,8 +73,11 @@ void Material ::setLightMap(Texture* tex){
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> origin/Resource3.0_ira
 =======
 >>>>>>> origin/Resource3.0_ira
 
@@ -116,7 +125,10 @@ Texture* Material ::getOpacityMap(){
 	return mTextures[5];
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/Resource3.0_ira
 glm::vec3 Material ::getAmbient(){
 	return mAmbColor;
 }
@@ -138,6 +150,9 @@ GLfloat Material::getTransparency(){
 GLfloat Material::getReflectivity(){
 	return mReflectivity;
 }
+<<<<<<< HEAD
+>>>>>>> origin/Resource3.0_ira
+=======
 >>>>>>> origin/Resource3.0_ira
 Texture* Material ::getSpecularMap(){
 	return mTextures[6];
@@ -155,7 +170,10 @@ Texture* Material ::getLightMap(){
 	return mTextures[10];
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/Resource3.0_ira
 
 std::string Material::getName(){
 	return mName;
@@ -166,6 +184,9 @@ Texture *tex = new Texture();
 return getNormalMap()->getTextureHandle() != tex->getTextureHandle();
 
 }
+<<<<<<< HEAD
+>>>>>>> origin/Resource3.0_ira
+=======
 >>>>>>> origin/Resource3.0_ira
 
 //---------------MESH SCOPE--------------------
