@@ -68,8 +68,6 @@ public:
 	Texture* getNormalMap();
 	Texture* getHeightMap();
 	Texture* getOpacityMap();
-<<<<<<< HEAD
-<<<<<<< HEAD
 
 	Texture* getSpecularMap();
 	Texture* getReflectionMap();
@@ -81,10 +79,7 @@ public:
 	glm::vec3* getDiffuse();
 	glm::vec3* getSpecular();
 	GLfloat getSpecularTerm();
-=======
->>>>>>> origin/Resource3.0_ira
-=======
->>>>>>> origin/Resource3.0_ira
+
 
 	Texture* getSpecularMap();
 	Texture* getReflectionMap();
