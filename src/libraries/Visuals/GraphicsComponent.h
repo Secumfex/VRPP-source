@@ -37,6 +37,7 @@ public:
 	glm::vec3 getBoundingBox_Min();
 	glm::vec3 getBoundingBox_Max();
 
+
 	GraphicsComponent();		//!< default constructor without parameters
 
 	GraphicsComponent(Mesh* mesh, Material* material);
