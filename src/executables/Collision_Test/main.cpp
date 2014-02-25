@@ -265,7 +265,7 @@ void initScene(){
 
 	test1->setPhysicsComponent(width1, height1, depth1, x1, y1, z1, 0.3);
 	test2->setPhysicsComponent(width2, height2, depth2, x2, 100.0+y2, z1, 1.0);
-	testSphere->setPhysicsComponent(radius, x4, 150.0+y4, z4, mass);
+	testSphere->setPhysicsComponent(radius, x4-1.0, 150.0+y4, z4, mass);
 	testPlane->setPhysicsComponent(width3, height3, depth3, x3, y3, z3, 0.0);
 
 	cout << "hit1: " << test1->physicsComponent->getHit() << endl;
