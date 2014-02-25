@@ -130,7 +130,7 @@ int main() {
 
 	rm->setRenderQueue(rq);
 	rm->setCurrentFBO(fbo);
-	rm->setProjectionMatrix(glm::perspective(40.0f, 1.0f, 0.1f, 100.f));
+	rm->setProjectionMatrix(40.0f, 1.0f, 0.1f, 100.f);
 	rm->setCamera(cam);
 
 	cam->setPosition(glm::vec3(0.0f, 1.0f, -6.0f));

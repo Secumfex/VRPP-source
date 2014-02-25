@@ -49,7 +49,7 @@ void ApplicationState::activate(){
 void ApplicationState::bindObjects(){
 	RenderManager* rm = RenderManager::getInstance();
 	
-	rm->setProjectionMatrix(projectionMatrix);
+	rm->setProjectionMatrix(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
 	rm->setRenderQueue(renderQueue);
 	rm->setCamera(camera);
 
