@@ -133,6 +133,7 @@ std::string Material::getName(){
 	return mName;
 }
 
+
 bool Material::hasNormalTexture(){
 Texture *tex = new Texture();
 return getNormalMap()->getTextureHandle() != tex->getTextureHandle();
@@ -176,6 +177,7 @@ return getDisplacementMap()->getTextureHandle() != tex->getTextureHandle();
 bool Material::hasLightTexture(){
 Texture *tex = new Texture();
 return getLightMap()->getTextureHandle() != tex->getTextureHandle();
+
 }
 
 //---------------MESH SCOPE--------------------
@@ -217,4 +219,16 @@ void Mesh::setNumIndices (int indices){
 
 int Mesh::getNumIndices(){
 	return mNumIndices;
+}
+
+void Mesh::setVertexPosition(std::vector<glm::vec3> position){
+	mVertexPositions = position;
+}
+
+void Mesh::addBoneWeight(GLuint boneweight){
+	mBoneWeights.push_back(boneweight);
+}
+std::vector<glm::vec3> Mesh::getVertices(){
+
+	return mVertexPositions;
 }

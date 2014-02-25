@@ -138,9 +138,21 @@ PrintCameraStatusListener :: PrintCameraStatusListener(Camera* cam){
 }
 
 void PrintCameraStatusListener::update(){
-	glm::vec3 pos = cam->getPosition();
-	glm::vec3 dir = cam->getViewDirection();
+	glm::vec3 pos 	= cam->getPosition();
+	glm::vec3 dir 	= cam->getViewDirection();
+	float phi 		= cam->getPhi();
+	float theta		= cam->getTheta();
 
 	std::cout << "Cam pos : " << pos.x << " , " << pos.y << " , " << pos.z << std::endl;
 	std::cout << "Cam dir : " << dir.x << " , " << dir.y << " , " << dir.z << std::endl;
+	std::cout << "rotation phi : " << phi   << " , pitch theta : " 		  << theta << std::endl;
+}
+
+SetCameraDirectionListener::SetCameraDirectionListener(Camera* cam, glm::vec3 direction){
+	this->cam = cam;
+	this->direction = direction;
+}
+
+void SetCameraDirectionListener::update(){
+	cam->setDirection(direction);
 }

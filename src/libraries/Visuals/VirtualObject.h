@@ -47,10 +47,17 @@ public:
 	
 	/** \brief
 	*
-	* 	@todo detailed description
+	* adds a GraphicComponent to the VOs graphic component vector "mGraphComponent"
+	* @param graphcomp GraphicComponent pointer
+	* @return void
 	*/
 	void addGraphicsComponent(GraphicsComponent *graphcomp);
 
+	/** \brief getter
+	*
+	* return the current graphic component vector
+	* @return the VOs graphic component vector "mGraphComponent"
+	*/
 	vector<GraphicsComponent*> getGraphicsComponent();
 
 	vector<GraphicsComponent*> getGraphicsComponent(std::string tag);
@@ -63,37 +70,63 @@ public:
 
 	/** \brief sets PhysicsComponent
 	 *
-	 * creates PhysicComponent with given modelmatrix
+	 * creates PhysicComponent with given modelMatrix
+	 * @param modelMatrix 4x4-matrix
+	 * @return void
 	 */
 	void setPhysicsComponent(glm::mat4 modelMatrix);
 
 	/** \brief sets PhysicsComponent
 	 *
-	 * creates PhysicComponent (box shaped rigid Body)
-	 * @param modelmatrix given modelmatrix of VO
+	 * creates PhysicComponent with box shaped rigid Body
+	 * @param min,max smallest and largest x, y, z values of a given model
+	 * @return void
 	 */
 	void setPhysicsComponent(glm::vec3 min, glm::vec3 max);
 
 	/** \brief sets PhysicsComponent
 	 *
-	 * creates PhysicComponent (sphere shaped rigid Body)
+	 * creates PhysicComponent with sphere shaped rigid Body
 	 * @param radius dimension of the sphere
 	 * @param x,y,z origin position in physics world
-	 * @mass defines the behavior of the rigid body in the physics world
+	 * @param mass defines the behavior of the rigid body in the physics world
+	 * @return void
 	 */
 	void setPhysicsComponent(float radius, float x, float y, float z, float mass);
 
 	/** \brief sets PhysicsComponent
 	 *
-	 * creates PhysicComponent (box shaped rigid Body)
+	 * creates PhysicComponent with box shaped rigid Body
 	 * @param width,height,depth dimension of the box
 	 * @param x,y,z origin position in physics world
-	 * @mass defines the behavior of the rigid body in the physics world
+	 * @param mass defines the behavior of the rigid body in the physics world
+	 * @return void
 	 */
-	void setPhysicsComponent(float width, float height, float depth, float x, float y, float z, float mass);			//TODO: Dokumentation
+	void setPhysicsComponent(float width, float height, float depth, float x, float y, float z, float mass);
 
+	/** \brief sets PhysicsComponent
+	 *
+	 * creates PhysicComponent with plane shaped rigid Body
+ 	 * @param x,y,z origin position in physics world
+ 	 * @param normal normal vector of the plane
+ 	 * @param mass defines the behavior of the rigid body in the physics world
+ 	 * @return void
+	 */
+	void setPhysicComponent(float x, float y, float z, btVector3 normal, float mass);	//todo: change the type of normal
+
+	/** \brief getter
+	 *
+	 * returns current modelMatrix
+	 * @return glm::mat4 4x4-matrix
+	 */
 	glm::mat4 getModelMatrix();
 
+	/** \brief setter
+	 *
+	 * sets a given matrix as the VOs modelMatrix
+	 * @param modelmatrix 4x4-matrix
+	 * @return void
+	 */
 	void setModelMatrix(glm::mat4 modelmatrix);
 
 	PhysicsComponent *physicsComponent; 			/**< pointer to the physics component of the VO */

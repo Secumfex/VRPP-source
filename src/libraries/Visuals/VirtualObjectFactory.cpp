@@ -225,39 +225,33 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 
 		if (mesh->HasTextureCoords(0))
 			for (unsigned int k = 0; k < mesh->mNumVertices; ++k) {
-				if(aabbMax.x < mesh->mVertices[k].x)
-					aabbMax.x = mesh->mVertices[k].x;
-				if(aabbMax.y < mesh->mVertices[k].y)
-					aabbMax.y = mesh->mVertices[k].y;
-				if(aabbMax.z < mesh->mVertices[k].z)
-					aabbMax.z = mesh->mVertices[k].z;
-				if(aabbMin.x > mesh->mVertices[k].x)
-					aabbMin.x = mesh->mVertices[k].x;
-				if(aabbMin.y > mesh->mVertices[k].y)
-					aabbMin.y = mesh->mVertices[k].y;
-				if(aabbMin.z > mesh->mVertices[k].z)
-					aabbMin.z = mesh->mVertices[k].z;
 				texCoords.push_back(mesh->mTextureCoords[0][k].x);
 				texCoords.push_back(mesh->mTextureCoords[0][k].y);
 			}else
 				for(unsigned int k = 0; k < mesh->mNumVertices; ++k){
-					if(aabbMax.x < mesh->mVertices[k].x)
-						aabbMax.x = mesh->mVertices[k].x;
-					if(aabbMax.y < mesh->mVertices[k].y)
-						aabbMax.y = mesh->mVertices[k].y;
-					if(aabbMax.z < mesh->mVertices[k].z)
-						aabbMax.z = mesh->mVertices[k].z;
-					if(aabbMin.x > mesh->mVertices[k].x)
-						aabbMin.x = mesh->mVertices[k].x;
-					if(aabbMin.y > mesh->mVertices[k].y)
-						aabbMin.y = mesh->mVertices[k].y;
-					if(aabbMin.z > mesh->mVertices[k].z)
-						aabbMin.z = mesh->mVertices[k].z;
-
 					texCoords.push_back(k * uv_steps);
 					texCoords.push_back(k * uv_steps);
 
 				}
+		std::vector<glm::vec3> vertexPositions;
+		for(unsigned int k = 0; k < mesh->mNumVertices; ++k){
+			if(aabbMax.x < mesh->mVertices[k].x)
+				aabbMax.x = mesh->mVertices[k].x;
+			if(aabbMax.y < mesh->mVertices[k].y)
+				aabbMax.y = mesh->mVertices[k].y;
+			if(aabbMax.z < mesh->mVertices[k].z)
+				aabbMax.z = mesh->mVertices[k].z;
+			if(aabbMin.x > mesh->mVertices[k].x)
+				aabbMin.x = mesh->mVertices[k].x;
+			if(aabbMin.y > mesh->mVertices[k].y)
+				aabbMin.y = mesh->mVertices[k].y;
+			if(aabbMin.z > mesh->mVertices[k].z)
+				aabbMin.z = mesh->mVertices[k].z;
+
+			vertexPositions.push_back(glm::vec3(mesh->mVertices[k].x, mesh->mVertices[k].y, mesh->mVertices[k].z));
+		}
+		aMesh->setVertexPosition(vertexPositions);
+
 
 		glGenBuffers(1, &buffer);
 		glBindBuffer(GL_ARRAY_BUFFER, buffer);

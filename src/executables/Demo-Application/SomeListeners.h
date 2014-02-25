@@ -29,7 +29,7 @@ public:
 	void update();
 };
 
-/// Listener which sets the Phont_Test Shader as the RenderManagers current Shader
+/// Listener which sets the Phong_Test Shader as the RenderManagers current Shader
 class SetAlternativeDefaultRenderManagerPointersListener : public Listener{
 private:
 	RenderManager* rm;
@@ -91,5 +91,15 @@ private:
 	Camera* cam;
 public:
 	PrintCameraStatusListener(Camera* cam);
+	void update();
+};
+
+// Listener which sets the direction of the given Camera Object
+class SetCameraDirectionListener : public Listener {
+private:
+	Camera* 	cam;
+	glm::vec3 	direction;
+public:
+	SetCameraDirectionListener(Camera* cam, glm::vec3 direction);
 	void update();
 };

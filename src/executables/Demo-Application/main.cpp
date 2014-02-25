@@ -12,35 +12,33 @@ Application* myApp;
 	/*How to build your own custom Application*/
 void configureMyApp(){
 	/*	customize application a little bit*/
-	myApp = 		Application::getInstance();	//create an Application labled PROJEKT PRAKTIKUM
+	myApp = 		Application::getInstance();	//create an Application labeled PROJEKT PRAKTIKUM
 	myApp->			setLabel("PROJEKT PRAKTIKUM");
 
 
 
 	/*   create some states to work with */	
-	MenuState* myMenu = 		new MenuState("MAINMENU");	//create a MenuState labled MAINMENU
+	MenuState* myMenu = 		new MenuState("MAINMENU");	//create a MenuState labeled MAINMENU
 	/*
-		Button* myButton = new Button("START_BUTTON");	//create a Button labled START_BUTTON
+		Button* myButton = new Button("START_BUTTON");	//create a Button labeled START_BUTTON
 		myButton->addListenerOnButtonPress(new SetStateListener(myApp, "LOADING_SCREEN")); //add a state changing listener to be notified upon a button press
 		myMenu->addButton(myButton);	//add Button to Main Menu
 	*/
 
 
 	/*	customize myLoadingScreen */
-	MenuState* myLoadingMenu = 	new MenuState("LOADING_SCREEN");	// create a MenuState labled LOADING_SCREEN
+	MenuState* myLoadingMenu = 	new MenuState("LOADING_SCREEN");	// create a MenuState labeled LOADING_SCREEN
 	
 	VirtualObject* myLoadingBarrel = 	myLoadingMenu->		createVirtualObject(RESOURCES_PATH "/barrel.obj"); 		// create and add virtual object to loading menu state
 	myLoadingBarrel->setModelMatrix(	glm::scale(			glm::mat4(1.0f), glm::vec3(1.0,0.125,1.0)));
 	myLoadingMenu->	attachListenerOnBeginningProgramCycle(	new AnimateSinusModelMatrixListener(myLoadingBarrel));	// animated loading barrel
 	myLoadingMenu->	attachListenerOnBeginningProgramCycle(	new AnimateClearColorListener());						// animated pseudo Loading_screen
 
-	/*	cutomize myVRState*/
-	VRState* myVRState = 	new VRState("VRSTATE"); // create a VRState labled VRSTATE
+	/*	customize myVRState*/
+	VRState* myVRState = 	new VRState("VRSTATE"); // create a VRState labeled VRSTATE
 	myVRState->		attachListenerOnAddingVirtualObject(new PrintMessageListener(string("Added a VirtualObject to RenderQueue")));	// console output when virtual object is added
 	myVRState->		attachListenerOnActivation(			new SetClearColorListener(0.44,0.5,0.56));					// custom background color
-
-	myVRState-> 	attachListenerOnActivation(			new PrintCameraStatusListener(myVRState->getCamera()));
-
+	myVRState-> 	attachListenerOnActivation(			new PrintCameraStatusListener( myVRState->getCamera()));
 
 	/*	load some virtual objects into vr state scene*/
 	VirtualObject* 	myCowObject1 = 		myVRState->			createVirtualObject(RESOURCES_PATH "/cow.obj");	 		// create a Virtual Object by reading an .obj file and add it to VRState automatically
@@ -52,6 +50,19 @@ void configureMyApp(){
 	VirtualObject* 	myCubeObject1 = 	VirtualObjectFactory::getInstance()->createVirtualObject(RESOURCES_PATH "/cube.obj");	// create a Virtual Object by using the VirtualObject-Factory and add it to VRState manually
 	myVRState->		addVirtualObject(	myCubeObject1);		// add to VRState manually
 	VirtualObject* 	myCubeObject2 = 	myVRState->	createVirtualObject(RESOURCES_PATH "/cube.obj");	// create another Virtual Object from the same geometry 
+
+	IOHandler* myVRStateIOHandler = myVRState-> getIOHandler();
+	// attach some listeners to keyboard key presses
+	myVRStateIOHandler->attachListenerOnKeyPress(new TerminateApplicationListener(myApp), 	GLFW_KEY_ESCAPE);	// Terminate Application by pressing Escape
+	myVRStateIOHandler->attachListenerOnKeyPress(new SetClearColorListener(0.0,0.0,0.0),	GLFW_KEY_1);		// pressing '1' : black background
+	myVRStateIOHandler->attachListenerOnKeyPress(new SetClearColorListener(1.0,1.0,1.0), 	GLFW_KEY_2);		// pressing '2' : white background
+	myVRStateIOHandler->attachListenerOnKeyPress(new SetClearColorListener(0.44,0.5,0.56), 	GLFW_KEY_3);		// pressing '3' : default greyish-blue background
+	myVRStateIOHandler->attachListenerOnKeyPress(new SetCameraDirectionListener(myVRState->getCamera(), glm::vec3(-1.0f,0.0f,-1.0f)), 	GLFW_KEY_LEFT);		// pressing '<-' : view direction at an angle to the left
+	myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myVRState->getCamera()), 								GLFW_KEY_LEFT);
+	myVRStateIOHandler->attachListenerOnKeyPress(new SetCameraDirectionListener(myVRState->getCamera(), glm::vec3(1.0f,0.0f,-1.0f)), 	GLFW_KEY_RIGHT);	// pressing '->' : view direction at an angle to the right
+	myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myVRState->getCamera()), 								GLFW_KEY_RIGHT);	
+	myVRStateIOHandler->attachListenerOnKeyPress(new SetCameraDirectionListener(myVRState->getCamera(), glm::vec3(0.0f,0.0f,-1.0f)), 	GLFW_KEY_UP);		// pressing '<-' : view direction straight ahead
+	myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myVRState->getCamera()), 								GLFW_KEY_UP);
 
 	/*	customize virtual objects*/
 	glm::mat4		myModelMatrix1 = 	glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.0f, 0.0f)), glm::vec3(2.5f, 0.2f, 2.5f));	//floor
@@ -74,14 +85,13 @@ void configureMyApp(){
 	// attach a listener which serves as renderloop by using the rendermanagers current RenderQueue and Shader
 	myApp->attachListenerOnRenderManagerFrameLoop(	new AlternativeRenderloopListener());
 
-	
 
 	/*	add customized states to application state pool*/
 	myApp->addState(	myMenu);		//add the Main Menu to Application
 	myApp->addState(	myLoadingMenu);	//add the Loading Screen to Application
 	myApp->addState(	myVRState);		//add the VR State to Application
 
-	myApp->setState(	"MAINMENU"); 	//set initial state to the state labled MAINMENU
+	myApp->setState(	"MAINMENU"); 	//set initial state to the state labeled MAINMENU
 }
 
 int main() {

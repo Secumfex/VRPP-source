@@ -5,10 +5,13 @@
 #include <GLFW/glfw3.h>
 
 #include <glm/glm.hpp>
+#include <sstream>
+
 #include "Patterns\Singleton.h"
 #include "IO\IOHandler.h"
+#include "Patterns/Subject.h"
 
-class IOManager : public Singleton<IOManager>{
+class IOManager : public Singleton<IOManager>, Subject{
 	friend class Singleton<IOManager>;
 
 private:
@@ -21,6 +24,8 @@ private:
 
 	IOHandler* currentIOHandler; /**<* active IOHandler Object */
 
+	std	::	stringstream sstream; /**<* mostly used to convert ints to strings */
+
 	IOManager();
 public:
 	void setWindow(GLFWwindow* window);
@@ -31,6 +36,7 @@ public:
 	IOHandler* getCurrentIOHandler();
 
 	float getDeltaTime();	/**< get time difference with which IOManager is working	*/
+	float* getDeltaTimePointer(); /**< get pointer to delta time variable, use with caution! */
 	float getLastTime ();	/**< get last time on which computeFrameTimeDifference was called */
 
 	void computeFrameTimeDifference();	/**< compute time difference since last call of this method */
@@ -60,6 +66,10 @@ public:
 
 	/// register callback methods by binding the static callback methods
 	void bindCallbackFuncs();
+
+
+	void notify(int key);	//!< notify Listeners attached to a key pess by using the GLFW integer definitions for keys
+	void attachListenerOnKeyPress(Listener* listener, int key);//!< attach a Listener to a key by using the GLFW integer definitions for keys
 };
 
 #endif

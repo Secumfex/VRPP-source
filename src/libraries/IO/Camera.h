@@ -21,9 +21,12 @@ private:
 	float zPosition;
 	float phi;		// rotation, horizontal
 	float theta;	// inclination, vertical
+	float speedRight;
+	float speedForward;
 
 	glm::vec3 getUp();
 
+	inline void clampPhiTheta();	// clip Phi, Theta into [-PI; PI] and [0, 2*PI]
 
 public:
 	Camera();	//!< constructor
@@ -42,7 +45,12 @@ public:
 	void setPhi(float updatePhi);	//!< @todo please use "[at]param" to describe which constraints exist to the parameter
 	float getTheta();	//!< @todo please describe this further
 	void setTheta(float updateTheta);	//!< @todo please use "[at]param" to describe which constraints exist to the parameter
+	void setSpeedRight(float speed);
+	void setSpeedForward(float speed);
+	void updatePosition(float deltaTime);
 
+	float getSpeedRight();
+	float getSpeedForward();
 	glm::vec3 getRight();
 	glm::vec3 getViewDirection();
 	glm::vec3 getPosition();
@@ -54,8 +62,8 @@ public:
 	/* GETTER AND SETTER END */
 
 
-	inline void updateViewDirection();		//!< compute ViewDirection
-
+	inline void updateViewDirection();		//!< compute ViewDirection from Phi and Theta
+	inline void updatePhiTheta();			//!< compute Phi and Theta from View Direction
 
 	glm::mat4 getViewMatrix();		//!< compute ViewMatrix
 };
