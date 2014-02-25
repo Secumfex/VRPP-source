@@ -13,20 +13,27 @@ IOHandler::IOHandler(){
 	currentTime = 0.0;
 	xPos = 0;
 	yPos = 0;
+
 //	glfwGetCursorPos(window, &xPos, &yPos);
 	// Get mouse position
 }
 
 // Compute new orientation
-void IOHandler::setOrientation(){
-	// Reset mouse position for next frame
-	//////TODO ERSETZE ZAHLEN DURCH WINDOW KOORDINATEN!!!!!
-//	glfwSetCursorPos(window, 100, 100);
+void IOHandler::setOrientation(GLFWwindow* window, double xpos, double ypos){
+	// Reset mouse position for next frame						CHECK
+	//////TODO ERSETZE ZAHLEN DURCH WINDOW KOORDINATEN!!!!!		CHECK
+	int Width, Height;
+    glfwGetWindowSize(window, &Width, &Height);
+	glfwSetCursorPos(window, Width/2, Height/2);
+    float gotPhi = camObject->getPhi();
+    float gotTheta = camObject->getTheta();
+    camObject->setPhi(gotPhi + mouseSpeed * float(Width / 2 - xpos));			//Horizontal
+    camObject->setTheta(gotTheta + mouseSpeed * float(Height / 2 - ypos));		//Vertikal
+}
 
-	float gotPhi = camObject->getPhi();
-	float gotTheta = camObject->getTheta();
-	camObject->setPhi(gotPhi += mouseSpeed * float(100 / 2 - xPos));
-	camObject->setTheta(gotTheta += mouseSpeed * float(100 / 2 - yPos));
+void IOHandler::cursorPos_callback(GLFWwindow* window, int xpos, int ypos){
+	setOrientation(window, xpos, ypos);
+
 }
 
 void IOHandler::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
