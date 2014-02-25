@@ -69,17 +69,6 @@ public:
 	Texture* getHeightMap();
 	Texture* getOpacityMap();
 
-	Texture* getSpecularMap();
-	Texture* getReflectionMap();
-	Texture* getShininessMap();
-	Texture* getDisplacementMap();
-	Texture* getLightMap();
-
-	glm::vec3* getAmbient();
-	glm::vec3* getDiffuse();
-	glm::vec3* getSpecular();
-	GLfloat getSpecularTerm();
-
 
 	Texture* getSpecularMap();
 	Texture* getReflectionMap();

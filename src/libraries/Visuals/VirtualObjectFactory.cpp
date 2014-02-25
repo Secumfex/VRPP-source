@@ -349,7 +349,9 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 		if(AI_SUCCESS == aiGetMaterialString(mtl, AI_MATKEY_NAME, &name)){
 			std::string matName = name.C_Str();
 			matName = matName.substr( matName.find_last_of( '/' ) + 1 );
-            std::cout<<"Name des Materials: "<<matName;
+
+            std::cout<<"\nName des Materials: "<<matName<<endl;
+
 			aMat->setName(matName);
 		}
         else{
@@ -364,10 +366,11 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
         GraphicsComponent* copie=new GraphicsComponent();
         try {
             copie=mm->makeMaterial(aMat->getName(),gc);
-            cout<<"SUCCESS: generated MATERIAL by name"<<endl;
+
             }
         catch (string param){
-            cout<<"\nFAILED: generate material by name"<<endl;;
+           cout<<"\nFAILED: generate material by name";
+
             }
 
         if (copie==NULL){
@@ -431,14 +434,14 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 // TODO: complete them
     VirtualObject* VirtualObjectFactory::createVirtualObject(vector<GraphicsComponent*> graphcomps){
 	VirtualObject* virtualObject = new VirtualObject();
-	//TODO: alle GraphicsComponents werden an das VO 端bergeben
+	//TODO: alle GraphicsComponents werden an das VO übergeben
 
 	return virtualObject;
 }
 
 VirtualObject* VirtualObjectFactory::copyVirtualObject(VirtualObject vo){
 	VirtualObject* virtualObject = new VirtualObject();
-	//TODO: variable wird 端berfuehrt
+	//TODO: variable wird überfuehrt
 
 	return createCow();
 }
