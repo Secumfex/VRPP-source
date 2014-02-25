@@ -56,9 +56,9 @@ public:
 class TurnCameraListener : public Listener {
 private:
 	Camera* 	cam;
-	float theta; // inlcination step
-	float phi;   // rotation step
+	float delta_theta; // inlcination step
+	float delta_phi;   // rotation step
 public:
-	TurnCameraListener(Camera* cam, float phi, float theta);
+	TurnCameraListener(Camera* cam, float delta_phi, float delta_theta);
 	void update();
 };

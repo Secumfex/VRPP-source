@@ -39,7 +39,7 @@ public:
 	float* getDeltaTimePointer(); /**< get pointer to delta time variable, use with caution! */
 	float getLastTime ();	/**< get last time on which computeFrameTimeDifference was called */
 
-	void computeFrameTimeDifference();	/**< compute time difference since last call of this method */
+	void computeFrameTimeDifference();	/**b< compute time difference since last call of this method */
 
 	/**\
 	 * @param window where the callback is used

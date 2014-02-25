@@ -41,10 +41,10 @@ public:
 	float getZ();
 	void setZ(float updateZ);
 
-	float getPhi();		//!< @todo please describe this further
-	void setPhi(float updatePhi);	//!< @todo please use "[at]param" to describe which constraints exist to the parameter
-	float getTheta();	//!< @todo please describe this further
-	void setTheta(float updateTheta);	//!< @todo please use "[at]param" to describe which constraints exist to the parameter
+	float getPhi();		//!< get rotational angle (yaw), always within [0,2*PI]
+	void setPhi(float updatePhi);	//!< set phi to provided float, will be clamped to [0,2*PI]
+	float getTheta();	//!< get inclinational angle (pitch), always within ]-PI , PI[
+	void setTheta(float updateTheta);	//!< set theta to provided float, will be clamped to ] -PI, PI []
 	void setSpeedRight(float speed);
 	void setSpeedForward(float speed);
 	void updatePosition(float deltaTime);

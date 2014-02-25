@@ -74,9 +74,9 @@ void configureApplication(){
 
 int main() {
 
-	configureApplication();		// 1 do some customization
+	configureApplication();	// 1 do some customization
 
-	testingApp->run();			// 2 run application
+	testingApp->run();		// 2 run application
 
 	return 0;				// 3 end :)
 }
