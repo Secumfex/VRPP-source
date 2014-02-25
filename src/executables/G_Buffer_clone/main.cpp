@@ -185,7 +185,7 @@ int main() {
 				GraphicsComponent *gc_temp = vo_temp->getGraphicsComponent()[j];
 				rm->setCurrentGC(gc_temp);
 
-				if(gc_temp->getMaterial()->hasNormalMap()){
+				if(gc_temp->getMaterial()->hasNormalTexture()){
 					gbuffer_normalMap_Shader->useProgram();
 					rm->setCurrentShader(gbuffer_normalMap_Shader);
 					gbuffer_normalMap_Shader->uploadAllUniforms();
