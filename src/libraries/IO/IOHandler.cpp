@@ -6,8 +6,7 @@ IOHandler::IOHandler(){
 	 */
 	isMenuState = false;
 	camObject = new Camera();
-	speed_walk = 3.0f; // 3 units / second
-	speed_run = 6.0f;
+	speed_movement = 3.0f; // 3 units / second
 	mouseSpeed = 0.005f;
 	deltaTime = 0.1f;	//default value
 	currentTime = 0.0;
@@ -51,77 +50,48 @@ void IOHandler::key_callback(GLFWwindow* window, int key, int scancode, int acti
 		glm::vec3 gotPosition = camObject->getPosition();
 
 		// Move forward
-		if (key == GLFW_KEY_W && action == GLFW_PRESS){
-			camObject->setSpeedForward(speed_walk);
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
+			camObject->setSpeedForward(speed_movement);
 		}
 
 		// Move backward
-		if (key == GLFW_KEY_S && action == GLFW_PRESS){
-			camObject->setSpeedForward(-speed_walk);
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS){
+			camObject->setSpeedForward(-speed_movement);
 		}
 
 		// Strafe right
-		if (key == GLFW_KEY_D && action == GLFW_PRESS){
-			camObject->setSpeedRight(speed_walk);
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS){
+			camObject->setSpeedRight(speed_movement);
 		}
 
 		// Strafe left
-		if (key == GLFW_KEY_A && action == GLFW_PRESS){
-			camObject->setSpeedRight(-speed_walk);
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){
+			camObject->setSpeedRight(-speed_movement);
 		}
 
-		if (key == GLFW_KEY_W && action == GLFW_RELEASE){
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_RELEASE){
 			camObject->setSpeedForward(0.0);
 		}
 
-		if (key == GLFW_KEY_S && action == GLFW_RELEASE){
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_RELEASE){
 			camObject->setSpeedForward(0.0);
 		}
 
-		if (key == GLFW_KEY_D && action == GLFW_RELEASE){
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_RELEASE){
 			camObject->setSpeedRight(0.0);
 		}
 
-		if (key == GLFW_KEY_A && action == GLFW_RELEASE){
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_RELEASE){
 			camObject->setSpeedRight(0.0);
 		}
 
-		// Fast move forward
-		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
-			camObject->setSpeedForward(speed_run);
+		// Fast movement
+		if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_PRESS){
+			float currentSpeedRight = camObject->getSpeedRight();
+			float currentSpeedForward = camObject->getSpeedForward();
+			camObject->setSpeedRight(currentSpeedRight*2.0);
+			camObject->setSpeedForward(currentSpeedRight*2.0);
 		}
-
-		// Fast move backward
-		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT && GLFW_KEY_S) && action == GLFW_PRESS){
-			camObject->setSpeedForward(-speed_run);
-		}
-
-		// Fast strafe right
-		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT && GLFW_KEY_A) && action == GLFW_PRESS){
-			camObject->setSpeedRight(speed_run);
-		}
-
-		// Fast strafe left
-		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT && GLFW_KEY_D) && action == GLFW_PRESS){
-			camObject->setSpeedRight(-speed_run);
-		}
-
-		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT && GLFW_KEY_W) && action == GLFW_RELEASE){
-			camObject->setSpeedForward(0.0);
-		}
-
-		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT && GLFW_KEY_S) && action == GLFW_RELEASE){
-			camObject->setSpeedForward(0.0);
-		}
-
-		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT && GLFW_KEY_A) && action == GLFW_RELEASE){
-			camObject->setSpeedRight(0.0);
-		}
-
-		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT && GLFW_KEY_D) && action == GLFW_RELEASE){
-			camObject->setSpeedRight(0.0);
-		}
-
 
 	}
 	if (action != GLFW_RELEASE){	// 	so listeners are only called on pess event, not on release ( i.e. twice )

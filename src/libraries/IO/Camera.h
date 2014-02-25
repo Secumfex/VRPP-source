@@ -49,6 +49,8 @@ public:
 	void setSpeedForward(float speed);
 	void updatePosition(float deltaTime);
 
+	float getSpeedRight();
+	float getSpeedForward();
 	glm::vec3 getRight();
 	glm::vec3 getViewDirection();
 	glm::vec3 getPosition();

@@ -16,8 +16,7 @@ private:
 		bool isMenuState; 				/**<Boolean for changing State between Menu und InGame*/
 
 		double xPos, yPos; 	/**<*Mouse Position*/
-		float speed_walk; 	 /**<Float for adding to Position*/
-		float speed_run;  	 /**<Float for adding to Position*/
+		float speed_movement; 	 /**<Float for adding to Position*/
 		float mouseSpeed; 	 /**<Float for adding to Theta, Phi*/
 
 		glm::mat4 mViewMatrix;	 /**<4*4-Matrix*/

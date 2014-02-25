@@ -74,6 +74,15 @@ void Camera::setTheta(float updateTheta){
 void Camera::setSpeedRight(float speed){
 	speedRight = speed;
 }
+
+float Camera::getSpeedRight(){
+	return speedRight;
+}
+
+float Camera::getSpeedForward(){
+	return speedForward;
+}
+
 void Camera::setSpeedForward(float speed){
 	speedForward = speed;
 }
