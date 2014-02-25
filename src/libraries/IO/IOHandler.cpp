@@ -10,8 +10,8 @@ IOHandler::IOHandler(){
 	mouseSpeed = 0.005f;
 	deltaTime = 0.1f;	//default value
 	currentTime = 0.0;
-	xPos = 0;
-	yPos = 0;
+	xPos = -1;
+	yPos = -1;
 
 //	glfwGetCursorPos(window, &xPos, &yPos);
 	// Get mouse position
@@ -21,16 +21,21 @@ IOHandler::IOHandler(){
 
 // Compute new orientation
 void IOHandler::setOrientation(GLFWwindow* window, double xpos, double ypos){
-	// Reset mouse position for next frame						CHECK
-	//////TODO ERSETZE ZAHLEN DURCH WINDOW KOORDINATEN!!!!!		CHECK
 	int Width, Height;
-    glfwGetWindowSize(window, &Width, &Height);
+	glfwGetWindowSize(window, &Width, &Height);
+	
+	if (xPos == -1 && yPos == -1){	//has never been called before
+		xPos = Width/2;
+		yPos = Height/2;
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+    }
+    else{	// has been called before --> mouse somewhere around middle of window and hidden
+	    float gotPhi 	= camObject->getPhi();
+	    float gotTheta 	= camObject->getTheta();
+	    camObject->setPhi(	gotPhi 		+ mouseSpeed * float(Width / 2 - xpos));			//Horizontal
+	    camObject->setTheta(gotTheta 	+ mouseSpeed * float(Height / 2 - ypos));		//Vertikal
+	}
 	glfwSetCursorPos(window, Width/2, Height/2);
-    float gotPhi = camObject->getPhi();
-    float gotTheta = camObject->getTheta();
-    camObject->setPhi(gotPhi + mouseSpeed * float(Width / 2 - xpos));			//Horizontal
-    camObject->setTheta(gotTheta + mouseSpeed * float(Height / 2 - ypos));		//Vertikal
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 }
 
 void IOHandler::cursorPos_callback(GLFWwindow* window, int xpos, int ypos){
