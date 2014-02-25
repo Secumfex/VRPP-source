@@ -1,5 +1,4 @@
 #include "IOHandler.h"
-#include <math.h>
 
 IOHandler::IOHandler(){
 	/* @todo	implement state check and change
@@ -19,26 +18,16 @@ IOHandler::IOHandler(){
 }
 
 // Compute new orientation
-void IOHandler::setOrientation(GLFWwindow* window, double xpos, double ypos){
-	// Reset mouse position for next frame						CHECK
-	//////TODO ERSETZE ZAHLEN DURCH WINDOW KOORDINATEN!!!!!		CHECK
-	double xpos1, ypos1;
-	glfwGetCursorPos(window, &xpos, &ypos);
-	int Width, Height;
-    glfwSetWindowSize(window, Width, Height);
-	glfwSetCursorPos(window, Width/2, Height/2);
-    float gotPhi = camObject->getPhi();
-    float gotTheta = camObject->getTheta();
-    camObject->setPhi(gotPhi += mouseSpeed * float(Width / 2 - xpos));			//Horizontal
-    camObject->setTheta(gotTheta += mouseSpeed * float(Height / 2 - ypos));		//Vertikal
+void IOHandler::setOrientation(){
+	// Reset mouse position for next frame
+	//////TODO ERSETZE ZAHLEN DURCH WINDOW KOORDINATEN!!!!!
+//	glfwSetCursorPos(window, 100, 100);
+
+	float gotPhi = camObject->getPhi();
+	float gotTheta = camObject->getTheta();
+	camObject->setPhi(gotPhi += mouseSpeed * float(100 / 2 - xPos));
+	camObject->setTheta(gotTheta += mouseSpeed * float(100 / 2 - yPos));
 }
-
-void IOHandler::cursorPos_callback(GLFWwindow* window, int xpos, int ypos){
-	glm::vec3 direction(cos(camObject->getTheta()) * sin(camObject->getPhi()),sin(camObject->getTheta()),cos(camObject->getTheta()) * cos(camObject->getPhi()));
-	//Schauvektor :-)
-
-
-};
 
 void IOHandler::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -52,64 +41,78 @@ void IOHandler::key_callback(GLFWwindow* window, int key, int scancode, int acti
 		glm::vec3 gotPosition = camObject->getPosition();
 
 		// Move forward
-		if (key == GLFW_KEY_W && action == GLFW_REPEAT){
-			gotPosition += camObject->getViewDirection() * deltaTime * speed_walk;
-			camObject->setPosition(gotPosition);
+		if (key == GLFW_KEY_W && action == GLFW_PRESS){
+			camObject->setSpeedForward(speed_walk);
 		}
 
 		// Move backward
-		if (key == GLFW_KEY_S && action == GLFW_REPEAT){
-			gotPosition -= camObject->getViewDirection() * deltaTime * speed_walk;
-			camObject->setPosition(gotPosition);
+		if (key == GLFW_KEY_S && action == GLFW_PRESS){
+			camObject->setSpeedForward(-speed_walk);
 		}
 
 		// Strafe right
-		if (key == GLFW_KEY_D && action == GLFW_REPEAT){
-			gotPosition += camObject->getRight() * deltaTime * speed_walk;
-			camObject->setPosition(gotPosition);
+		if (key == GLFW_KEY_D && action == GLFW_PRESS){
+			camObject->setSpeedRight(speed_walk);
 		}
 
 		// Strafe left
-		if (key == GLFW_KEY_A && action == GLFW_REPEAT){
-			gotPosition -= camObject->getRight() * deltaTime * speed_walk;
-			camObject->setPosition(gotPosition);
+		if (key == GLFW_KEY_A && action == GLFW_PRESS){
+			camObject->setSpeedRight(-speed_walk);
+		}
+
+		if (key == GLFW_KEY_W && action == GLFW_RELEASE){
+			camObject->setSpeedForward(0.0);
+		}
+
+		if (key == GLFW_KEY_S && action == GLFW_RELEASE){
+			camObject->setSpeedForward(0.0);
+		}
+
+		if (key == GLFW_KEY_D && action == GLFW_RELEASE){
+			camObject->setSpeedRight(0.0);
+		}
+
+		if (key == GLFW_KEY_A && action == GLFW_RELEASE){
+			camObject->setSpeedRight(0.0);
 		}
 
 		// Fast move forward
-		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT && GLFW_KEY_W) && action == GLFW_REPEAT){
-			gotPosition += camObject->getViewDirection() * deltaTime * speed_run;
-			camObject->setPosition(gotPosition);
+		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT && GLFW_KEY_W) && action == GLFW_PRESS){
+			camObject->setSpeedForward(speed_run);
 		}
 
 		// Fast move backward
-		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT && GLFW_KEY_S) && action == GLFW_REPEAT){
-			gotPosition -= camObject->getViewDirection() * deltaTime * speed_run;
-			camObject->setPosition(gotPosition);
+		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT && GLFW_KEY_S) && action == GLFW_PRESS){
+			camObject->setSpeedForward(-speed_run);
 		}
+
 		// Fast strafe right
-		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT && GLFW_KEY_D) && action == GLFW_REPEAT){
-			gotPosition += camObject->getRight() * deltaTime * speed_run;
-			camObject->setPosition(gotPosition);
+		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT && GLFW_KEY_A) && action == GLFW_PRESS){
+			camObject->setSpeedRight(speed_run);
 		}
 
 		// Fast strafe left
-		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT && GLFW_KEY_A) && action == GLFW_REPEAT){
-			gotPosition -= camObject->getRight() * deltaTime * speed_run;
-			camObject->setPosition(gotPosition);
+		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT && GLFW_KEY_D) && action == GLFW_PRESS){
+			camObject->setSpeedRight(-speed_run);
 		}
 
-	}
-	else {
-		//TODO implement menu keys
-		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS){
-			//not exit but enter menu state
-			//glfwSetWindowShouldClose(window, GL_TRUE);
-			isMenuState = false;
+		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT && GLFW_KEY_W) && action == GLFW_RELEASE){
+			camObject->setSpeedForward(0.0);
 		}
 
-		if (key == GLFW_KEY_F1 && action == GLFW_PRESS){
-			//placeholder
+		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT && GLFW_KEY_S) && action == GLFW_RELEASE){
+			camObject->setSpeedForward(0.0);
 		}
+
+		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT && GLFW_KEY_A) && action == GLFW_RELEASE){
+			camObject->setSpeedRight(0.0);
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT && GLFW_KEY_D) && action == GLFW_RELEASE){
+			camObject->setSpeedRight(0.0);
+		}
+
+
 	}
 	if (action != GLFW_RELEASE){	// 	so listeners are only called on pess event, not on release ( i.e. twice )
 		notify(key);				//	notify listeners

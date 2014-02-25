@@ -1,5 +1,5 @@
 	/*
-	 * @author Sanèr, Oliver
+	 * @author Saner, Arend, Oliver
 	 */
 
 #include <glm/glm.hpp>
