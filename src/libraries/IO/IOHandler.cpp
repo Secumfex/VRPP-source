@@ -84,7 +84,7 @@ void IOHandler::key_callback(GLFWwindow* window, int key, int scancode, int acti
 		}
 
 		// Fast move forward
-		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT && GLFW_KEY_W) && action == GLFW_PRESS){
+		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
 			camObject->setSpeedForward(speed_run);
 		}
 
