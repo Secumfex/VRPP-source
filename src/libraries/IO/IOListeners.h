@@ -8,8 +8,9 @@
 class UpdateCameraPositionListener : public Listener{
 private:
 	Camera* cam;
+	float* delta_time_source;
 public:
-	UpdateCameraPositionListener(Camera* cam);
+	UpdateCameraPositionListener(Camera* cam, float* delta_time_source = 0);
 	void update();
 };
 

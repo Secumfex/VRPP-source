@@ -18,7 +18,7 @@ ApplicationState::ApplicationState(){
 	renderQueue = new RenderQueue();
 	iOHandler = new IOHandler();
 	iOHandler->setCameraObject(camera);
-	attachListenerOnBeginningProgramCycle(	new UpdateCameraPositionListener(camera));
+	attachListenerOnBeginningProgramCycle(	new UpdateCameraPositionListener(camera, IOManager::getInstance()->getDeltaTimePointer()));
 	
 	projectionMatrix = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
 }
