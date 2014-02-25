@@ -93,18 +93,11 @@ void IOHandler::key_callback(GLFWwindow* window, int key, int scancode, int acti
 		}
 
 		// Fast movement
-		if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_PRESS){
+		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS){
 			float currentSpeedRight = camObject->getSpeedRight();
 			float currentSpeedForward = camObject->getSpeedForward();
 			camObject->setSpeedRight(  currentSpeedRight*2.0);
 			camObject->setSpeedForward(currentSpeedForward*2.0);
-		}
-		// Fast movement
-		if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_RELEASE){
-			float currentSpeedRight = camObject->getSpeedRight();
-			float currentSpeedForward = camObject->getSpeedForward();
-			camObject->setSpeedRight(  currentSpeedRight / 2.0);
-			camObject->setSpeedForward(currentSpeedForward / 2.0);
 		}
 
 	}
