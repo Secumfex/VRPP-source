@@ -1,5 +1,5 @@
 	/*
-	 * @author Sanèr, Oliver
+	 * @author Saner, Arend, Oliver
 	 */
 
 #include <glm/glm.hpp>
@@ -32,17 +32,15 @@ void IOManager::cursorPos_callback(GLFWwindow* window, double xpos, double ypos)
 	xPos = xpos;
 	yPos = ypos;
 
-	// @todo call IOHandler cursorPos func
-	// if (currentIOHandler != 0){
-	// 	currentIOHandler->cursorPos_callback(window, xpos, ypos);
-	// }
+	 if (currentIOHandler != 0){
+		currentIOHandler->cursorPos_callback(window, xpos, ypos);
+	 }
 }
 
 void IOManager::mouseButton_callback(GLFWwindow* window, int button, int action, int mods){
-	// @todo call IOHandler mouseButton func
-	// if (currentIOHandler != 0){
-	// 	currentIOHandler->mouseButton_callback(window, xpos, ypos);
-	// }
+	if (currentIOHandler != 0){
+		currentIOHandler->mouseButton_callback(window, button, action, mods);
+	}
 
 	//if left button clicked do ray-picking
 	if(button == 0 && action == GLFW_PRESS && currentIOHandler != 0){	//GLFW_MOUSE_BUTTON_1 = 0 (?)

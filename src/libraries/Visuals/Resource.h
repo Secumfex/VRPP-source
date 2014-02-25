@@ -122,6 +122,11 @@ public:
 	void setNumIndices(int verts);
 	int getNumIndices();
 
+	void setVertexPosition(std::vector<glm::vec3> position);
+	std::vector<glm::vec3> getVertices();
+
+	void addBoneWeight(GLuint boneweight);
+
 
 	//---------------MEMBER VARIABLES--------------------
 private:
@@ -132,6 +137,9 @@ private:
 		int mNumVerts;
 		int mNumIndices;
 
+		std::vector<glm::vec3> mVertexPositions;
+
+		std::vector<GLuint> mBoneWeights;
 
 
 

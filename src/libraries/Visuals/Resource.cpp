@@ -140,8 +140,8 @@ std::string Material::getName(){
 }
 
 bool Material::hasNormalMap(){
-Texture *tex = new Texture();
-return getNormalMap()->getTextureHandle() != tex->getTextureHandle();
+	Texture *tex = new Texture();
+	return getNormalMap()->getTextureHandle() != tex->getTextureHandle();
 
 }
 
@@ -184,4 +184,16 @@ void Mesh::setNumIndices (int indices){
 
 int Mesh::getNumIndices(){
 	return mNumIndices;
+}
+
+void Mesh::setVertexPosition(std::vector<glm::vec3> position){
+	mVertexPositions = position;
+}
+
+void Mesh::addBoneWeight(GLuint boneweight){
+	mBoneWeights.push_back(boneweight);
+}
+std::vector<glm::vec3> Mesh::getVertices(){
+
+	return mVertexPositions;
 }

@@ -15,6 +15,9 @@ Camera::Camera(){
 	// Initial vertical angle : none
 	theta = 0.0f;
 
+	speedRight = 0.0f;
+	speedForward = 0.0f;
+
 	//compute initial View Direction vector
 	updateViewDirection();
 }
@@ -66,6 +69,29 @@ float Camera::getTheta(){
 void Camera::setTheta(float updateTheta){
 	theta = updateTheta;
 	updateViewDirection();
+}
+
+void Camera::setSpeedRight(float speed){
+	speedRight = speed;
+}
+
+float Camera::getSpeedRight(){
+	return speedRight;
+}
+
+float Camera::getSpeedForward(){
+	return speedForward;
+}
+
+void Camera::setSpeedForward(float speed){
+	speedForward = speed;
+}
+
+void Camera::updatePosition(float deltaTime){
+	glm::vec3 gotPosition = getPosition();
+	gotPosition += getViewDirection() * deltaTime * speedForward;
+	gotPosition += getRight() * deltaTime * speedRight;
+	setPosition(gotPosition);
 }
 
 glm::vec3 Camera::getViewDirection(){

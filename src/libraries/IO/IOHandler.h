@@ -16,8 +16,7 @@ private:
 		bool isMenuState; 				/**<Boolean for changing State between Menu und InGame*/
 
 		double xPos, yPos; 	/**<*Mouse Position*/
-		float speed_walk; 	 /**<Float for adding to Position*/
-		float speed_run;  	 /**<Float for adding to Position*/
+		float speed_movement; 	 /**<Float for adding to Position*/
 		float mouseSpeed; 	 /**<Float for adding to Theta, Phi*/
 
 		glm::mat4 mViewMatrix;	 /**<4*4-Matrix*/
@@ -26,7 +25,7 @@ private:
 		double currentTime;			/**<Double for currentTime*/
 		float deltaTime;			/**<Float for time bewteen lastTime and CurrentTime*/
 
-		inline void setOrientation();
+
 		inline void computeFrameTimeDifference();
 
 		Camera* camObject;
@@ -55,10 +54,14 @@ public:
 	 * @return returns a new Matrix of the camera
 	 *
 	 */
+	void setOrientation(GLFWwindow* window, double xpos, double ypos);
+	void cursorPos_callback(GLFWwindow* window, int xpos, int ypos);
+	void mouseButton_callback(GLFWwindow* window, int button, int action, int mods); //!< mouse button callback (press / release)
 	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-
 	void notify(int key);	//!< notify Listeners attached to a key pess by using the GLFW integer definitions for keys
 	void attachListenerOnKeyPress(Listener* listener, int key);//!< attach a Listener to a key by using the GLFW integer definitions for keys
+	void attachListenerOnMouseButtonPress(Listener* listener, int button);
+	void attachListenerOnCursorPosCallback(Listener* listener);
 };
 
 
