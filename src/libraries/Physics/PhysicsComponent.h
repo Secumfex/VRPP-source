@@ -78,9 +78,9 @@ public:
 	*
 	* ORed current flag with the wanted one.
 	* possible flags are:
-	*  CF_STATIC_OBJECT = 1,
+	*  CF_STATIC_OBJECT = 1, ->no gravity
 	*  CF_KINEMATIC_OBJECT = 2,
-  	*  CF_NO_CONTACT_RESPONSE = 4,
+  	*  CF_NO_CONTACT_RESPONSE = 4, ->no interaction/collision with other objects
   	*  CF_CUSTOM_MATERIAL_CALLBACK = 8,
   	*  CF_CHARACTER_OBJECT = 16,
   	*  CF_DISABLE_VISUALIZE_OBJECT = 32,

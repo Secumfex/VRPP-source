@@ -38,7 +38,7 @@ PhysicsComponent::PhysicsComponent(glm::vec3 min, glm::vec3 max) {
 	hit = false;
 
 	rigidBody = addBox(width, height, depth, x, y, z, mass);
-	addCollisionFlag(4);	//momentan noch fest, muesste eig auch zusaetzlicher input wert sein
+	addCollisionFlag(8);	//momentan noch fest, muesste eig auch zusaetzlicher input wert sein
 	update();
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
@@ -48,7 +48,7 @@ PhysicsComponent::PhysicsComponent(float radius, float x, float y, float z, floa
 	hit = false;
 
 	rigidBody = addSphere(radius,x,y,z,mass);
-	addCollisionFlag(4);
+	addCollisionFlag(8);
 	update();
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
@@ -57,7 +57,7 @@ PhysicsComponent::PhysicsComponent(float width, float height, float depth, float
 
 	hit = false;
 	rigidBody = addBox(width,height,depth,x,y,z,mass);
-	addCollisionFlag(4);
+	addCollisionFlag(8);
 	update();
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
@@ -66,7 +66,7 @@ PhysicsComponent::PhysicsComponent(float x, float y, float z, btVector3 normal, 
 
 	hit = false;
 	rigidBody = addPlane(x,y,z,normal,mass);
-	addCollisionFlag(4);
+	addCollisionFlag(8);
 	update();
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
@@ -82,10 +82,14 @@ PhysicsComponent::~PhysicsComponent() {
 }
 
 void PhysicsComponent::addCollisionFlag(int flag) {
-
-	if(flag == 4) {
-		rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK);
-	}
+	switch( flag)
+	  { case 1: rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_STATIC_OBJECT); break;
+	    case 2: rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT); break;
+	    case 4: rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_NO_CONTACT_RESPONSE); break;
+	    case 8: rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK); break;
+	    case 16: rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_CHARACTER_OBJECT); break;
+	    case 32: rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_DISABLE_VISUALIZE_OBJECT); break;
+	    case 64: rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_DISABLE_SPU_COLLISION_PROCESSING); break;}
 }
 
 btRigidBody* PhysicsComponent::addBox(float width, float height, float depth, float x, float y, float z, float mass){
@@ -104,7 +108,7 @@ btRigidBody* PhysicsComponent::addBox(float width, float height, float depth, fl
 	btMotionState* motion = new btDefaultMotionState(t);
 	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,box);
 	btRigidBody* body = new btRigidBody(info);
-
+	body->setLinearFactor(btVector3(1,1,1));
 	return body;
 }
 
@@ -124,7 +128,7 @@ btRigidBody* PhysicsComponent::addSphere(float radius, float x, float y, float z
 	btMotionState* motion = new btDefaultMotionState(t);
 	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,sphere);
 	btRigidBody* body = new btRigidBody(info);
-
+	body->setLinearFactor(btVector3(1,1,1));
 	return body;
 }
 
@@ -140,7 +144,7 @@ btRigidBody* PhysicsComponent::addPlane(float x, float y, float z, btVector3 nor
 	btMotionState* motion = new btDefaultMotionState(t);
 	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,plane);
 	btRigidBody* body = new btRigidBody(info);
-
+	body->setLinearFactor(btVector3(1,1,1));
 	return body;
 }
 
@@ -204,8 +208,11 @@ void PhysicsComponent::update(){
 		body->getMotionState()->getWorldTransform(t);
 		float mat[16];
 		t.getOpenGLMatrix(mat);
-
+		btQuaternion rotation = t.getRotation();
+		btVector3 transform = t.getOrigin();
 		this-> modelMatrix = glm::make_mat4(mat);
+
+
 	}
 	if(body->getCollisionShape()->getShapeType() == BOX_SHAPE_PROXYTYPE) {
 
