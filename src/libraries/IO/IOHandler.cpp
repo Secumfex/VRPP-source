@@ -36,6 +36,13 @@ void IOHandler::setOrientation(GLFWwindow* window, double xpos, double ypos){
 void IOHandler::cursorPos_callback(GLFWwindow* window, int xpos, int ypos){
 	setOrientation(window, xpos, ypos);
 
+	Subject::notify( "CURSOR_POS_CALLBACK_LISTENER" );
+}
+
+void IOHandler::mouseButton_callback(GLFWwindow* window, int button, int action, int mods){
+	if (action == GLFW_PRESS){
+		notify( button );		//notify button press listener
+	}	
 }
 
 void IOHandler::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -120,4 +127,17 @@ void IOHandler::notify(int key){
 	Subject :: notify( sstream.str() );
 	sstream.str("");	// clear stringstream
 	sstream.clear();
+}
+
+void IOHandler::attachListenerOnMouseButtonPress(Listener* listener, int button){
+	sstream	<<	button;	// convert int to string
+	listener->setName( sstream.str()	);
+	attach(listener);
+	sstream.str("");	// clear stringstream
+	sstream.clear();
+}
+
+void IOHandler::attachListenerOnCursorPosCallback(Listener* listener){
+	listener->setName( "CURSOR_POS_CALLBACK_LISTENER");
+	attach(listener);
 }

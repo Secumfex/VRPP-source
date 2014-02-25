@@ -56,9 +56,12 @@ public:
 	 */
 	void setOrientation(GLFWwindow* window, double xpos, double ypos);
 	void cursorPos_callback(GLFWwindow* window, int xpos, int ypos);
+	void mouseButton_callback(GLFWwindow* window, int button, int action, int mods); //!< mouse button callback (press / release)
 	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	void notify(int key);	//!< notify Listeners attached to a key pess by using the GLFW integer definitions for keys
 	void attachListenerOnKeyPress(Listener* listener, int key);//!< attach a Listener to a key by using the GLFW integer definitions for keys
+	void attachListenerOnMouseButtonPress(Listener* listener, int button);
+	void attachListenerOnCursorPosCallback(Listener* listener);
 };
 
 
