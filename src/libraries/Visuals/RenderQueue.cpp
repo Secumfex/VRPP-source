@@ -17,11 +17,22 @@ RenderQueue* RenderQueue::getRenderQueue(){
 	return this;
 }
 
-/** \brief adds a VO to the member list of VOs
+/** \brief adds a VO to the member list of VOs, also maps GC->VO and vice versa
 */
 void RenderQueue::addVirtualObject(VirtualObject* vo){
 	cout<<"Adding VO."<<endl; // <-- REMOVE IN FINAL
 	voList.push_back(vo);
+
+	vector<GraphicsComponent* > gcVector; 
+
+	gcVector = vo->getGraphicsComponent();
+
+	for(unsigned int i = 0; i < gcVector.size(); i++){
+		cout<<"Sort: GC->VO, VO->GC"<<endl; // <-- REMOVE IN FINAL
+
+		vo2gcMap[vo].push_back(gcVector[i]); /// VO --> GC
+		gc2voMap[gcVector[i]] = vo;
+	}
 }
 
 /** \brief removes a single VO from the member list of VOs
@@ -60,20 +71,48 @@ void RenderQueue::resetQueue(){
 	currentFirstElement = voList.begin();
 }
 
-/** \brief extract VOs from voList, extract gc-vectors from the VOs, extract the gcs from the vectors, put them into a list in a map
-* @param shader ID-string to one of which all GraphicsComponents will be sorted
-* @param vo temporary VO pointer variable
-* @param gcVector temporary storage for all GCs of each VO, one at a time
-* @todo  map<VO, vec<GC> > works fine, map<GC, vec<VO> > however is causing issues and the latter is what we want
+/** \brief getter for GCs sorted by flags
 */
+map<string, vector<GraphicsComponent* > > RenderQueue::getGcFlagStorage(){
+	return gcFlagStorage;
+}
+
+/** \brief getter for GCs sorted by shaders
+*/
+map<string, vector<GraphicsComponent* > > RenderQueue::getGcShaderStorage(){
+	return gcShaderStorage;
+}
+
+/** \brief getter for GCs sorted by textures
+*/
+map<string, vector<GraphicsComponent* > > RenderQueue::getGcTexStorage(){
+	return gcTexStorage;
+}
+
+/** \brief getter for GC->VO map
+*/
+map<GraphicsComponent*, VirtualObject* > RenderQueue::getGc2VoMap(){
+	return gc2voMap;
+}
+
+/** \brief getter for VO->GC map
+*/
+map<VirtualObject*, vector<GraphicsComponent* > > RenderQueue::getVo2GcMap(){
+	return vo2gcMap;
+}
+
+list<VirtualObject*> RenderQueue::getVirtualObjectList(){
+	return voList;
+}
+
 void RenderQueue::sortByShaders(){
 	resetQueue();
-	string shader = "DEFERRED_SHADING"; 
+	string shader = "DEFERRED_SHADING";
 	VirtualObject* vo;
 	vector<GraphicsComponent* > gcVector; 
 
 
-	cout<<"Entering extractAndSort"<<endl; // <-- REMOVE IN FINAL
+	cout<<"Entering sortByShaders"<<endl; // <-- REMOVE IN FINAL
 
 	while(hasNext()){
 		vo = getNextObject();
@@ -81,13 +120,67 @@ void RenderQueue::sortByShaders(){
 		for(unsigned int i = 0; i < gcVector.size(); i++){
 			cout<<"Adding GC to the map."<<endl; // <-- REMOVE IN FINAL
 
-			gcStorage[shader].push_back(gcVector[i]); /// shader --> GC
-			gc2voMap[vo].push_back(gcVector[i]); /// VO --> GC
+			gcShaderStorage[shader].push_back(gcVector[i]); /// shader --> GC
+			vo2gcMap[vo].push_back(gcVector[i]); /// VO --> GC
 
-			vo2gcMap[gcVector[i]] = vo;
+			gc2voMap[gcVector[i]] = vo;
 		}
 	}
-	
-
-
 }
+	
+void RenderQueue::sortByTextures(){
+	resetQueue();
+	string texID = "tex_stone";
+	VirtualObject* vo;
+	vector<GraphicsComponent* > gcTexVector;
+
+
+	cout<<"Entering sortByTextures"<<endl; // <-- REMOVE IN FINAL
+
+	while(hasNext()){
+		vo = getNextObject();
+		gcTexVector = vo->getGraphicsComponent();
+		for(unsigned int i = 0; i < gcTexVector.size(); i++){
+			cout<<"Adding GC to the TextureMap."<<endl; // <-- REMOVE IN FINAL
+
+			gcTexStorage[texID].push_back(gcTexVector[i]); /// texture --> GC
+			gcTex2voMap[vo].push_back(gcTexVector[i]); /// VO --> GC
+
+			vo2gcTexMap[gcTexVector[i]] = vo;
+		}
+	}
+}
+
+void RenderQueue::sortByFlags(){
+	resetQueue();
+	string sString = "SHADOW";
+	string eString = "EMISSION";
+	string tString = "TRANSPARENCY";
+
+	VirtualObject* vo;
+
+	vector<GraphicsComponent* > gcFlagVector;
+
+	cout<<"entering sortByFlags"<<endl; // <-- REMOVE IN FINAL
+
+	while(hasNext()){
+		vo = getNextObject();
+		gcFlagVector = vo->getGraphicsComponent();
+		for(unsigned int i = 0; i < gcFlagVector.size(); i++){
+			cout<<"Adding GC to the FlagMap."<<endl;
+			
+			if(gcFlagVector[i]->hasEmission()){
+				gcFlagStorage[eString].push_back(gcFlagVector[i]);
+			}
+
+			if(gcFlagVector[i]->hasShadow()){
+				gcFlagStorage[sString].push_back(gcFlagVector[i]);
+			}
+
+			if(gcFlagVector[i]->hasTransparency()){
+				gcFlagStorage[tString].push_back(gcFlagVector[i]);
+			}
+		}
+	}
+}
+

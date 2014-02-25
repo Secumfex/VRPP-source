@@ -13,6 +13,7 @@
 
 #include <Patterns/Singleton.h>
 #include <Visuals/VirtualObject.h>
+#include "MaterialManager.h"
 #include <vector>
 
 #include "assimp/Importer.hpp"
@@ -60,7 +61,7 @@ std::vector<struct MyMesh> myMeshes;
 std::map<std::string, GLuint> textureIdMap;
 
 VirtualObject* mCow;
-
+GraphicsComponent* mScreenFillTriangle;
 
 
 //---------------MEMBER FUNCTIONS--------------------
@@ -69,7 +70,7 @@ public:
 
 
 VirtualObject* createCow();
-
+GraphicsComponent* getTriangle();
 
 VirtualObject* createVirtualObject();
 VirtualObject* createVirtualObject(std::string filename);

@@ -1,9 +1,13 @@
 #ifndef RENDERMANAGER_H
 #define RENDERMANAGER_H
-#include "IO/IOManager.h"
+//#include "IO/IOManager.h"   @todo problem due to multiple includes of glfw and stuff
 #include "Visuals/RenderQueue.h"
 #include "Patterns/Singleton.h"
 #include "Patterns/Subject.h"
+#include "IO/Camera.h"
+#include "Visuals/Shader.h"
+#include "Visuals/FrameBufferObject.h"
+
 
 // RenderManager is a Singleton and can be called by getInstance(), it is also a Subject
 class RenderManager : public Singleton<RenderManager>, public Subject{
@@ -13,14 +17,48 @@ protected:
 public:
     ~RenderManager ();
 	//RenderQueue renderQueue;
-	void setRenderQueue();
+
+	void setRenderQueue(RenderQueue* currentRQ);
+	void setCamera(Camera* camera);
+	void setCurrentGC(GraphicsComponent* gc);
+	void setCurrentShader(Shader* shader);
+	void setCurrentFBO(FrameBufferObject* fbo);
+	void setProjectionMatrix(glm::mat4 _projectionMatrix);
+	void setDefaultProjectionMatrix();
+
+	VirtualObject* getCurrentVO();
+	GraphicsComponent* getCurrentGC();
+	Shader* getCurrentShader();
+	Camera* getCamera();
+	FrameBufferObject* getCurrentFBO();
+	GLFWwindow* getWindow();
+	RenderQueue* getRenderQueue();
+	glm::mat4 getProjectionMatrix();
+
 	void libInit();
 	void manageShaderProgram();
 	void renderLoop();
-	void attachFrameListener(Listener* listener);	//attach a listener that will be called at the beginning of a frameloop
-	glm::mat4 getProjectionMatrix();
-	void setProjectionMatrix(glm::mat4 _projectionMatrix);
-	void setDefaultProjectionMatrix();
+	void attachListenerOnNewFrame(Listener* listener);	        //!< attach a listener that will be called at the beginning of a frameloop
+	void attachListenerOnWindowShouldClose(Listener* listener); //!< attach a listener that will be called at the closure of the GLFW window
+
+
+private:
+	GLuint vbo;
+	GLuint MVPHandle;
+	GLuint shaderProgramHandle;
+
+	glm::mat4 projectionMatrix;
+
+	GLFWwindow* window;
+
+
+	Camera* mCamera;
+	RenderQueue* mRenderqueue;
+	Shader* mCurrentShader;
+	GraphicsComponent* mCurrentGC;
+	VirtualObject* mCurrentVO;
+	FrameBufferObject* mCurrentFBO;
+
 };
 
 #endif /* RENDERMANAGER_H */

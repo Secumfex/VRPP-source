@@ -6,9 +6,9 @@
 #include <vector>
 #include <glm/glm.hpp>
 
-#include "assimp/Importer.hpp"
-#include "assimp/postprocess.h"
-#include "assimp/scene.h"
+// #include "assimp/Importer.hpp"
+// #include "assimp/postprocess.h"
+// #include "assimp/scene.h"
 
 #include <vector>
 #include <Visuals/Texture.h>
@@ -41,11 +41,13 @@ public:
 
 
 	void setName(std::string name);
-	void setAmbient(glm::vec4 ambient);
-	void setDiffuse(glm::vec4 diffuse);
-	void setSpecular(glm::vec4 specular);
-	void setEmission(glm::vec4 specular);
+	void setAmbient(glm::vec3 ambient);
+	void setDiffuse(glm::vec3 diffuse);
+	void setSpecular(glm::vec3 specular);
+	void setEmission(glm::vec3 emission);
 	void setShininess(GLfloat term);
+	void setReflectivity(GLfloat term);
+    void setTransparency(GLfloat term);
 
 	void setAmbientMap(Texture* tex);
 	void setDiffuseMap(Texture* tex);
@@ -66,6 +68,7 @@ public:
 	Texture* getNormalMap();
 	Texture* getHeightMap();
 	Texture* getOpacityMap();
+<<<<<<< HEAD
 
 	Texture* getSpecularMap();
 	Texture* getReflectionMap();
@@ -77,7 +80,26 @@ public:
 	glm::vec3* getDiffuse();
 	glm::vec3* getSpecular();
 	GLfloat getSpecularTerm();
+=======
+>>>>>>> origin/Resource3.0_ira
 
+	Texture* getSpecularMap();
+	Texture* getReflectionMap();
+	Texture* getShininessMap();
+	Texture* getDisplacementMap();
+	Texture* getLightMap();
+
+	glm::vec3 getAmbient();
+	glm::vec3 getDiffuse();
+	glm::vec3 getSpecular();
+	glm::vec3 getEmission();
+	GLfloat getShininess();
+	GLfloat getReflectivity();
+    GLfloat getTransparency();
+
+	std::string getName();
+
+	bool hasNormalMap();
 	//---------------MEMBER VARIABLES--------------------
 private:
 	std::string mName;
@@ -86,7 +108,11 @@ private:
 	glm::vec3 mAmbColor;
 	glm::vec3 mDiffColor;
 	glm::vec3 mSpecColor;
-	GLfloat mSpecCoeff;
+	glm::vec3 mEmissColor;
+
+	GLfloat mShininess;
+	GLfloat mReflectivity;
+    GLfloat mTransparency;
 
 
 

@@ -21,6 +21,7 @@ file(GLOB_RECURSE HEADER *.h)
 add_definitions(-DSHADERS_PATH="${SHADERS_PATH}")
 add_definitions(-DRESOURCES_PATH="${RESOURCES_PATH}")
 add_definitions(-DGLFW_INCLUDE_GLCOREARB)
+add_definitions(-DBUILD_SHARED_LIBS=off)
 
 add_executable(${ProjectId} ${SOURCES} ${HEADER})
 

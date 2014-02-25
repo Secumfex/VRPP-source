@@ -18,26 +18,49 @@
 
 #include "Tools/ShaderTools.h"
 #include "Tools/TextureTools.h"
-#include "Tools/Geometry.h"
+//#include "Tools/Geometry.h"
 
 using namespace glm;
 
-GLuint vbo;
-GLuint MVPHandle;
-GLuint shaderProgramHandle;
 
-mat4 projectionMatrix;
-
-GLFWwindow* window; 
-
-RenderQueue* rq;
-
-void RenderManager::setRenderQueue(){
-    rq->getRenderQueue();
+void RenderManager::setRenderQueue(RenderQueue* currentRQ){
+    mRenderqueue = currentRQ;
 }
 
 mat4 RenderManager::getProjectionMatrix(){
     return projectionMatrix;
+}
+
+//TODO
+/*wir brauchen eine setCurrentGC(GraphicsComponent* gc)
+und eine getCurrentGC()
+die auf eine globale Pointer-variable im RenderManager zugreifen
+sowas wie GraphicsComponent* mCurrentGC
+gesetzt wird der shit in der renderLoop, aber das machen wir sp�ter
+erstmal wollen wir nur den Access haben
+
+WENN wir das geschafft haben kommt Step2
+dann machen wir uns noch eine currentVO globale variable, ebenfalls im RenderManager (auf raphis anfrage)
+die getCurrentVO wird dann genauso aussehen wie die getCurrentGC, nur halt mit virtual object
+die setCurrentVO wird stattdessen auf die jeweilige map in der RenderQueue zugreifen und kann direkt in der
+setCurrentGC aufgerufen werden sobald die GC global gesetzt wurde
+
+*/
+
+void RenderManager::setCurrentGC(GraphicsComponent* gc){
+	mCurrentGC = gc;
+}
+
+void RenderManager::setCurrentShader(Shader* shader){
+    mCurrentShader = shader;
+}
+
+void RenderManager::setCurrentFBO(FrameBufferObject* fbo){
+	mCurrentFBO = fbo;
+}
+
+void RenderManager::setCamera(Camera* camera){
+    mCamera = camera;
 }
 
 void RenderManager::setProjectionMatrix(mat4 _projectionMatrix){
@@ -46,6 +69,38 @@ void RenderManager::setProjectionMatrix(mat4 _projectionMatrix){
 
 void RenderManager::setDefaultProjectionMatrix(){
     projectionMatrix = perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
+}
+
+VirtualObject* RenderManager::getCurrentVO(){
+	map<GraphicsComponent*, VirtualObject* > gc2voMap = mRenderqueue->getGc2VoMap();
+    VirtualObject* myCurrentVO = gc2voMap[mCurrentGC];
+
+	return myCurrentVO;
+}
+
+FrameBufferObject* RenderManager::getCurrentFBO(){
+	return mCurrentFBO;
+}
+
+
+GraphicsComponent* RenderManager::getCurrentGC(){
+	return mCurrentGC;
+}
+
+Shader* RenderManager::getCurrentShader(){
+	return mCurrentShader;
+}
+Camera* RenderManager::getCamera(){
+	//TODO: ordentlich Kamera uebergeben
+	return mCamera;
+}
+
+RenderQueue* RenderManager::getRenderQueue(){
+    return mRenderqueue;
+}
+
+GLFWwindow* RenderManager::getWindow(){
+    return window;
 }
 
 //glfw error-callback function
@@ -79,7 +134,6 @@ void RenderManager::libInit(){
 	#endif
 
     window = glfwCreateWindow(800, 600, "GLFW TUT", NULL, NULL);
-    glfwSetKeyCallback(window, keyCallback);
 
     if(!window){
         glfwTerminate();
@@ -111,21 +165,23 @@ void RenderManager::manageShaderProgram(){
 }
 
 void RenderManager::renderLoop(){
-    std::cout<<"Render loop reached successfully."<<std::endl;
+ //   std::cout<<"Render loop reached successfully."<<std::endl;
 
     MVPHandle = glGetUniformLocation(shaderProgramHandle, "uniformMVP");
 
-    while(!glfwWindowShouldClose(window)){
+    if(!glfwWindowShouldClose(window)){ //if window is not about to close
+        glfwMakeContextCurrent(window);
+        glClear(GL_COLOR_BUFFER_BIT);
 
         notify("FRAMELISTENER");      //notify all listeners labeled FRAMELISTENER
 
-        glfwMakeContextCurrent(window);
-        glClear(GL_COLOR_BUFFER_BIT);
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-
-    glfwTerminate();
+    else{
+        glfwTerminate();
+        notify("WINDOWSHOULDCLOSELISTENER"); //else notify Listeners labled WINDOWSHOULDCLOSELISTENER
+    }
 }
 
 
@@ -134,9 +190,21 @@ RenderManager::~RenderManager(){
 }
 
 RenderManager::RenderManager(){
+    mCamera = 0;
+    mRenderqueue = 0;   //must be set from outside
+
+    mCurrentGC = 0;
+    mCurrentFBO = 0;
+    mCurrentShader = 0;
+
 }
 
-void RenderManager::attachFrameListener(Listener* listener){
+void RenderManager::attachListenerOnNewFrame(Listener* listener){
     listener->setName("FRAMELISTENER"); //label this listener as framelistener
     attach(listener);                   //attach listener
+}
+
+void RenderManager::attachListenerOnWindowShouldClose(Listener* listener){
+    listener->setName("WINDOWSHOULDCLOSELISTENER"); 
+    attach(listener);                   
 }

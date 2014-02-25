@@ -1,121 +1,125 @@
 #include "Camera.h"
-/**
- * @param pos 		position in world coordinates
- * @param direction view direction of camera
- * @param up 		up vector
- */
-Camera::Camera(glm::vec3 pos, glm::vec3 direction, glm::vec3 up){ 
-	m_position 	= pos,
-    m_up 		= up;
 
-	m_direction = glm::normalize(direction);
-	
-	updatePolarCoordinates();
-}
+#define PI 3.14159265f
 
-/**
- * @param pos 		position in world coordinates
- * @param theta 	pitch - rotation about x-axis
- * @param phi	 	yaw   - rotation about y-axis
- * @param up 		up vector
- */
-Camera::Camera(glm::vec3 pos, float theta, float phi, glm::vec3 up){
-	m_position 	= pos,
-	m_up 		= up;
+Camera::Camera(){
+	xPosition = 0.0;
+	yPosition = 0.0;
+	zPosition = -5.0;
 
-	m_theta 	= theta;
-	m_phi 		= phi;
+	// Initial position : on +Z
+	position = glm::vec3(xPosition, yPosition, zPosition);
 
+	// Initial horizontal angle : toward -Z
+	float phi = PI;
+	// Initial vertical angle : none
+	float theta = 0.0f;
+
+	//compute initial View Direction vector
 	updateViewDirection();
-}
-
-glm::mat4 Camera::getViewMatrix(){
-	glm::vec3 pointofinterest = m_position + m_direction;
-	return glm::lookAt(m_position,pointofinterest,m_up);
-}
-
-void Camera::updateViewDirection(){
-	m_direction = glm::vec3(std::sin(m_theta) * std::cos(m_phi),
-							std::cos(m_theta),
-							std::sin(m_phi)   * std::sin(m_theta));
-	glm::normalize(m_direction);
-}
-
-void Camera::updatePolarCoordinates(){
-	m_theta = std::acos( m_direction.z);
-	m_phi   = std::atan2((float) m_direction.y , (float) m_direction.x);
 }
 
 Camera::~Camera(){}
 
+
+/* GETTER AND SETTER BEGIN */
+float Camera::getX(){
+	return xPosition;
+}
+
+void Camera::setX(float updateX){
+	xPosition = updateX;
+}
+
+float Camera::getY(){
+	return yPosition;
+}
+
+void Camera::setY(float updateY){
+	yPosition = updateY;
+}
+
+float Camera::getZ(){
+	return zPosition;
+}
+
+void Camera::setZ(float updateZ){
+	zPosition = updateZ;
+}
+
 float Camera::getPhi(){
-	return m_phi;
+	return phi;
+}
+
+void Camera::setPhi(float updatePhi){
+	phi = updatePhi;
 }
 
 float Camera::getTheta(){
-	return m_theta;
+	return theta;
 }
 
-glm::vec3 Camera::getPosition(){
-	return m_position;
+void Camera::setTheta(float updateTheta){
+	theta = updateTheta;
 }
 
 glm::vec3 Camera::getViewDirection(){
-	return m_direction;
+	return direction;
+}
+
+glm::vec3 Camera::getPosition(){
+	return position;
 }
 
 void Camera::setPosition(float x, float y, float z){
-	m_position = glm::vec3(x,y,z);
+	xPosition = x;
+	yPosition = y;
+	zPosition = z;
+	position = glm::vec3(x,y,z);
 }
 
-void Camera::turn(float deg_phi, float deg_theta){
-	m_phi += deg_phi;
-	if(m_phi > 2*PI){
-		m_phi-=2*PI;
+void Camera::setPosition(glm::vec3 newPos){
+	position = newPos;
+}
+/* GETTER AND SETTER END */
+
+// Direction : Spherical coordinates to Cartesian coordinates conversion
+void Camera::updateViewDirection(){
+	direction = glm::vec3(	cos(theta) * sin(phi),
+							sin(theta),
+							cos(phi) * cos(theta)	);
+	glm::normalize(direction);
+}
+	// Right vector
+glm::vec3 Camera::getRight(){
+	glm::vec3 right = glm::vec3(	sin(phi - PI / 2.0f),
+									0,
+									cos(phi - PI / 2.0f));
+	glm::normalize(right);
+	return right;
+}
+	// Up vector
+glm::vec3 Camera::getUp(){
+	glm::vec3 up = glm::cross(getRight() , direction);
+	glm::normalize(up);
+	return up;
+}
+
+glm::mat4 Camera::getViewMatrix(){
+	// Camera matrix
+	return glm::lookAt(
+		position,           // Camera is here
+		position + direction, // and looks here : at the same position, plus "direction"
+		glm::vec3(0,1,0)                  // Head is up (set to 0,-1,0 to look upside-down)
+		);
 	}
-	if(m_phi< 0){
-		m_phi+=2*PI;
-	}
-	m_theta+=deg_theta;
-	if(m_theta<0.1){
-		m_theta = 0.1;
-	}
-	if(m_theta>(PI-0.1)){
-		m_theta = PI-0.1;
-	}
-	updateViewDirection();
+
+void Camera::setDirection(glm::vec3 dir){
+	direction = dir;
+	glm::normalize(direction);
 }
 
-void Camera::move(float delta_x, float delta_y, float delta_z){
-	move(glm::vec3(delta_x,delta_y,delta_z));
-}
-
-void Camera::move(glm::vec3 translation){
-	m_position = m_position + translation;
-}
-
-void Camera::moveForward(float distance){
-	glm::vec3 translation = m_direction * distance;
-	move(translation); 
-}
-
-void Camera::moveBackward(float distance){
-	moveForward(-distance);
-}
-
-void Camera::moveRight(float distance){
-	moveLeft(-distance);
-}
-
-void Camera::moveLeft(float distance){
-	glm::vec3 translation = glm::normalize(glm::cross(m_up, m_direction)) * distance;
-	move(translation);
-}
-
-void Camera::moveUp(float distance){
-	glm::vec3 translation = m_up * distance;
-}
-
-void Camera::moveDown(float distance){
-	moveUp(-distance);
+void Camera::setCenter(glm::vec3 center){
+	direction = center - position;
+	glm::normalize(direction);
 }

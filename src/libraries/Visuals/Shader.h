@@ -13,45 +13,59 @@
 #include "Tools/ShaderTools.h"
 #include <vector>
 #include <glm/gtc/type_ptr.hpp>
+#include "Visuals/UploadUniformListeners.h"
+#include "Patterns/Subject.h"
 
 
-class Shader {
+class Shader : public Subject{
 
 	//-----------------MEMBER FUNCTIONS-----------------
 public:
 
-	Shader(string vertexShader, string fragmentShader);
+	Shader(std::string vertexShader, std::string fragmentShader);
 	virtual ~Shader();
-	void setShaderName(string name);
-	void uploadUniforms(GraphicsComponent* graphcomp);
+	void setShaderName(std::string name);
+	void uploadAllUniforms();
 	void uploadUniforms(glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
-	string getShaderName();
+	std::string getShaderName();
 	GLuint getProgramHandle();
 
-	bool uploadUniform(glm::mat4 uniformMatrix, string uniformName);
-	bool uploadUniform(glm::vec3 uniformVector, string uniformName);
-	bool uploadUniform(GLfloat uniformVariable, string uniformName);
-	bool uploadUniform(GLint uniformVariable, string uniformName);
 
-	bool hasUniform(string uniformName);
+	bool uploadUniform(glm::mat4 uniformMatrix, std::string uniformName);
+	bool uploadUniform(glm::vec3 uniformVector, std::string uniformName);
+	bool uploadUniform(GLfloat uniformVariable, std::string uniformName);
+	bool uploadUniform(GLint uniformVariable, std::string uniformName);
 
-	vector<string> getUniformNames();
+	bool hasUniform(std::string uniformName);
+
+	std::vector<std::string> getUniformNames();
+
 
 	void useProgram();
 
 	void render(GraphicsComponent *gc);
 
+	void attachUniformListener(std::string uniform);
+
+	void setBlurStrength(int strength);
+	GLint getBlurStrength();
+
 private:
-	void makeShader(string vert, string frag);
+	void makeShader(std::string vert, std::string frag);
 
 	//-----------------MEMBER VARIABLES-----------------
 protected:
-	std::map<string, GLuint> mUniformHandles;
 
-	vector<string> mUniformNames;
+	std::map<std::string, GLuint> mUniformHandles;
 
-	string mShaderName;
+	std::vector<std::string> mUniformNames;
+
+	std::string mShaderName;
+
 	GLuint mProgramHandle;
+
+	GLint blurStrength;
+
 };
 
 #endif /* SHADER_H_ */
