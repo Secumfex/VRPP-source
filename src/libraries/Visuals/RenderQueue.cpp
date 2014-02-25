@@ -111,35 +111,49 @@ list<VirtualObject*> RenderQueue::getVirtualObjectList() {
 	return voList;
 }
 
+
+	//Beim rendern, wenn ein Feld der Map leer ist, dann muss der GBuffer genutzt werden
 void RenderQueue::sortByAttributes() {
 	resetQueue();
+	cout<<"Entering sortByAttributes:"<<endl;
 
 	GraphicsComponent* gc;
 	Shader* sh;
+
+	cout<<"- Creating iterators."<<endl;
 
 	list<Shader*>::iterator sh_it = shaderList.begin(); //name totally unintended.
 	list<GraphicsComponent*>::iterator gc_it = gcList.begin();
 	list<Shader*>::iterator shAlt_it = shaderListAlternate.begin();
 	list<Shader*>::iterator shCop_it = shaderListCopy.begin();
 
+	cout<<"- Creating boolean isElement."<<endl;
+
 	bool isElement = false;
 
+	cout<<"- Starting key-fill-loop:"<<endl;
+
 	for (sh_it = shaderList.begin(); sh_it != shaderList.end(); sh_it++) {
-		cout << "Filling the shaderList with keys" << endl;
-		shader2gcStorage[*sh_it];
+		cout << "- Filling the shaderList with keys" << endl;
+		//shader2gcStorage[*sh_it];
+		gc2shaderStorage[*gc_it];
 	}
 
+	cout<<"- main loop:"<<endl;
+
 	for (gc_it = gcList.begin(); gc_it != gcList.end(); gc_it++) {
-		cout << "Entering sortByAttributes loop" << endl;
+		cout << "- Is in sortByAttributes loop" << endl;
 
 			//create copy of shaderList
 		for (sh_it = shaderList.begin(); sh_it != shaderList.end(); sh_it++) {
+			cout<<"- Inner loop: copy shaderList"<<endl;
 			shaderListCopy.push_back(*sh_it);
 		}
 			//ShaderList 3 more uniforms then shader takes
 		shaderListAlternate.clear();
 
 		for (sh_it = shaderList.begin(); sh_it != shaderList.end(); sh_it++) {
+			cout<<"- In inner loop: if-stuff"<<endl;
 			//if s1.hasUniform("normalTexture") XOR gc1.hasNormalMap() --> doStuff :
 			if (!((*sh_it)->hasUniform("normalTexture"))
 					&& (*gc_it)->getMaterial()->hasNormalTexture()) {
@@ -220,6 +234,7 @@ void RenderQueue::sortByAttributes() {
 				continue;
 			}
 
+			cout<<"- More if stuff"<<endl;
 
 			if (((*sh_it)->hasUniform("normalTexture"))
 					&& !(*gc_it)->getMaterial()->hasNormalTexture()) {
@@ -281,16 +296,23 @@ void RenderQueue::sortByAttributes() {
 //				if(*shAlt_it == *sh_it)
 //					isElement = true;
 //			}
+			cout<<"- Finished ifs, L2 or L3?"<<endl;
+
 			if(isElement == false)
 				shaderListCopy.push_back(*sh_it);
 			isElement = false;
 		}
+		cout<<"- L2@"<<*gc_it<<endl;
 		for (shCop_it = shaderListCopy.begin(); shCop_it != shaderListCopy.end(); shCop_it++) {
 			gc2shaderStorage[*gc_it].push_back(*shCop_it);
+			cout<<*shCop_it<<endl;
 		}
+		cout<<"- L3@"<<*gc_it<<endl;
 		for (shAlt_it = shaderListAlternate.begin(); shAlt_it != shaderListAlternate.end(); shAlt_it++) {
 			gc2shaderStorage[*gc_it].push_back(*shAlt_it);
+			cout<<*shAlt_it<<endl;
 		}
+		cout<<"- done."<<endl;
 
 	}
 }
