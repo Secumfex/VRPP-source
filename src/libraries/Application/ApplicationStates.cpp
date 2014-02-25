@@ -11,12 +11,14 @@ using namespace std;
 #include "Visuals/VirtualObjectFactory.h"
 
 #include "IO/IOManager.h"
+#include "IO/IOListeners.h"
 
 ApplicationState::ApplicationState(){
 	camera = new Camera();
 	renderQueue = new RenderQueue();
 	iOHandler = new IOHandler();
 	iOHandler->setCameraObject(camera);
+	attachListenerOnBeginningProgramCycle(	new UpdateCameraPositionListener(camera));
 	
 	projectionMatrix = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
 }

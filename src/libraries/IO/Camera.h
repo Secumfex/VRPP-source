@@ -21,6 +21,8 @@ private:
 	float zPosition;
 	float phi;		// rotation, horizontal
 	float theta;	// inclination, vertical
+	float speedRight;
+	float speedForward;
 
 	glm::vec3 getUp();
 
@@ -43,6 +45,9 @@ public:
 	void setPhi(float updatePhi);	//!< @todo please use "[at]param" to describe which constraints exist to the parameter
 	float getTheta();	//!< @todo please describe this further
 	void setTheta(float updateTheta);	//!< @todo please use "[at]param" to describe which constraints exist to the parameter
+	void setSpeedRight(float speed);
+	void setSpeedForward(float speed);
+	void updatePosition(float deltaTime);
 
 	glm::vec3 getRight();
 	glm::vec3 getViewDirection();
