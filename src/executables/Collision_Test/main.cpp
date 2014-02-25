@@ -17,6 +17,10 @@
 #include "Physics/PhysicsComponent.h"
 #include "Visuals/GraphicsComponent.h"
 #include "Visuals/VirtualObject.h"
+#include <math.h>
+
+#define X .525731112119133606
+#define Z .850650808352039932
 
 using namespace std;
 
@@ -51,10 +55,14 @@ glm::mat4 cube1Inverse;
 glm::mat4 cube2;
 glm::mat4 cube2Inverse;
 
+glm::mat4 sphere;
+glm::mat4 sphereInverse;
+
 //VOs and physic-world
 VirtualObject* testPlane;
 VirtualObject* test1;
 VirtualObject* test2;
+VirtualObject* testSphere;
 
 PhysicWorld* world;
 
@@ -105,38 +113,53 @@ void initPhysics(){
 	cout << "world created" << endl;
 }
 
+static GLfloat vdata[12][3] = {
+    {-X, 0.0, Z}, {X, 0.0, Z}, {-X, 0.0, -Z}, {X, 0.0, -Z},
+    {0.0, Z, X}, {0.0, Z, -X}, {0.0, -Z, X}, {0.0, -Z, -X},
+    {Z, X, 0.0}, {-Z, X, 0.0}, {Z, -X, 0.0}, {-Z, -X, 0.0}
+};
+static GLuint tindices[20][3] = {
+    {0,4,1}, {0,9,4}, {9,5,4}, {4,5,8}, {4,8,1},
+    {8,10,1}, {8,3,10}, {5,3,8}, {5,2,3}, {2,7,3},
+    {7,10,3}, {7,6,10}, {7,11,6}, {11,0,6}, {0,1,6},
+    {6,1,10}, {9,0,11}, {9,11,2}, {9,2,5}, {7,2,11} };
+
+void normalize(GLfloat *a) {
+    GLfloat d=sqrt(a[0]*a[0]+a[1]*a[1]+a[2]*a[2]);
+    a[0]/=d; a[1]/=d; a[2]/=d;
+}
 /*
- * renders a sphere
- */ /*
-void renderSphere(VirtualObject* vo){
+ * draws triangles for sphere
+ */
+void drawtri(GLfloat *a, GLfloat *b, GLfloat *c, int div, float r) {
+    if (div<=0) {
+        glNormal3fv(a); glVertex3f(a[0]*r, a[1]*r, a[2]*r);
+        glNormal3fv(b); glVertex3f(b[0]*r, b[1]*r, b[2]*r);
+        glNormal3fv(c); glVertex3f(c[0]*r, c[1]*r, c[2]*r);
+    } else {
+        GLfloat ab[3], ac[3], bc[3];
+        for (int i=0;i<3;i++) {
+            ab[i]=(a[i]+b[i])/2;
+            ac[i]=(a[i]+c[i])/2;
+            bc[i]=(b[i]+c[i])/2;
+        }
+        normalize(ab); normalize(ac); normalize(bc);
+        drawtri(a, ab, ac, div-1, r);
+        drawtri(b, bc, ab, div-1, r);
+        drawtri(c, ac, bc, div-1, r);
+        drawtri(ab, bc, ac, div-1, r);  //<--Comment this line and sphere looks really cool!
+    }
+}
+/*
+ * draws sphere
+ */
+void drawsphere(int ndiv, float radius) {
+    glBegin(GL_TRIANGLES);
+    for (int i=0;i<20;i++)
+        drawtri(vdata[tindices[i][0]], vdata[tindices[i][1]], vdata[tindices[i][2]], ndiv, radius);
+    glEnd();
+}
 
-	//unseren renderManager benutzen wenn moeglich (also den vom renter-team)
-
-	btRigidBody* sphere=vo->physicsComponent->getRigidBody();
-
-	//hit test
-	if(!vo->physicsComponent->getHit()){
-
-		glColor3f(1,0,0);
-	}
-	else {
-
-		glColor3f(0,1,0);
-	}
-
-	//aktuelle modelMatrix holen. spaeter anders, da glm::mat4 und nicht float[]
-	float r=((btSphereShape*)sphere->getCollisionShape())->getRadius();
-	btTransform t;
-	sphere->getMotionState()->getWorldTransform(t);
-	float mat[16];
-	t.getOpenGLMatrix(mat);
-
-	//TODO sphere zeichnen, mit radius
-	glPushMatrix();
-		glMultMatrixf(mat);
-		//gluSphere(quad,r,20,20);		//geht nicht, da ja kein glu/glut mehr
-	glPopMatrix();
-} */
 
 /*
  * init of VOs and its components
@@ -191,6 +214,12 @@ void initScene(){
             cube2Inverse = transpose(inverse(viewMatrix * cube2));
             }
 
+     { // Sphere
+
+            sphere = scale(translate(mat4(1.0f), vec3(0.3f, 0.5f, -0.5f)), vec3(0.6f, 0.6f, 0.6f));
+            sphereInverse = transpose(inverse(viewMatrix * sphere));
+            }
+
     lightPosition = vec4(0, 10, 0, 1);
 
 	//2 VOs
@@ -198,6 +227,7 @@ void initScene(){
     testPlane = new VirtualObject;
 	test1 = new VirtualObject;
 	test2 = new VirtualObject;
+	testSphere = new VirtualObject;
 
 	//with box rigidBodies
 
@@ -217,6 +247,14 @@ void initScene(){
 	float y2 = fm2[5];
 	float z2 = fm2[10];
 
+	float *fm4 = value_ptr(sphere);
+	float radius = 1.2;
+	float mass = 1.0;
+	float x4 = fm4[0];
+	float y4 = fm4[5];
+	float z4 = fm4[10];
+
+
 	float *fm3 = value_ptr(plane);
 	float width3 = fm3[0];
 	float height3 = fm3[5];
@@ -227,10 +265,12 @@ void initScene(){
 
 	test1->setPhysicsComponent(width1, height1, depth1, x1, y1, z1, 0.3);
 	test2->setPhysicsComponent(width2, height2, depth2, x2, 100.0+y2, z1, 1.0);
+	testSphere->setPhysicsComponent(radius, x4, 150.0+y4, z4, mass);
 	testPlane->setPhysicsComponent(width3, height3, depth3, x3, y3, z3, 0.0);
 
 	cout << "hit1: " << test1->physicsComponent->getHit() << endl;
 	cout << "hit2: " << test2->physicsComponent->getHit() << endl;
+	cout << "hit3: " << testSphere->physicsComponent->getHit() << endl;
 
 	//setter test
 	test1->physicsComponent->setHit(true);
@@ -265,6 +305,10 @@ void loop(){
 		cube2 = test2->physicsComponent->getModelMatrix();
 		cube2Inverse = transpose(inverse(viewMatrix * cube2));
 
+		testSphere->physicsComponent->update();
+		sphere = testSphere->physicsComponent->getModelMatrix();
+		sphereInverse = transpose(inverse(viewMatrix * sphere));
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glViewport(0, 0, width, height);
         glUniformMatrix4fv(projectionHandle, 1, GL_FALSE, value_ptr(projectionMatrix));
@@ -287,6 +331,10 @@ void loop(){
         glUniformMatrix4fv(modelHandle, 1, GL_FALSE, value_ptr(cube2));
         glUniformMatrix4fv(inverseHandle, 1, GL_FALSE, value_ptr(cube2Inverse));
         glDrawArrays(GL_TRIANGLES, 0, 12*3);
+
+        glUniformMatrix4fv(modelHandle, 1, GL_FALSE, value_ptr(sphere));
+        glUniformMatrix4fv(inverseHandle, 1, GL_FALSE, value_ptr(sphereInverse));
+        drawsphere(5,1);
 
         ///////////////////////////////////////////////////////////////////////////
 
