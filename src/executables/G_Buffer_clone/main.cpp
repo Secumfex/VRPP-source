@@ -96,7 +96,7 @@ int main() {
 	fbo->createPositionTexture();
 	fbo->createNormalTexture();
 	fbo->createColorTexture();
-	fbo->createMaterialTexture();
+	//fbo->createMaterialTexture();
 
 	//set the list of draw buffers.
 	fbo->makeDrawBuffers();
@@ -250,7 +250,7 @@ int main() {
 		        glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		        glViewport((width/4)*3, (height/4)*3, width/4, height/4);
-		        glBindTexture(GL_TEXTURE_2D, fbo->getMaterialTextureHandle());
+		     //   glBindTexture(GL_TEXTURE_2D, fbo->getMaterialTextureHandle());
 		        glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		//show what's been drawn
