@@ -18,6 +18,8 @@ IOHandler::IOHandler(){
 	// Get mouse position
 }
 
+
+
 // Compute new orientation
 void IOHandler::setOrientation(GLFWwindow* window, double xpos, double ypos){
 	// Reset mouse position for next frame						CHECK
@@ -29,6 +31,7 @@ void IOHandler::setOrientation(GLFWwindow* window, double xpos, double ypos){
     float gotTheta = camObject->getTheta();
     camObject->setPhi(gotPhi + mouseSpeed * float(Width / 2 - xpos));			//Horizontal
     camObject->setTheta(gotTheta + mouseSpeed * float(Height / 2 - ypos));		//Vertikal
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 }
 
 void IOHandler::cursorPos_callback(GLFWwindow* window, int xpos, int ypos){
