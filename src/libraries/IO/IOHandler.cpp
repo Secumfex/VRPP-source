@@ -1,4 +1,5 @@
 #include "IOHandler.h"
+#include <iostream>
 
 IOHandler::IOHandler(){
 	/* @todo	implement state check and change
@@ -10,6 +11,7 @@ IOHandler::IOHandler(){
 	mouseSpeed = 0.005f;
 	xPos = -1;
 	yPos = -1;
+	speed = 5.0;
 
 	//	glfwGetCursorPos(window, &xPos, &yPos);
 	// Get mouse position
@@ -62,21 +64,25 @@ void IOHandler::key_callback(GLFWwindow* window, int key, int scancode, int acti
 		// Move forward
 		if (key == GLFW_KEY_W && action == GLFW_PRESS){
 			camObject->setSpeedForward(speed_movement);
+
 		}
 
 		// Move backward
 		if (key == GLFW_KEY_S && action == GLFW_PRESS){
 			camObject->setSpeedForward(-speed_movement);
+
 		}
 
 		// Strafe right
 		if (key == GLFW_KEY_D && action == GLFW_PRESS){
 			camObject->setSpeedRight(speed_movement);
+
 		}
 
 		// Strafe left
 		if (key == GLFW_KEY_A && action == GLFW_PRESS){
 			camObject->setSpeedRight(-speed_movement);
+
 		}
 
 		if (key == GLFW_KEY_W && action == GLFW_RELEASE){
@@ -96,13 +102,23 @@ void IOHandler::key_callback(GLFWwindow* window, int key, int scancode, int acti
 		}
 
 		// Fast movement
-		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS){
+		if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_PRESS){
+			speed=5.0;
 			float currentSpeedRight = camObject->getSpeedRight();
 			float currentSpeedForward = camObject->getSpeedForward();
-			camObject->setSpeedRight(  currentSpeedRight*2.0);
-			camObject->setSpeedForward(currentSpeedForward*2.0);
-		}
+			camObject->setSpeedRight(  currentSpeedRight*speed);
+			camObject->setSpeedForward(currentSpeedForward*speed);
+			float cam =camObject->getSpeedForward();
 
+		}
+		if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_RELEASE){
+			float currentSpeedRight = camObject->getSpeedRight();
+			float currentSpeedForward = camObject->getSpeedForward();
+			camObject->setSpeedRight( currentSpeedRight/speed);
+			camObject->setSpeedForward(currentSpeedForward/speed);
+			speed = 1.0;
+			float cam =camObject->getSpeedForward();
+		}
 	}
 	if (action != GLFW_RELEASE){	// 	so listeners are only called on pess event, not on release ( i.e. twice )
 		notify(key);				//	notify listeners

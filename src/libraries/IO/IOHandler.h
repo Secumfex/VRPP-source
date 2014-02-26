@@ -14,7 +14,7 @@ private:
 
 		// TODO implement state check and change
 		bool isMenuState; 				/**<Boolean for changing State between Menu und InGame*/
-
+		double speed;
 		double xPos, yPos; 	/**<*Mouse Position*/
 		float speed_movement; 	 /**<Float for adding to Position*/
 		float mouseSpeed; 	 /**<Float for adding to Theta, Phi*/
