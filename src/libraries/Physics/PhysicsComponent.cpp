@@ -14,13 +14,6 @@ PhysicsComponent::PhysicsComponent(){
 	hit = false;
 }
 
-PhysicsComponent::PhysicsComponent(glm::mat4 modelMatrix) {
-
-	this-> modelMatrix = modelMatrix;
-	rigidBody =  0;
-	hit = false;
-}
-
 PhysicsComponent::PhysicsComponent(glm::vec3 min, glm::vec3 max) {
 
 	glm::vec3 boxValue = max-min;
@@ -79,6 +72,10 @@ PhysicsComponent::~PhysicsComponent() {
 	delete shape;
 	delete motionState;
 	delete rigidBody;
+}
+
+void translate(glm::vec3 pos){
+	rigidBody->
 }
 
 void PhysicsComponent::addCollisionFlag(int flag) {
@@ -148,11 +145,6 @@ btRigidBody* PhysicsComponent::addPlane(float x, float y, float z, btVector3 nor
 	return body;
 }
 
-glm::mat4 PhysicsComponent::getModelMatrix(){
-
-	return modelMatrix;
-}
-
 btRigidBody* PhysicsComponent::getRigidBody(){
 
 	return rigidBody;
@@ -199,43 +191,17 @@ void PhysicsComponent::setHit(bool hitState){
 	hit = hitState;
 }
 
-void PhysicsComponent::update(){
+void PhysicsComponent::update(VirtualObject* vo){
 
 	btRigidBody* body = rigidBody;
-	if(body->getCollisionShape()->getShapeType() == SPHERE_SHAPE_PROXYTYPE){
 
-		btTransform t;
-		body->getMotionState()->getWorldTransform(t);
-		float mat[16];
-		t.getOpenGLMatrix(mat);
-		btQuaternion rotation = t.getRotation();
-		btVector3 transform = t.getOrigin();
-		this-> modelMatrix = glm::make_mat4(mat);
-
-
-	}
-	if(body->getCollisionShape()->getShapeType() == BOX_SHAPE_PROXYTYPE) {
 
 		btTransform t;
 		body->getMotionState()->getWorldTransform(t);
 		float mat[16];
 		t.getOpenGLMatrix(mat);
 
-		this-> modelMatrix = glm::make_mat4(mat);
-	}
-	if(body->getCollisionShape()->getShapeType() == STATIC_PLANE_PROXYTYPE) {
-
-		btTransform t;
-		body->getMotionState()->getWorldTransform(t);
-		float mat[16];
-		t.getOpenGLMatrix(mat);
-
-		this->modelMatrix = glm::make_mat4(mat);
-
-	}
-	else {
-		return;
-	}
+		vo->modelMatrix = glm::make_mat4(mat);
 }
 
 void PhysicsComponent::initFrameListener(){

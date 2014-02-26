@@ -13,8 +13,6 @@ using namespace std;
 class PhysicsComponent{
 private:
 
-	glm::mat4 modelMatrix;	/**< 4x4Matrix */
-
 	btRigidBody *rigidBody;	/**< bullet rigid body */
 
 	bool hit;	/**< true if it is hit by an other object, else false */
@@ -73,6 +71,17 @@ public:
 	*/
 	~PhysicsComponent();
 
+	/** \brief translates a rigidBody to another position
+	 *
+	 * @param pos new position
+	 */
+	void translate(glm::vec3 pos);
+
+	/** \brief translates a rigidBody to another position
+	 *
+	 * @param scale vec3 which contains x,y,z values for scaling
+	 */
+	void scale(glm::vec3 scale);
 
 	/** \brief changes the collision flag of the rigid body
 	*
@@ -164,7 +173,7 @@ public:
 	*
 	* updates the modelMatrix by the rigid body's behavior in the physics world.
 	*/
-	void update();
+	void update(VirtualObject* vo);
 
 	/** \brief initialize FrameListener
 	*

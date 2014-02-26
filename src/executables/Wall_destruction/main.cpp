@@ -7,11 +7,7 @@
 #include "Physics/UpdatePhysicsComponentListener.h"
 #include "Physics/PhysicWorldSimulationListener.h"
 
-<<<<<<< HEAD
 #include "Physics/PhysicWorld.h"
-
-=======
->>>>>>> adf3d90506fc6c446b43bc75a556f5a78fc86de4
 #include "SomeListeners.h" // until missing functionality is added
 
 Application* myApp;

@@ -17,22 +17,19 @@ VirtualObject::VirtualObject() {
 VirtualObject::VirtualObject(glm::vec3 min, glm::vec3 max){
 	physicsComponent = new PhysicsComponent(min,max);
 
-	physicsComponent->update();
-	modelMatrix = physicsComponent->getModelMatrix();
+	physicsComponent->update(this);
 }
 
 VirtualObject::VirtualObject(float radius, float x, float y, float z, float mass){
 	physicsComponent = new PhysicsComponent(radius, x, y, z, mass);
 
-	physicsComponent->update();
-	modelMatrix = physicsComponent->getModelMatrix();
+	physicsComponent->update(this);
 }
 
 VirtualObject::VirtualObject(float width, float height, float depth, float x, float y, float z, float mass){
 	physicsComponent = new PhysicsComponent(width, height, depth, x, y, z, mass);
 
-	physicsComponent->update();
-	modelMatrix = physicsComponent->getModelMatrix();
+	physicsComponent->update(this);
 }
 
 VirtualObject::~VirtualObject() {
@@ -40,8 +37,8 @@ VirtualObject::~VirtualObject() {
 	delete physicsComponent;
 }
 
-void VirtualObject::updateModelMatrix() {
-	modelMatrix = physicsComponent->getModelMatrix();
+void VirtualObject::updateModelMatrixViaPhysics() {
+	physicsComponent->update(this);
 }
 
 void VirtualObject:: addGraphicsComponent(GraphicsComponent *graphcomp){

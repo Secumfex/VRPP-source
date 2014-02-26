@@ -70,7 +70,7 @@ public:
 	 *
 	 * fetches the current modelMatrix of the physicsComponent
 	 */
-	void updateModelMatrix();
+	void updateModelMatrixViaPhysics();
 	
 	/** \brief
 	*
