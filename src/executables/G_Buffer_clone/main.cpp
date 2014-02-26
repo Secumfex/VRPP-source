@@ -100,6 +100,7 @@ int main() {
 	fbo->createNormalTexture();
 	fbo->createColorTexture();
 	fbo->createMaterialTexture();
+	fbo->createShadowMap();
 
 	//set the list of draw buffers.
 	fbo->makeDrawBuffers();
