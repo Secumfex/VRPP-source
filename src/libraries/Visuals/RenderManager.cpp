@@ -64,9 +64,8 @@ void RenderManager::setCamera(Camera* camera){
 }
 
 void RenderManager::setProjectionMatrix(float fovy, float aspect, float near, float far){
-	if(mFrustum == NULL)
-		mFrustum = new Frustum();
-	std::cout << "hier ist er 01" << std::endl;
+	if(mFrustum==NULL)
+		std::cout << "ERROR: Cannot set Projection Matrix. RenderManager does not know a Frustum, yet." << std:: endl;
 	mFrustum->setProjectionMatrix(fovy, aspect, near, far);
 }
 
@@ -82,7 +81,7 @@ VirtualObject* RenderManager::getCurrentVO(){
 }
 
 void RenderManager::setCurrentFrustum(Frustum* frustum){
-mFrustum = frustum;
+	mFrustum = frustum;
 }
 
 FrameBufferObject* RenderManager::getCurrentFBO(){

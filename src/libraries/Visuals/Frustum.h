@@ -17,6 +17,9 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
 
+
+class RenderManager;
+
 class Frustum {
 public:
 	Frustum();
@@ -27,7 +30,7 @@ public:
 
 private:
 	Camera *mCam;
-	btCollisionShape *mFrustum;
+	btCollisionShape *mFrustumVolume;
 	glm::mat4 mProjectionMatrix;
 };
 

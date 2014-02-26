@@ -121,7 +121,7 @@ int main() {
 
 	rm->setRenderQueue(rq);
 	rm->setCurrentFBO(fbo);
-	rm->setCurrentFrustum(frustum);
+//	rm->setCurrentFrustum(frustum);
 	rm->setProjectionMatrix(40.0f, 1.0f, 0.1f, 100.f);
 	rm->setCamera(cam);
 
