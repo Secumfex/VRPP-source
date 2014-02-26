@@ -77,6 +77,9 @@ void configureMyApp(){
 	myVRStateIOHandler->attachListenerOnKeyPress(new SetCameraDirectionListener(myVRState->getCamera(), glm::vec3(0.0f,0.0f,-1.0f)), 	GLFW_KEY_UP);		// pressing '<-' : view direction straight ahead
 	myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myVRState->getCamera()), 								GLFW_KEY_UP);
 
+	myVRStateIOHandler->attachListenerOnKeyPress(new CreateVirtualObjectListener(RESOURCES_PATH "/cow.obj", glm::vec3(5.0,20.0,5.0), 	myVRState, 	2.0f), GLFW_KEY_M); // create a cow in da sky
+	myVRStateIOHandler->attachListenerOnKeyPress(new CreateVirtualObjectListener(RESOURCES_PATH "/cube.obj", glm::vec3(5.0,20.0,5.0), 	myVRState, 	2.0f), GLFW_KEY_SPACE); // create a cube in da sky
+
 	/*	further customize application functionality by adding various listeners */
 	myApp->attachListenerOnProgramInitialization(	new PrintMessageListener(		string("Application is booting")));
 	myApp->attachListenerOnProgramTermination(		new PrintMessageListener(		string("Application is terminating")));

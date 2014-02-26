@@ -78,7 +78,7 @@ public:
 	void update();
 };
 
-// Listener which updates the PhysicsWorld on every update
+/// Listener which updates the PhysicsWorld on every update
 class UpdatePhysicsWorldListener : public Listener {
 private:
 public:
@@ -86,7 +86,7 @@ public:
 	void update();
 };
 
-// Listener which prints the current configuration of the given Camera Object
+/// Listener which prints the current configuration of the given Camera Object
 class PrintCameraStatusListener : public Listener {
 private:
 	Camera* cam;
@@ -95,12 +95,25 @@ public:
 	void update();
 };
 
-// Listener which sets the direction of the given Camera Object
+/// Listener which sets the direction of the given Camera Object
 class SetCameraDirectionListener : public Listener {
 private:
 	Camera* 	cam;
 	glm::vec3 	direction;
 public:
 	SetCameraDirectionListener(Camera* cam, glm::vec3 direction);
+	void update();
+};
+
+#include "Application/ApplicationStates.h"
+/// Listener which creates a Virtual Object at the provided position in the provided state
+class CreateVirtualObjectListener : public Listener {
+private:
+	ApplicationState* state;
+	glm::vec3 	position;
+	std::string path;
+	float random_offset;
+public:
+	CreateVirtualObjectListener(string path, glm::vec3 position, ApplicationState* state, float random_offset = 0.0f);
 	void update();
 };
