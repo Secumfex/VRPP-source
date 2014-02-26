@@ -12,14 +12,14 @@ RenderPass::RenderPass() {
 }
 
 //Variante statt addRenderPass:
-RenderPass::RenderPass(Shader* shader, FrameBufferObject fbo, vector<GraphicsComponent*> gcVector){
+RenderPass::RenderPass(Shader* shader, FrameBufferObject fbo, std::vector<GraphicsComponent*> gcVector){
 	mFBO = fbo;
 	mGcVector = gcVector;
 	mShader = shader;
 }
 
 //wir KÖNNTEN statt einer addRenderPass Funktion auch einfach den Konstruktor überladen, wie ihr wollt. -Saschalex
-void RenderPass::addRenderPass(Shader* shader, FrameBufferObject fbo, vector<GraphicsComponent*> gcVector){
+void RenderPass::addRenderPass(Shader* shader, FrameBufferObject fbo, std::vector<GraphicsComponent*> gcVector){
 
 	/*
 	 * iwo muss auch noch das ViewFrustumCulling hin
@@ -27,6 +27,18 @@ void RenderPass::addRenderPass(Shader* shader, FrameBufferObject fbo, vector<Gra
 	 * oder direkt nach dem Aufruf zeichnen ?!
 	 */
 
+}
+
+std::vector<GraphicsComponent*> RenderPass::willBeRendered(){
+
+	RenderManager *rm = RenderManager::getInstance();
+	Frustum *frustum = rm->getCurrentFrustum();
+	unsigned int i = 0;
+	for (i = 0; i < mGcVector.size(); ++i) {
+
+	}
+
+	return mGcVector;
 }
 
 

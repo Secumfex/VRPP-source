@@ -22,6 +22,7 @@ public:
 	virtual ~RenderPass();
 	void addRenderPass(Shader* shader, FrameBufferObject fbo, vector<GraphicsComponent*> gcVector);
 	void render();
+	std::vector<GraphicsComponent*> willBeRendered();
 
 private:
 
