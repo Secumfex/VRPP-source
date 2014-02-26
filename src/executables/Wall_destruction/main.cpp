@@ -7,14 +7,7 @@
 #include "Physics/UpdatePhysicsComponentListener.h"
 #include "Physics/PhysicWorldSimulationListener.h"
 
-#include <glm/glm.hpp>
-#include <glm/gtc/constants.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtc/matrix_inverse.hpp>
-#include "Tools/ShaderTools.h"
-#include "Tools/TextureTools.h"
-#include "Tools/Geometry.h"
+#include "Physics/PhysicWorld.h"
 
 #include "SomeListeners.h" // until missing functionality is added
 
@@ -112,9 +105,10 @@ void configureMyApp(){
 	// attach a listener which serves as renderloop by using the rendermanagers current RenderQueue and Shader
 	myApp->attachListenerOnRenderManagerFrameLoop(	new AlternativeRenderloopListener());
 
+	std::cout << PhysicWorld::getInstance()->dynamicsWorld->getNumCollisionObjects();
 
 	/*	add customized states to application state pool*/
-	myApp->addState(	myMenu);		//add the Main Menu to Application
+	myApp->addState(	myMenu);		//add the Main Menu to Applicationä
 	myApp->addState(	myLoadingMenu);	//add the Loading Screen to Application
 	myApp->addState(	myVRState);		//add the VR State to Application
 
