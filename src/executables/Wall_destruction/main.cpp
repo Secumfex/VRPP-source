@@ -8,6 +8,7 @@
 #include "Physics/PhysicWorldSimulationListener.h"
 
 #include "Physics/PhysicWorld.h"
+
 #include "SomeListeners.h" // until missing functionality is added
 
 Application* myApp;
@@ -72,7 +73,7 @@ void configureMyApp(){
 	/*	load some virtual objects into vr state scene*/	 		// create a Virtual Object by reading an .obj file and add it to VRState automatically
 	//PhysicsComponent* myCowObject1PhysicsComponent = 		myCowObject1->getPhysicsComponent();					// get PhysicsComponent pointer
 	//myVRState->		attachListenerOnBeginningProgramCycle( 	new UpdatePhysicsWorldListener());
-	myVRState->		attachListenerOnBeginningProgramCycle(  new UpdatePhysicsComponentListener(			cube1->getPhysicsComponent()));	// update PhysicsComponent on every program cycle iteration
+	myVRState->		attachListenerOnBeginningProgramCycle(  new UpdatePhysicsComponentListener(			cube1));	// update PhysicsComponent on every program cycle iteration
 	myVRState->		attachListenerOnBeginningProgramCycle(  new UpdateVirtualObjectModelMatrixListener(	cube1));	// update VirtualObject Model Matrix on every program cycle iteration
 	myVRState->		attachListenerOnBeginningProgramCycle( 	new PhysicWorldSimulationListener); 					// updates physics simulation
 

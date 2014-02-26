@@ -122,7 +122,7 @@ UpdateVirtualObjectModelMatrixListener::UpdateVirtualObjectModelMatrixListener(V
 }
 
 void UpdateVirtualObjectModelMatrixListener::update(){
-	vo->updateModelMatrix();
+	vo->updateModelMatrixViaPhysics();
 }
 #include "Physics/PhysicWorld.h"
 UpdatePhysicsWorldListener::UpdatePhysicsWorldListener(){

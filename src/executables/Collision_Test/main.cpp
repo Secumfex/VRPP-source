@@ -297,16 +297,16 @@ void loop(){
 		//TODO stepSimulation per listener (PhysicWorldSimulationListener)
 		PhysicWorld::getInstance()->dynamicsWorld->stepSimulation(1/120.f,10);
 
-		test1->physicsComponent->update();
-		cube1 = test1->physicsComponent->getModelMatrix();
+		test1->updateModelMatrixViaPhysics();
+		cube1 = test1->getModelMatrix();
 		cube1Inverse = transpose(inverse(viewMatrix * cube1));
 
-		test2->physicsComponent->update();
-		cube2 = test2->physicsComponent->getModelMatrix();
+		test2->updateModelMatrixViaPhysics();
+		cube2 = test2->getModelMatrix();
 		cube2Inverse = transpose(inverse(viewMatrix * cube2));
 
-		testSphere->physicsComponent->update();
-		sphere = testSphere->physicsComponent->getModelMatrix();
+		testSphere->updateModelMatrixViaPhysics();
+		sphere = testSphere->getModelMatrix();
 		sphereInverse = transpose(inverse(viewMatrix * sphere));
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

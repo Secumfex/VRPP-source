@@ -5,12 +5,13 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Visuals/VirtualObject.h"
+
 
 using namespace std;
 
 PhysicsComponent::PhysicsComponent(){
 	rigidBody = 0;
-	modelMatrix = glm::mat4();
 	hit = false;
 }
 
@@ -32,7 +33,6 @@ PhysicsComponent::PhysicsComponent(glm::vec3 min, glm::vec3 max) {
 
 	rigidBody = addBox(width, height, depth, x, y, z, mass);
 	addCollisionFlag(8);	//momentan noch fest, muesste eig auch zusaetzlicher input wert sein
-	update();
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
 
@@ -42,7 +42,6 @@ PhysicsComponent::PhysicsComponent(float radius, float x, float y, float z, floa
 
 	rigidBody = addSphere(radius,x,y,z,mass);
 	addCollisionFlag(8);
-	update();
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
 
@@ -51,7 +50,6 @@ PhysicsComponent::PhysicsComponent(float width, float height, float depth, float
 	hit = false;
 	rigidBody = addBox(width,height,depth,x,y,z,mass);
 	addCollisionFlag(8);
-	update();
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
 
@@ -60,7 +58,6 @@ PhysicsComponent::PhysicsComponent(float x, float y, float z, btVector3 normal, 
 	hit = false;
 	rigidBody = addPlane(x,y,z,normal,mass);
 	addCollisionFlag(8);
-	update();
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
 
@@ -74,8 +71,13 @@ PhysicsComponent::~PhysicsComponent() {
 	delete rigidBody;
 }
 
-void translate(glm::vec3 pos){
-	rigidBody->
+void PhysicsComponent::translate(glm::vec3 pos){
+	btVector3 trans = btVector3(pos.x, pos.y, pos.z);
+
+	this->rigidBody->translate(trans);
+}
+
+void PhysicsComponent::scale(glm::vec3 scale){
 }
 
 void PhysicsComponent::addCollisionFlag(int flag) {
@@ -201,7 +203,7 @@ void PhysicsComponent::update(VirtualObject* vo){
 		float mat[16];
 		t.getOpenGLMatrix(mat);
 
-		vo->modelMatrix = glm::make_mat4(mat);
+		vo->setModelMatrix(glm::make_mat4(mat));
 }
 
 void PhysicsComponent::initFrameListener(){

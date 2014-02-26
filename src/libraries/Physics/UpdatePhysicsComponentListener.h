@@ -3,18 +3,21 @@
 
 #include "Patterns/Listener.h"
 
-class PhysicsComponent;
+class VirtualObject;
 
 class UpdatePhysicsComponentListener : public Listener {
+
 protected:
-	PhysicsComponent* physicsComponent;		/**< pointer to the physics component of the VO */
+
+	VirtualObject* vo;
+
 public:
 
 	/** \brief listener
 	 *
 	 * sets the physicComponent
 	 */
-	UpdatePhysicsComponentListener(PhysicsComponent* physicsComponent);
+	UpdatePhysicsComponentListener(VirtualObject* vo);
 
 	/** \brief update
 	 *
