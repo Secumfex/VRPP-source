@@ -3,6 +3,8 @@
 
 #include <glm/glm.hpp>
 
+#include "Visuals/RenderQueue.h"
+
 using namespace std;
 
 int lastID = 0;
@@ -35,6 +37,21 @@ VirtualObject::VirtualObject(float width, float height, float depth, float x, fl
 VirtualObject::~VirtualObject() {
 	//delete graphicsComponent;
 	delete physicsComponent;
+}
+
+void VirtualObject::translate(glm::vec3 trans){
+	physicsComponent->translate(trans);
+	updateModelMatrixViaPhysics();
+
+}
+
+void VirtualObject::scale(glm::vec3 scale){
+	physicsComponent->scale(scale);
+	updateModelMatrixViaPhysics();
+	glm::mat4 gcMatrix = physicsComponent->getModelMatrix();
+	vector<GraphicsComponent*>::iterator gc_it = mGraphComponent.begin();
+
+	this->getGraphicsComponent()
 }
 
 void VirtualObject::updateModelMatrixViaPhysics() {

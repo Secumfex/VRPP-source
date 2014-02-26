@@ -6,6 +6,7 @@
 #include <glm/glm.hpp>
 #include <vector>
 
+class RenderQueue;
 
 class VirtualObject{
 
@@ -65,6 +66,10 @@ public:
 	 * deletes the physics and graphics components
 	 */
 	~VirtualObject();
+
+	void translate(glm::vec3 trans);
+
+	void scale(glm::vec3 scale);
 
 	/** \brief updates the modelMatrix
 	 *

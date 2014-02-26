@@ -78,6 +78,9 @@ void PhysicsComponent::translate(glm::vec3 pos){
 }
 
 void PhysicsComponent::scale(glm::vec3 scale){
+	btVector3 scalevec = btVector3(scale.x, scale.y, scale.z);
+
+		rigidBody->getCollisionShape()->setLocalScaling(scalevec);
 }
 
 void PhysicsComponent::addCollisionFlag(int flag) {
