@@ -6,6 +6,8 @@
 #include "Patterns/Subject.h"
 #include "IO/Camera.h"
 #include "Visuals/Shader.h"
+#include "Visuals/FrameBufferObject.h"
+
 
 // RenderManager is a Singleton and can be called by getInstance(), it is also a Subject
 class RenderManager : public Singleton<RenderManager>, public Subject{
@@ -17,8 +19,10 @@ public:
 	//RenderQueue renderQueue;
 
 	void setRenderQueue(RenderQueue* currentRQ);
+	void setCamera(Camera* camera);
 	void setCurrentGC(GraphicsComponent* gc);
 	void setCurrentShader(Shader* shader);
+	void setCurrentFBO(FrameBufferObject* fbo);
 	void setProjectionMatrix(glm::mat4 _projectionMatrix);
 	void setDefaultProjectionMatrix();
 
@@ -26,6 +30,9 @@ public:
 	GraphicsComponent* getCurrentGC();
 	Shader* getCurrentShader();
 	Camera* getCamera();
+	FrameBufferObject* getCurrentFBO();
+	GLFWwindow* getWindow();
+	RenderQueue* getRenderQueue();
 	glm::mat4 getProjectionMatrix();
 
 	void libInit();
@@ -49,6 +56,8 @@ private:
 	Shader* mCurrentShader;
 	GraphicsComponent* mCurrentGC;
 	VirtualObject* mCurrentVO;
+	FrameBufferObject* mCurrentFBO;
+
 };
 
 #endif /* RENDERMANAGER_H */

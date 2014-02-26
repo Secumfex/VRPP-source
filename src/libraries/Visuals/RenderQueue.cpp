@@ -109,6 +109,10 @@ map<VirtualObject*, vector<GraphicsComponent* > > RenderQueue::getVo2GcMap(){
 	return vo2gcMap;
 }
 
+list<VirtualObject*> RenderQueue::getVirtualObjectList(){
+	return voList;
+}
+
 void RenderQueue::sortByShaders(){
 	resetQueue();
 	string shader = "DEFERRED_SHADING";

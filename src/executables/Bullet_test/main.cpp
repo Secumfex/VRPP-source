@@ -9,19 +9,12 @@
 
 using namespace std;
 
-bool collisionCallbackFunc(btManifoldPoint& collisionPoint, const btCollisionObjectWrapper* obj1, int id1, int index1, const btCollisionObjectWrapper* obj2, int id2, int index2) {
-
-	cout<<"collision"<<endl;
-
-	return false;
-}
+//ray-picking test
 
 int main() {
 
 	PhysicWorld* world = new PhysicWorld();
 	cout << "world created" << endl;
-
-	gContactAddedCallback = collisionCallbackFunc;
 
 	VirtualObject* test1 = new VirtualObject();
 	cout << test1 << endl;

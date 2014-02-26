@@ -3,8 +3,10 @@
 #include <iostream>
 
 #include "Visuals/RenderManager.h"
+#include "IO/IOManager.h"
 
 #include "ApplicationListeners.h"
+#include "IO/IOListeners.h"
 //Application starts in the Idle State
 Application::Application(std::string label){
 	initialized = false;
@@ -21,17 +23,22 @@ Application::Application(std::string label){
 
 void Application::setLabel(std::string label){
 	this->label = label;
+	glfwSetWindowTitle(RenderManager::getInstance()->getWindow(),label.c_str());
 }
 
 void Application::initialize(){
-	RenderManager* rm = RenderManager::getInstance();
+	RenderManager* rm 	= RenderManager::getInstance();
+	rm->manageShaderProgram();	// compile default Shader Program
 
-	rm->manageShaderProgram();
+	IOManager* io 		= IOManager::getInstance();
+	io->setWindow(rm->getWindow());	// set window reference of IO Manager
+	io->bindCallbackFuncs();		// bind callback methods
 
 	rm->attachListenerOnWindowShouldClose(new TerminateApplicationListener(this));	//Application will close when Window is closed
 
 	attachListenerOnStateChange(new ActivateStateListener(this));	// a new state will be activated upon being set
-	
+	attachListenerOnBeginningProgramCycle(new ComputeFrameTimeListener());
+
 	if (currentState != 0){
 		currentState->activate();	//activate the current state
 	}
@@ -52,6 +59,7 @@ std::string Application::getLabel(){
 bool Application::setState(State* state){
 	if (StateMachine::setState(state)){
 		notify("STATECHANGELISTENER");
+		currentState->notify("STATECHANGELISTENER");
 		return true;
 	}
 	return false;
@@ -60,6 +68,7 @@ bool Application::setState(State* state){
 bool Application::setState(std::string state){
 	if (StateMachine::setState(state)){
 		notify("STATECHANGELISTENER");
+		currentState->notify("STATECHANGELISTENER");
 		return true;
 	}
 	return false;
@@ -77,8 +86,7 @@ void Application::run(){
 	while (!shouldTerminate){
 		notify("BEGINNINGPROGRAMCYCLELISTENER");	// notify listeners of beginning program cycle
 
-// @todo enable states to notify listeners (make subject of some sort)
-//		currentState->notify("BEGINNINGPROGRAMCYCLELISTENER");		// notify listeners of active state of beginning program cycle
+		currentState->notify("BEGINNINGPROGRAMCYCLELISTENER");		// notify listeners of active state of beginning program cycle
 
 		RenderManager::getInstance()->renderLoop();
 	}
@@ -105,4 +113,8 @@ void Application::attachListenerOnProgramTermination(Listener* listener){
 void Application::attachListenerOnProgramInitialization(Listener* listener){
 	listener->setName("PROGRAMINITIALIZATIONLISTENER");
 	attach(listener);
+}
+
+void Application::attachListenerOnRenderManagerFrameLoop(Listener* listener){
+	RenderManager::getInstance()->attachListenerOnNewFrame(listener);
 }

@@ -14,6 +14,7 @@
 #include <Patterns/Singleton.h>
 #include <Visuals/VirtualObject.h>
 #include <vector>
+#include <Tools/NoAssimpVirtualObjectFactory.h>
 
 #include "assimp/Importer.hpp"
 #include "assimp/scene.h"
@@ -59,8 +60,8 @@ std::vector<struct MyMesh> myMeshes;
 
 std::map<std::string, GLuint> textureIdMap;
 
-VirtualObject* mCow;
-
+VirtualObject* mCube;
+GraphicsComponent* mScreenFillTriangle;
 
 
 //---------------MEMBER FUNCTIONS--------------------
@@ -68,8 +69,8 @@ public:
 
 
 
-VirtualObject* createCow();
-
+VirtualObject* createNonAssimpVO();
+GraphicsComponent* getTriangle();
 
 VirtualObject* createVirtualObject();
 VirtualObject* createVirtualObject(std::string filename);

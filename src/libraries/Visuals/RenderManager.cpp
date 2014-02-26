@@ -16,7 +16,7 @@
 
 #include "Tools/ShaderTools.h"
 #include "Tools/TextureTools.h"
-#include "Tools/Geometry.h"
+//#include "Tools/Geometry.h"
 
 using namespace glm;
 
@@ -28,26 +28,36 @@ mat4 RenderManager::getProjectionMatrix(){
     return projectionMatrix;
 }
 
-VirtualObject* RenderManager::getCurrentVO(){
-	map<GraphicsComponent*, VirtualObject* > gc2voMap = mRenderqueue->getGc2VoMap();
-    VirtualObject* myCurrentVO = gc2voMap[mCurrentGC];
-	return myCurrentVO;
-}
+//TODO
+/*wir brauchen eine setCurrentGC(GraphicsComponent* gc)
+und eine getCurrentGC()
+die auf eine globale Pointer-variable im RenderManager zugreifen
+sowas wie GraphicsComponent* mCurrentGC
+gesetzt wird der shit in der renderLoop, aber das machen wir sp�ter
+erstmal wollen wir nur den Access haben
 
-GraphicsComponent* RenderManager::getCurrentGC(){
-	return mCurrentGC;
-}
+WENN wir das geschafft haben kommt Step2
+dann machen wir uns noch eine currentVO globale variable, ebenfalls im RenderManager (auf raphis anfrage)
+die getCurrentVO wird dann genauso aussehen wie die getCurrentGC, nur halt mit virtual object
+die setCurrentVO wird stattdessen auf die jeweilige map in der RenderQueue zugreifen und kann direkt in der
+setCurrentGC aufgerufen werden sobald die GC global gesetzt wurde
+
+*/
 
 void RenderManager::setCurrentGC(GraphicsComponent* gc){
 	mCurrentGC = gc;
 }
 
-Shader* RenderManager::getCurrentShader(){
-	return mCurrentShader;
+void RenderManager::setCurrentShader(Shader* shader){
+    mCurrentShader = shader;
 }
-Camera* RenderManager::getCamera(){
-	//TODO: ordentlich Kamera uebergeben
-	return mCamera;
+
+void RenderManager::setCurrentFBO(FrameBufferObject* fbo){
+	mCurrentFBO = fbo;
+}
+
+void RenderManager::setCamera(Camera* camera){
+    mCamera = camera;
 }
 
 void RenderManager::setProjectionMatrix(mat4 _projectionMatrix){
@@ -58,7 +68,44 @@ void RenderManager::setDefaultProjectionMatrix(){
     projectionMatrix = perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
 }
 
-//glfw error-callback function
+
+VirtualObject* RenderManager::getCurrentVO(){
+	map<GraphicsComponent*, VirtualObject* > gc2voMap = mRenderqueue->getGc2VoMap();
+    VirtualObject* myCurrentVO = gc2voMap[mCurrentGC];
+	return mCurrentVO;
+}
+
+FrameBufferObject* RenderManager::getCurrentFBO(){
+	return mCurrentFBO;
+}
+
+
+GraphicsComponent* RenderManager::getCurrentGC(){
+	return mCurrentGC;
+}
+
+Shader* RenderManager::getCurrentShader(){
+	return mCurrentShader;
+}
+Camera* RenderManager::getCamera(){
+	//TODO: ordentlich Kamera uebergeben
+	return mCamera;
+}
+
+
+void RenderManager::setProjectionMatrix(mat4 _projectionMatrix){
+    projectionMatrix = _projectionMatrix;
+}
+
+RenderQueue* RenderManager::getRenderQueue(){
+    return mRenderqueue;
+}
+
+GLFWwindow* RenderManager::getWindow(){
+    return window;
+}
+
+	//glfw error-callback function
 void errorCallback(int error, const char* description){
     fputs(description, stderr);
 }
@@ -88,7 +135,6 @@ void RenderManager::libInit(){
 	#endif
 
     window = glfwCreateWindow(800, 600, "GLFW TUT", NULL, NULL);
-    glfwSetKeyCallback(window, keyCallback);
 
     if(!window){
         glfwTerminate();
@@ -123,12 +169,11 @@ void RenderManager::renderLoop(){
     MVPHandle = glGetUniformLocation(shaderProgramHandle, "uniformMVP");
 
     if(!glfwWindowShouldClose(window)){ //if window is not about to close
+        glfwMakeContextCurrent(window);
+        glClear(GL_COLOR_BUFFER_BIT);
 
         notify("FRAMELISTENER");      //notify all listeners labeled FRAMELISTENER
 
-        glfwMakeContextCurrent(window);
-        glClear(GL_COLOR_BUFFER_BIT);
-        
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -157,6 +202,13 @@ RenderManager::~RenderManager(){
 }
 
 RenderManager::RenderManager(){
+    mCamera = 0;
+    mRenderqueue = 0;   //must be set from outside
+
+    mCurrentGC = 0;
+    mCurrentFBO = 0;
+    mCurrentShader = 0;
+
 }
 
 void RenderManager::attachListenerOnNewFrame(Listener* listener){

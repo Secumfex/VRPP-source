@@ -17,17 +17,19 @@
 #include "Patterns/Subject.h"
 
 
+
 class Shader : public Subject{
 
 	//-----------------MEMBER FUNCTIONS-----------------
 public:
 
+	Shader();
 	Shader(std::string vertexShader, std::string fragmentShader);
 	virtual ~Shader();
 	void setShaderName(std::string name);
 	void uploadAllUniforms();
 	void uploadUniforms(glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
-	string getShaderName();
+	std::string getShaderName();
 	GLuint getProgramHandle();
 
 
@@ -47,6 +49,9 @@ public:
 
 	void attachUniformListener(std::string uniform);
 
+	void setBlurStrength(int strength);
+	GLint getBlurStrength();
+
 private:
 	void makeShader(std::string vert, std::string frag);
 
@@ -60,6 +65,9 @@ protected:
 	std::string mShaderName;
 
 	GLuint mProgramHandle;
+
+	GLint blurStrength;
+
 };
 
 #endif /* SHADER_H_ */

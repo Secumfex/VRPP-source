@@ -12,7 +12,7 @@
 
 //---------------TEXTURE SCOPE--------------------
 
-	Material :: Material(){
+Material :: Material(){
 	Texture* tex = new Texture();
 	mTextures.push_back(tex);
 	mTextures.push_back(tex);
@@ -20,20 +20,21 @@
 	mTextures.push_back(tex);
 	mTextures.push_back(tex);
 	mTextures.push_back(tex);
-		mAmbColor = glm::vec3(1,1,1);
-		mDiffColor = glm::vec3(1,1,1);
-		mName = "";
-		mSpecCoeff = 0;
-}
-	Material :: ~Material(){}
 
-void Material ::setAmbientMap(Texture* tex){
+	mAmbColor = glm::vec3(1,1,1);
+	mDiffColor = glm::vec3(1,1,1);
+	mName = "";
+	mShininess = 0;
+	mEmissColor = mAmbColor;
+}
+Material :: ~Material(){}
+void Material ::setAmbientMap(Texture* tex){ //ändern
 	mTextures[0] = tex;
 }
 void Material ::setDiffuseMap(Texture* tex){
 	mTextures[1] = tex;
 }
-void Material ::setSpecularMap(Texture* tex){
+void Material ::setEmissiveMap(Texture* tex){  //ändern
 	mTextures[2] = tex;
 }
 void Material ::setNormalMap(Texture* tex){
@@ -42,18 +43,45 @@ void Material ::setNormalMap(Texture* tex){
 void Material ::setHeightMap(Texture* tex){
 	mTextures[4] = tex;
 }
-void Material ::setShadowMap(Texture* tex){
+void Material ::setOpacityMap(Texture* tex){
 	mTextures[5] = tex;
 }
+void Material ::setSpecularMap(Texture* tex){
+	mTextures[6] = tex;
+}
+void Material ::setReflectionMap(Texture* tex){
+	mTextures[7] = tex;
+}
+void Material ::setShininessMap(Texture* tex){
+	mTextures[8] = tex;
+}
+void Material ::setDisplacementMap(Texture* tex){
+	mTextures[9] = tex;
+}
+void Material ::setLightMap(Texture* tex){
+	mTextures[10] = tex;
+}
+
 
 void Material :: setName(std::string name){
 	mName = name;
 }
-void Material :: setAmbient(glm::vec4 ambient){}
-void Material :: setDiffuse(glm::vec4 diffuse){}
-void Material :: setSpecular(glm::vec4 specular){}
-void Material :: setEmission(glm::vec4 specular){}
-void Material :: setShininess(GLfloat term){}
+void Material :: setAmbient(glm::vec3 ambient){
+	mAmbColor = ambient;
+}
+void Material :: setDiffuse(glm::vec3 diffuse){
+	mDiffColor = diffuse;
+}
+void Material :: setSpecular(glm::vec3 specular){
+	mSpecColor = specular;
+}
+void Material :: setEmission(glm::vec3 emission){}
+void Material :: setShininess(GLfloat term){
+	mShininess = term;
+}
+void Material :: setReflectivity(GLfloat term){
+	mReflectivity = term;
+}
 
 Texture* Material ::getAmbientMap(){
 	return mTextures[0];
@@ -61,7 +89,7 @@ Texture* Material ::getAmbientMap(){
 Texture* Material ::getDiffuseMap(){
 	return mTextures[1];
 }
-Texture* Material ::getSpecularMap(){
+Texture* Material ::getEmissiveMap(){
 	return mTextures[2];
 }
 Texture* Material ::getNormalMap(){
@@ -70,48 +98,102 @@ Texture* Material ::getNormalMap(){
 Texture* Material ::getHeightMap(){
 	return mTextures[4];
 }
-Texture* Material ::getShadowMap(){
+Texture* Material ::getOpacityMap(){
 	return mTextures[5];
 }
+glm::vec3 Material ::getAmbient(){
+	return mAmbColor;
+}
+glm::vec3 Material ::getDiffuse(){
+	return mDiffColor;
+}
+glm::vec3 Material ::getSpecular(){
+	return mSpecColor;
+}
+glm::vec3 Material ::getEmission(){
+	return mEmissColor;
+}
+GLfloat Material::getShininess(){
+	return mShininess;
+}
+GLfloat Material::getReflectivity(){
+	return mReflectivity;
+}
+Texture* Material ::getSpecularMap(){
+	return mTextures[6];
+}
+Texture* Material ::getReflectionMap(){
+	return mTextures[7];
+}
+Texture* Material ::getShininessMap(){
+	return mTextures[8];
+}
+Texture* Material ::getDisplacementMap(){
+	return mTextures[9];
+}
+Texture* Material ::getLightMap(){
+	return mTextures[10];
+}
 
+std::string Material::getName(){
+	return mName;
+}
+
+bool Material::hasNormalMap(){
+	Texture *tex = new Texture();
+	return getNormalMap()->getTextureHandle() != tex->getTextureHandle();
+
+}
 
 //---------------MESH SCOPE--------------------
 
-	Mesh::Mesh() {
+Mesh::Mesh() {
 	mNumFaces = 0;
 	mNumIndices = 0;
 	mVaoHandle = 0;
 	mNumVerts = 0;
-	}
-	Mesh::~Mesh() { }
+}
+Mesh::~Mesh() { }
 
-	void Mesh :: setVAO(GLuint vao){
-		mVaoHandle=vao;}
+void Mesh :: setVAO(GLuint vao){
+	mVaoHandle=vao;
+}
 
-	GLuint Mesh :: getVAO(){
+GLuint Mesh :: getVAO(){
 	return mVaoHandle;
 }
 
-	void Mesh::setNumFaces (int faces){
+void Mesh::setNumFaces (int faces){
 	mNumFaces=faces;}
 
-	int Mesh::getNumFaces(){
-		return mNumFaces;
-	}
+int Mesh::getNumFaces(){
+	return mNumFaces;
+}
 
+void Mesh::setNumVertices (int verts){
+	mNumVerts = verts;
+}
 
-	void Mesh::setNumVertices (int verts){
-		mNumVerts = verts;
-	}
+int Mesh::getNumVertices(){
+	return mNumVerts;
+}
 
-	int Mesh::getNumVertices(){
-		return mNumVerts;
-	}
+void Mesh::setNumIndices (int indices){
+	mNumIndices = indices;
+}
 
-	void Mesh::setNumIndices (int indices){
-		mNumIndices = indices;
-	}
+int Mesh::getNumIndices(){
+	return mNumIndices;
+}
 
-	int Mesh::getNumIndices(){
-		return mNumIndices;
+void Mesh::setVertexPosition(std::vector<glm::vec3> position){
+	mVertexPositions = position;
+}
+
+void Mesh::addBoneWeight(GLuint boneweight){
+	mBoneWeights.push_back(boneweight);
+}
+std::vector<glm::vec3> Mesh::getVertices(){
+
+	return mVertexPositions;
 }

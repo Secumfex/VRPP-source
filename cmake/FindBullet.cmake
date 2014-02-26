@@ -158,18 +158,18 @@ ELSEIF(APPLE)
 	${DEPENDENCIES_PATH}/bullet_osx/src)
 	
     FIND_LIBRARY( l1
-        NAMES libBulletDynamics 
-        PATHS ${DEPENDENCIES_PATH}/bullet-osx/lib
+        NAMES libBulletDynamics.a
+        PATHS ${DEPENDENCIES_PATH}/bullet_osx/lib
     )
 
     FIND_LIBRARY( l2
-        NAMES libBulletCollision 
-        PATHS ${DEPENDENCIES_PATH}/bullet-osx/lib
+        NAMES libBulletCollision.a
+        PATHS ${DEPENDENCIES_PATH}/bullet_osx/lib
     )
 
     FIND_LIBRARY( l3
-        NAMES libBulletLinearMath 
-        PATHS ${DEPENDENCIES_PATH}/bullet-osx/lib
+        NAMES libLinearMath.a
+        PATHS ${DEPENDENCIES_PATH}/bullet_osx/lib
     )    
 
     set(BULLET_LIBRARY ${l1} ${l2} ${l3})

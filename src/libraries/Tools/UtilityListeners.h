@@ -43,5 +43,14 @@ public:
 	void update();
 };
 
+/// Print Value Listener will print the value pointed and print that other stuff in front of it
+class PrintValueListener : public Listener{
+private:
+	float* value;
+	std::string message;
+public:
+	PrintValueListener(float* value, std::string message);
+	void update();
+};
 
 #endif

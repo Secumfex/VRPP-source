@@ -21,9 +21,12 @@ private:
 	float zPosition;
 	float phi;		// rotation, horizontal
 	float theta;	// inclination, vertical
+	float speedRight;
+	float speedForward;
 
 	glm::vec3 getUp();
 
+	inline void clampPhiTheta();	// clip Phi, Theta into [-PI; PI] and [0, 2*PI]
 
 public:
 	Camera();	//!< constructor
@@ -38,21 +41,29 @@ public:
 	float getZ();
 	void setZ(float updateZ);
 
-	float getPhi();		//!< @todo please describe this further
-	void setPhi(float updatePhi);	//!< @todo please use "[at]param" to describe which constraints exist to the parameter
-	float getTheta();	//!< @todo please describe this further
-	void setTheta(float updateTheta);	//!< @todo please use "[at]param" to describe which constraints exist to the parameter
+	float getPhi();		//!< get rotational angle (yaw), always within [0,2*PI]
+	void setPhi(float updatePhi);	//!< set phi to provided float, will be clamped to [0,2*PI]
+	float getTheta();	//!< get inclinational angle (pitch), always within ]-PI , PI[
+	void setTheta(float updateTheta);	//!< set theta to provided float, will be clamped to ] -PI, PI []
+	void setSpeedRight(float speed);
+	void setSpeedForward(float speed);
+	void updatePosition(float deltaTime);
 
+	float getSpeedRight();
+	float getSpeedForward();
 	glm::vec3 getRight();
 	glm::vec3 getViewDirection();
 	glm::vec3 getPosition();
 	void setPosition(float x, float y, float z);
 	void setPosition(glm::vec3 newPos);
+
+	void setDirection(glm::vec3 dir);
+	void setCenter(glm::vec3 center);
 	/* GETTER AND SETTER END */
 
 
-	inline void updateViewDirection();		//!< compute ViewDirection
-
+	inline void updateViewDirection();		//!< compute ViewDirection from Phi and Theta
+	inline void updatePhiTheta();			//!< compute Phi and Theta from View Direction
 
 	glm::mat4 getViewMatrix();		//!< compute ViewMatrix
 };

@@ -28,7 +28,8 @@ public:
 	void removeVirtualObject(VirtualObject* vo); //remove VO from list
 	VirtualObject* getNextObject(); //iterate list
 	bool hasNext(); //is voList empty?
-
+	void resetQueue();	//resetting iterator to list begin
+	list<VirtualObject* > getVirtualObjectList(); //!< return list of all virtual objects in this queue
 	map<string, vector<GraphicsComponent* > > getGcFlagStorage();
 	map<string, vector<GraphicsComponent* > > getGcShaderStorage();
 	map<string, vector<GraphicsComponent* > > getGcTexStorage();

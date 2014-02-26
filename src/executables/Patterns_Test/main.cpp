@@ -44,7 +44,7 @@ void testListenerSubjectPattern(){
 
 void testSingletonPattern(){
 	//einzige Application-Instanz ansprechen und Status ändern
-	app = Application::getInstance();
+//	app = Application::getInstance();
 
 	std::cout<<"- - - - - - - - - - - - - - -"<<std::endl;
 

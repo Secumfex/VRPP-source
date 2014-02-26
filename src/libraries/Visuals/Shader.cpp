@@ -7,12 +7,13 @@
 
 #include <Visuals/Shader.h>
 
-Shader::Shader(std::string vertexShader, std::string fragmentShader) {
+Shader::Shader(){
 
-	std::string vertexshader = vertexShader ;
-	std::string fragmentshader = fragmentShader ;
 
-	makeShader(vertexShader, fragmentShader);
+	mProgramHandle = ShaderTools::makeShaderProgram();
+	setShaderName("DefaultShader");
+
+	blurStrength = 0.0f;
 
 	int total = -1;
 
@@ -30,7 +31,37 @@ Shader::Shader(std::string vertexShader, std::string fragmentShader) {
 	    GLuint location = glGetUniformLocation( mProgramHandle, name );
 
 
-	    mUniformHandles.insert(pair<std::string, GLuint>(name, location));
+	    mUniformHandles.insert(std::pair<std::string, GLuint>(name, location));
+	    mUniformNames.push_back(name);
+	    attachUniformListener(name);
+}
+}
+Shader::Shader(std::string vertexShader, std::string fragmentShader) {
+
+	std::string vertexshader = vertexShader ;
+	std::string fragmentshader = fragmentShader ;
+
+	makeShader(vertexShader, fragmentShader);
+
+	blurStrength = 0.0f;
+
+	int total = -1;
+
+	glGetProgramiv( mProgramHandle, GL_ACTIVE_UNIFORMS, &total );
+
+	unsigned int i= 0;
+
+	for(i=0; i<total; ++i)  {
+	    int name_len=-1, num=-1;
+	    GLenum type = GL_ZERO;
+	    char name[100];
+	    glGetActiveUniform( mProgramHandle, GLuint(i), sizeof(name)-1,
+	        &name_len, &num, &type, name );
+	    name[name_len] = 0;
+	    GLuint location = glGetUniformLocation( mProgramHandle, name );
+
+
+	    mUniformHandles.insert(std::pair<std::string, GLuint>(name, location));
 	    mUniformNames.push_back(name);
 	    attachUniformListener(name);
 	}
@@ -117,6 +148,14 @@ return std::vector<std::string>(mUniformNames);
 
 }
 
+void Shader::setBlurStrength(int strength){
+	blurStrength = strength;
+}
+
+GLint Shader::getBlurStrength(){
+	return blurStrength;
+}
+
 void Shader::attachUniformListener(std::string uniform){
 
 	if(uniform == "uniformModel"){
@@ -132,7 +171,29 @@ void Shader::attachUniformListener(std::string uniform){
 	else if(uniform == "normalMap"){
 		attach(new UploadUniformNormalMapListener(std::string("UNIFORMUPLOADLISTENER")));}
 	else if(uniform == "colorMap"){
-		attach(new UploadUniformColorMapListener(std::string("UNIFORMUPLOADLISTENER")));}
+		attach(new UploadUniformColorMapListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "materialMap"){
+		attach(new UploadUniformMaterialMapListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "depthMap"){
+		attach(new UploadUniformDepthMapListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "diffuseTexture"){
+		attach(new UploadUniformDiffuseTextureListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "normalTexture"){
+		attach(new UploadUniformNormalTextureListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "ambientColor"){
+		attach(new UploadUniformAmbientColorListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "diffuseColor"){
+		attach(new UploadUniformDiffuseColorListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "specularColor"){
+		attach(new UploadUniformSpecularColorListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "shininess"){
+		attach(new UploadUniformShininessListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "emissiveColor"){
+		attach(new UploadUniformEmissiveColorListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "resX"){
+			attach(new UploadUniformResolutionXListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "resY"){
+			attach(new UploadUniformResolutionYListener("UNIFORMUPLOADLISTENER"));}
 	else {
 		std::cout << "ERROR: Uniform \"" << uniform << "\" is not a valid uniform name." << std:: endl;
 	}

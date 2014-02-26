@@ -1,172 +1,131 @@
 	/*
-	 * @author Sanèr, Oliver
+	 * @author Saner, Arend, Oliver
 	 */
 
+#include <glm/glm.hpp>
 #include "IOManager.h"
+#include "Physics/PhysicWorld.h"
+#include "Visuals/RenderManager.h"
 
-IOManager::IOManager(){
-	/* @todo	implement state check and change
-	 * 			discuss if implement here or get from Rendermanager -> initialFoV = 45.0f;
-	 */
-	isMenuState = false;
-	camObject = new Camera();
-	speed_walk = 3.0f; // 3 units / second
-	speed_run = 6.0f;
-	mouseSpeed = 0.005f;
-	glfwGetCursorPos(window, &xPos, &yPos);
-	// Get mouse position
+void IOManager::bindCallbackFuncs(){
+	if (window != 0){
+		glfwSetKeyCallback(window, staticKey_callback);
+		glfwSetCursorPosCallback(window, staticCursorPos_callback);
+		glfwSetMouseButtonCallback(window, staticMouseButton_callback);
+	}
 }
 
-/*
-void IOManager::computeFoV(){
-	FoV = initialFoV - 5 * glfwGetMouseWheel();
-}
-*/
+void IOManager::staticKey_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
+	IOManager::getInstance()->key_callback(window,key,scancode,action,mods);
+}	 
 
-void IOManager::setCameraObject(Camera* camera){
-		camObject = camera;
+void IOManager::staticCursorPos_callback(GLFWwindow* window, double xpos, double ypos){
+	IOManager::getInstance()->cursorPos_callback(window, xpos, ypos);
+}
+
+void IOManager::staticMouseButton_callback(GLFWwindow* window, int button, int action, int mods){
+	IOManager::getInstance()->mouseButton_callback(window, button, action, mods);
+}
+
+void IOManager::cursorPos_callback(GLFWwindow* window, double xpos, double ypos){
+	// save current mouse cursor position
+	xPos = xpos;
+	yPos = ypos;
+
+	 if (currentIOHandler != 0){
+		currentIOHandler->cursorPos_callback(window, xpos, ypos);
+	 }
+}
+
+void IOManager::mouseButton_callback(GLFWwindow* window, int button, int action, int mods){
+	if (currentIOHandler != 0){
+		currentIOHandler->mouseButton_callback(window, button, action, mods);
 	}
 
-Camera* IOManager::getCameraObject(){
-		return camObject;
+	//if left button clicked do ray-picking
+	if(button == 0 && action == GLFW_PRESS && currentIOHandler != 0){	//GLFW_MOUSE_BUTTON_1 = 0 (?)
+
+		glm::vec3 outOrigin;
+		glm::vec3 outDirection;
+		glm::mat4 projectionMatrix = RenderManager::getInstance()->getProjectionMatrix();
+		glm::mat4 viewMatrix = currentIOHandler->getCameraObject()->getViewMatrix();
+		PhysicWorld::getInstance()->ScreenPosToWorldRay(xPos,yPos,WIDTH,HEIGHT,viewMatrix,projectionMatrix,outOrigin,outDirection);
+		return;
 	}
-
-void IOManager::computeFrameTimeDifference(){
-	// glfwGetTime is called only once, the first time this function is called
-	lastTime = glfwGetTime();
-
-	// Compute time difference between current and last frame
-	currentTime = glfwGetTime();
-	deltaTime = float(currentTime - lastTime);
+	else{
+		return;
+	}
 }
-
-// Compute new orientation
-void IOManager::setOrientation(){
-	// Reset mouse position for next frame
-	glfwSetCursorPos(window, WIDTH / 2, HEIGHT / 2);
-
-	float gotPhi = camObject->getPhi();
-	float gotTheta = camObject->getTheta();
-	camObject->setPhi(gotPhi += mouseSpeed * float(WIDTH / 2 - xPos));
-	camObject->setTheta(gotTheta += mouseSpeed * float(HEIGHT / 2 - yPos));
-}
-
-void IOManager::computeIO(){
-	computeFrameTimeDifference();
-
-	setOrientation();
-
-	// For the next frame, the "last time" will be "now"
-	lastTime = currentTime;
-}
-//TODO switch implementations for menu state and game state
 
 void IOManager::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {	
-	if (isMenuState == false){
-		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS){
-			//not exit but enter menu state
-			//glfwSetWindowShouldClose(window, GL_TRUE);
-			isMenuState = true;
-			return;
-		}
-
-		glm::vec3 gotPosition = camObject->getPosition();
-
-		// Move forward
-		if (key == GLFW_KEY_W && action == GLFW_REPEAT){
-			gotPosition += camObject->getViewDirection() * deltaTime * speed_walk;
-			camObject->setPosition(gotPosition);
-		}
-
-		// Move backward
-		if (key == GLFW_KEY_S && action == GLFW_REPEAT){
-			gotPosition -= camObject->getViewDirection() * deltaTime * speed_walk;
-			camObject->setPosition(gotPosition);
-		}
-
-		// Strafe right
-		if (key == GLFW_KEY_D && action == GLFW_REPEAT){
-			gotPosition += camObject->getRight() * deltaTime * speed_walk;
-			camObject->setPosition(gotPosition);
-		}
-
-		// Strafe left
-		if (key == GLFW_KEY_A && action == GLFW_REPEAT){
-			gotPosition -= camObject->getRight() * deltaTime * speed_walk;
-			camObject->setPosition(gotPosition);
-		}
-
-		// Fast move forward
-		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT && GLFW_KEY_W) && action == GLFW_REPEAT){
-			gotPosition += camObject->getViewDirection() * deltaTime * speed_run;
-			camObject->setPosition(gotPosition);
-		}
-
-		// Fast move backward
-		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT && GLFW_KEY_S) && action == GLFW_REPEAT){
-			gotPosition -= camObject->getViewDirection() * deltaTime * speed_run;
-			camObject->setPosition(gotPosition);
-		}
-		// Fast strafe right
-		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT && GLFW_KEY_D) && action == GLFW_REPEAT){
-			gotPosition += camObject->getRight() * deltaTime * speed_run;
-			camObject->setPosition(gotPosition);
-		}
-
-		// Fast strafe left
-		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT && GLFW_KEY_A) && action == GLFW_REPEAT){
-			gotPosition -= camObject->getRight() * deltaTime * speed_run;
-			camObject->setPosition(gotPosition);
-		}
-
+	if (currentIOHandler != 0){
+		currentIOHandler->key_callback(window, key, scancode, action, mods);
 	}
-	else {
-		//TODO implement menu keys
-		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS){
-			//not exit but enter menu state
-			//glfwSetWindowShouldClose(window, GL_TRUE);
-			isMenuState = false;
-			return;
-		}
+	notify(key);	// notify listeners attached to key
+}
 
-		if (key == GLFW_KEY_F1 && action == GLFW_PRESS){
-			//placeholder
+IOManager::IOManager(){
+	currentIOHandler 	= 0;
+	window 				= 0;
+	deltaTime 			= 0.1f; //default deltaTime value: 100ms
+	lastTime 			= 0.0;
+	currentTime = 0.0;
+
+	xPos = 0;
+	yPos = 0;
+
+	WIDTH 	= 0;
+	HEIGHT 	= 0;
+}
+
+void IOManager::setWindow(GLFWwindow* window){
+	this->window = window;
+
+	glfwGetWindowSize(window, &WIDTH, &HEIGHT);
+}
+
+void IOManager::computeFrameTimeDifference(){
+	if (window != 0){
+		if (lastTime 	== 0.0f){ 			// if glfwGetTime() has never been called before
+			lastTime 	= glfwGetTime();	// last time is current time
+			deltaTime 	= 0.1f;				// time since last call is assumed 100ms 
+		}
+		else{	// Compute time difference between current and last frame	
+			currentTime = glfwGetTime();	// get current time
+			deltaTime 	= float(currentTime - lastTime);	// compute time difference since last call
+			lastTime = currentTime;			// save current time for next call
 		}
 	}
 }
 
-// keep as reference
-/*void IOManager::keyFunction(int key){
-	glm::vec3 gotPosition = camObject->getPosition();
-	// Move forward
-	switch (key){
-		case glfwGetKey(window, GLFW_KEY_UP):
-			gotPosition += camObject->getViewDirection() * deltaTime * speed;
-			camObject->setPosition(gotPosition);
-			break;
-		// Move backward
-		case glfwGetKey(window, GLFW_KEY_DOWN):
-			gotPosition -= camObject->getViewDirection() * deltaTime * speed;
-			camObject->setPosition(gotPosition);
-			break;
-		// Strafe right
-		case glfwGetKey(window, GLFW_KEY_RIGHT):
-			gotPosition += camObject->getRight() * deltaTime * speed;
-			camObject->setPosition(gotPosition);
-			break;
-		// Strafe left
-		case glfwGetKey(window, GLFW_KEY_LEFT):
-			gotPosition -= camObject->getRight() * deltaTime * speed;
-			camObject->setPosition(gotPosition);
-			break;
-	}
+float IOManager::getDeltaTime(){
+	return deltaTime;
 }
-*/
 
-//this HAS TO BE put in rendermanager
-//glfwSetKeyCallback(window, key_callback);
+float* IOManager::getDeltaTimePointer(){
+	return &deltaTime;
+}
 
-glm::mat4 IOManager::getViewMatrix(){
-	return mViewMatrix;
+float IOManager::getLastTime(){
+	return lastTime;
+}
+
+void IOManager::setCurrentIOHandler(IOHandler* iOHandler){
+	currentIOHandler = iOHandler;
+}
+
+void IOManager::attachListenerOnKeyPress(Listener* listener, int key){
+	sstream	<<	key;	// convert int to string
+	listener->setName( sstream.str()	);
+	attach(listener);
+	sstream.str("");	// clear stringstream
+	sstream.clear();
+}
+
+void IOManager::notify(int key){
+	sstream << key;		// convert int to string
+	Subject :: notify( sstream.str() );
+	sstream.str("");	// clear stringstream
+	sstream.clear();
 }
