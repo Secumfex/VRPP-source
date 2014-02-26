@@ -72,10 +72,6 @@ void Frustum::setProjectionMatrix(float fovy, float aspect, float near, float fa
 
 	mFrustumVolume->setCollisionShape(shape);
 	mFrustumVolume->setCollisionFlags(4);
-
-
-
-
 }
 
 bool Frustum::inFrustum(GraphicsComponent *gc){

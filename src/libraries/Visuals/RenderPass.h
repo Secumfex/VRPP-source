@@ -14,21 +14,40 @@
 #include <Visuals/RenderLoop.h>
 #include <Visuals/Shader.h>
 #include <Visuals/FrameBufferObject.h>
+#include <Visuals/VirtualObjectFactory.h>
 
 class RenderPass {
 public:
 	RenderPass();
-	RenderPass(Shader* shader, FrameBufferObject fbo, vector<GraphicsComponent*> gcVector);
+	RenderPass(Shader* shader, FrameBufferObject* fbo, vector<GraphicsComponent*> gcVector);
 	virtual ~RenderPass();
 	void addRenderPass(Shader* shader, FrameBufferObject fbo, vector<GraphicsComponent*> gcVector);
-	void render();
+	virtual void render();
+
 	std::vector<GraphicsComponent*> willBeRendered();
 
-private:
+protected:
 
-	FrameBufferObject mFBO;
+	FrameBufferObject *mFBO;
 	vector<GraphicsComponent*> mGcVector;
 	Shader *mShader;
 };
+class ShadowPass : public RenderPass {
+public:
+	ShadowPass();
+	~ShadowPass();
 
+	void render();
+};
+
+class CompositingPass : public RenderPass {
+public:
+	CompositingPass();
+	~CompositingPass();
+
+	void render();
+
+	GraphicsComponent* mTriangle;
+
+};
 #endif /* RENDERPASS_H_ */

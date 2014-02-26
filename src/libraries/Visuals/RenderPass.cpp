@@ -12,7 +12,7 @@ RenderPass::RenderPass() {
 }
 
 //Variante statt addRenderPass:
-RenderPass::RenderPass(Shader* shader, FrameBufferObject fbo, std::vector<GraphicsComponent*> gcVector){
+RenderPass::RenderPass(Shader* shader, FrameBufferObject* fbo, std::vector<GraphicsComponent*> gcVector){
 	mFBO = fbo;
 	mGcVector = gcVector;
 	mShader = shader;
@@ -58,3 +58,21 @@ RenderPass::~RenderPass() {
 	// TODO Auto-generated destructor stub
 }
 
+ShadowPass::ShadowPass(){}
+ShadowPass::~ShadowPass(){}
+
+CompositingPass::CompositingPass(){
+	mTriangle =	VirtualObjectFactory::getInstance()->getTriangle();
+}
+CompositingPass::~CompositingPass(){}
+
+void CompositingPass::render(){
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glDisable(GL_DEPTH_TEST);
+
+	mShader->useProgram();
+	RenderManager::getInstance()->setCurrentShader(mShader);
+	mShader->uploadAllUniforms();
+	mShader->render(mTriangle);
+
+}
