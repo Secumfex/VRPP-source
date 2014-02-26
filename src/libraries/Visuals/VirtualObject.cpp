@@ -42,16 +42,17 @@ VirtualObject::~VirtualObject() {
 void VirtualObject::translate(glm::vec3 trans){
 	physicsComponent->translate(trans);
 	updateModelMatrixViaPhysics();
-
+	for(unsigned int i=0; i< mGraphComponent.size();i++){
+		mGraphComponent[i]->setModelMatrixGc(modelMatrix);
+	}
 }
 
 void VirtualObject::scale(glm::vec3 scale){
 	physicsComponent->scale(scale);
 	updateModelMatrixViaPhysics();
-	glm::mat4 gcMatrix = physicsComponent->getModelMatrix();
-	vector<GraphicsComponent*>::iterator gc_it = mGraphComponent.begin();
-
-	this->getGraphicsComponent()
+	for(unsigned int i=0; i< mGraphComponent.size();i++){
+		mGraphComponent[i]->setModelMatrixGc(modelMatrix);
+	}
 }
 
 void VirtualObject::updateModelMatrixViaPhysics() {
