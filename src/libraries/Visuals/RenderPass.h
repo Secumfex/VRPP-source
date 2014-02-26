@@ -22,9 +22,7 @@ public:
 	virtual ~RenderPass();
 	void addRenderPass(Shader* shader, FrameBufferObject fbo, vector<GraphicsComponent*> gcVector);
 	void render();
-	bool inFrustum();
-	bool inFrustum(glm::vec4 vec_a, glm::vec4 vec_b, glm::vec4 vec_c, glm::vec4 vec_d, glm::vec4 vec_e, glm::vec4 vec_f, glm::vec4 vec_g, glm::vec4 vec_h);
-	void calcViewFrustum();
+
 private:
 
 	FrameBufferObject mFBO;
