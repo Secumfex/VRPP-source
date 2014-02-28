@@ -11,6 +11,7 @@
 #include "IO\IOHandler.h"
 #include "Patterns/Subject.h"
 
+/// singleton implementation of a class to handle input callbacks and call specific callback methods of it's current IOHandler
 class IOManager : public Singleton<IOManager>, Subject{
 	friend class Singleton<IOManager>;
 
@@ -35,11 +36,11 @@ public:
 	void setCurrentIOHandler(IOHandler* iOHandler);
 	IOHandler* getCurrentIOHandler();
 
-	float getDeltaTime();	/**< get time difference with which IOManager is working	*/
-	float* getDeltaTimePointer(); /**< get pointer to delta time variable, use with caution! */
-	float getLastTime ();	/**< get last time on which computeFrameTimeDifference was called */
+	float getDeltaTime();	//!< get time difference with which IOManager is working	
+	float* getDeltaTimePointer(); //!< get pointer to delta time variable, use with caution!
+	float getLastTime ();	//!< get last time on which computeFrameTimeDifference was called 
 
-	void computeFrameTimeDifference();	/**b< compute time difference since last call of this method */
+	void computeFrameTimeDifference();	//!< compute time difference since last call of this method
 
 	/**\
 	 * @param window where the callback is used

@@ -6,7 +6,7 @@
 #include <glm/glm.hpp>
 #include <vector>
 
-
+/// represents a 3D-Model in the scene 
 class VirtualObject{
 
 	private:

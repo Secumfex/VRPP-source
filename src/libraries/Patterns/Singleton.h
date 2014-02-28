@@ -6,6 +6,7 @@ using namespace std;
 
 
 template <typename C>
+/// a singleton class can only be instantiated once
  class Singleton
  {
  public:
@@ -30,10 +31,9 @@ template <typename C>
 
 
 
- //Beispielklasse die Singleton implementiert
+/// sample implementation of Singleton to use as reference
 class ConcreteSingleton : public Singleton <ConcreteSingleton>
  {
-//nötig damit Singleton Zugriff auf private und protected Membervariablen von ConcreteSingleton hat
  friend class Singleton <ConcreteSingleton>;
 
  public:

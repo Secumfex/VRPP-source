@@ -43,7 +43,7 @@ public:
 	void update();
 };
 
-// Listener which prints the current configuration of the given Camera Object
+/// Listener which prints the current configuration of the given Camera Object
 class PrintCameraStatusListener : public Listener {
 private:
 	Camera* cam;
@@ -52,7 +52,7 @@ public:
 	void update();
 };
 
-// Listener which sets the direction of the given Camera Object
+/// Listener which sets the direction of the given Camera Object
 class TurnCameraListener : public Listener {
 private:
 	Camera* 	cam;
