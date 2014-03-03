@@ -42,6 +42,7 @@ void IOManager::mouseButton_callback(GLFWwindow* window, int button, int action,
 		currentIOHandler->mouseButton_callback(window, button, action, mods);
 	}
 
+	/*
 	//if left button clicked do ray-picking
 	if(button == 0 && action == GLFW_PRESS && currentIOHandler != 0){	//GLFW_MOUSE_BUTTON_1 = 0 (?)
 
@@ -49,12 +50,14 @@ void IOManager::mouseButton_callback(GLFWwindow* window, int button, int action,
 		glm::vec3 outDirection;
 		glm::mat4 projectionMatrix = RenderManager::getInstance()->getProjectionMatrix();
 		glm::mat4 viewMatrix = currentIOHandler->getCameraObject()->getViewMatrix();
-		PhysicWorld::getInstance()->ScreenPosToWorldRay(xPos,yPos,WIDTH,HEIGHT,viewMatrix,projectionMatrix,outOrigin,outDirection);
+		PhysicWorld::getInstance()->screenPosToWorldRay(xPos,yPos,WIDTH,HEIGHT,viewMatrix,projectionMatrix,outOrigin,outDirection);
 		return;
 	}
 	else{
 		return;
 	}
+	*/
+
 }
 
 void IOManager::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -109,6 +112,10 @@ float IOManager::getLastTime(){
 
 void IOManager::setCurrentIOHandler(IOHandler* iOHandler){
 	currentIOHandler = iOHandler;
+}
+
+IOHandler* IOManager::getCurrentIOHandler(){
+	return currentIOHandler;
 }
 
 void IOManager::attachListenerOnKeyPress(Listener* listener, int key){

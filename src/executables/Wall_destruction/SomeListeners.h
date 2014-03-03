@@ -114,3 +114,14 @@ public:
 	TurnCameraListener(Camera* cam, float phi, float theta);
 	void update();
 };
+
+#include "Physics/PhysicWorld.h"
+//Listener which starts the ray-picking test
+class PickRayListener : public Listener {
+private:
+	PhysicWorld* phWorld;
+
+public:
+	PickRayListener();
+	void update();
+};

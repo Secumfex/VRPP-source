@@ -168,3 +168,29 @@ void TurnCameraListener::update(){
 	cam->setPhi(  old_phi   + phi);
 	cam->setTheta(old_theta + theta);
 }
+
+//includes for ray-picking
+#include "IO/IOManager.h"
+#include "IO/IOHandler.h"
+#include "Physics/PhysicWorld.h"
+
+PickRayListener::PickRayListener(){
+
+	this->phWorld = PhysicWorld::getInstance();
+}
+
+void PickRayListener::update(){
+
+	//int xPos = IOManager::getInstance()->;
+	//int yPos = IOManager::getInstance()->;
+	//int WIDTH = IOManager::getInstance()->;
+	//int HEIGHT = IOManager::getInstance()->;
+
+	glm::vec3 outOrigin;
+	glm::vec3 outDirection;
+	glm::mat4 projectionMatrix = RenderManager::getInstance()->getProjectionMatrix();
+	//IOHandler* handler = IOManager::getInstance()->getCurrentIOHandler;
+	glm::mat4 viewMatrix = IOManager::getInstance()->getCurrentIOHandler()->getViewMatrix();
+	//glm::mat4 viewMatrix = handler->getViewMatrix();
+	//phWorld->screenPosToWorldRay(xPos,yPos,WIDTH,HEIGHT,viewMatrix,projectionMatrix,outOrigin,outDirection);
+}
