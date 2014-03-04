@@ -388,26 +388,26 @@ void MaterialManager::makeMaterial_wood(GraphicsComponent* gc){
 	//for third round
 
 	void MaterialManager::makeMaterial_polished(GraphicsComponent* gc){
-	    gc->getMaterial()->setAmbient(glm::vec3(0.01f));
-	    gc->getMaterial()->setDiffuse(glm::vec3(0.01f,0.01f,0.01f));
-	    gc->getMaterial()->setSpecular(glm::vec3(0.5f));
-	    gc->getMaterial()->setShininess(32.0f);
+	 //   gc->getMaterial()->setAmbient(glm::vec3(0.01f));
+	//    gc->getMaterial()->setDiffuse(glm::vec3(0.01f,0.01f,0.01f));
+	    gc->getMaterial()->setSpecular(glm::vec3(0.75f));
+	    gc->getMaterial()->setShininess(0.5f);
 	    std::cout<<"\n'polished' set"<<endl;
 	}
 
 	void MaterialManager::makeMaterial_rough(GraphicsComponent* gc){
-		    gc->getMaterial()->setAmbient(glm::vec3(0.01f));
-		    gc->getMaterial()->setDiffuse(glm::vec3(0.01f,0.01f,0.01f));
+//		    gc->getMaterial()->setAmbient(glm::vec3(0.01f));
+//		    gc->getMaterial()->setDiffuse(glm::vec3(0.01f,0.01f,0.01f));
 		    gc->getMaterial()->setSpecular(glm::vec3(0.5f));
 		    gc->getMaterial()->setShininess(32.0f);
 		    std::cout<<"\n'rough' set"<<endl;
 		}
 
 	void MaterialManager::makeMaterial_mat(GraphicsComponent* gc){
-			    gc->getMaterial()->setAmbient(glm::vec3(0.01f));
-			    gc->getMaterial()->setDiffuse(glm::vec3(0.01f,0.01f,0.01f));
+			  //  gc->getMaterial()->setAmbient(glm::vec3(0.01f));
+			 //   gc->getMaterial()->setDiffuse(glm::vec3(0.01f,0.01f,0.01f));
 			    gc->getMaterial()->setSpecular(glm::vec3(0.5f));
-			    gc->getMaterial()->setShininess(32.0f);
+			    gc->getMaterial()->setShininess(2.0f);
 			    std::cout<<"\n'mat' set"<<endl;
 			}
 
@@ -425,4 +425,5 @@ void MaterialManager::makeMaterial_wood(GraphicsComponent* gc){
 			MaterialManager::makeMaterial(matName,*it);
 		}
 	}
+
 
