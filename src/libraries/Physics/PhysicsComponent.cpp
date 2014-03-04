@@ -108,7 +108,7 @@ btRigidBody* PhysicsComponent::addBox(float width, float height, float depth, fl
 	}
 
 	btMotionState* motion = new btDefaultMotionState(t);
-	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,box);
+	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,box,inertia);
 	btRigidBody* body = new btRigidBody(info);
 	body->setLinearFactor(btVector3(1,1,1));
 	return body;
