@@ -32,6 +32,7 @@ public:
 	void updateModelMatrix();
 	void setCamera(Camera *cam);
 	void makeRigidBody();
+	static void isTrue(bool& myBool);
 
 private:
 	Camera *mCam;

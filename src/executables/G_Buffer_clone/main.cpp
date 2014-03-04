@@ -126,8 +126,9 @@ int main() {
 	rm->setProjectionMatrix(40.0f, 1.0f, 0.1f, 100.f);
 
 	cam->setPosition(glm::vec3(0.0f, 1.0f, -6.0f));
-	cam->setCenter(glm::vec3(0.0f, 0.0f, 0.0f));
+	cam->setCenter(glm::vec3(1.0f, 3.0f, 1.0f));
 
+	frustum->updateModelMatrix();
 
 	while(!glfwWindowShouldClose(window)) {
 
@@ -186,6 +187,9 @@ int main() {
 			for (j = 0; j < vo_temp->getGraphicsComponent().size(); ++j) {
 				GraphicsComponent *gc_temp = vo_temp->getGraphicsComponent()[j];
 				rm->setCurrentGC(gc_temp);
+
+				if(frustum->inFrustum(gc_temp))
+					std::cout << gc_temp->getMaterial()->getName() << "ES KOLLIDIERT" << std:: endl;
 
 				if(gc_temp->getMaterial()->hasNormalTexture()){
 					gbuffer_normalMap_Shader->useProgram();
