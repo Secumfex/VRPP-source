@@ -30,6 +30,11 @@ public:
 	IOHandler* 		getIOHandler();
 	glm::mat4 		getProjectionMatrix();
 
+	void setCamera(				Camera* camera);
+	void setRenderQueue(		RenderQueue* renderQueue);
+	void setIOHandler(			IOHandler* iOHandler);
+	void setProjectionMatrix(	glm::mat4 projectionMatrix);
+
 	virtual void activate(); //!< activation of state --> binding objects
 
 	VirtualObject* createVirtualObject(std::string path); //!< create Object from path and add it to renderQueue

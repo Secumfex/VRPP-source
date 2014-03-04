@@ -40,6 +40,24 @@ glm::mat4 ApplicationState::getProjectionMatrix(){
 	return projectionMatrix;
 }
 
+void ApplicationState::setCamera(				Camera* camera){
+	this->camera = camera;
+	this->iOHandler->setCameraObject(camera);
+	attachListenerOnBeginningProgramCycle(	new UpdateCameraPositionListener(camera, IOManager::getInstance()->getDeltaTimePointer()));
+}
+
+void ApplicationState::setRenderQueue(		RenderQueue* renderQueue){
+	this->renderQueue = renderQueue;
+}
+
+void ApplicationState::setIOHandler(			IOHandler* iOHandler){
+	this->iOHandler = iOHandler;
+	this->iOHandler->setCameraObject(camera);
+}
+void ApplicationState::setProjectionMatrix(	glm::mat4 projectionMatrix){
+	this->projectionMatrix = projectionMatrix;
+}
+
 void ApplicationState::activate(){
 	State::activate();
 	bindObjects();	

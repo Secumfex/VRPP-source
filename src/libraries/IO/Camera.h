@@ -12,7 +12,7 @@ using namespace std;
  *
  */
 class Camera{
-private:
+protected:
 	glm::vec3 position;
 	glm::vec3 direction;
 
@@ -47,15 +47,15 @@ public:
 	void setTheta(float updateTheta);	//!< set theta to provided float, will be clamped to ] -PI, PI []
 	void setSpeedRight(float speed);
 	void setSpeedForward(float speed);
-	void updatePosition(float deltaTime);
+	virtual void updatePosition(float deltaTime);
 
 	float getSpeedRight();
 	float getSpeedForward();
 	glm::vec3 getRight();
 	glm::vec3 getViewDirection();
 	glm::vec3 getPosition();
-	void setPosition(float x, float y, float z);
-	void setPosition(glm::vec3 newPos);
+	virtual void setPosition(float x, float y, float z);
+	virtual void setPosition(glm::vec3 newPos);
 
 	void setDirection(glm::vec3 dir);
 	void setCenter(glm::vec3 center);

@@ -111,6 +111,9 @@ void Camera::setPosition(float x, float y, float z){
 
 void Camera::setPosition(glm::vec3 newPos){
 	position = newPos;
+	xPosition = newPos.x;
+	yPosition = newPos.y;
+	zPosition = newPos.z;
 }
 /* GETTER AND SETTER END */
 
