@@ -226,9 +226,10 @@ void ShootSphereListener::update(){
 
 	state->addVirtualObject(cube);
 	cube->setModelMatrix(glm::translate(glm::mat4(1.0f), glm::vec3(start.x, start.y, start.z)));
+	cube->getPhysicsComponent()->~PhysicsComponent();
 	cube->setPhysicsComponent(1.0f, 1.0f, 1.0f, start.x, start.y, start.z, 1.0f);
 	cube->physicsComponent->getRigidBody()->setLinearVelocity(dir*20);
-
+	std::cout << PhysicWorld::getInstance()->dynamicsWorld->getNumCollisionObjects() << endl;
 
 
 	state->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube));
