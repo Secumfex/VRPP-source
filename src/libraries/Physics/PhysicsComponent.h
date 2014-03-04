@@ -65,7 +65,7 @@ public:
 	 * @param normal normal vector of the plane
 	 * @param mass defines the behavior of the rigid body in the physics world
 	 */
-	PhysicsComponent(float x, float y, float z, btVector3 normal, float mass);	//todo: change the type of normal
+	PhysicsComponent(float x, float y, float z, btVector3& normal, float mass);	//todo: change the type of normal
 
 	/** \brief destructor
 	*
@@ -118,7 +118,7 @@ public:
 	 * @param mass defines the behavior of the rigid body in the physics world
 	 * @return a bullet rigid body
 	 */
-	btRigidBody* addPlane(float x, float y, float z, btVector3 normal, float mass);
+	btRigidBody* addPlane(float x, float y, float z, btVector3& normal, float mass);
 
 
 	/** \brief getter
