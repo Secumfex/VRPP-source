@@ -11,12 +11,13 @@ using namespace std;
 #include "Visuals/VirtualObjectFactory.h"
 
 #include "IO/IOManager.h"
+#include "IO/IngameHandler.h"
 #include "IO/IOListeners.h"
 
 ApplicationState::ApplicationState(){
 	camera = new Camera();
 	renderQueue = new RenderQueue();
-	iOHandler = new IOHandler();
+	iOHandler = new IngameHandler();
 	iOHandler->setCameraObject(camera);
 	attachListenerOnBeginningProgramCycle(	new UpdateCameraPositionListener(camera, IOManager::getInstance()->getDeltaTimePointer()));
 	

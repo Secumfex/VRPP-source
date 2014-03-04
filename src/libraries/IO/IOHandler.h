@@ -11,8 +11,7 @@
 
 /// a class which implements specific input interpretation, i.e. camera movement
 class IOHandler : public Subject{
-private:
-
+protected:
 		// TODO implement state check and change
 		bool isMenuState; 				/**<Boolean for changing State between Menu und InGame*/
 		double speed;
@@ -27,6 +26,8 @@ private:
 		std	::	stringstream sstream; /**<* mostly used to convert ints to strings */
 public:
 	IOHandler();
+	virtual ~IOHandler();
+
 
 	void setCameraObject(Camera* camera);
 	Camera* getCameraObject();
@@ -45,10 +46,10 @@ public:
 	 * @return returns a new Matrix of the camera
 	 *
 	 */
-	void setOrientation(GLFWwindow* window, double xpos, double ypos); // !< method to set the Camera orientation 
+	virtual void setOrientation(GLFWwindow* window, double xpos, double ypos); // !< method to set the Camera orientation
 	void cursorPos_callback(GLFWwindow* window, int xpos, int ypos);	//!< cursorPos_callback as defined by GLFW
 	void mouseButton_callback(GLFWwindow* window, int button, int action, int mods); //!< mouse button callback (press / release) as defined by GLFW
-	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+	virtual void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	void notify(int key);	//!< notify Listeners attached to a key pess by using the GLFW integer definitions for keys
 	void attachListenerOnKeyPress(Listener* listener, int key); //!< attach a Listener to a key by using the GLFW integer definitions for keys
 	void attachListenerOnMouseButtonPress(Listener* listener, int button); //!< attach a Listener to a button press by using the GLFW integer definitions for buttons
