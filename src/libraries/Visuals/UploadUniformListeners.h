@@ -31,6 +31,13 @@ class UploadUniformModelMatrixListener : public Listener{
  	 	void update();
  };
 
+ class UploadUniformLightProjectionMatrixListener : public Listener{
+
+ 	public:
+	 UploadUniformLightProjectionMatrixListener(std::string name);
+ 	 	void update();
+ };
+
  class UploadUniformPositionMapListener : public Listener{
 
  	public:
@@ -49,6 +56,13 @@ class UploadUniformModelMatrixListener : public Listener{
 
  	public:
  		UploadUniformColorMapListener(std::string name);
+ 	 	void update();
+ };
+
+ class UploadUniformShadowMapListener : public Listener{
+
+ 	public:
+ 		UploadUniformShadowMapListener(std::string name);
  	 	void update();
  };
 

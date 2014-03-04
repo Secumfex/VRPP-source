@@ -62,10 +62,11 @@ int main() {
 	Shader *gbufferShader = new Shader(		SHADERS_PATH "/GBuffer_clone/GBuffer.vert",
 			SHADERS_PATH "/GBuffer_clone/GBuffer.frag");
 
-//	Shader *gbufferShader = new Shader();
-
 	Shader *gbuffer_normalMap_Shader = new Shader(		SHADERS_PATH "/GBuffer_clone/GBuffer.vert",
 			SHADERS_PATH "/GBuffer_clone/GBuffer_normalTexture.frag");
+
+	Shader *depthwrite_Shader = new Shader(		SHADERS_PATH "/GBuffer_clone/Depthwrite.vert",
+			SHADERS_PATH "/GBuffer_clone/Depthwrite.frag");
 
 	RenderQueue* rq = new RenderQueue();
 	RenderManager* rm = RenderManager::getInstance();
@@ -125,6 +126,7 @@ int main() {
 	rm->setCamera(cam);
 	rm->setCurrentFrustum(frustum);
 	rm->setProjectionMatrix(40.0f, 1.0f, 0.1f, 100.f);
+	rm->setLightPosition(glm::vec3(5,2,-2),0);
 
 	cam->setPosition(glm::vec3(0.0f, 1.0f, -6.0f));
 	cam->setCenter(glm::vec3(0.0f, 0.0f, 0.0f));
@@ -180,6 +182,26 @@ int main() {
 
 		list<VirtualObject*> vo_list = rm->getRenderQueue()->getVirtualObjectList();
 		unsigned int i= 0;
+		while (!vo_list.empty()) {
+			unsigned int j= 0;
+			VirtualObject* vo_temp = vo_list.front();
+			vo_list.pop_front();
+			for (j = 0; j < vo_temp->getGraphicsComponent().size(); ++j) {
+				GraphicsComponent *gc_temp = vo_temp->getGraphicsComponent()[j];
+				rm->setCurrentGC(gc_temp);
+
+
+					depthwrite_Shader->useProgram();
+					rm->setCurrentShader(depthwrite_Shader);
+					depthwrite_Shader->uploadAllUniforms();
+
+
+				depthwrite_Shader->render(gc_temp);
+			}
+		}
+
+		vo_list = rm->getRenderQueue()->getVirtualObjectList();
+		i= 0;
 		while (!vo_list.empty()) {
 			unsigned int j= 0;
 			VirtualObject* vo_temp = vo_list.front();
@@ -246,7 +268,7 @@ int main() {
 		        glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		        glViewport((width/4)*3, (height/4)*3, width/4, height/4);
-		        glBindTexture(GL_TEXTURE_2D, fbo->getMaterialTextureHandle());
+		        glBindTexture(GL_TEXTURE_2D, fbo->getShadowMapHandle());
 		        glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		//show what's been drawn

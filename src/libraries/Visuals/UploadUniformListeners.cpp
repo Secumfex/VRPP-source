@@ -61,6 +61,18 @@ UploadUniformInverseModelViewMatrixListener::UploadUniformInverseModelViewMatrix
  	shader->uploadUniform(transposeInverseModelView, "uniformInverse");
  }
 
+ UploadUniformLightProjectionMatrixListener::UploadUniformLightProjectionMatrixListener(std::string  name){
+	setName(name);
+}
+
+ void UploadUniformLightProjectionMatrixListener::update(){
+ 	Shader* shader = RenderManager::getInstance()->getCurrentShader();
+
+ 	glm::mat4 lightprojectionMatrix = RenderManager::getInstance()->getLightProjectionMatrix(0);
+
+ 	shader->uploadUniform(lightprojectionMatrix, "uniformLightProjection");
+ }
+
 UploadUniformPositionMapListener::UploadUniformPositionMapListener(std::string name){
 	setName(name);
 }
@@ -101,6 +113,19 @@ UploadUniformColorMapListener::UploadUniformColorMapListener(std::string name){
 	 glEnable(GL_TEXTURE_2D);
 	 fbo->bindColorTexture();
 	 shader->uploadUniform(6,"colorMap");
+ }
+UploadUniformShadowMapListener::UploadUniformShadowMapListener(std::string name){
+	setName(name);
+}
+
+ void UploadUniformShadowMapListener::update(){
+	 FrameBufferObject* fbo = RenderManager::getInstance()->getCurrentFBO();
+	 Shader* shader = RenderManager::getInstance()->getCurrentShader();
+
+	 glActiveTexture(GL_TEXTURE8);
+	 glEnable(GL_TEXTURE_2D);
+	 fbo->bindShadowMap();
+	 shader->uploadUniform(8,"shadowMap");
  }
 UploadUniformMaterialMapListener::UploadUniformMaterialMapListener(std::string name){
 	setName(name);

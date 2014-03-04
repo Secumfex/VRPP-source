@@ -166,6 +166,8 @@ void Shader::attachUniformListener(std::string uniform){
 		attach(new UploadUniformProjectionMatrixListener(std::string("UNIFORMUPLOADLISTENER")));}
 	else if(uniform == "uniformInverse"){
 		attach(new UploadUniformInverseModelViewMatrixListener(std::string("UNIFORMUPLOADLISTENER")));}
+	else if(uniform == "uniformLightProjection"){
+		attach(new UploadUniformLightProjectionMatrixListener(std::string("UNIFORMUPLOADLISTENER")));}
 	else if(uniform == "positionMap"){
 		attach(new UploadUniformPositionMapListener(std::string("UNIFORMUPLOADLISTENER")));}
 	else if(uniform == "normalMap"){
@@ -174,6 +176,8 @@ void Shader::attachUniformListener(std::string uniform){
 		attach(new UploadUniformColorMapListener("UNIFORMUPLOADLISTENER"));}
 	else if(uniform == "materialMap"){
 		attach(new UploadUniformMaterialMapListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "shadowMap"){
+		attach(new UploadUniformShadowMapListener("UNIFORMUPLOADLISTENER"));}
 	else if(uniform == "depthMap"){
 		attach(new UploadUniformDepthMapListener("UNIFORMUPLOADLISTENER"));}
 	else if(uniform == "diffuseTexture"){

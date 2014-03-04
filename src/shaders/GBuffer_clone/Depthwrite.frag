@@ -14,5 +14,5 @@ uniform sampler2D diffuseTexture;
 layout(location = 4) out vec4 shadowOutput;
  
 void main(){  
-    shadowOutput = vec4(texture(diffuseTexture, passUVCoord).rgb, passPosition.z);
+    shadowOutput = vec4(passPosition.z, 0, 0, 0);
 }

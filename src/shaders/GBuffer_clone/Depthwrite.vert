@@ -16,6 +16,6 @@ out vec2 passUVCoord;
 
 void main(){
     passUVCoord = uvCoordAttribute;
-    passPosition = uniformLightProjection * positionAttribute;
-    gl_Position = passPosition;
+    passPosition = uniformLightProjection * uniformModel * positionAttribute;
+    gl_Position = uniformModel * passPosition;
 }
