@@ -60,6 +60,7 @@ void configureMyApp(){
 
 	glm::mat4		myModelMatrix1 = 	glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.0f, 0.0f)), glm::vec3(2.5f, 0.2f, 2.5f));	//floor
 	myCubeObject1-> setModelMatrix(		myModelMatrix1); 	// override default Model Matrix
+
 	myCubeObject1->	setPhysicsComponent(2.5f, 0.2f, 2.5f, 0.0f, -1.0f, 0.0f, 0.0f);
 
 	glm::mat4 myModelMatrix2 = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -2.5f)), glm::vec3(2.5f, 2.5f, 0.2f));	// wall
