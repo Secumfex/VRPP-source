@@ -100,7 +100,7 @@ btRigidBody* PhysicsComponent::addBox(float width, float height, float depth, fl
 	t.setIdentity();
 	t.setOrigin(btVector3(x,y,z));
 
-	btBoxShape* box = new btBoxShape(btVector3(width/2.0,height/2.0,depth/2.0));
+	btBoxShape* box = new btBoxShape(btVector3(width,height,depth));
 
 	btVector3 inertia(0,0,0);
 	if(mass != 0.0) {
