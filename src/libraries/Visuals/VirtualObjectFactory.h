@@ -62,6 +62,7 @@ std::vector<struct MyMesh> myMeshes;
 std::map<std::string, GLuint> textureIdMap;
 
 VirtualObject* mCube;
+VirtualObject* mSphere;
 GraphicsComponent* mScreenFillTriangle;
 
 
@@ -71,6 +72,7 @@ public:
 
 
 VirtualObject* createNonAssimpVO();
+VirtualObject* createNonAssimpSphere();
 GraphicsComponent* getTriangle();
 
 VirtualObject* createVirtualObject();

@@ -6,12 +6,13 @@
 #include <glm/glm.hpp>
 #include <vector>
 
+class RenderQueue;
+
 /// represents a 3D-Model in the scene 
 class VirtualObject{
 
 	private:
-	glm::mat4 modelMatrix;							/**< 4x4Matrix */
-	int id;											/**< identification number */
+	glm::mat4 modelMatrix;							/**< 4x4Matrix */										/**< identification number */
 
 	vector<GraphicsComponent*> mGraphComponent;		/**< vector of graphic-components */
 
@@ -33,17 +34,49 @@ public:
 	 */
 	VirtualObject(glm::mat4 modelMatrix);
 
+	/** \brief constructor
+	 *
+	 * creates VirtualObject with min and max vector of the mesh
+	 * creates physicComponent with same vectors
+	 * @param min,max glm::vec3 vector for max an min x,y and z values
+	 */
+	VirtualObject(glm::vec3 min, glm::vec3 max);
+
+	/** \brief constructor
+	 *
+	 * creates a sphere as virtual object
+	 * creates physicComponent as a sphere as well
+	 * @param radius radius of sphere
+	 * @param x,y,z position of sphere
+	 * @param mass mass of the rigidBody (physicComponent)
+	 */
+	VirtualObject(float radius, float x, float y, float z, float mass);
+
+	/** \brief constructor
+	 *
+	 * creates a box as virtual object
+	 * creates physicComponent as a box as well
+	 * @param width,height,depth size of the box
+	 * @param x,y,z position of box
+	 * @param mass mass of the rigidBody (physicComponent)
+	 */
+	VirtualObject(float width, float height, float depth, float x, float y, float z, float mass);
+
 	/** \brief destructor
 	 *
 	 * deletes the physics and graphics components
 	 */
 	~VirtualObject();
 
+	void translate(glm::vec3 trans);
+
+	void scale(glm::vec3 scale);
+
 	/** \brief updates the modelMatrix
 	 *
 	 * fetches the current modelMatrix of the physicsComponent
 	 */
-	void updateModelMatrix();
+	void updateModelMatrixViaPhysics();
 	
 	/** \brief
 	*

@@ -2,13 +2,7 @@
 
 #include <iostream>
 
-AnimateClearColorListener::AnimateClearColorListener(float* delta_time_source){
-	if(delta_time_source != 0){
-		this->delta_time_source == delta_time_source;
-	}
-	else{
-		this->delta_time_source = 0;
-	}
+AnimateClearColorListener::AnimateClearColorListener(){
 	t = 0.0;
 }
 
@@ -17,12 +11,7 @@ void AnimateClearColorListener::update(){
 		float g = std::sin(2.0*t+0.3) * 0.5;
 		float b = std::sin(3.0*t+0.7) * 0.5;
 		glClearColor(r,g,b,1.0);
-		if (delta_time_source != 0){
-			t+= *delta_time_source;
-		}
-		else{
-			t+= 0.0001;
-		}
+		t+= 0.0001;
 	}
 
 AlternativeRenderloopListener::AlternativeRenderloopListener(){ 
@@ -167,33 +156,81 @@ SetCameraDirectionListener::SetCameraDirectionListener(Camera* cam, glm::vec3 di
 void SetCameraDirectionListener::update(){
 	cam->setDirection(direction);
 }
+TurnCameraListener::TurnCameraListener(Camera* cam, float phi, float theta){
+	this->cam 	= cam;
+	this->theta = theta;
+	this->phi 	= phi;
+}
+void TurnCameraListener::update(){
+	float old_phi   = cam->getPhi();
+	float old_theta = cam->getTheta();
 
-#include <stdlib.h>
-#include <time.h>
-
-CreateVirtualObjectListener::CreateVirtualObjectListener(string path, glm::vec3 position, ApplicationState* state, float random_offset){
-	this->state = state;
-	this->position = position;
-	this->path = path;
-	this->random_offset = random_offset;
-	std::srand (time(NULL));	// rand dat
+	cam->setPhi(  old_phi   + phi);
+	cam->setTheta(old_theta + theta);
 }
 
-#include "Physics/UpdatePhysicsComponentListener.h"
+//includes for ray-picking
+#include "IO/IOManager.h"
+#include "IO/IOHandler.h"
+#include "Physics/PhysicWorld.h"
 
-void CreateVirtualObjectListener::update(){
-	VirtualObject* vo = state->createVirtualObject(path);		// create new Virtual Object
-	if (random_offset != 0.0){
-		glm::vec3 randPos = position;	
-		randPos.x += ( (((float) std::rand() / (float) RAND_MAX) * random_offset) * 2.0 ) - random_offset; // randomize a little bit by adding [-random_offset, random_offset] to the mix 
-		randPos.y += ( (((float) std::rand() / (float) RAND_MAX) * random_offset) * 2.0 ) - random_offset; // randomize a little bit by adding [-random_offset, random_offset] to the mix 
-		randPos.z += ( (((float) std::rand() / (float) RAND_MAX) * random_offset) * 2.0 ) - random_offset; // randomize a little bit by adding [-random_offset, random_offset] to the mix 
-		vo->setPhysicsComponent(0.5,randPos.x,randPos.y,randPos.z,0.5);
-	}
-	else{
-		vo->setPhysicsComponent(0.5,position.x ,position.y ,position.z,0.5);	// assign PhysicsComponent
-	}
-	state->		attachListenerOnBeginningProgramCycle(  new UpdatePhysicsComponentListener(			vo));	// update PhysicsComponent on every program cycle iteration
-	state->		attachListenerOnBeginningProgramCycle(  new UpdateVirtualObjectModelMatrixListener(	vo ));	// update VirtualObject Model Matrix on every program cycle iteration
+PickRayListener::PickRayListener(){
 
+	this->phWorld = PhysicWorld::getInstance();
+}
+
+void PickRayListener::update(){
+
+	GLFWwindow* window = glfwGetCurrentContext();
+
+	double currentXPos,currentYPos;
+	glfwGetCursorPos(window,&currentXPos,&currentYPos);
+
+	/*
+	int xPos,yPos;
+	xPos = static_cast<int>(currentXPos);
+	yPos = static_cast<int>(currentYPos);
+	*/
+
+	int currentWidth,currentHeight;
+	glfwGetWindowSize(window,&currentWidth,&currentHeight);
+
+	glm::vec3 outOrigin;
+	glm::vec3 outDirection;
+	glm::mat4 projectionMatrix = RenderManager::getInstance()->getProjectionMatrix();
+	glm::mat4 viewMatrix = IOManager::getInstance()->getCurrentIOHandler()->getViewMatrix();
+	phWorld->screenPosToWorldRay(currentXPos,currentYPos,currentWidth,currentHeight,viewMatrix,projectionMatrix,outOrigin,outDirection);
+}
+
+#include "Application/ApplicationStates.h"
+#include "Visuals/VirtualObjectFactory.h"
+#include "Tools/NoAssimpVirtualObjectFactory.h"
+
+ShootSphereListener::ShootSphereListener(Camera* cam, VRState* state){
+	this->cam = cam;
+	this->state = state;
+}
+void ShootSphereListener::update(){
+	glm::vec3 start = cam->getPosition();
+	glm::vec3 view = cam->getViewDirection();
+	btVector3 dir = btVector3(view.x, view.y, view.z);
+
+
+
+	//VirtualObject* sphere = new VirtualObject(0.2f, 0.2f, 0.2f, start.x, start.y, start.z, 1.0f);
+	//VirtualObject* sphere = new VirtualObject(0.2f, start.x, start.y, start.z, 1.0f);
+	//sphere->addGraphicsComponent(new GraphicsComponent);
+	//VirtualObject* cube = VirtualObjectFactory::getInstance()->createNonAssimpVO();
+
+	VirtualObject* 	cube = 	VirtualObjectFactory::getInstance()->createVirtualObject(RESOURCES_PATH "/cube.obj");
+
+	state->addVirtualObject(cube);
+	cube->setModelMatrix(glm::translate(glm::mat4(1.0f), glm::vec3(start.x, start.y, start.z)));
+	cube->getPhysicsComponent()->~PhysicsComponent();
+	cube->setPhysicsComponent(1.0f, 1.0f, 1.0f, start.x, start.y, start.z, 1.0f);
+	cube->physicsComponent->getRigidBody()->setLinearVelocity(dir*20);
+	std::cout << PhysicWorld::getInstance()->dynamicsWorld->getNumCollisionObjects() << endl;
+
+
+	state->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube));
 }

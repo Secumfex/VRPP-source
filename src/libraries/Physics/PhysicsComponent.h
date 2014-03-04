@@ -4,7 +4,10 @@
 #include <glm/glm.hpp>
 #include "btBulletDynamicsCommon.h"
 
+
 using namespace std;
+
+class VirtualObject;
 
 /*! @brief PhysicsComponent.
  *
@@ -12,8 +15,6 @@ using namespace std;
  */
 class PhysicsComponent{
 private:
-
-	glm::mat4 modelMatrix;	/**< 4x4Matrix */
 
 	btRigidBody *rigidBody;	/**< bullet rigid body */
 
@@ -73,14 +74,25 @@ public:
 	*/
 	~PhysicsComponent();
 
+	/** \brief translates a rigidBody to another position
+	 *
+	 * @param pos new position
+	 */
+	void translate(glm::vec3 pos);
+
+	/** \brief translates a rigidBody to another position
+	 *
+	 * @param scale vec3 which contains x,y,z values for scaling
+	 */
+	void scale(glm::vec3 scale);
 
 	/** \brief changes the collision flag of the rigid body
 	*
 	* ORed current flag with the wanted one.
 	* possible flags are:
-	*  CF_STATIC_OBJECT = 1,
+	*  CF_STATIC_OBJECT = 1, ->no gravity
 	*  CF_KINEMATIC_OBJECT = 2,
-  	*  CF_NO_CONTACT_RESPONSE = 4,
+  	*  CF_NO_CONTACT_RESPONSE = 4, ->no interaction/collision with other objects
   	*  CF_CUSTOM_MATERIAL_CALLBACK = 8,
   	*  CF_CHARACTER_OBJECT = 16,
   	*  CF_DISABLE_VISUALIZE_OBJECT = 32,
@@ -164,7 +176,7 @@ public:
 	*
 	* updates the modelMatrix by the rigid body's behavior in the physics world.
 	*/
-	void update();
+	void update(VirtualObject* vo);
 
 	/** \brief initialize FrameListener
 	*

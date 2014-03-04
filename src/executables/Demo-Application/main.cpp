@@ -54,13 +54,13 @@ void configureMyApp(){
 	VirtualObject* 	myCowObject1 = 		myVRState->			createVirtualObject(RESOURCES_PATH "/cow.obj");	 		// create a Virtual Object by reading an .obj file and add it to VRState automatically
 	myCowObject1->	setPhysicsComponent(0.5,0.5,7.5,0.5,0.5);
 	PhysicsComponent* myCowObject1PhysicsComponent = 		myCowObject1->getPhysicsComponent();					// get PhysicsComponent pointer
-	myVRState->		attachListenerOnBeginningProgramCycle(  new UpdatePhysicsComponentListener(			myCowObject1PhysicsComponent));	// update PhysicsComponent on every program cycle iteration
+	myVRState->		attachListenerOnBeginningProgramCycle(  new UpdatePhysicsComponentListener(			myCowObject1));	// update PhysicsComponent on every program cycle iteration
 	myVRState->		attachListenerOnBeginningProgramCycle(  new UpdateVirtualObjectModelMatrixListener(	myCowObject1));	// update VirtualObject Model Matrix on every program cycle iteration
 
 	VirtualObject* 	myCowObject2 = 		myVRState->			createVirtualObject(RESOURCES_PATH "/cow.obj");	 		// create a Virtual Object by reading an .obj file and add it to VRState automatically
 	myCowObject2->	setPhysicsComponent(0.5,0.75,15.0,0.75,0.5);
 	PhysicsComponent* myCowObject2PhysicsComponent = 		myCowObject2->getPhysicsComponent();					// get PhysicsComponent pointer
-	myVRState->		attachListenerOnBeginningProgramCycle(  new UpdatePhysicsComponentListener(			myCowObject2PhysicsComponent));	// update PhysicsComponent on every program cycle iteration
+	myVRState->		attachListenerOnBeginningProgramCycle(  new UpdatePhysicsComponentListener(			myCowObject2));	// update PhysicsComponent on every program cycle iteration
 	myVRState->		attachListenerOnBeginningProgramCycle(  new UpdateVirtualObjectModelMatrixListener(	myCowObject2));	// update VirtualObject Model Matrix on every program cycle iteration
 
 
@@ -90,7 +90,7 @@ void configureMyApp(){
 	myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myVRState->getCamera()), 								GLFW_KEY_UP);
 
 	myVRStateIOHandler->attachListenerOnKeyPress(new CreateVirtualObjectListener(RESOURCES_PATH "/cow.obj", glm::vec3(5.0,20.0,5.0), 	myVRState, 	2.0f), GLFW_KEY_M); // create a cow in da sky
-	myVRStateIOHandler->attachListenerOnKeyPress(new CreateVirtualObjectListener(RESOURCES_PATH "/cube.obj", glm::vec3(5.0,20.0,5.0), 	myVRState, 	2.0f), GLFW_KEY_SPACE); // create a cube in da sky
+	myVRStateIOHandler->attachListenerOnKeyPress(new CreateVirtualObjectListener(RESOURCES_PATH "/sphere.obj", glm::vec3(5.0,20.0,5.0), 	myVRState, 	2.0f), GLFW_KEY_SPACE); // create a cube in da sky
 
 	/*	further customize application functionality by adding various listeners */
 	myApp->attachListenerOnProgramInitialization(	new PrintMessageListener(		string("Application is booting")));

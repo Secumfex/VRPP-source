@@ -1,11 +1,12 @@
 #include "UpdatePhysicsComponentListener.h"
 #include "PhysicsComponent.h"
+#include "Visuals/VirtualObject.h"
 
 #include <iostream>
 
-UpdatePhysicsComponentListener::UpdatePhysicsComponentListener(PhysicsComponent* physicsComponent){
-	this->physicsComponent = physicsComponent;
+UpdatePhysicsComponentListener::UpdatePhysicsComponentListener(VirtualObject* virObj){
+	this->vo = virObj;
 }
 void UpdatePhysicsComponentListener::update(){
-	this->physicsComponent->update();
+	this->vo->updateModelMatrixViaPhysics();
 }

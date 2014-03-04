@@ -3,6 +3,8 @@
 
 #include <glm/glm.hpp>
 
+#include "Visuals/RenderQueue.h"
+
 using namespace std;
 
 int lastID = 0;
@@ -11,23 +13,25 @@ int lastID = 0;
 VirtualObject::VirtualObject() {
 	modelMatrix = glm::mat4(); 	//loadidentity
 
-	id = lastID + 1;
-	lastID = id;
-	//graphicsComponent = new GraphicsComponent();
-
 	physicsComponent = new PhysicsComponent();
-
-	float radius,x,y,z,mass = 1.0; 	//aus graphiccomponent bkommen (?) 1.0 zum test
-
-
 }
 
-VirtualObject::VirtualObject(glm::mat4 modelMatrix) {
-	this-> modelMatrix = modelMatrix;
-	id = lastID + 1;
-	lastID = id;
+VirtualObject::VirtualObject(glm::vec3 min, glm::vec3 max){
+	physicsComponent = new PhysicsComponent(min,max);
 
-	physicsComponent = new PhysicsComponent(modelMatrix);
+	physicsComponent->update(this);
+}
+
+VirtualObject::VirtualObject(float radius, float x, float y, float z, float mass){
+	physicsComponent = new PhysicsComponent(radius, x, y, z, mass);
+
+	physicsComponent->update(this);
+}
+
+VirtualObject::VirtualObject(float width, float height, float depth, float x, float y, float z, float mass){
+	physicsComponent = new PhysicsComponent(width, height, depth, x, y, z, mass);
+
+	physicsComponent->update(this);
 }
 
 VirtualObject::~VirtualObject() {
@@ -35,8 +39,24 @@ VirtualObject::~VirtualObject() {
 	delete physicsComponent;
 }
 
-void VirtualObject::updateModelMatrix() {
-	modelMatrix = physicsComponent->getModelMatrix();
+void VirtualObject::translate(glm::vec3 trans){
+	physicsComponent->translate(trans);
+	updateModelMatrixViaPhysics();
+	for(unsigned int i=0; i< mGraphComponent.size();i++){
+		mGraphComponent[i]->setModelMatrixGc(modelMatrix);
+	}
+}
+
+void VirtualObject::scale(glm::vec3 scale){
+	physicsComponent->scale(scale);
+	updateModelMatrixViaPhysics();
+	for(unsigned int i=0; i< mGraphComponent.size();i++){
+		mGraphComponent[i]->setModelMatrixGc(modelMatrix);
+	}
+}
+
+void VirtualObject::updateModelMatrixViaPhysics() {
+	physicsComponent->update(this);
 }
 
 void VirtualObject:: addGraphicsComponent(GraphicsComponent *graphcomp){
@@ -60,10 +80,6 @@ vector<GraphicsComponent*> VirtualObject:: getGraphicsComponent(std::string tag)
 
 void VirtualObject::setPhysicsComponent(){
 	physicsComponent = new PhysicsComponent();
-}
-
-void VirtualObject::setPhysicsComponent(glm::mat4 modelMatrix){
-	physicsComponent = new PhysicsComponent(modelMatrix);
 }
 
 void VirtualObject::setPhysicsComponent(glm::vec3 min, glm::vec3 max){

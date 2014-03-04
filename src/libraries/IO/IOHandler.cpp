@@ -55,6 +55,10 @@ Camera* IOHandler::getCameraObject(){
 	return camObject;
 }
 
+glm::mat4 IOHandler::getViewMatrix(){
+	return mViewMatrix;
+}
+
 void IOHandler::attachListenerOnKeyPress(Listener* listener, int key){
 	sstream	<<	key;	// convert int to string
 	listener->setName( sstream.str()	);

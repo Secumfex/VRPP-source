@@ -169,6 +169,7 @@ int main() {
 
 		        glViewport(0, 0, width, (height/4)*3);
 
+
 		gbufferShader->useProgram();
 		rm->setCurrentShader(gbufferShader);
 		//----------------------------------------------------------------------------------------//
