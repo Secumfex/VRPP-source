@@ -113,6 +113,7 @@ list<VirtualObject*> RenderQueue::getVirtualObjectList() {
 
 
 	//Beim rendern, wenn ein Feld der Map leer ist, dann muss der GBuffer genutzt werden
+	//Am besten noch eine Liste erstellen wo die shadowCast GCs reinkommen (müssen in mehr als einer Liste sein)
 void RenderQueue::sortByAttributes() {
 	resetQueue();
 	cout<<"Entering sortByAttributes:"<<endl;
