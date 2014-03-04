@@ -27,7 +27,7 @@ bool PhysicWorld::staticCollisionCallbackFunc(btManifoldPoint& collisionPoint, c
 	return false;
 }
 
-void PhysicWorld::screenPosToWorldRay(int mouseX, int mouseY, int screenWidth, int screenHeight, glm::mat4 viewMatrix, glm::mat4 projectionMatrix, glm::vec3& outOrigin, glm::vec3& outDirection){
+void PhysicWorld::screenPosToWorldRay(double mouseX, double mouseY, int screenWidth, int screenHeight, glm::mat4 viewMatrix, glm::mat4 projectionMatrix, glm::vec3& outOrigin, glm::vec3& outDirection){
 
 	glm::vec4 rayStart_NDC (
 			((float)mouseX/(float)screenWidth  - 0.5f) * 2.0f,

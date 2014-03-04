@@ -181,16 +181,23 @@ PickRayListener::PickRayListener(){
 
 void PickRayListener::update(){
 
-	//int xPos = IOManager::getInstance()->;
-	//int yPos = IOManager::getInstance()->;
-	//int WIDTH = IOManager::getInstance()->;
-	//int HEIGHT = IOManager::getInstance()->;
+	GLFWwindow* window = glfwGetCurrentContext();
+
+	double currentXPos,currentYPos;
+	glfwGetCursorPos(window,&currentXPos,&currentYPos);
+
+	/*
+	int xPos,yPos;
+	xPos = static_cast<int>(currentXPos);
+	yPos = static_cast<int>(currentYPos);
+	*/
+
+	int currentWidth,currentHeight;
+	glfwGetWindowSize(window,&currentWidth,&currentHeight);
 
 	glm::vec3 outOrigin;
 	glm::vec3 outDirection;
 	glm::mat4 projectionMatrix = RenderManager::getInstance()->getProjectionMatrix();
-	//IOHandler* handler = IOManager::getInstance()->getCurrentIOHandler;
 	glm::mat4 viewMatrix = IOManager::getInstance()->getCurrentIOHandler()->getViewMatrix();
-	//glm::mat4 viewMatrix = handler->getViewMatrix();
-	//phWorld->screenPosToWorldRay(xPos,yPos,WIDTH,HEIGHT,viewMatrix,projectionMatrix,outOrigin,outDirection);
+	phWorld->screenPosToWorldRay(currentXPos,currentYPos,currentWidth,currentHeight,viewMatrix,projectionMatrix,outOrigin,outDirection);
 }
