@@ -74,6 +74,16 @@ VirtualObject* VirtualObjectFactory::createNonAssimpVO(){
 	return mCube;
 }
 
+VirtualObject* VirtualObjectFactory::createNonAssimpSphere(){
+
+	if(mSphere == NULL){
+	NoAssimpVirtualObjectFactory *voFactory = new NoAssimpVirtualObjectFactory();
+	VirtualObject *cube = voFactory->createCubeObject();
+	}
+
+	return mSphere;
+}
+
 
 VirtualObject* VirtualObjectFactory::createVirtualObject(){
 	return new VirtualObject();

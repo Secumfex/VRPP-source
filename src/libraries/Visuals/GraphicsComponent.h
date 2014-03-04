@@ -2,6 +2,8 @@
 #define GRAPHICSCOMPONENT_H
 #include <vector>
 #include "Visuals/Resource.h"
+#include "btBulletDynamicsCommon.h"
+#include "BulletCollision/CollisionDispatch/btGhostObject.h"
 
 /*! @brief GraphicsComponent .
  *
@@ -44,6 +46,8 @@ public:
 private:
 	Mesh *mMesh;
 	Material *mMaterial;
+
+
 
 
 	glm::mat4 modelMatrixGc;
