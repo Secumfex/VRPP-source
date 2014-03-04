@@ -18,7 +18,7 @@ public:
 	btDefaultCollisionConfiguration* collisionConfiguration;	/**< fine tunes the algorithms used for the full (not broadphase) collision detection */
 	btCollisionDispatcher* dispatcher;							/**< register a callback that filters overlapping broadphase proxies */
 	btSequentialImpulseConstraintSolver* solver;				/**< causes the objects to interact properly */
-	btDiscreteDynamicsWorld* dynamicsWorld;						/**< bullet dynamic world */
+	btDynamicsWorld* dynamicsWorld;						/**< bullet dynamic world */
 
 	/** \brief constructor
 	 *

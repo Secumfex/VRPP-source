@@ -125,3 +125,15 @@ public:
 	PickRayListener();
 	void update();
 };
+
+
+#include "Application/ApplicationStates.h"
+/// Listener which shoots a sphere out of the camera
+class ShootSphereListener : public Listener {
+private:
+	Camera* cam;
+	VRState* state;
+public:
+	ShootSphereListener(Camera* cam, VRState* state);
+	void update();
+};
