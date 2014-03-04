@@ -32,9 +32,6 @@ void configureMyApp(){
 	/*	customize myLoadingScreen */
 	MenuState* myLoadingMenu = 	new MenuState("LOADING_SCREEN");	// create a MenuState labeled LOADING_SCREEN
 
-	VirtualObject* myLoadingBarrel = 	myLoadingMenu->		createVirtualObject(RESOURCES_PATH "/barrel.obj"); 		// create and add virtual object to loading menu state
-	myLoadingBarrel->setModelMatrix(	glm::scale(			glm::mat4(1.0f), glm::vec3(1.0,0.125,1.0)));
-	myLoadingMenu->	attachListenerOnBeginningProgramCycle(	new AnimateSinusModelMatrixListener(myLoadingBarrel));	// animated loading barrel
 	myLoadingMenu->	attachListenerOnBeginningProgramCycle(	new AnimateClearColorListener());						// animated pseudo Loading_screen
 
 	/*	customize myVRState*/
@@ -44,21 +41,23 @@ void configureMyApp(){
 	myVRState-> 	attachListenerOnActivation(			new PrintCameraStatusListener( myVRState->getCamera()));
 
 	/*	customize virtual objects*/
+
 	//VirtualObject* cube1 = myVRState-> createVirtualObject(RESOURCES_PATH "/cube.obj");
 
-	VirtualObject* 	myCubeObject1 = 	VirtualObjectFactory::getInstance()->createVirtualObject(RESOURCES_PATH "/cube.obj");	// create a Virtual Object by using the VirtualObject-Factory and add it to VRState manually
-	myVRState->		addVirtualObject(	myCubeObject1);		// add to VRState manually
-	VirtualObject* 	myCubeObject2 = 	myVRState->	createVirtualObject(RESOURCES_PATH "/cube.obj");	// create another Virtual Object from the same geometry
+	//VirtualObject* 	myCubeObject1 = 	VirtualObjectFactory::getInstance()->createVirtualObject(RESOURCES_PATH "/cube.obj");	// create a Virtual Object by using the VirtualObject-Factory and add it to VRState manually
+	//myVRState->		addVirtualObject(	myCubeObject1);		// add to VRState manually
+	//VirtualObject* 	myCubeObject2 = 	myVRState->	createVirtualObject(RESOURCES_PATH "/cube.obj");	// create another Virtual Object from the same geometry
 
 
 	//cube1->translate(glm::vec3(1.0f, 1.5f, 1.0f));
 	//cube1->scale(glm::vec3(0.2f, 0.2f, 0.2f));
 
 	/* glm::mat4 		cube1Matrix = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 1.5f, 1.0f)), glm::vec3(0.2f, 0.2f, 0.2f));
-	cube1->			setModelMatrix( 	cube1Matrix);
-	cube1->			setPhysicsComponent(0.2f, 0.2f, 0.2f, 1.0f, 1.5f, 1.0f, 1.0f); */
-
+	//cube1->			setModelMatrix( 	cube1Matrix);
+	//cube1->			setPhysicsComponent(0.2f, 0.2f, 0.2f, 1.0f, 1.5f, 1.0f, 1.0f); */
+	/*
 	glm::mat4		myModelMatrix1 = 	glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.0f, 0.0f)), glm::vec3(2.5f, 0.2f, 2.5f));	//floor
+	myCubeObject1->getPhysicsComponent()->~PhysicsComponent();
 	myCubeObject1-> setModelMatrix(		myModelMatrix1); 	// override default Model Matrix
 
 	myCubeObject1->	setPhysicsComponent(2.5f, 0.2f, 2.5f, 0.0f, -1.0f, 0.0f, 0.0f);
@@ -66,7 +65,7 @@ void configureMyApp(){
 	glm::mat4 myModelMatrix2 = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -2.5f)), glm::vec3(2.5f, 2.5f, 0.2f));	// wall
 	myCubeObject2-> setModelMatrix(		myModelMatrix2);	// override default Model Matrix
 	myCubeObject2-> setPhysicsComponent(2.5f, 2.5f, 0.2f, 0.0f, 0.0f, -2.5f, 0.0f);
-
+*/
 	/*	load some virtual objects into vr state scene*/	 		// create a Virtual Object by reading an .obj file and add it to VRState automatically
 	//PhysicsComponent* myCowObject1PhysicsComponent = 		myCowObject1->getPhysicsComponent();					// get PhysicsComponent pointer
 	//myVRState->		attachListenerOnBeginningProgramCycle( 	new UpdatePhysicsWorldListener());
@@ -103,10 +102,10 @@ void configureMyApp(){
 	// attach a listener which serves as renderloop by using the rendermanagers current RenderQueue and Shader
 	myApp->attachListenerOnRenderManagerFrameLoop(	new AlternativeRenderloopListener());
 
-	std::cout << PhysicWorld::getInstance()->dynamicsWorld->getNumCollisionObjects();
+	std::cout << PhysicWorld::getInstance()->dynamicsWorld->getNumCollisionObjects() << endl;
 
 	/*	add customized states to application state pool*/
-	myApp->addState(	myMenu);		//add the Main Menu to Applicationä
+	myApp->addState(	myMenu);		//add the Main Menu to Application
 	//myApp->addState(	myLoadingMenu);	//add the Loading Screen to Application
 	myApp->addState(	myVRState);		//add the VR State to Application
 
