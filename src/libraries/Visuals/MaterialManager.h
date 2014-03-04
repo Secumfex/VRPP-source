@@ -20,6 +20,7 @@ public:
 	virtual ~MaterialManager();
 
 	void makeMaterial(std:: string matName, GraphicsComponent* gc);
+	void makeMaterial(std:: string matName, vector<GraphicsComponent*> gc);
 
 private:
     
