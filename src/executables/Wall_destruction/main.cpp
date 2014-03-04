@@ -8,6 +8,7 @@
 #include "Physics/PhysicWorldSimulationListener.h"
 
 #include "Physics/PhysicWorld.h"
+#include "IO/IOManager.h"
 
 #include "SomeListeners.h" // until missing functionality is added
 
@@ -17,22 +18,6 @@ void configureMyApp(){
 	/*	customize application a little bit*/
 	myApp = 		Application::getInstance();	//create an Application labeled PROJEKT PRAKTIKUM
 	myApp->			setLabel("PROJEKT PRAKTIKUM");
-
-
-
-	/*   create some states to work with */
-	MenuState* myMenu = 		new MenuState("MAINMENU");	//create a MenuState labeled MAINMENU
-	/*
-		Button* myButton = new Button("START_BUTTON");	//create a Button labeled START_BUTTON
-		myButton->addListenerOnButtonPress(new SetStateListener(myApp, "LOADING_SCREEN")); //add a state changing listener to be notified upon a button press
-		myMenu->addButton(myButton);	//add Button to Main Menu
-	*/
-
-
-	/*	customize myLoadingScreen */
-	MenuState* myLoadingMenu = 	new MenuState("LOADING_SCREEN");	// create a MenuState labeled LOADING_SCREEN
-
-	myLoadingMenu->	attachListenerOnBeginningProgramCycle(	new AnimateClearColorListener());						// animated pseudo Loading_screen
 
 	/*	customize myVRState*/
 	VRState* myVRState = 	new VRState("VRSTATE"); // create a VRState labeled VRSTATE
@@ -141,7 +126,8 @@ void configureMyApp(){
 	//PhysicsComponent* myCowObject1PhysicsComponent = 		myCowObject1->getPhysicsComponent();					// get PhysicsComponent pointer
 	//myVRState->		attachListenerOnBeginningProgramCycle( 	new UpdatePhysicsWorldListener());
 	//myVRState->		attachListenerOnBeginningProgramCycle(  new UpdateVirtualObjectModelMatrixListener(	cube1));	// update VirtualObject Model Matrix on every program cycle iteration
-	myVRState->		attachListenerOnBeginningProgramCycle( 	new PhysicWorldSimulationListener); 					// updates physics simulation
+	myVRState->			attachListenerOnBeginningProgramCycle( 	new PhysicWorldSimulationListener(IOManager::getInstance()->getDeltaTimePointer()));				// updates physics simulation
+					
 
 	IOHandler* myVRStateIOHandler = myVRState-> getIOHandler();
 	// attach some listeners to keyboard key presses
@@ -165,9 +151,6 @@ void configureMyApp(){
 	myApp->attachListenerOnProgramTermination(		new PrintMessageListener(		string("Application is terminating")));
 	myApp->attachListenerOnStateChange( 			new PrintCurrentStateListener(	myApp) );
 
-	myApp->attachListenerOnBeginningProgramCycle(	new TimedTriggerListener(		new SetStateListener(myApp, "LOADING_SCREEN"), 	2500.0)); //	Use Listeners to change states
-	myApp->attachListenerOnBeginningProgramCycle(	new TimedTriggerListener(		new SetStateListener(myApp, "VRSTATE"), 		5000.0));
-
 	// attach a listener which overrides the rendermanager's current Shader
 	myApp->attachListenerOnProgramInitialization(	new SetAlternativeDefaultRenderManagerPointersListener());
 	// attach a listener which serves as renderloop by using the rendermanagers current RenderQueue and Shader
@@ -176,11 +159,9 @@ void configureMyApp(){
 	std::cout << PhysicWorld::getInstance()->dynamicsWorld->getNumCollisionObjects() << endl;
 
 	/*	add customized states to application state pool*/
-	myApp->addState(	myMenu);		//add the Main Menu to Application
-	myApp->addState(	myLoadingMenu);	//add the Loading Screen to Application
 	myApp->addState(	myVRState);		//add the VR State to Application
 
-	myApp->setState(	"MAINMENU"); 	//set initial state to the state labeled MAINMENU
+	myApp->setState(	"VRSTATE"); 	//set initial state to the state labeled MAINMENU
 }
 
 int main() {
