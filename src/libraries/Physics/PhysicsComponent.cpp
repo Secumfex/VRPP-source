@@ -102,13 +102,16 @@ btRigidBody* PhysicsComponent::addBox(float width, float height, float depth, fl
 
 	btBoxShape* box = new btBoxShape(btVector3(width,height,depth));
 
-	btVector3 inertia(0,0,0);
+	btVector3 inertia;
 	if(mass != 0.0) {
 		box->calculateLocalInertia(mass,inertia);
 	}
+	box->calculateLocalInertia(mass,inertia);
+
+
 
 	btMotionState* motion = new btDefaultMotionState(t);
-	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,box);
+	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,box, inertia);
 	btRigidBody* body = new btRigidBody(info);
 	body->setLinearFactor(btVector3(1,1,1));
 	return body;
@@ -122,10 +125,12 @@ btRigidBody* PhysicsComponent::addSphere(float radius, float x, float y, float z
 
 	btSphereShape* sphere = new btSphereShape(radius);
 
-	btVector3 inertia(0,0,0);
+	btVector3 inertia;
 	if(mass != 0.0){
-		sphere->calculateLocalInertia(mass,inertia);
+		sphere->calculateLocalInertia(mass, inertia);
 	}
+
+
 
 	btMotionState* motion = new btDefaultMotionState(t);
 	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,sphere);
