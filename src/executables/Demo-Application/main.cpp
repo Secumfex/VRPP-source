@@ -11,6 +11,9 @@
 
 #include "SomeListeners.h" // until missing functionality is added
 
+#include "IO/PlayerCamera.h"
+#include "Physics/PhysicWorld.h"
+
 Application* myApp;
 	/*How to build your own custom Application*/
 void configureMyApp(){
@@ -43,9 +46,9 @@ void configureMyApp(){
 	myVRState->		attachListenerOnActivation(			new SetClearColorListener(0.44,0.5,0.56));					// custom background color
 	myVRState-> 	attachListenerOnActivation(			new PrintCameraStatusListener( myVRState->getCamera()));
 	myVRState->		attachListenerOnBeginningProgramCycle( 	new PhysicWorldSimulationListener(				IOManager::getInstance()->getDeltaTimePointer()));
-	
-	Camera* cam = myVRState-> getCamera();
-	cam->setPosition(0.0,0.0,5.0);
+
+	PlayerCamera* playercam = new PlayerCamera();
+	myVRState->setCamera(playercam);
 
 	/*	load some virtual objects into vr state scene*/
 	VirtualObject* 	myCowObject1 = 		myVRState->			createVirtualObject(RESOURCES_PATH "/cow.obj");	 		// create a Virtual Object by reading an .obj file and add it to VRState automatically
@@ -60,9 +63,18 @@ void configureMyApp(){
 	myVRState->		attachListenerOnBeginningProgramCycle(  new UpdatePhysicsComponentListener(			myCowObject2PhysicsComponent));	// update PhysicsComponent on every program cycle iteration
 	myVRState->		attachListenerOnBeginningProgramCycle(  new UpdateVirtualObjectModelMatrixListener(	myCowObject2));	// update VirtualObject Model Matrix on every program cycle iteration
 
-	VirtualObject* 	myCubeObject1 = 	VirtualObjectFactory::getInstance()->createVirtualObject(RESOURCES_PATH "/cube.obj");	// create a Virtual Object by using the VirtualObject-Factory and add it to VRState manually
-	myCubeObject1-> setPhysicsComponent(glm::vec3(-5.0,0.0,-5.0), glm::vec3(5.0,0.1,5.0));
-	myVRState->		addVirtualObject(	myCubeObject1);		// add to VRState manually
+
+		btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,1,0),0);
+		//create an invisible ground plane
+		btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,-4,5)));
+    	btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0,groundMotionState,groundShape,btVector3(0,0,0));
+   	 	btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
+    	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(groundRigidBody);
+
+	btRigidBody* camBody = playercam->getRigidBody();
+	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(camBody);
+
+
 
 	IOHandler* myVRStateIOHandler = myVRState-> getIOHandler();
 	// attach some listeners to keyboard key presses

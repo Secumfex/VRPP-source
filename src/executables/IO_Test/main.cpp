@@ -32,12 +32,11 @@ void configureVirtualObjects(){
 
 void configurePhysics(){
 	btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,1,0),0);
-	//create an invisible ground plate
-	btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,-4,5)));
-    btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0,groundMotionState,groundShape,btVector3(0,0,0));
-    btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
-    PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(groundRigidBody);
-
+	//create an invisible ground plane
+		btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,-4,5)));
+    	btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0,groundMotionState,groundShape,btVector3(0,0,0));
+   	 	btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
+    	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(groundRigidBody);
 
 	btRigidBody* camBody = playercam->getRigidBody();
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(camBody);
