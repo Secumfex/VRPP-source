@@ -328,6 +328,7 @@ void MaterialManager::makeMaterial_wood(GraphicsComponent* gc){
     gc->getMaterial()->setAmbient(glm::vec3(0.0f));
     gc->getMaterial()->setDiffuse(glm::vec3(0.01f,0.01f,0.01f));
     std::cout<<"\n'black' set"<<endl;
+
 	}
 
 
@@ -339,33 +340,33 @@ void MaterialManager::makeMaterial_wood(GraphicsComponent* gc){
 
 	void MaterialManager::makeMaterial_red(GraphicsComponent* gc){
 		    gc->getMaterial()->setAmbient(glm::vec3(1.0f));
-		    gc->getMaterial()->setDiffuse(glm::vec3(0.9f,0.9f,0.9f));
-		    std::cout<<"\n'white' set"<<endl;
+		    gc->getMaterial()->setDiffuse(glm::vec3(0.9f,0.01f,0.01f));
+		    std::cout<<"\n'red' set"<<endl;
 		}
 
 	void MaterialManager::makeMaterial_green(GraphicsComponent* gc){
 		    gc->getMaterial()->setAmbient(glm::vec3(1.0f));
-		    gc->getMaterial()->setDiffuse(glm::vec3(0.9f,0.9f,0.9f));
-		    std::cout<<"\n'white' set"<<endl;
+		    gc->getMaterial()->setDiffuse(glm::vec3(0.01f,0.9f,0.01f));
+		    std::cout<<"\n'green' set"<<endl;
 		}
 
 	void MaterialManager::makeMaterial_blue(GraphicsComponent* gc){
 		    gc->getMaterial()->setAmbient(glm::vec3(1.0f));
-		    gc->getMaterial()->setDiffuse(glm::vec3(0.9f,0.9f,0.9f));
-		    std::cout<<"\n'white' set"<<endl;
+		    gc->getMaterial()->setDiffuse(glm::vec3(0.01f,0.01f,0.9f));
+		    std::cout<<"\n'blue' set"<<endl;
 		}
 
 	void MaterialManager::makeMaterial_yellow(GraphicsComponent* gc){
 		    gc->getMaterial()->setAmbient(glm::vec3(1.0f));
-		    gc->getMaterial()->setDiffuse(glm::vec3(0.9f,0.9f,0.9f));
-		    std::cout<<"\n'white' set"<<endl;
+		    gc->getMaterial()->setDiffuse(glm::vec3(0.9f,0.9f,0.01f));
+		    std::cout<<"\n'yellow' set"<<endl;
 		}
 
 	void MaterialManager::makeMaterial_genericColor(GraphicsComponent* gc){
 	    gc->getMaterial()->setAmbient(glm::vec3(0.5f));
-	    gc->getMaterial()->setDiffuse(glm::vec3(0.5f,0.5f,0.5f));
+	    gc->getMaterial()->setDiffuse(glm::vec3(0.01f,0.9f,0.9f));
 	    gc->getMaterial()->setSpecular(glm::vec3(0.3f));
-	    gc->getMaterial()->setShininess(32.0f);
+	    gc->getMaterial()->setShininess(20.0f);
 	    std::cout<<"\n'generic color' set"<<endl;
 	}
 
@@ -397,10 +398,10 @@ void MaterialManager::makeMaterial_wood(GraphicsComponent* gc){
 			}
 
 	void MaterialManager::makeMaterial_genericSpecific(GraphicsComponent* gc){
-		    gc->getMaterial()->setAmbient(glm::vec3(0.0f));
-		    gc->getMaterial()->setDiffuse(glm::vec3(0.01f,0.01f,0.01f));
-		    gc->getMaterial()->setSpecular(glm::vec3(0.5f));
-		    gc->getMaterial()->setShininess(32.0f);
+//		    gc->getMaterial()->setAmbient(glm::vec3(0.0f));
+//		    gc->getMaterial()->setDiffuse(glm::vec3(0.01f,0.01f,0.01f));
+//		    gc->getMaterial()->setSpecular(glm::vec3(0.5f));
+//		    gc->getMaterial()->setShininess(32.0f);
 		    std::cout<<"\n'generic specification' set"<<endl;
 		}
 

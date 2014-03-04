@@ -9,7 +9,9 @@ uniform float shininess;
 uniform vec3 specularColor;
 
 
-uniform sampler2D diffuseTexture;
+//uniform sampler2D diffuseTexture;
+
+uniform vec3 diffuseColor;
 
 //writable textures for deferred screen space calculations
 layout(location = 0) out vec4 positionOutput;
@@ -20,6 +22,7 @@ layout(location = 3) out vec4 materialOutput;
 void main(){  
     positionOutput = passPosition;
     normalOutput = vec4(normalize(passNormal), 0);
-    colorOutput = texture(diffuseTexture, passUVCoord);
+    colorOutput = vec4(diffuseColor,0);
+    //texture(diffuseTexture, passUVCoord);
     materialOutput = vec4(shininess,specularColor);
 }
