@@ -208,6 +208,8 @@ void ShootSphereListener::update(){
 	glm::vec3 view = cam->getViewDirection();
 	btVector3 dir = btVector3(view.x, view.y, view.z);
 
+
+
 	//VirtualObject* sphere = new VirtualObject(0.2f, 0.2f, 0.2f, start.x, start.y, start.z, 1.0f);
 	//VirtualObject* sphere = new VirtualObject(0.2f, start.x, start.y, start.z, 1.0f);
 	//sphere->addGraphicsComponent(new GraphicsComponent);
@@ -218,7 +220,9 @@ void ShootSphereListener::update(){
 	state->addVirtualObject(cube);
 	cube->setModelMatrix(glm::translate(glm::mat4(1.0f), glm::vec3(start.x, start.y, start.z)));
 	cube->setPhysicsComponent(1.0f, 1.0f, 1.0f, start.x, start.y, start.z, 1.0f);
-	cube->physicsComponent->getRigidBody()->setLinearVelocity(dir);
+	cube->physicsComponent->getRigidBody()->setLinearVelocity(dir*20);
+
+
 
 	state->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube));
 }
