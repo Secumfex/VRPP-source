@@ -9,8 +9,6 @@ GraphicsComponent::GraphicsComponent(){
 	mTranparency = false;
 	mEmission = false;
 	mShadow = false;
-	mAABB_Min = glm::vec3(0.0, 0.0, 0.0);
-	mAABB_Max = glm::vec3(0.0, 0.0, 0.0);
 }
 
 GraphicsComponent::GraphicsComponent(Mesh* mesh, Material* material){
@@ -19,8 +17,6 @@ GraphicsComponent::GraphicsComponent(Mesh* mesh, Material* material){
 	mTranparency = false;
 	mEmission = false;
 	mShadow = false;
-	mAABB_Min = glm::vec3(0.0, 0.0, 0.0);
-	mAABB_Max = glm::vec3(0.0, 0.0, 0.0);
 }
 void GraphicsComponent::setMesh(Mesh* mesh){
 	mMesh = mesh;
@@ -37,28 +33,22 @@ Material* GraphicsComponent::getMaterial(){
 }
 
 void GraphicsComponent::setDynamic(bool value){
-mDynamic=value;
+	mDynamic=value;
 }
-	
+
 bool GraphicsComponent::isDynamic(){
-return mDynamic;}
+	return mDynamic;}
 
-	void GraphicsComponent::setModelMatrixGc(glm::mat4 matrix){
+void GraphicsComponent::setModelMatrixGc(glm::mat4 matrix){
 	modelMatrixGc=matrix;
-	}
+	btTransform t;
+	float * mat = glm::value_ptr(matrix);
+	t.setFromOpenGLMatrix(mat);
+	mGhostObject->setWorldTransform(t);
+}
 
-	glm::mat4 GraphicsComponent::getModelMatrix(){
+glm::mat4 GraphicsComponent::getModelMatrix(){
 	return modelMatrixGc;}
-
-	void GraphicsComponent::setPivot(){
-	pivot.x=getBoundingBox_Max().x - getBoundingBox_Min().x;
-	pivot.y=getBoundingBox_Max().y - getBoundingBox_Min().y;
-	pivot.z=getBoundingBox_Max().z - getBoundingBox_Min().z;
-	}
-
-
-	glm::vec3 GraphicsComponent::getPivot(){
-	return pivot;}
 
 void GraphicsComponent:: setEmission(bool value){
 	mEmission = value;
@@ -80,15 +70,20 @@ bool GraphicsComponent:: hasTransparency(){
 	return mTranparency;
 }
 
-void GraphicsComponent:: setBoundingBox(glm::vec3 min, glm::vec3 max){
-	mAABB_Min = min;
-	mAABB_Max = max;
-}
-glm::vec3 GraphicsComponent:: getBoundingBox_Min(){
-	return mAABB_Min;
-}
-glm::vec3 GraphicsComponent:: getBoundingBox_Max(){
-	return mAABB_Max;
+void GraphicsComponent:: setGhostObject(glm::vec3 min, glm::vec3 max){
+
+	if(mGhostObject != NULL)
+		delete mGhostObject;
+
+	glm::vec3 midpoint = (min + max) * 0.5f;
+	max = max - midpoint;
+	btBoxShape* shape = new btBoxShape(btVector3(max.x, max.y, max.z));
+	mGhostObject = new btGhostObject();
+	mGhostObject->setCollisionShape(shape);
+	mGhostObject->setCollisionFlags(4);
+
+	setModelMatrixGc(glm::mat4(1.0f));
+	PhysicWorld::getInstance()->dynamicsWorld->addCollisionObject(mGhostObject);
 }
 
 

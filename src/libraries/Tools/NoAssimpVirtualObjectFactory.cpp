@@ -78,10 +78,10 @@ VirtualObject* NoAssimpVirtualObjectFactory::createCubeObject(){
 
 	//create GraphicsComponent
 	GraphicsComponent* cube_gc = new GraphicsComponent(createCubeMesh(),createCubeMaterial());
-	cube_gc->setBoundingBox(glm::vec3((-1.0) * CubeGeometry::size,(-1.0) *CubeGeometry::size,(-1.0) *CubeGeometry::size) ,glm::vec3(CubeGeometry::size,CubeGeometry::size,CubeGeometry::size));
+	cube_gc->setGhostObject(glm::vec3((-1.0) * CubeGeometry::size,(-1.0) *CubeGeometry::size,(-1.0) *CubeGeometry::size) ,glm::vec3(CubeGeometry::size,CubeGeometry::size,CubeGeometry::size));
 	cube->addGraphicsComponent(cube_gc);	//add GraphicsComponent
 
-	cube->setPhysicsComponent(cube_gc->getBoundingBox_Min(), cube_gc->getBoundingBox_Max());
+	cube->setPhysicsComponent(glm::vec3((-1.0) * CubeGeometry::size,(-1.0) *CubeGeometry::size,(-1.0) *CubeGeometry::size) ,glm::vec3(CubeGeometry::size,CubeGeometry::size,CubeGeometry::size));
 
 	//return cube
 	return cube;

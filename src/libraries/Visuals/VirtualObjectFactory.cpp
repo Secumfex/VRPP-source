@@ -68,7 +68,7 @@ VirtualObject* VirtualObjectFactory::createNonAssimpVO(){
 
 	if(mCube == NULL){
 	NoAssimpVirtualObjectFactory *voFactory = new NoAssimpVirtualObjectFactory();
-	VirtualObject *cube = voFactory->createCubeObject();
+	mCube = voFactory->createCubeObject();
 	}
 
 	return mCube;
@@ -454,7 +454,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 
 		//Mesh und Material wird gelesen und in neuer GraphicsComponent gespeichert
 		GraphicsComponent* gc=new GraphicsComponent(aMesh, aMat);
-		gc->setBoundingBox(aabbMin, aabbMax);
+		gc->setGhostObject(aabbMin, aabbMax);
 
 
 		virtualObject->addGraphicsComponent(gc);
