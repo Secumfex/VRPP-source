@@ -21,6 +21,7 @@ Material :: Material(){
 	mTextures.push_back(tex);
 	mTextures.push_back(tex);
 
+
 	mAmbColor = glm::vec3(1,1,1);
 	mDiffColor = glm::vec3(1,1,1);
 	mName = "";
@@ -29,6 +30,7 @@ Material :: Material(){
     mTransparency = 0.0f;
 }
 Material :: ~Material(){}
+
 void Material ::setAmbientMap(Texture* tex){ //ändern
 	mTextures[0] = tex;
 }
@@ -62,6 +64,7 @@ void Material ::setDisplacementMap(Texture* tex){
 void Material ::setLightMap(Texture* tex){
 	mTextures[10] = tex;
 }
+
 
 
 void Material :: setName(std::string name){
@@ -107,6 +110,7 @@ Texture* Material ::getHeightMap(){
 Texture* Material ::getOpacityMap(){
 	return mTextures[5];
 }
+
 glm::vec3 Material ::getAmbient(){
 	return mAmbColor;
 }
@@ -128,6 +132,7 @@ GLfloat Material::getTransparency(){
 GLfloat Material::getReflectivity(){
 	return mReflectivity;
 }
+
 Texture* Material ::getSpecularMap(){
 	return mTextures[6];
 }
@@ -144,6 +149,7 @@ Texture* Material ::getLightMap(){
 	return mTextures[10];
 }
 
+
 std::string Material::getName(){
 	return mName;
 }
@@ -153,6 +159,7 @@ Texture *tex = new Texture();
 return getNormalMap()->getTextureHandle() != tex->getTextureHandle();
 
 }
+
 
 //---------------MESH SCOPE--------------------
 

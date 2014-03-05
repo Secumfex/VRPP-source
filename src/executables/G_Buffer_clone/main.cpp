@@ -32,6 +32,7 @@ int main() {
 	glewExperimental= GL_TRUE;
 #endif
 
+
 	GLFWwindow* window = glfwCreateWindow(800, 800, "Compositing", NULL, NULL);
 	glfwMakeContextCurrent(window);
 	glClearColor(1,1,1,0);
@@ -144,6 +145,7 @@ int main() {
 			//		rm->setProjectionMatrix(glm::perspective(40.0f, (newwidth * 1.0f) / newheight , 0.1f, 100.f));
 			width = newwidth;
 			height = newheight;
+
 		}
 
 		using namespace glm;
@@ -205,6 +207,7 @@ int main() {
 				gbufferShader->render(gc_temp);
 			}
 		}
+
 
 		fbo->unbindFBO();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

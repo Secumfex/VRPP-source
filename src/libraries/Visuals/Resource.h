@@ -69,6 +69,7 @@ public:
 	Texture* getHeightMap();
 	Texture* getOpacityMap();
 
+
 	Texture* getSpecularMap();
 	Texture* getReflectionMap();
 	Texture* getShininessMap();
