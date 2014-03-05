@@ -76,7 +76,13 @@ void Frustum::setProjectionMatrix(float fovy, float aspect, float near, float fa
 
 bool Frustum::inFrustum(GraphicsComponent *gc){
 
-	return true;
+	unsigned int i = 0;
+	for (i = 0; i < mFrustumVolume->getNumOverlappingObjects(); ++i) {
+		if(gc->getGhostObject() == (mFrustumVolume->getOverlappingObject(i)))
+			return true;
+	}
+
+	return false;
 }
 
 glm::mat4 Frustum::getProjectionMatrix(){

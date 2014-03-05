@@ -31,9 +31,9 @@ public:
 	glm::mat4 getProjectionMatrix();
 	void updateModelMatrix();
 	void setCamera(Camera *cam);
-	void makeGhostObject();
 
-private:
+protected:
+
 	Camera *mCam;
 	btGhostObject *mFrustumVolume;
 	glm::mat4 mProjectionMatrix;

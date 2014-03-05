@@ -33,24 +33,30 @@ std::vector<GraphicsComponent*> RenderPass::willBeRendered(){
 
 	RenderManager *rm = RenderManager::getInstance();
 	Frustum *frustum = rm->getCurrentFrustum();
+
+	std::vector<GraphicsComponent*> toBeRendered;
 	unsigned int i = 0;
 	for (i = 0; i < mGcVector.size(); ++i) {
-
+		if(frustum->inFrustum(mGcVector[i]))
+			toBeRendered.push_back(mGcVector[i]);
 	}
 
-	return mGcVector;
+	return toBeRendered;
 }
 
 
 void RenderPass::render(){
-	mShader->useProgram();
 	RenderManager *rm = RenderManager::getInstance();
+	std::vector<GraphicsComponent*> visibleGC = willBeRendered();
+
+	mShader->useProgram();
 	rm->setCurrentShader(mShader);
-	for(unsigned int i = 0; i < mGcVector.size(); i++){
-		GraphicsComponent* myGC = mGcVector[i];
+
+	for(unsigned int i = 0; i < visibleGC.size(); i++){
+		GraphicsComponent* myGC = visibleGC[i];
 		rm->setCurrentGC(myGC);
-
-
+		mShader->uploadAllUniforms();
+		mShader->render(myGC);
 	}
 }
 
