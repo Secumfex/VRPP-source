@@ -216,12 +216,24 @@ void ShootSphereListener::update(){
 	btVector3 dir = btVector3(view.x, view.y, view.z);
 	btScalar speed = 30;
 
+	VirtualObject* 	sphere = 	VirtualObjectFactory::getInstance()->createVirtualObject(RESOURCES_PATH "/sphere.obj");
 
-	//VirtualObject* sphere = new VirtualObject(0.2f, 0.2f, 0.2f, start.x, start.y, start.z, 1.0f);
-	//VirtualObject* sphere = new VirtualObject(0.2f, start.x, start.y, start.z, 1.0f);
-	//sphere->addGraphicsComponent(new GraphicsComponent);
-	//VirtualObject* cube = VirtualObjectFactory::getInstance()->createNonAssimpVO();
+	state->addVirtualObject(sphere);
+	sphere->setModelMatrix(glm::translate(glm::mat4(1.0f), glm::vec3(start.x, start.y, start.z)));
+	sphere->getPhysicsComponent()->~PhysicsComponent();
+	sphere->setPhysicsComponent(2.0f, 2.0f, 2.0f, start.x, start.y, start.z, 3.0f);
+	sphere->physicsComponent->getRigidBody()->setLinearVelocity(dir*speed);
+	state->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(sphere));
 
+
+	/*
+	VirtualObject* sphere = new VirtualObject(0.2f, 0.2f, 0.2f, start.x, start.y, start.z, 1.0f);
+	VirtualObject* sphere = new VirtualObject(0.2f, start.x, start.y, start.z, 1.0f);
+	sphere->addGraphicsComponent(new GraphicsComponent);
+	VirtualObject* cube = VirtualObjectFactory::getInstance()->createNonAssimpVO();
+	 */
+
+	/*
 	VirtualObject* 	cube = 	VirtualObjectFactory::getInstance()->createVirtualObject(RESOURCES_PATH "/cube.obj");
 
 	state->addVirtualObject(cube);
@@ -231,6 +243,6 @@ void ShootSphereListener::update(){
 	cube->physicsComponent->getRigidBody()->setLinearVelocity(dir*speed);
 	std::cout << PhysicWorld::getInstance()->dynamicsWorld->getNumCollisionObjects() << endl;
 
-
 	state->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube));
+	*/
 }
