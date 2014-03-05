@@ -166,15 +166,15 @@ int main() {
 				GraphicsComponent *gc_temp = vo_temp->getGraphicsComponent()[j];
 				rm->setCurrentGC(gc_temp);
 
-				if(gc_temp->getMaterial()->hasNormalMap()){
-					gbuffer_normalMap_Shader->useProgram();
-					rm->setCurrentShader(gbuffer_normalMap_Shader);
-					gbuffer_normalMap_Shader->uploadAllUniforms();
-				}else{
+//				if(gc_temp->getMaterial()->hasNormalMap()){
+//					gbuffer_normalMap_Shader->useProgram();
+//					rm->setCurrentShader(gbuffer_normalMap_Shader);
+//					gbuffer_normalMap_Shader->uploadAllUniforms();
+//				}else{
 					gbufferShader->useProgram();
 					rm->setCurrentShader(gbufferShader);
 					gbufferShader->uploadAllUniforms();
-				}
+			//	}
 
 				gbufferShader->render(gc_temp);
 			}
