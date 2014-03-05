@@ -119,10 +119,11 @@ public:
 //Listener which starts the ray-picking test
 class PickRayListener : public Listener {
 private:
+	Camera* cam;
 	PhysicWorld* phWorld;
 
 public:
-	PickRayListener();
+	PickRayListener(Camera* cam);
 	void update();
 };
 
