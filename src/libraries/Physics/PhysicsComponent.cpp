@@ -7,6 +7,7 @@
 
 #include "Visuals/VirtualObject.h"
 
+#include "BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h"
 
 using namespace std;
 
@@ -59,6 +60,16 @@ PhysicsComponent::PhysicsComponent(float x, float y, float z, btVector3& normal,
 	rigidBody = addPlane(x,y,z,normal,mass);
 	addCollisionFlag(8);
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
+}
+
+PhysicsComponent::PhysicsComponent(char* filename){
+
+	FILE* heightfieldFile;
+	//char* path = "test/";		//pfad zum entspr. ordner
+	//char* temp = path + filename;		//char+char
+	heightfieldFile = fopen(filename,"r");
+	//btHeightfieldTerrainShape* heightmap = new btHeightfieldTerrainShape();
+
 }
 
 PhysicsComponent::~PhysicsComponent() {

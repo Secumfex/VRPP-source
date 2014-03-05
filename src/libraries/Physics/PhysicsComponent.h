@@ -18,7 +18,7 @@ private:
 
 	btRigidBody *rigidBody;	/**< bullet rigid body */
 
-	bool hit;	/**< true if hit by an other object, else false */
+	bool hit;				/**< true if hit by an other object, else false */
 
 public:
 
@@ -62,11 +62,19 @@ public:
 
 	/** \brief constructor
 	 *
+	 * constructor to create a static plane shaped rigid body.
 	 * @param x,y,z start position in the world
 	 * @param normal normal vector of the plane
 	 * @param mass defines the behavior of the rigid body in the physics world
 	 */
 	PhysicsComponent(float x, float y, float z, btVector3& normal, float mass);	//todo: change the type of normal
+
+	/** \brief constructor
+	 *
+	 * constructor to create a heightfieldterrainshaped rigid body (btHeightfieldTerrainShape).
+	 * @param filename filename
+	 */
+	PhysicsComponent(char* filename);
 
 	/** \brief destructor
 	*
