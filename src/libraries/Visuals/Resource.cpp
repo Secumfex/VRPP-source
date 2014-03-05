@@ -75,6 +75,7 @@ void Material :: setAmbient(glm::vec3 ambient){
 }
 void Material :: setDiffuse(glm::vec3 diffuse){
 	mDiffColor = diffuse;
+
 }
 void Material :: setSpecular(glm::vec3 specular){
 	mSpecColor = specular;
