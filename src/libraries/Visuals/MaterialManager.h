@@ -23,17 +23,6 @@ public:
 	void makeMaterial(std:: string matName, vector<GraphicsComponent*> gc);
 
 private:
-    
-
-	void makeMaterial_generic(GraphicsComponent* gc);
-	GraphicsComponent* makeMaterial_wood(GraphicsComponent* gc);
-    GraphicsComponent* makeMaterial_brass(GraphicsComponent* gc);
-    GraphicsComponent* makeMaterial_bronze(GraphicsComponent* gc);
-    GraphicsComponent* makeMaterial_chrome(GraphicsComponent* gc);
-    GraphicsComponent* makeMaterial_copper(GraphicsComponent* gc);
-    GraphicsComponent* makeMaterial_gold(GraphicsComponent* gc);
-    GraphicsComponent* makeMaterial_silver(GraphicsComponent* gc);
-    GraphicsComponent* makeMaterial_glass(GraphicsComponent* gc);
 
     /*
 	void makeMaterial_wood(GraphicsComponent* gc);
@@ -55,7 +44,6 @@ private:
 
     void makeMaterial_genericMaterial(GraphicsComponent* gc);
 
-
     //color material
     void makeMaterial_none(GraphicsComponent* gc);
     void makeMaterial_brighter(GraphicsComponent* gc);
@@ -75,15 +63,6 @@ private:
     void makeMaterial_mat(GraphicsComponent* gc);
 
     void makeMaterial_genericSpecific(GraphicsComponent* gc);
-
-
-
-    //==================================
-    /*
-    void makeMaterial_shiny(GraphicsComponent* gc, std::string amount);
-    void makeMaterial_transparency(GraphicsComponent* gc, std::string amount);
-    void makeMaterial_black(GraphicsComponent* gc);
-     */
 
 };
 

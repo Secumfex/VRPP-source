@@ -14,9 +14,6 @@ MaterialManager::MaterialManager() {
 MaterialManager::~MaterialManager() {
     
 	}
-
-
-// TODO: _custom_ -> do nothing!
     
 
 void MaterialManager::makeMaterial(std:: string matName, GraphicsComponent* gc){
@@ -135,7 +132,7 @@ void MaterialManager::makeMaterial(std:: string matName, GraphicsComponent* gc){
 	else {makeMaterial_genericSpecific(gc);
     }
 
-
+}
 
 
 //basic
@@ -405,7 +402,9 @@ void MaterialManager::makeMaterial(std:: string matName, GraphicsComponent* gc){
 		    std::cout<<"\n'generic specification' set"<<endl;
 		}
 
-	void MaterialManager::makeMaterial(std:: string matName, vector<GraphicsComponent*> gc){
+
+
+void MaterialManager::makeMaterial(std:: string matName, vector<GraphicsComponent*> gc){
 
 		for(vector<GraphicsComponent*>::iterator it = gc.begin();it != gc.end(); ++it){
 			MaterialManager::makeMaterial(matName,*it);
