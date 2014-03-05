@@ -34,7 +34,6 @@ GraphicsComponent* MaterialManager::makeMaterial(std:: string matName, GraphicsC
     if(matName.find("bronze") != std::string::npos)
 		return makeMaterial_bronze(gc);
     // chrome - Chrom
-    if(matName.find("chrome") != std::string::npos)
 		return makeMaterial_chrome(gc);
     // copper - Kupfer
     if(matName.find("copper") != std::string::npos)
