@@ -92,15 +92,15 @@ void FrameBufferObject::createShadowMap(){
 	glBindFramebuffer(GL_FRAMEBUFFER, mFramebufferHandle);
 	glGenTextures(1, &mShadowMapHandle);
 	glBindTexture(GL_TEXTURE_2D, mShadowMapHandle);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, mWidth, mHeight, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWidth, mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, mShadowMapHandle, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT4, GL_TEXTURE_2D, mShadowMapHandle, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	mDrawBuffers.push_back(GL_DEPTH_ATTACHMENT);
+	mDrawBuffers.push_back(GL_COLOR_ATTACHMENT4);
 }
 void FrameBufferObject::createDepthBuffer(){
 	glBindFramebuffer(GL_FRAMEBUFFER, mFramebufferHandle);

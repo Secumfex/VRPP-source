@@ -6,6 +6,9 @@ uniform sampler2D positionMap;
 uniform sampler2D normalMap;
 uniform sampler2D colorMap;
 uniform sampler2D materialMap;
+uniform sampler2D shadowMap;
+
+uniform mat4 uniformLightProjection;
 
 uniform float resX;
 uniform float resY;
@@ -21,6 +24,20 @@ void main() {
     //lightPosition from camera system
     vec4 lightPos = vec4(5,2,-2,1);
     
+    vec4 lightProjection = uniformLightProjection * position;
+
+	lightProjection = vec4(lightProjection.xyz / lightProjection.w, 0.0);
+    lightProjection = lightProjection * 0.5 + 0.5;
+    float lightDepth = texture(shadowMap, lightProjection.xy).x;
+
+	float visibility = 1.0;
+//    
+//  	if (lightDepth < lightProjection.z - 0.0005) {
+//       visibility = 0.5;    
+//  } else {
+//     visibility = 1.0;
+// }
+    
     //calculate lighting with given position, normal and lightposition
     vec3 nPosToLight = normalize(vec3(lightPos.xyz - position.xyz));
 
@@ -28,7 +45,7 @@ void main() {
 
     vec3  reflection = normalize(reflect(-nPosToLight,normal.xyz));
     float ambient = 0.1;
-    float diffuse = max(dot(normal.xyz, nPosToLight), 0);
+    float diffuse = max(dot(normal.xyz, nPosToLight), 0) * visibility;
     float specular = pow(max(dot(reflection, -normalize(position.xyz)),0), shininess * 1000.0);
 
     float resX_temp = 1.0/resX;

@@ -83,6 +83,13 @@ VirtualObject* RenderManager::getCurrentVO(){
 void RenderManager::setCurrentFrustum(Frustum* frustum){
 	mFrustum = frustum;
 }
+void RenderManager::setLightPosition (glm::vec3 pos, int index){
+if(mLightPositions.empty())
+	createFourLightsources();
+if(index < 0 || index > 3)
+	return;
+
+}
 
 FrameBufferObject* RenderManager::getCurrentFBO(){
 	return mCurrentFBO;
@@ -111,6 +118,16 @@ GLFWwindow* RenderManager::getWindow(){
 
 Frustum* RenderManager::getCurrentFrustum(){
 	return mFrustum;
+}
+
+glm::mat4 RenderManager::getLightProjectionMatrix(int index){
+	glm::vec3 eye = mCamera->getPosition();
+	glm::vec3 center = mCamera->getViewDirection() - eye;
+
+	glm::mat4 persp = glm::perspective(60.0f, 1.0f, 0.1f, 100.0f);
+	glm::mat4 view = glm::lookAt(mLightPositions[index], center, vec3(0.0, 1.0, 0.0));
+
+	return  persp * view;
 }
 
 //glfw error-callback function
@@ -217,4 +234,11 @@ void RenderManager::attachListenerOnNewFrame(Listener* listener){
 void RenderManager::attachListenerOnWindowShouldClose(Listener* listener){
 	listener->setName("WINDOWSHOULDCLOSELISTENER");
 	attach(listener);
+}
+
+void RenderManager::createFourLightsources(){
+	mLightPositions.push_back(vec3(20, 20, 20));
+	mLightPositions.push_back(vec3(-20, 20, 20));
+	mLightPositions.push_back(vec3(20, 20, -20));
+	mLightPositions.push_back(vec3(-20, 20, -20));
 }

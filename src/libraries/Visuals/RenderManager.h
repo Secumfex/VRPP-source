@@ -27,6 +27,7 @@ public:
 	void setProjectionMatrix(float fovy, float aspect, float near, float far);
 	void setDefaultProjectionMatrix();
 	void setCurrentFrustum(Frustum* frustum);
+	void setLightPosition (glm::vec3 pos, int index);
 
 	VirtualObject* getCurrentVO();
 	GraphicsComponent* getCurrentGC();
@@ -37,6 +38,8 @@ public:
 	RenderQueue* getRenderQueue();
 	Frustum* getCurrentFrustum();
 	glm::mat4 getProjectionMatrix();
+	glm::mat4 getLightProjectionMatrix(int index);
+
 
 	void libInit();
 	void manageShaderProgram();
@@ -46,6 +49,9 @@ public:
 
 
 private:
+
+	void createFourLightsources();
+
 	GLuint vbo;
 	GLuint MVPHandle;
 	GLuint shaderProgramHandle;
@@ -59,6 +65,7 @@ private:
 	GraphicsComponent* mCurrentGC;
 	VirtualObject* mCurrentVO;
 	FrameBufferObject* mCurrentFBO;
+	vector<glm::vec3> mLightPositions;
 
 };
 
