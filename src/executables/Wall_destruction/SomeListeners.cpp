@@ -174,8 +174,8 @@ void TurnCameraListener::update(){
 #include "IO/IOHandler.h"
 #include "Physics/PhysicWorld.h"
 
-PickRayListener::PickRayListener(){
-
+PickRayListener::PickRayListener(Camera* cam){
+	this->cam = cam;
 	this->phWorld = PhysicWorld::getInstance();
 }
 
@@ -195,8 +195,8 @@ void PickRayListener::update(){
 	int currentWidth,currentHeight;
 	glfwGetWindowSize(window,&currentWidth,&currentHeight);
 
-	glm::vec3 outOrigin;
-	glm::vec3 outDirection;
+	glm::vec3 outOrigin= cam->getPosition();
+	glm::vec3 outDirection= cam->getViewDirection();;
 	glm::mat4 projectionMatrix = RenderManager::getInstance()->getProjectionMatrix();
 	glm::mat4 viewMatrix = IOManager::getInstance()->getCurrentIOHandler()->getViewMatrix();
 	phWorld->screenPosToWorldRay(currentXPos,currentYPos,currentWidth,currentHeight,viewMatrix,projectionMatrix,outOrigin,outDirection);

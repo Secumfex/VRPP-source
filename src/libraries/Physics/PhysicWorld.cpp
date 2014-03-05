@@ -46,13 +46,13 @@ void PhysicWorld::screenPosToWorldRay(double mouseX, double mouseY, int screenWi
 	glm::mat4 InverseViewMatrix = glm::inverse(viewMatrix);
 
 	glm::vec4 rayStart_camera = InverseProjectionMatrix * rayStart_NDC;
-	rayStart_camera = rayStart_camera.w / rayStart_camera;
+	rayStart_camera/=rayStart_camera.w;
 	glm::vec4 rayStart_world = InverseViewMatrix       * rayStart_camera;
-	rayStart_world = rayStart_world.w / rayStart_world;
+	rayStart_world/=rayStart_world.w;
 	glm::vec4 rayEnd_camera = InverseProjectionMatrix * rayEnd_NDC;
-	rayEnd_camera = rayEnd_camera.w / rayEnd_camera;
+	rayEnd_camera /=rayEnd_camera.w;
 	glm::vec4 rayEnd_world = InverseViewMatrix       * rayEnd_camera;
-	rayEnd_world = rayEnd_world.w / rayEnd_world;
+	rayEnd_world/=rayEnd_world.w;
 
 	glm::vec3 rayDirection_world(rayEnd_world - rayStart_world);
 	rayDirection_world = glm::normalize(rayDirection_world);
