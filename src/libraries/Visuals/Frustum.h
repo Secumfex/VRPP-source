@@ -13,6 +13,7 @@
 #include "Physics/PhysicsComponent.h"
 #include "Visuals/GraphicsComponent.h"
 #include <iostream>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -27,7 +28,7 @@ public:
 	Frustum(Camera *cam);
 	virtual ~Frustum();
 	bool inFrustum(GraphicsComponent *gc);
-	void setProjectionMatrix(float fovy, float aspect, float near, float far);
+	void setProjectionMatrix(GLfloat fovy, GLfloat aspect, GLfloat near, GLfloat far);
 	glm::mat4 getProjectionMatrix();
 	void updateModelMatrix();
 	void setCamera(Camera *cam);

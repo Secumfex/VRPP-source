@@ -17,10 +17,16 @@ ApplicationState::ApplicationState(){
 	camera = new Camera();
 	renderQueue = new RenderQueue();
 	iOHandler = new IOHandler();
+	frustum = new Frustum(camera);
 	iOHandler->setCameraObject(camera);
 	attachListenerOnBeginningProgramCycle(	new UpdateCameraPositionListener(camera));
 	
+
 	projectionMatrix = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
+}
+
+Frustum* ApplicationState::getFrustum(){
+	return frustum;
 }
 
 Camera* ApplicationState::getCamera(){
@@ -49,9 +55,10 @@ void ApplicationState::activate(){
 void ApplicationState::bindObjects(){
 	RenderManager* rm = RenderManager::getInstance();
 	
+	rm->setCamera(camera);
+	rm->setCurrentFrustum(frustum);
 	rm->setProjectionMatrix(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
 	rm->setRenderQueue(renderQueue);
-	rm->setCamera(camera);
 
 	IOManager* io = IOManager::getInstance();
 	io->setCurrentIOHandler(iOHandler);

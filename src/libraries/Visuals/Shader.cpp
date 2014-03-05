@@ -7,40 +7,11 @@
 
 #include <Visuals/Shader.h>
 
-Shader::Shader(){
 
-
-	mProgramHandle = ShaderTools::makeShaderProgram();
-	setShaderName("DefaultShader");
-
-	blurStrength = 0.0f;
-
-	int total = -1;
-
-	glGetProgramiv( mProgramHandle, GL_ACTIVE_UNIFORMS, &total );
-
-	unsigned int i= 0;
-
-	for(i=0; i<total; ++i)  {
-	    int name_len=-1, num=-1;
-	    GLenum type = GL_ZERO;
-	    char name[100];
-	    glGetActiveUniform( mProgramHandle, GLuint(i), sizeof(name)-1,
-	        &name_len, &num, &type, name );
-	    name[name_len] = 0;
-	    GLuint location = glGetUniformLocation( mProgramHandle, name );
-
-
-	    mUniformHandles.insert(std::pair<std::string, GLuint>(name, location));
-	    mUniformNames.push_back(name);
-	    attachUniformListener(name);
-}
-}
 Shader::Shader(std::string vertexShader, std::string fragmentShader) {
 
 	std::string vertexshader = vertexShader ;
 	std::string fragmentshader = fragmentShader ;
-
 	makeShader(vertexShader, fragmentShader);
 
 	blurStrength = 0.0f;
@@ -50,7 +21,6 @@ Shader::Shader(std::string vertexShader, std::string fragmentShader) {
 	glGetProgramiv( mProgramHandle, GL_ACTIVE_UNIFORMS, &total );
 
 	unsigned int i= 0;
-
 	for(i=0; i<total; ++i)  {
 	    int name_len=-1, num=-1;
 	    GLenum type = GL_ZERO;

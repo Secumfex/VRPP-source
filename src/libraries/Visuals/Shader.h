@@ -24,7 +24,6 @@ class Shader : public Subject{
 public:
 
 
-	Shader();
 	Shader(std::string vertexShader, std::string fragmentShader);
 	virtual ~Shader();
 	void setShaderName(std::string name);

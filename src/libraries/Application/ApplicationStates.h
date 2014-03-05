@@ -7,6 +7,7 @@
 #include "Patterns/State.h"
 #include "Patterns/Subject.h"
 #include "IO/IOHandler.h"
+#include "Visuals/Frustum.h"
 
 class Camera; class RenderQueue; class VirtualObject;
 
@@ -16,6 +17,7 @@ class ApplicationState : public State{
 
 protected: 
 	/*Member variables*/
+	Frustum* frustum;
 	Camera* camera;
 	RenderQueue* renderQueue;
 	IOHandler* iOHandler;
@@ -25,6 +27,7 @@ protected:
 public:
 	ApplicationState();
 
+	Frustum*		getFrustum();
 	Camera* 		getCamera();
 	RenderQueue* 	getRenderQueue();
 	IOHandler* 		getIOHandler();

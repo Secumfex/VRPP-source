@@ -33,16 +33,12 @@ void Frustum::setCamera(Camera *cam){
 	mCam = cam;
 }
 
-void Frustum::makeGhostObject(){
-	btTransform t;
-	t.setIdentity();
-	mFrustumVolume->setWorldTransform(t);
 
-}
+void Frustum::setProjectionMatrix(GLfloat fovy, GLfloat aspect, GLfloat near, GLfloat far){
 
-void Frustum::setProjectionMatrix(float fovy, float aspect, float near, float far){
 
 	mProjectionMatrix = glm::perspective(fovy, aspect, near, far);
+
 
 	float fovx = fovy / aspect;
 
