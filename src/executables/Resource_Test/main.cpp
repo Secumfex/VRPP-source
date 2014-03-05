@@ -54,7 +54,7 @@ int main() {
 
 	VirtualObjectFactory *voFactory = VirtualObjectFactory::getInstance();
 
-	VirtualObject *object01 = voFactory->createVirtualObject(RESOURCES_PATH "/soda_can1.obj");
+	//VirtualObject *object01 = voFactory->createVirtualObject(RESOURCES_PATH "/soda_can1.obj");
 	VirtualObject *object02 = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj");
 	VirtualObject *object03 = voFactory->createVirtualObject(RESOURCES_PATH "/cube.obj");
     VirtualObject *object04 = voFactory->createVirtualObject(RESOURCES_PATH "/cow.obj");
@@ -91,7 +91,7 @@ int main() {
 	gbufferShader->setBlurStrength(0.5);
 	gbuffer_normalMap_Shader->setBlurStrength(0);
 
-	rq->addVirtualObject(object01);
+	//rq->addVirtualObject(object01);
 	rq->addVirtualObject(object02);
     rq->addVirtualObject(object04);
 	rq->addVirtualObject(object03);
@@ -134,13 +134,13 @@ int main() {
 		//nice rotation of a small cube
 		mat4 modelMatrix02 = scale(translate(rotate(mat4(1.0f), degrees(angle), vec3(1.0f, 1.0f, 0.0f)), vec3(2.0f, 0.8f, -0.5f)), vec3(0.9f, 0.9f, 0.9f));
 
-		mat4 modelMatrix03 = scale(translate(rotate(mat4(1.0f), degrees(angle), vec3(0.0f, 1.0f, 1.0f)), vec3(-2.0f, 0.2f, -0.5f)), vec3(0.3f, 0.3f, 0.3f));
-        modelMatrix03=scale(mat4(1.0f), vec3(0.5f,0.5f,0.5f))*modelMatrix03;
+		//mat4 modelMatrix03 = scale(translate(rotate(mat4(1.0f), degrees(angle), vec3(0.0f, 1.0f, 1.0f)), vec3(-2.0f, 0.2f, -0.5f)), vec3(0.3f, 0.3f, 0.3f));
+        // modelMatrix03=scale(mat4(1.0f), vec3(0.5f,0.5f,0.5f))*modelMatrix03;
         mat4 modelMatrix04 = scale(translate(rotate(mat4(1.0f), degrees(angle), vec3(1.0f, 0.0f, 1.0f)), vec3(0.7f)),vec3(2.5f));
 
 		object03->setModelMatrix(modelMatrix01);
 		object02->setModelMatrix(modelMatrix02);
-		object01->setModelMatrix(modelMatrix03);
+		//object01->setModelMatrix(modelMatrix03);
         object04->setModelMatrix(modelMatrix04);
 
 		//--------------------------------------------//

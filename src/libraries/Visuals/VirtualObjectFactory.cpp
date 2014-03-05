@@ -349,7 +349,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 		if(AI_SUCCESS == aiGetMaterialString(mtl, AI_MATKEY_NAME, &name)){
 			std::string matName = name.C_Str();
 			matName = matName.substr( matName.find_last_of( '/' ) + 1 );
-            std::cout<<"\nName des Materials: "<<matName<<endl;
+            std::cout<<"Name des Materials: "<<matName;
 			aMat->setName(matName);
 		}
         else{
@@ -364,9 +364,10 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
         GraphicsComponent* copie=new GraphicsComponent();
         try {
             copie=mm->makeMaterial(aMat->getName(),gc);
+            cout<<"SUCCESS: generated MATERIAL by name"<<endl;
             }
         catch (string param){
-           cout<<"\nFAILED: generate material by name";
+            cout<<"\nFAILED: generate material by name"<<endl;;
             }
 
         if (copie==NULL){

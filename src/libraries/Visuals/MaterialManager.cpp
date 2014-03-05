@@ -22,12 +22,11 @@ GraphicsComponent* MaterialManager::makeMaterial(std:: string matName, GraphicsC
     
 	if(matName.find("genericMaterial") != std::string::npos){
 		makeMaterial_generic(gc);
-        return NULL;}
-   /*
+        return NULL;
+    }
+    // wood - Holz
 	if(matName.find("wood") != std::string::npos)
-		makeMaterial_wood(gc);
-    */
-    
+		return makeMaterial_wood(gc);
     // brass - Messing
     if(matName.find("brass") != std::string::npos)
 		return makeMaterial_brass(gc);
@@ -71,11 +70,24 @@ GraphicsComponent* MaterialManager::makeMaterial(std:: string matName, GraphicsC
 void MaterialManager::makeMaterial_generic(GraphicsComponent* gc){
     
 }
-/*
-void MaterialManager::makeMaterial_wood(GraphicsComponent* gc){
 
+GraphicsComponent* MaterialManager::makeMaterial_wood(GraphicsComponent* gc){
+    gc->setEmission(false);
+    gc->setShadow(true);
+    gc->setTransparency(false);
+    gc->getMaterial()->setAmbient(glm::vec3(0.0f));
+    gc->getMaterial()->setDiffuse(glm::vec3(0.522400f,0.284809f,0.044319f));
+    gc->getMaterial()->setSpecular(glm::vec3(0.420462f));
+    gc->getMaterial()->setShininess(66.666667f/1000.0f);
+
+    Texture *tex_temp = new Texture();
+     tex_temp = new Texture(RESOURCES_PATH "/Wood.jpg");
+     gc->getMaterial()->setDiffuseMap(tex_temp);
+    
+    std::cout<<"\n'wood' set"<<endl;
+    return gc;
 }
-*/
+
 
 // Messing
 GraphicsComponent* MaterialManager::makeMaterial_brass(GraphicsComponent* gc){
@@ -100,9 +112,10 @@ GraphicsComponent* MaterialManager::makeMaterial_bronze(GraphicsComponent* gc){
     gc->getMaterial()->setSpecular(glm::vec3(0.393548f,0.271906f,0.166721f));
     gc->getMaterial()->setShininess(25.6f/1000.0f);
 
-    Texture *tex_temp = new Texture();
+    /*Texture *tex_temp = new Texture();
     tex_temp = new Texture(RESOURCES_PATH "/bronze.jpg");
     gc->getMaterial()->setDiffuseMap(tex_temp);
+     */
     std::cout<<"\n'bronze' set"<<endl;
     return gc;
 }

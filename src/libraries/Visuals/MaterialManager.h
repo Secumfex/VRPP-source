@@ -24,10 +24,7 @@ public:
 private:
     
 	void makeMaterial_generic(GraphicsComponent* gc);
-    /*
-	void makeMaterial_wood(GraphicsComponent* gc);
-
-     */
+	GraphicsComponent* makeMaterial_wood(GraphicsComponent* gc);
     GraphicsComponent* makeMaterial_brass(GraphicsComponent* gc);
     GraphicsComponent* makeMaterial_bronze(GraphicsComponent* gc);
     GraphicsComponent* makeMaterial_chrome(GraphicsComponent* gc);

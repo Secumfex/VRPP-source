@@ -142,7 +142,7 @@ void RenderManager::libInit(){
 
     glfwMakeContextCurrent(window);
     glewInit();
-    glClearColor(0,0,0,0);
+    glClearColor(1,1,1,0);
 
     // print out some info about the graphics drivers
     std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
