@@ -83,5 +83,7 @@ void GraphicsComponent:: setGhostObject(glm::vec3 min, glm::vec3 max){
 	setModelMatrixGc(glm::mat4(1.0f));
 	PhysicWorld::getInstance()->dynamicsWorld->addCollisionObject(mGhostObject);
 }
-
+btGhostObject* GraphicsComponent::getGhostObject(){
+return mGhostObject;
+}
 

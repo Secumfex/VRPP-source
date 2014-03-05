@@ -195,6 +195,9 @@ int main() {
 					gbufferShader->uploadAllUniforms();
 				}
 
+				if(gc_temp->getGhostObject()->getNumOverlappingObjects() > 0)
+				std::cout << gc_temp->getGhostObject()->getNumOverlappingObjects() << " SO VIELE ÜBERSCHNEIDUNGEN BEI" << gc_temp->getMaterial()->getName() << endl;
+
 				gbufferShader->render(gc_temp);
 			}
 		}

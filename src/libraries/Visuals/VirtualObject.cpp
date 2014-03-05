@@ -104,6 +104,10 @@ glm::mat4 VirtualObject::getModelMatrix(){
 
 void VirtualObject::setModelMatrix(glm::mat4 modelmatrix){
 	modelMatrix = modelmatrix;
+	unsigned int i = 0;
+	for(i=0; i< mGraphComponent.size();i++){
+		mGraphComponent[i]->setModelMatrixGc(modelmatrix);
+	}
 }
 
 PhysicsComponent* VirtualObject::getPhysicsComponent(){

@@ -39,6 +39,7 @@ public:
 	bool hasTransparency();	//!< @return 1 if component is transparent @return 0 if component is not transparent
 
 	void setGhostObject(glm::vec3 min, glm::vec3 max);
+	btGhostObject* getGhostObject();
 
 	GraphicsComponent();		//!< default constructor without parameters
 
