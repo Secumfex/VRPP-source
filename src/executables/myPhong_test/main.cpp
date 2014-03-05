@@ -160,20 +160,6 @@ int main()
     glUniform4f(light_loc3, 0.8f,0.8f,0.8f,1.0f);
     glUniform4f(light_loc4, 0.8f,0.8f,0.8f,1.0f);
     
-    /*
-    // Material - Gold
-    glUniform4f(mat_loc1, 0.25f,0.20f,0.07f, 1.0f);
-    glUniform4f(mat_loc2, 0.75f,0.61f,0.23f, 1.0f);
-    glUniform4f(mat_loc3, 0.63f,0.56f,0.37f, 1.0f);
-    glUniform1f(mat_loc4, 51.0f);
-    */
-    
-    // Material - Silber
-    glUniform4f(mat_loc1, 0.19, 0.19, 0.19, 1.0f);
-    glUniform4f(mat_loc2, 0.51, 0.51, 0.51, 1.0f);
-    glUniform4f(mat_loc3, 0.51, 0.51, 0.51, 1.0f);
-    glUniform1f(mat_loc4, 51.0f);
-    
     glUniform1f(sceneAmbient, 0.3);
 
     /** Matritzen definieren **/
@@ -200,6 +186,11 @@ int main()
             //std::cout<<"true";
             glUniformMatrix4fv(modelview,1,GL_FALSE,&viewMatrix[0][0]);
             glUniformMatrix4fv(projection,1,GL_FALSE,&projectionMatrix[0][0]);
+            // Material - Silber
+            glUniform4f(mat_loc1, 0.19, 0.19, 0.19, 1.0f);
+            glUniform4f(mat_loc2, 0.51, 0.51, 0.51, 1.0f);
+            glUniform4f(mat_loc3, 0.51, 0.51, 0.51, 1.0f);
+            glUniform1f(mat_loc4, 51.0f);
             glBindVertexArray(bunnyVAO);
             glDrawElements(GL_TRIANGLES, NUM_POINTS*6, GL_UNSIGNED_INT, 0);
         }
@@ -214,6 +205,12 @@ int main()
             //std::cout<<"true";
             glUniformMatrix4fv(modelview,1,GL_FALSE,&viewMatrix[0][0]);
             glUniformMatrix4fv(projection,1,GL_FALSE,&projectionMatrix[0][0]);
+            // Material - Gold
+            glUniform4f(mat_loc1, 0.25f,0.20f,0.07f, 1.0f);
+            glUniform4f(mat_loc2, 0.75f,0.61f,0.23f, 1.0f);
+            glUniform4f(mat_loc3, 0.63f,0.56f,0.37f, 1.0f);
+            glUniform1f(mat_loc4, 51.0f);
+            
             glBindVertexArray(bunnyVAO);
             glDrawElements(GL_TRIANGLES, NUM_POINTS*6, GL_UNSIGNED_INT, 0);
         }
