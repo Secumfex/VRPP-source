@@ -9,6 +9,7 @@ GraphicsComponent::GraphicsComponent(){
 	mTranparency = false;
 	mEmission = false;
 	mShadow = false;
+	mGhostObject = new btGhostObject();
 }
 
 GraphicsComponent::GraphicsComponent(Mesh* mesh, Material* material){
@@ -17,6 +18,7 @@ GraphicsComponent::GraphicsComponent(Mesh* mesh, Material* material){
 	mTranparency = false;
 	mEmission = false;
 	mShadow = false;
+	mGhostObject = new btGhostObject();
 }
 void GraphicsComponent::setMesh(Mesh* mesh){
 	mMesh = mesh;
@@ -72,13 +74,9 @@ bool GraphicsComponent:: hasTransparency(){
 
 void GraphicsComponent:: setGhostObject(glm::vec3 min, glm::vec3 max){
 
-	if(mGhostObject != NULL)
-		delete mGhostObject;
-
 	glm::vec3 midpoint = (min + max) * 0.5f;
 	max = max - midpoint;
 	btBoxShape* shape = new btBoxShape(btVector3(max.x, max.y, max.z));
-	mGhostObject = new btGhostObject();
 	mGhostObject->setCollisionShape(shape);
 	mGhostObject->setCollisionFlags(4);
 
