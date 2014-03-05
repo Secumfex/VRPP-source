@@ -5,19 +5,13 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Visuals/VirtualObject.h"
+
 
 using namespace std;
 
 PhysicsComponent::PhysicsComponent(){
 	rigidBody = 0;
-	modelMatrix = glm::mat4();
-	hit = false;
-}
-
-PhysicsComponent::PhysicsComponent(glm::mat4 modelMatrix) {
-
-	this-> modelMatrix = modelMatrix;
-	rigidBody =  0;
 	hit = false;
 }
 
@@ -38,8 +32,7 @@ PhysicsComponent::PhysicsComponent(glm::vec3 min, glm::vec3 max) {
 	hit = false;
 
 	rigidBody = addBox(width, height, depth, x, y, z, mass);
-	addCollisionFlag(4);	//momentan noch fest, muesste eig auch zusaetzlicher input wert sein
-	update();
+	addCollisionFlag(8);	//momentan noch fest, muesste eig auch zusaetzlicher input wert sein
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
 
@@ -48,8 +41,7 @@ PhysicsComponent::PhysicsComponent(float radius, float x, float y, float z, floa
 	hit = false;
 
 	rigidBody = addSphere(radius,x,y,z,mass);
-	addCollisionFlag(4);
-	update();
+	addCollisionFlag(8);
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
 
@@ -57,8 +49,7 @@ PhysicsComponent::PhysicsComponent(float width, float height, float depth, float
 
 	hit = false;
 	rigidBody = addBox(width,height,depth,x,y,z,mass);
-	addCollisionFlag(4);
-	update();
+	addCollisionFlag(8);
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
 
@@ -66,8 +57,7 @@ PhysicsComponent::PhysicsComponent(float x, float y, float z, btVector3 normal, 
 
 	hit = false;
 	rigidBody = addPlane(x,y,z,normal,mass);
-	addCollisionFlag(4);
-	update();
+	addCollisionFlag(8);
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
 
@@ -81,11 +71,27 @@ PhysicsComponent::~PhysicsComponent() {
 	delete rigidBody;
 }
 
-void PhysicsComponent::addCollisionFlag(int flag) {
+void PhysicsComponent::translate(glm::vec3 pos){
+	btVector3 trans = btVector3(pos.x, pos.y, pos.z);
 
-	if(flag == 4) {
-		rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK);
-	}
+	this->rigidBody->translate(trans);
+}
+
+void PhysicsComponent::scale(glm::vec3 scale){
+	btVector3 scalevec = btVector3(scale.x, scale.y, scale.z);
+
+		rigidBody->getCollisionShape()->setLocalScaling(scalevec);
+}
+
+void PhysicsComponent::addCollisionFlag(int flag) {
+	switch( flag)
+	  { case 1: rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_STATIC_OBJECT); break;
+	    case 2: rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT); break;
+	    case 4: rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_NO_CONTACT_RESPONSE); break;
+	    case 8: rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK); break;
+	    case 16: rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_CHARACTER_OBJECT); break;
+	    case 32: rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_DISABLE_VISUALIZE_OBJECT); break;
+	    case 64: rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_DISABLE_SPU_COLLISION_PROCESSING); break;}
 }
 
 btRigidBody* PhysicsComponent::addBox(float width, float height, float depth, float x, float y, float z, float mass){
@@ -94,17 +100,21 @@ btRigidBody* PhysicsComponent::addBox(float width, float height, float depth, fl
 	t.setIdentity();
 	t.setOrigin(btVector3(x,y,z));
 
-	btBoxShape* box = new btBoxShape(btVector3(width/2.0,height/2.0,depth/2.0));
+	btBoxShape* box = new btBoxShape(btVector3(width,height,depth));
 
-	btVector3 inertia(0,0,0);
+	btVector3 inertia;
 	if(mass != 0.0) {
 		box->calculateLocalInertia(mass,inertia);
 	}
+	box->calculateLocalInertia(mass,inertia);
+
+
 
 	btMotionState* motion = new btDefaultMotionState(t);
-	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,box);
-	btRigidBody* body = new btRigidBody(info);
+	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,box, inertia);
 
+	btRigidBody* body = new btRigidBody(info);
+	body->setLinearFactor(btVector3(1,1,1));
 	return body;
 }
 
@@ -116,15 +126,17 @@ btRigidBody* PhysicsComponent::addSphere(float radius, float x, float y, float z
 
 	btSphereShape* sphere = new btSphereShape(radius);
 
-	btVector3 inertia(0,0,0);
+	btVector3 inertia;
 	if(mass != 0.0){
-		sphere->calculateLocalInertia(mass,inertia);
+		sphere->calculateLocalInertia(mass, inertia);
 	}
+
+
 
 	btMotionState* motion = new btDefaultMotionState(t);
 	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,sphere);
 	btRigidBody* body = new btRigidBody(info);
-
+	body->setLinearFactor(btVector3(1,1,1));
 	return body;
 }
 
@@ -140,13 +152,8 @@ btRigidBody* PhysicsComponent::addPlane(float x, float y, float z, btVector3 nor
 	btMotionState* motion = new btDefaultMotionState(t);
 	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,plane);
 	btRigidBody* body = new btRigidBody(info);
-
+	body->setLinearFactor(btVector3(1,1,1));
 	return body;
-}
-
-glm::mat4 PhysicsComponent::getModelMatrix(){
-
-	return modelMatrix;
 }
 
 btRigidBody* PhysicsComponent::getRigidBody(){
@@ -195,40 +202,17 @@ void PhysicsComponent::setHit(bool hitState){
 	hit = hitState;
 }
 
-void PhysicsComponent::update(){
+void PhysicsComponent::update(VirtualObject* vo){
 
 	btRigidBody* body = rigidBody;
-	if(body->getCollisionShape()->getShapeType() == SPHERE_SHAPE_PROXYTYPE){
+
 
 		btTransform t;
 		body->getMotionState()->getWorldTransform(t);
 		float mat[16];
 		t.getOpenGLMatrix(mat);
 
-		this-> modelMatrix = glm::make_mat4(mat);
-	}
-	if(body->getCollisionShape()->getShapeType() == BOX_SHAPE_PROXYTYPE) {
-
-		btTransform t;
-		body->getMotionState()->getWorldTransform(t);
-		float mat[16];
-		t.getOpenGLMatrix(mat);
-
-		this-> modelMatrix = glm::make_mat4(mat);
-	}
-	if(body->getCollisionShape()->getShapeType() == STATIC_PLANE_PROXYTYPE) {
-
-		btTransform t;
-		body->getMotionState()->getWorldTransform(t);
-		float mat[16];
-		t.getOpenGLMatrix(mat);
-
-		this->modelMatrix = glm::make_mat4(mat);
-
-	}
-	else {
-		return;
-	}
+		vo->setModelMatrix(glm::make_mat4(mat));
 }
 
 void PhysicsComponent::initFrameListener(){

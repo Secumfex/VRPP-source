@@ -62,6 +62,7 @@ Shader::Shader(std::string vertexShader, std::string fragmentShader) {
 
 
 	    mUniformHandles.insert(std::pair<std::string, GLuint>(name, location));
+
 	    mUniformNames.push_back(name);
 	    attachUniformListener(name);
 	}
@@ -132,6 +133,7 @@ void Shader::render(GraphicsComponent *gc){
 }
 
 
+
 bool Shader::hasUniform(std::string uniformName){
 
 	unsigned int i = 0;
@@ -141,6 +143,7 @@ bool Shader::hasUniform(std::string uniformName){
 	}
 	return false;
 }
+
 
 
 std::vector<std::string> Shader::getUniformNames(){
@@ -197,4 +200,7 @@ void Shader::attachUniformListener(std::string uniform){
 	else {
 		std::cout << "ERROR: Uniform \"" << uniform << "\" is not a valid uniform name." << std:: endl;
 	}
+
+
+
 }

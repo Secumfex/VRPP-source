@@ -23,11 +23,13 @@ class Shader : public Subject{
 	//-----------------MEMBER FUNCTIONS-----------------
 public:
 
+
 	Shader();
 	Shader(std::string vertexShader, std::string fragmentShader);
 	virtual ~Shader();
 	void setShaderName(std::string name);
 	void uploadAllUniforms();
+
 	void uploadUniforms(glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
 	std::string getShaderName();
 	GLuint getProgramHandle();
@@ -41,6 +43,7 @@ public:
 	bool hasUniform(std::string uniformName);
 
 	std::vector<std::string> getUniformNames();
+
 
 
 	void useProgram();
@@ -57,6 +60,7 @@ private:
 
 	//-----------------MEMBER VARIABLES-----------------
 protected:
+
 
 	std::map<std::string, GLuint> mUniformHandles;
 

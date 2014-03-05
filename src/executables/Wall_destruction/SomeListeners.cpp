@@ -156,3 +156,81 @@ SetCameraDirectionListener::SetCameraDirectionListener(Camera* cam, glm::vec3 di
 void SetCameraDirectionListener::update(){
 	cam->setDirection(direction);
 }
+TurnCameraListener::TurnCameraListener(Camera* cam, float phi, float theta){
+	this->cam 	= cam;
+	this->theta = theta;
+	this->phi 	= phi;
+}
+void TurnCameraListener::update(){
+	float old_phi   = cam->getPhi();
+	float old_theta = cam->getTheta();
+
+	cam->setPhi(  old_phi   + phi);
+	cam->setTheta(old_theta + theta);
+}
+
+//includes for ray-picking
+#include "IO/IOManager.h"
+#include "IO/IOHandler.h"
+#include "Physics/PhysicWorld.h"
+
+PickRayListener::PickRayListener(){
+
+	this->phWorld = PhysicWorld::getInstance();
+}
+
+void PickRayListener::update(){
+
+	GLFWwindow* window = glfwGetCurrentContext();
+
+	double currentXPos,currentYPos;
+	glfwGetCursorPos(window,&currentXPos,&currentYPos);
+
+	/*
+	int xPos,yPos;
+	xPos = static_cast<int>(currentXPos);
+	yPos = static_cast<int>(currentYPos);
+	*/
+
+	int currentWidth,currentHeight;
+	glfwGetWindowSize(window,&currentWidth,&currentHeight);
+
+	glm::vec3 outOrigin;
+	glm::vec3 outDirection;
+	glm::mat4 projectionMatrix = RenderManager::getInstance()->getProjectionMatrix();
+	glm::mat4 viewMatrix = IOManager::getInstance()->getCurrentIOHandler()->getViewMatrix();
+	phWorld->screenPosToWorldRay(currentXPos,currentYPos,currentWidth,currentHeight,viewMatrix,projectionMatrix,outOrigin,outDirection);
+}
+
+#include "Application/ApplicationStates.h"
+#include "Visuals/VirtualObjectFactory.h"
+#include "Tools/NoAssimpVirtualObjectFactory.h"
+
+ShootSphereListener::ShootSphereListener(Camera* cam, VRState* state){
+	this->cam = cam;
+	this->state = state;
+}
+void ShootSphereListener::update(){
+	glm::vec3 start = cam->getPosition();
+	glm::vec3 view = cam->getViewDirection();
+	btVector3 dir = btVector3(view.x, view.y, view.z);
+
+
+
+	//VirtualObject* sphere = new VirtualObject(0.2f, 0.2f, 0.2f, start.x, start.y, start.z, 1.0f);
+	//VirtualObject* sphere = new VirtualObject(0.2f, start.x, start.y, start.z, 1.0f);
+	//sphere->addGraphicsComponent(new GraphicsComponent);
+	//VirtualObject* cube = VirtualObjectFactory::getInstance()->createNonAssimpVO();
+
+	VirtualObject* 	cube = 	VirtualObjectFactory::getInstance()->createVirtualObject(RESOURCES_PATH "/cube.obj");
+
+	state->addVirtualObject(cube);
+	cube->setModelMatrix(glm::translate(glm::mat4(1.0f), glm::vec3(start.x, start.y, start.z)));
+	cube->getPhysicsComponent()->~PhysicsComponent();
+	cube->setPhysicsComponent(1.0f, 1.0f, 1.0f, start.x, start.y, start.z, 1.0f);
+	cube->physicsComponent->getRigidBody()->setLinearVelocity(dir*20);
+	std::cout << PhysicWorld::getInstance()->dynamicsWorld->getNumCollisionObjects() << endl;
+
+
+	state->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube));
+}
