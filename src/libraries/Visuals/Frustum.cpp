@@ -11,16 +11,18 @@
 Frustum::Frustum() {
 
 	setCamera(RenderManager::getInstance()->getCamera());
-	makeRigidBody();
+	mFrustumVolume = new btGhostObject();
+	mFrustumVolume->setCollisionFlags(4);
 	setProjectionMatrix(40.0f, 1.0f, 0.1f, 100.f);
-
+	PhysicWorld::getInstance()->dynamicsWorld->addCollisionObject(mFrustumVolume);
 }
 
 Frustum::Frustum(Camera *cam) {
 	setCamera(cam);
-	makeRigidBody();
+	mFrustumVolume = new btGhostObject();
+	mFrustumVolume->setCollisionFlags(4);
 	setProjectionMatrix(40.0f, 1.0f, 0.1f, 100.f);
-
+	PhysicWorld::getInstance()->dynamicsWorld->addCollisionObject(mFrustumVolume);
 }
 
 Frustum::~Frustum() {
@@ -31,13 +33,11 @@ void Frustum::setCamera(Camera *cam){
 	mCam = cam;
 }
 
-void Frustum::makeRigidBody(){
+void Frustum::makeGhostObject(){
 	btTransform t;
 	t.setIdentity();
-	btMotionState* motion = new btDefaultMotionState(t);
-	btConvexHullShape *shape = new btConvexHullShape();
-	btRigidBody::btRigidBodyConstructionInfo info(0.0,motion,shape);
-	mFrustumVolume = new btRigidBody(info);
+	mFrustumVolume->setWorldTransform(t);
+
 }
 
 void Frustum::setProjectionMatrix(float fovy, float aspect, float near, float far){
@@ -72,50 +72,12 @@ void Frustum::setProjectionMatrix(float fovy, float aspect, float near, float fa
 
 
 	mFrustumVolume->setCollisionShape(shape);
-	mFrustumVolume->setCollisionFlags(4);
 }
 
 bool Frustum::inFrustum(GraphicsComponent *gc){
 
-	RenderManager *rm = RenderManager::getInstance();
-
-	if(!mFrustumVolume->checkCollideWith(rm->getCurrentVO()->getPhysicsComponent()->getRigidBody()))
-		return false;
-
-	glm::vec3 temp = gc->getBoundingBox_Max() - gc->getPivot();
-	btVector3 *halfExtends = new btVector3(temp.x, temp.y, temp.z);
-
-	btBoxShape *box = new btBoxShape(*halfExtends);
-
-	btTransform t;
-
-	glm:: mat4 glmmatt = rm->getCurrentVO()->getPhysicsComponent()->getModelMatrix();
-	float *mat = glm::value_ptr(glmmatt);
-
-	t.setFromOpenGLMatrix(mat);
-
-	btMotionState* motion = new btDefaultMotionState(t);
-	btRigidBody::btRigidBodyConstructionInfo info(0.0,motion,box);
-	btRigidBody *tempBox = new btRigidBody(info);
-
-
-//	unsigned int i = 0;
-//	for (i = 0; i < box->getNumVertices(); ++i) {
-//
-//		btVector3 temp;
-//		box->getVertex(i, temp);
-//		std::cout << "This is Vertex (" << temp.getX() << "/" << temp.getY() << "/" << temp.getZ() <<") from Frustum" << std::endl;
-//	}
-
-	bool myBool = false;
-
-//	PhysicWorld::getInstance()->dynamicsWorld->contactPairTest(tempBox, mFrustumVolume, isTrue(myBool));
-
-
-	return mFrustumVolume->checkCollideWith(tempBox);
+	return true;
 }
-
-void Frustum::isTrue(bool& myBool){}
 
 glm::mat4 Frustum::getProjectionMatrix(){
 	return mProjectionMatrix;

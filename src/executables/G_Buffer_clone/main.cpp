@@ -188,9 +188,6 @@ int main() {
 				GraphicsComponent *gc_temp = vo_temp->getGraphicsComponent()[j];
 				rm->setCurrentGC(gc_temp);
 
-				if(frustum->inFrustum(gc_temp))
-					std::cout << gc_temp->getMaterial()->getName() << "ES KOLLIDIERT" << std:: endl;
-
 				if(gc_temp->getMaterial()->hasNormalTexture()){
 					gbuffer_normalMap_Shader->useProgram();
 					rm->setCurrentShader(gbuffer_normalMap_Shader);

@@ -31,12 +31,11 @@ public:
 	glm::mat4 getProjectionMatrix();
 	void updateModelMatrix();
 	void setCamera(Camera *cam);
-	void makeRigidBody();
-	static void isTrue(bool& myBool);
+	void makeGhostObject();
 
 private:
 	Camera *mCam;
-	btRigidBody *mFrustumVolume;
+	btGhostObject *mFrustumVolume;
 	glm::mat4 mProjectionMatrix;
 };
 
