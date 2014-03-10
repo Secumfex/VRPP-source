@@ -7,6 +7,10 @@
 
 #include <Visuals/VirtualObjectFactory.h>
 
+VirtualObjectFactory::VirtualObjectFactory(){
+	mCube = NULL;
+	mScreenFillTriangle = NULL;
+}
 
 //eingefügt
 void VirtualObjectFactory::set_float4(float f[4], float a, float b, float c, float d)

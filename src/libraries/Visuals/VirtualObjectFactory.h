@@ -25,6 +25,9 @@ using namespace std;
 /// class which creates Virtual Objects by reading 3D model files
 class VirtualObjectFactory : public Singleton<VirtualObjectFactory> {
 	friend class Singleton<VirtualObjectFactory>;
+
+    VirtualObjectFactory();
+
 //---------------MEMBER VARIABLES--------------------
 
 
