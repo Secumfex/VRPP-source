@@ -171,18 +171,19 @@ void SetCameraDirectionListener::update(){
 #include <stdlib.h>
 #include <time.h>
 
-CreateVirtualObjectListener::CreateVirtualObjectListener(string path, glm::vec3 position, ApplicationState* state, float random_offset){
+CreateVirtualObjectListener::CreateVirtualObjectListener(string path, glm::vec3 position, ApplicationState* state, float random_offset, VirtualObjectFactory::BodyType bodyType){
 	this->state = state;
 	this->position = position;
 	this->path = path;
 	this->random_offset = random_offset;
 	std::srand (time(NULL));	// rand dat
+	this->bodyType = bodyType;
 }
 
 #include "Physics/UpdatePhysicsComponentListener.h"
 
 void CreateVirtualObjectListener::update(){
-	VirtualObject* vo = state->createVirtualObject(path);		// create new Virtual Object
+	VirtualObject* vo = state->createVirtualObject(path, bodyType);		// create new Virtual Object
 	if (random_offset != 0.0){
 		glm::vec3 randPos = position;	
 		randPos.x += ( (((float) std::rand() / (float) RAND_MAX) * random_offset) * 2.0 ) - random_offset; // randomize a little bit by adding [-random_offset, random_offset] to the mix 

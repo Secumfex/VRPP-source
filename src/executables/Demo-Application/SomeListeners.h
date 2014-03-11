@@ -113,7 +113,8 @@ private:
 	glm::vec3 	position;
 	std::string path;
 	float random_offset;
+	VirtualObjectFactory::BodyType bodyType;
 public:
-	CreateVirtualObjectListener(string path, glm::vec3 position, ApplicationState* state, float random_offset = 0.0f);
+	CreateVirtualObjectListener(string path, glm::vec3 position, ApplicationState* state, float random_offset = 0.0f, VirtualObjectFactory::BodyType bodyType= VirtualObjectFactory::OTHER);
 	void update();
 };

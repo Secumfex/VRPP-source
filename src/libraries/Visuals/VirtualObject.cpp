@@ -102,7 +102,8 @@ void VirtualObject::setPhysicsComponent(float width, float height, float depth, 
 	physicsComponent = new PhysicsComponent(width, height, depth, x, y, z, mass);
 }
 
-void VirtualObject::setPhysicComponent(float x, float y, float z, btVector3& normal, float mass){	//todo: change the type of normal
+
+void VirtualObject::setPhysicComponent(float x, float y, float z, glm::vec3 normal, float mass){	//TODO: change the type of normal
 	if(physicsComponent != NULL)
 	physicsComponent->~PhysicsComponent();
 	physicsComponent = new PhysicsComponent(x,y,z,normal,mass);

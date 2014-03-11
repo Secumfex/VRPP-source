@@ -68,17 +68,19 @@ GraphicsComponent* mScreenFillTriangle;
 
 //---------------MEMBER FUNCTIONS--------------------
 public:
-
-
+enum BodyType {CUBE, SPHERE, PLANE, OTHER};
 
 VirtualObject* createNonAssimpVO();
 VirtualObject* createNonAssimpSphere();
 GraphicsComponent* getTriangle();
 
 VirtualObject* createVirtualObject();
-VirtualObject* createVirtualObject(std::string filename);
+VirtualObject* createVirtualObject(std::string filename, BodyType bodyType);
 VirtualObject* createVirtualObject(vector<GraphicsComponent*> graphcomps);
 VirtualObject* copyVirtualObject(VirtualObject vo);
+
+
+
 
 private:
 

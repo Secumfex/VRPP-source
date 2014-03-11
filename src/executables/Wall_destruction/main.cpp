@@ -26,11 +26,20 @@ void configureMyApp(){
 	myVRState-> 	attachListenerOnActivation(			new PrintCameraStatusListener( myVRState->getCamera()));
 
 	/*	customize virtual objects*/
+	/*
 	VirtualObject* 	myCubeObject1 = 	VirtualObjectFactory::getInstance()->createVirtualObject(RESOURCES_PATH "/cube.obj");	// create a Virtual Object by using the VirtualObject-Factory and add it to VRState manually
 	myVRState->		addVirtualObject(	myCubeObject1);		// add to VRState manually
+	*/
 	//VirtualObject* 	myCubeObject2 = 	myVRState->	createVirtualObject(RESOURCES_PATH "/cube.obj");	// create another Virtual Object from the same geometry
 
-	VirtualObject* 	cube1 = 	myVRState->	createVirtualObject(RESOURCES_PATH "/cube.obj");
+	VirtualObject* 	cube1 = 	myVRState->	createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE);
+	//glm::mat4		cube1M = 	glm::translate(glm::mat4(1.0f), glm::vec3(-2.5f, 3.0f, 0.0f));
+	//cube1->getPhysicsComponent()->~PhysicsComponent();
+	//cube1-> setModelMatrix(		cube1M); 	// override default Model Matrix
+	//cube1->	setPhysicsComponent(1.0f, 1.0f, 1.0f, -2.5f, 3.0f, 0.0f, 1.0f);
+	myVRState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube1));
+
+	/*
 	VirtualObject* 	cube2 = 	myVRState->	createVirtualObject(RESOURCES_PATH "/cube.obj");
 	VirtualObject* 	cube3 = 	myVRState->	createVirtualObject(RESOURCES_PATH "/cube.obj");
 	VirtualObject* 	cube4 = 	myVRState->	createVirtualObject(RESOURCES_PATH "/cube.obj");
@@ -159,7 +168,7 @@ void configureMyApp(){
 	cube20-> setModelMatrix(		cube20M); 	// override default Model Matrix
 	cube20->	setPhysicsComponent(1.0f, 1.0f, 1.0f, 1.5f, 3.0f, 0.0f, 1.0f);
 	myVRState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube20));
-
+	/*
 	glm::mat4		myModelMatrix1 = 	glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.0f, 0.0f)), glm::vec3(5.0f, 0.2f, 5.0f));	//floor
 	myCubeObject1-> setModelMatrix(		myModelMatrix1); 	// override default Model Matrix
 	myCubeObject1->	setPhysicsComponent(5.0f, 0.2f, 5.0f, 0.0f, -1.0f, 0.0f, 0.0f);
