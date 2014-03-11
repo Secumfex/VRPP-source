@@ -15,6 +15,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "Visuals/UploadUniformListeners.h"
 #include "Patterns/Subject.h"
+#include "VirtualObject.h"
 
 
 
@@ -48,6 +49,7 @@ public:
 	void useProgram();
 
 	void render(GraphicsComponent *gc);
+    // void render(VirtualObject *vo);
 
 	void attachUniformListener(std::string uniform);
 

@@ -47,6 +47,7 @@ public:
 	void setEmission(glm::vec3 emission);
 	void setShininess(GLfloat term);
 	void setReflectivity(GLfloat term);
+    void setTransparency(GLfloat term);
 
 	void setAmbientMap(Texture* tex);
 	void setDiffuseMap(Texture* tex);
@@ -68,6 +69,7 @@ public:
 	Texture* getHeightMap();
 	Texture* getOpacityMap();
 
+
 	Texture* getSpecularMap();
 	Texture* getReflectionMap();
 	Texture* getShininessMap();
@@ -79,7 +81,7 @@ public:
 	glm::vec3 getSpecular();
 	glm::vec3 getEmission();
 	GLfloat getShininess();
-
+    GLfloat getTransparency();
 
 	std::string getName();
 
@@ -107,6 +109,7 @@ private:
 	glm::vec3 mEmissColor;
 
 	GLfloat mShininess;
+    GLfloat mTransparency;
 
 };
 

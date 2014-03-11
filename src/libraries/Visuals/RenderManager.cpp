@@ -27,8 +27,8 @@ void RenderManager::setRenderQueue(RenderQueue* currentRQ){
 	mRenderqueue = currentRQ;
 }
 
-glm::mat4 RenderManager::getProjectionMatrix(){
-	return mFrustum->getProjectionMatrix();
+glm::mat4 RenderManager::getPerspectiveMatrix(){
+	return mFrustum->getPerspectiveMatrix();
 }
 
 //TODO
@@ -63,14 +63,14 @@ void RenderManager::setCamera(Camera* camera){
 	mCamera = camera;
 }
 
-void RenderManager::setProjectionMatrix(float fovy, float aspect, float near, float far){
+void RenderManager::setPerspectiveMatrix(float fovy, float aspect, float near, float far){
 	if(mFrustum==NULL)
-		std::cout << "ERROR: Cannot set Projection Matrix. RenderManager does not know a Frustum, yet." << std:: endl;
-	mFrustum->setProjectionMatrix(fovy, aspect, near, far);
+		std::cout << "ERROR: Cannot set Perspective Matrix. RenderManager does not know a Frustum, yet." << std:: endl;
+	mFrustum->setPerspectiveMatrix(fovy, aspect, near, far);
 }
 
-void RenderManager::setDefaultProjectionMatrix(){
-	//    projectionMatrix = perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
+void RenderManager::setDefaultPerspectiveMatrix(){
+	//    PerspectiveMatrix = perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
 }
 
 VirtualObject* RenderManager::getCurrentVO(){
@@ -120,7 +120,7 @@ Frustum* RenderManager::getCurrentFrustum(){
 	return mFrustum;
 }
 
-glm::mat4 RenderManager::getLightProjectionMatrix(int index){
+glm::mat4 RenderManager::getLightPerspectiveMatrix(int index){
 	glm::vec3 eye = mCamera->getPosition();
 	glm::vec3 center = mCamera->getViewDirection() - eye;
 
@@ -177,8 +177,8 @@ void RenderManager::libInit(){
 	std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
 	std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
 
-	//set default projectionMatrix
-	setDefaultProjectionMatrix();
+	//set default PerspectiveMatrix
+	setDefaultPerspectiveMatrix();
 
 }
 

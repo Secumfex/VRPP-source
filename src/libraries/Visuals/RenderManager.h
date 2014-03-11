@@ -24,8 +24,8 @@ public:
 	void setCurrentGC(GraphicsComponent* gc);
 	void setCurrentShader(Shader* shader);
 	void setCurrentFBO(FrameBufferObject* fbo);
-	void setProjectionMatrix(float fovy, float aspect, float near, float far);
-	void setDefaultProjectionMatrix();
+	void setPerspectiveMatrix(float fovy, float aspect, float near, float far);
+	void setDefaultPerspectiveMatrix();
 	void setCurrentFrustum(Frustum* frustum);
 	void setLightPosition (glm::vec3 pos, int index);
 
@@ -37,8 +37,8 @@ public:
 	GLFWwindow* getWindow();
 	RenderQueue* getRenderQueue();
 	Frustum* getCurrentFrustum();
-	glm::mat4 getProjectionMatrix();
-	glm::mat4 getLightProjectionMatrix(int index);
+	glm::mat4 getPerspectiveMatrix();
+	glm::mat4 getLightPerspectiveMatrix(int index);
 
 
 	void libInit();

@@ -9,6 +9,7 @@
 #define MATERIALMANAGER_H_
 
 #include "Visuals/GraphicsComponent.h"
+#include "TextureManager.h"
 #include <string>
 
 class MaterialManager : public Singleton<MaterialManager> {
@@ -18,12 +19,50 @@ protected:
 public:
 	virtual ~MaterialManager();
 
-	void makeMaterial(std:: string matName, GraphicsComponent* cg);
+	void makeMaterial(std:: string matName, GraphicsComponent* gc);
+	void makeMaterial(std:: string matName, vector<GraphicsComponent*> gc);
 
 private:
-	void makeMaterial_generic(GraphicsComponent* cg);
-	void makeMaterial_wood(GraphicsComponent* cg);
-	void makeMaterial_metal(GraphicsComponent* cg);
+
+    /*
+	void makeMaterial_wood(GraphicsComponent* gc);
+
+     */
+
+	//basic material
+	void makeMaterial_plastic(GraphicsComponent* gc);
+	void makeMaterial_wood(GraphicsComponent* gc);
+	void makeMaterial_stone(GraphicsComponent* gc);
+	void makeMaterial_metal(GraphicsComponent* gc);
+	void makeMaterial_brass(GraphicsComponent* gc);
+    void makeMaterial_bronze(GraphicsComponent* gc);
+    void makeMaterial_chrome(GraphicsComponent* gc);
+    void makeMaterial_copper(GraphicsComponent* gc);
+    void makeMaterial_gold(GraphicsComponent* gc);
+    void makeMaterial_silver(GraphicsComponent* gc);
+    void makeMaterial_glass(GraphicsComponent* gc);
+
+    void makeMaterial_genericMaterial(GraphicsComponent* gc);
+
+    //color material
+    void makeMaterial_none(GraphicsComponent* gc);
+    void makeMaterial_brighter(GraphicsComponent* gc);
+    void makeMaterial_darker(GraphicsComponent* gc);
+    void makeMaterial_black(GraphicsComponent* gc);
+    void makeMaterial_white(GraphicsComponent* gc);
+    void makeMaterial_red(GraphicsComponent* gc);
+    void makeMaterial_blue(GraphicsComponent* gc);
+    void makeMaterial_green(GraphicsComponent* gc);
+    void makeMaterial_yellow(GraphicsComponent* gc);
+
+    void makeMaterial_genericColor(GraphicsComponent* gc);
+
+    //specification material
+    void makeMaterial_polished(GraphicsComponent* gc);
+    void makeMaterial_rough(GraphicsComponent* gc);
+    void makeMaterial_mat(GraphicsComponent* gc);
+
+    void makeMaterial_genericSpecific(GraphicsComponent* gc);
 
 };
 

@@ -197,7 +197,7 @@ void PickRayListener::update(){
 
 	glm::vec3 outOrigin;
 	glm::vec3 outDirection;
-	glm::mat4 projectionMatrix = RenderManager::getInstance()->getProjectionMatrix();
+	glm::mat4 projectionMatrix = RenderManager::getInstance()->getPerspectiveMatrix();
 	glm::mat4 viewMatrix = IOManager::getInstance()->getCurrentIOHandler()->getViewMatrix();
 	phWorld->screenPosToWorldRay(currentXPos,currentYPos,currentWidth,currentHeight,viewMatrix,projectionMatrix,outOrigin,outDirection);
 }

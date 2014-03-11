@@ -6,7 +6,6 @@
 
 #include <glm/glm.hpp>
 #include <sstream>
-
 #include "Patterns\Singleton.h"
 #include "IO\IOHandler.h"
 #include "Patterns/Subject.h"

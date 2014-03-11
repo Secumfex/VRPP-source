@@ -101,6 +101,18 @@ void Shader::render(GraphicsComponent *gc){
 	glBindVertexArray(gc->getMesh()->getVAO());
 	glDrawElements(GL_TRIANGLES, gc->getMesh()->getNumIndices(), GL_UNSIGNED_INT, 0);
 }
+/*
+// render VO -> alle GraphicComponents im VO
+void Shader::render(VirtualObject *vo){
+    std::vector<GraphicsComponent*> gc_vec = vo->getGraphicsComponent();
+    for(unsigned int i = 0; i < gc_vec.size(); i++)
+	{
+        GraphicsComponent* gc=gc_vec[i];
+        glBindVertexArray(gc->getMesh()->getVAO());
+        glDrawElements(GL_TRIANGLES, gc->getMesh()->getNumIndices(), GL_UNSIGNED_INT, 0);
+	}
+}
+ */
 
 
 
@@ -135,22 +147,22 @@ void Shader::attachUniformListener(std::string uniform){
 		attach(new UploadUniformModelMatrixListener(std::string("UNIFORMUPLOADLISTENER")));}
 	else if(uniform == "uniformView"){
 		attach(new UploadUniformViewMatrixListener(std::string("UNIFORMUPLOADLISTENER")));}
-	else if(uniform == "uniformProjection"){
-		attach(new UploadUniformProjectionMatrixListener(std::string("UNIFORMUPLOADLISTENER")));}
+	else if(uniform == "uniformPerspective"){
+		attach(new UploadUniformPerspectiveMatrixListener(std::string("UNIFORMUPLOADLISTENER")));}
 	else if(uniform == "uniformInverse"){
 		attach(new UploadUniformInverseModelViewMatrixListener(std::string("UNIFORMUPLOADLISTENER")));}
-	else if(uniform == "uniformLightProjection"){
-		attach(new UploadUniformLightProjectionMatrixListener(std::string("UNIFORMUPLOADLISTENER")));}
+	else if(uniform == "uniformLightPerspective"){
+		attach(new UploadUniformLightPerspectiveMatrixListener(std::string("UNIFORMUPLOADLISTENER")));}
 	else if(uniform == "positionMap"){
 		attach(new UploadUniformPositionMapListener(std::string("UNIFORMUPLOADLISTENER")));}
 	else if(uniform == "normalMap"){
 		attach(new UploadUniformNormalMapListener(std::string("UNIFORMUPLOADLISTENER")));}
 	else if(uniform == "colorMap"){
 		attach(new UploadUniformColorMapListener("UNIFORMUPLOADLISTENER"));}
-	else if(uniform == "materialMap"){
-		attach(new UploadUniformMaterialMapListener("UNIFORMUPLOADLISTENER"));}
 	else if(uniform == "shadowMap"){
 		attach(new UploadUniformShadowMapListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "specularMap"){
+		attach(new UploadUniformSpecularMapListener("UNIFORMUPLOADLISTENER"));}
 	else if(uniform == "depthMap"){
 		attach(new UploadUniformDepthMapListener("UNIFORMUPLOADLISTENER"));}
 	else if(uniform == "diffuseTexture"){

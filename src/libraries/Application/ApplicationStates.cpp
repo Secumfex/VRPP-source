@@ -22,7 +22,7 @@ ApplicationState::ApplicationState(){
 	attachListenerOnBeginningProgramCycle(	new UpdateCameraPositionListener(camera));
 	
 
-	projectionMatrix = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
+	perspectiveMatrix = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
 }
 
 Frustum* ApplicationState::getFrustum(){
@@ -41,8 +41,8 @@ IOHandler* ApplicationState::getIOHandler(){
 	return iOHandler;
 }
 
-glm::mat4 ApplicationState::getProjectionMatrix(){
-	return projectionMatrix;
+glm::mat4 ApplicationState::getPerspectiveMatrix(){
+	return perspectiveMatrix;
 }
 
 void ApplicationState::activate(){
@@ -57,7 +57,7 @@ void ApplicationState::bindObjects(){
 	
 	rm->setCamera(camera);
 	rm->setCurrentFrustum(frustum);
-	rm->setProjectionMatrix(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
+	rm->setPerspectiveMatrix(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
 	rm->setRenderQueue(renderQueue);
 
 	IOManager* io = IOManager::getInstance();
@@ -87,7 +87,7 @@ VRState::VRState(std::string name){
 
 void VRState::activate(){
 
-	//bind Input-Object, RenderQueue-Object, Camera-Object, Projectionmatrix 
+	//bind Input-Object, RenderQueue-Object, Camera-Object, Perspectivematrix
 	ApplicationState::activate();
 	
 }

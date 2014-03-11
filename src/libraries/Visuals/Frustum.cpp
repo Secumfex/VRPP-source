@@ -13,7 +13,7 @@ Frustum::Frustum() {
 	setCamera(RenderManager::getInstance()->getCamera());
 	mFrustumVolume = new btGhostObject();
 	mFrustumVolume->setCollisionFlags(4);
-	setProjectionMatrix(40.0f, 1.0f, 0.1f, 100.f);
+	setPerspectiveMatrix(40.0f, 1.0f, 0.1f, 100.f);
 	PhysicWorld::getInstance()->dynamicsWorld->addCollisionObject(mFrustumVolume);
 }
 
@@ -21,7 +21,7 @@ Frustum::Frustum(Camera *cam) {
 	setCamera(cam);
 	mFrustumVolume = new btGhostObject();
 	mFrustumVolume->setCollisionFlags(4);
-	setProjectionMatrix(40.0f, 1.0f, 0.1f, 100.f);
+	setPerspectiveMatrix(40.0f, 1.0f, 0.1f, 100.f);
 	PhysicWorld::getInstance()->dynamicsWorld->addCollisionObject(mFrustumVolume);
 }
 
@@ -34,10 +34,10 @@ void Frustum::setCamera(Camera *cam){
 }
 
 
-void Frustum::setProjectionMatrix(GLfloat fovy, GLfloat aspect, GLfloat near, GLfloat far){
+void Frustum::setPerspectiveMatrix(GLfloat fovy, GLfloat aspect, GLfloat near, GLfloat far){
 
 
-	mProjectionMatrix = glm::perspective(fovy, aspect, near, far);
+	mPerspectiveMatrix = glm::perspective(fovy, aspect, near, far);
 
 
 	float fovx = fovy / aspect;
@@ -81,8 +81,8 @@ bool Frustum::inFrustum(GraphicsComponent *gc){
 	return false;
 }
 
-glm::mat4 Frustum::getProjectionMatrix(){
-	return mProjectionMatrix;
+glm::mat4 Frustum::getPerspectiveMatrix(){
+	return mPerspectiveMatrix;
 }
 
 void Frustum::updateModelMatrix(){

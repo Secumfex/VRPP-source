@@ -21,7 +21,7 @@ protected:
 	Camera* camera;
 	RenderQueue* renderQueue;
 	IOHandler* iOHandler;
-	glm::mat4 projectionMatrix;
+	glm::mat4 perspectiveMatrix;
 
 	virtual void bindObjects(); //!< bind objects to RenderManager, IOManager, PhysicsWorld etc.
 public:
@@ -31,7 +31,7 @@ public:
 	Camera* 		getCamera();
 	RenderQueue* 	getRenderQueue();
 	IOHandler* 		getIOHandler();
-	glm::mat4 		getProjectionMatrix();
+	glm::mat4 		getPerspectiveMatrix();
 
 	virtual void activate(); //!< activation of state --> binding objects
 

@@ -75,6 +75,7 @@ int main() {
 
 	GraphicsComponent* triangle = voFactory->getTriangle();
 
+	object03->getGraphicsComponent()[0]->getMaterial()->setSpecular(glm::vec3(0.0, 0.0, 1.0));
 
 	//--------------------------------------------//
 	//         Create a Framebuffer Object        //
@@ -87,7 +88,7 @@ int main() {
 	fbo->createPositionTexture();
 	fbo->createNormalTexture();
 	fbo->createColorTexture();
-	fbo->createMaterialTexture();
+	fbo->createSpecularTexture();
 	fbo->createShadowMap();
 
 	//set the list of draw buffers.
@@ -109,7 +110,7 @@ int main() {
 	rm->setCurrentFBO(fbo);
 	rm->setCamera(cam);
 	rm->setCurrentFrustum(frustum);
-	rm->setProjectionMatrix(40.0f, 1.0f, 0.1f, 100.f);
+	rm->setPerspectiveMatrix(40.0f, 1.0f, 0.1f, 100.f);
 	rm->setLightPosition(glm::vec3(5,2,-2),0);
 
 	cam->setPosition(glm::vec3(0.0f, 1.0f, -6.0f));
@@ -127,9 +128,10 @@ int main() {
 		glfwGetFramebufferSize(window, &newwidth, &newheight);
 		if(newwidth != width || newheight != height){
 			fbo->resize(newwidth, newheight);
-			//		rm->setProjectionMatrix(glm::perspective(40.0f, (newwidth * 1.0f) / newheight , 0.1f, 100.f));
+			//		rm->setPerspectiveMatrix(glm::perspective(40.0f, (newwidth * 1.0f) / newheight , 0.1f, 100.f));
 			width = newwidth;
 			height = newheight;
+
 		}
 
 		using namespace glm;
@@ -198,6 +200,7 @@ int main() {
 			}
 		}
 
+
 		fbo->unbindFBO();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glDisable(GL_DEPTH_TEST);
@@ -242,7 +245,7 @@ int main() {
 		        glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		        glViewport((width/4)*3, (height/4)*3, width/4, height/4);
-		        glBindTexture(GL_TEXTURE_2D, fbo->getMaterialTextureHandle());
+		        glBindTexture(GL_TEXTURE_2D, fbo->getSpecularTextureHandle());
 		        glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		//show what's been drawn

@@ -16,14 +16,16 @@
 
 
 
+
 int main() {
+    
     
     // render window
     glfwInit();
     
 #ifdef __APPLE__
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glewExperimental= GL_TRUE;
@@ -63,7 +65,7 @@ int main() {
     GLint positionMapHandle = glGetUniformLocation(finalCompositingProgramHandle, "positionMap");
     GLint colorMapHandle = glGetUniformLocation(finalCompositingProgramHandle, "colorMap");
     GLint normalMapHandle = glGetUniformLocation(finalCompositingProgramHandle, "normalMap");
-    GLint blurStrengthHandle = glGetUniformLocation(finalCompositingProgramHandle, "blurStrength");
+    // GLint blurStrengthHandle = glGetUniformLocation(finalCompositingProgramHandle, "blurStrength");
     
     
     
@@ -76,6 +78,9 @@ int main() {
     GLuint viewHandle = glGetUniformLocation(gBufferProgramHandle, "uniformView");
     GLuint projectionHandle = glGetUniformLocation(gBufferProgramHandle, "uniformProjection");
     
+    //load a fancy texture
+    GLuint textureHandle = TextureTools::loadTexture(RESOURCES_PATH "/Wood.jpg");
+    
     
     
 
@@ -85,8 +90,8 @@ int main() {
     //           fills the whole screen           //
     //--------------------------------------------//
     
-    GLuint screenFillVertexArrayHandle;
-    {
+        // VAO
+        GLuint screenFillVertexArrayHandle;
         glGenVertexArrays(1, &screenFillVertexArrayHandle);
         glBindVertexArray(screenFillVertexArrayHandle);
         
@@ -105,10 +110,10 @@ int main() {
         
         GLfloat vertices[] = {-1, -1,   3, -1,   -1,  3};
         glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-        
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
-    }
+    
+        GLuint position=glGetAttribLocation(simpleTextureProgramHandle,"positionAttribute");
+        glEnableVertexAttribArray(position);
+        glVertexAttribPointer(position, 2, GL_FLOAT, GL_FALSE, 0, 0);
     
     
     
@@ -118,92 +123,91 @@ int main() {
     //             to render a cube               //
     //--------------------------------------------//
     
-    GLuint cubeVertexArrayHandle;
-    {
+        // VAO
+        GLuint cubeVertexArrayHandle;
         glGenVertexArrays(1, &cubeVertexArrayHandle);
         glBindVertexArray(cubeVertexArrayHandle);
-        
+    
+    
         //we generate multiple buffers at a time
         GLuint vertexBufferHandles[3];
-        glGenBuffers(3, vertexBufferHandles);
-        
+        glGenBuffers(3, vertexBufferHandles); // 3 Buffer werden generiert
+    
+        /* Attribute werden gebunden */
+        // layout(location = 0) in vec4 positionAttribute
         glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandles[0]);
         glBufferData(GL_ARRAY_BUFFER, sizeof(CubeGeometry::positions), CubeGeometry::positions, GL_STATIC_DRAW);
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-        
+    
+        // für die Textur
+        // layout(location = 1) in vec2 uvCoordAttribute
         glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandles[1]);
         glBufferData(GL_ARRAY_BUFFER, sizeof(CubeGeometry::uvCoordinates), CubeGeometry::uvCoordinates, GL_STATIC_DRAW);
         glEnableVertexAttribArray(1);
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
-        
+    
+        // layout(location = 2) in vec4 normalAttribute
         glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandles[2]);
         glBufferData(GL_ARRAY_BUFFER, sizeof(CubeGeometry::normals), CubeGeometry::normals, GL_STATIC_DRAW);
         glEnableVertexAttribArray(2);
         glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    }
     
     
-    
+    // ???
     //--------------------------------------------//
     //         Create a Framebuffer Object        //
     //--------------------------------------------//
-    
-    GLuint framebufferHandle;
-    GLuint positionTextureHandle;
-    GLuint normalTextureHandle;
-    GLuint colorTextureHandle;
-    GLuint depthbufferHandle;
-    {
+        // FBO
+        GLuint framebufferHandle;
         glGenFramebuffers(1, &framebufferHandle);
         glBindFramebuffer(GL_FRAMEBUFFER, framebufferHandle);
         
         //the geometry buffer
+        GLuint positionTextureHandle;
         glGenTextures(1, &positionTextureHandle);
         glBindTexture(GL_TEXTURE_2D, positionTextureHandle);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, (height/4.0)*3, 0, GL_RGBA, GL_FLOAT, 0);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, 600, 0, GL_RGBA, GL_FLOAT, 0);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, positionTextureHandle, 0); //set color attachments
         
         //the normal buffer
+        GLuint normalTextureHandle;
         glGenTextures(1, &normalTextureHandle);
         glBindTexture(GL_TEXTURE_2D, normalTextureHandle);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, (height/4.0)*3, 0, GL_RGBA, GL_FLOAT, 0);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, 600, 0, GL_RGBA, GL_FLOAT, 0);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, normalTextureHandle, 0); //set color attachments
         
         //the color buffer
+        GLuint colorTextureHandle;
         glGenTextures(1, &colorTextureHandle);
         glBindTexture(GL_TEXTURE_2D, colorTextureHandle);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, (height/4.0)*3, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, 600, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, colorTextureHandle, 0); //set color attachments
+        
         
         //the depth buffer
+        GLuint depthbufferHandle;
         glGenRenderbuffers(1, &depthbufferHandle);
         glBindRenderbuffer(GL_RENDERBUFFER, depthbufferHandle);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, (height/4.0)*3); //800x600
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, 600); //800x600 -> (height/4.0)*3
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthbufferHandle);
         
-        //set color attachments
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, positionTextureHandle, 0);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, normalTextureHandle, 0);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, colorTextureHandle, 0);
         
         //set the list of draw buffers.
         GLenum drawBufferHandles[3] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2};
         glDrawBuffers(3, drawBufferHandles);
-    }
     
-    
-    
-    //load a fancy texture
-    GLuint textureHandle = TextureTools::loadTexture(RESOURCES_PATH "/cubeTexture.jpg");
     
     //rotation of the cube
-    float angle = 0.0f;
     float rotationSpeed = 1.0f;
-	int blurStrength = 4;
+    float angle = 0.0f;
+
     
     while(!glfwWindowShouldClose(window)) {
         
@@ -212,6 +216,7 @@ int main() {
         using namespace glm;
         
         //rotation angle
+
         angle = fmod((float)(angle+rotationSpeed*glfwGetTime()), (float)(pi<float>()*2.0f));
         glfwSetTime(0.0);
         
@@ -229,18 +234,22 @@ int main() {
         //        Render the scene into the FBO       //
         //--------------------------------------------//
         
+        /* die ganze Szene wird in den Framebuffer gezeichnet */
+        
         glBindFramebuffer(GL_FRAMEBUFFER, framebufferHandle);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
-        
         glEnable(GL_DEPTH_TEST);
-        glBindVertexArray(cubeVertexArrayHandle);
-        glBindTexture(GL_TEXTURE_2D, textureHandle);
         
+        // VAO mit positionAttribute, uvCoordinates und normals
+        glBindVertexArray(cubeVertexArrayHandle);
+        glBindTexture(GL_TEXTURE_2D, textureHandle); //Textur wird gebunden
+        
+        // Shader wird gestartet (/GBuffer/GBuffer.vert","/GBuffer/GBuffer.frag")
         glUseProgram(gBufferProgramHandle);
         
-        glViewport(0, 0, width, (height/4)*3);
+        glViewport(0, 0, width, 600); // das große Bild
         
+        // update the matrixes
         glUniformMatrix4fv(viewHandle, 1, GL_FALSE, value_ptr(viewMatrix));
         glUniformMatrix4fv(projectionHandle, 1, GL_FALSE, value_ptr(projectionMatrix));
         
@@ -249,9 +258,9 @@ int main() {
         
         
         glUniformMatrix4fv(modelHandle, 1, GL_FALSE, value_ptr(modelCube_2));
-        glDrawArrays(GL_TRIANGLES, 0, 12*3);
+        glDrawArrays(GL_TRIANGLES, 0, 12*3); //DRAW ROTATED CUBE
         
-        
+        // unbind FBO
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
@@ -265,15 +274,16 @@ int main() {
         glDisable(GL_DEPTH_TEST);
         glBindVertexArray(screenFillVertexArrayHandle);
         
+        // Shader wird gestartet ("/GBuffer/screenFill.vert", "/GBuffer/finalCompositing.frag")
         glUseProgram(finalCompositingProgramHandle);
-        
-		glUniform1i(blurStrengthHandle, blurStrength);
-        glViewport(0, 0, width, (height/4)*3);
+        glViewport(0, 0, width, 600);
+
         
         glActiveTexture(GL_TEXTURE0);
         glEnable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, positionTextureHandle);
         glUniform1i(positionMapHandle, 0);
+
         
         glActiveTexture(GL_TEXTURE1);
         glEnable(GL_TEXTURE_2D);
@@ -286,23 +296,16 @@ int main() {
         glUniform1i(colorMapHandle, 2);
         
         glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO MAIN FRAME
-        
+
+        // im Shader werden 'position' benötigt ???
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, 0);
-        
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, 0);
-        
-        glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, 0);
-        
-        glActiveTexture(GL_TEXTURE0);
+
         
         //--------------------------------------------//
         //       Render small views at the top to     //
         //      show all the components of the FBO    //
         //--------------------------------------------//
-        glDisable(GL_DEPTH_TEST);
+      /*  glDisable(GL_DEPTH_TEST);
         
         glBindVertexArray(screenFillVertexArrayHandle);
         glUseProgram(simpleTextureProgramHandle);
@@ -318,7 +321,7 @@ int main() {
         glViewport((width/3)*2, (height/4)*3, width/3, height/4);
         glBindTexture(GL_TEXTURE_2D, colorTextureHandle);
         glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-RIGHT VIEWPORT
-        
+        */
         //show what's been drawn
         glfwSwapBuffers(window);
         glfwPollEvents();
