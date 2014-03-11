@@ -81,12 +81,19 @@ PhysicsComponent::PhysicsComponent(char* filename, float x, float y, float z){
 
 PhysicsComponent::~PhysicsComponent() {
 
-	PhysicWorld::getInstance()->dynamicsWorld->removeCollisionObject(rigidBody);
-	btMotionState* motionState = rigidBody->getMotionState();
-	btCollisionShape* shape = rigidBody->getCollisionShape();
-	delete shape;
-	delete motionState;
-	delete rigidBody;
+	if(rigidBody != 0){
+		PhysicWorld::getInstance()->dynamicsWorld->removeCollisionObject(rigidBody);
+		btMotionState* motionState = rigidBody->getMotionState();
+		btCollisionShape* shape = rigidBody->getCollisionShape();
+		delete shape;
+		delete motionState;
+		delete rigidBody;
+	}
+
+	else
+		delete rigidBody;
+
+
 }
 
 void PhysicsComponent::translate(glm::vec3 pos){
