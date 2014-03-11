@@ -6,15 +6,16 @@
 #include <glm/glm.hpp>
 #include <sstream>
 
-#include "Camera.h"
 #include "Patterns/Subject.h"
+#include "SelectionHandler.h"
+#include "Camera.h"
 
+/// a class which implements specific input interpretation, i.e. camera movement
 class IOHandler : public Subject{
-private:
-
+protected:
 		// TODO implement state check and change
 		bool isMenuState; 				/**<Boolean for changing State between Menu und InGame*/
-
+		double speed;
 		double xPos, yPos; 	/**<*Mouse Position*/
 		float speed_movement; 	 /**<Float for adding to Position*/
 		float mouseSpeed; 	 /**<Float for adding to Theta, Phi*/
@@ -24,11 +25,17 @@ private:
 		Camera* camObject;
 
 		std	::	stringstream sstream; /**<* mostly used to convert ints to strings */
+
+		SelectionHandler* selectionHandler;
 public:
 	IOHandler();
+	virtual ~IOHandler();
+
 
 	void setCameraObject(Camera* camera);
 	Camera* getCameraObject();
+	void setSelectionHandler(SelectionHandler* selectionHandler);
+	SelectionHandler* getSelectionHandler();
 
 	/**\brief getter
 	 * returns current ViewMatrix
@@ -44,14 +51,14 @@ public:
 	 * @return returns a new Matrix of the camera
 	 *
 	 */
-	void setOrientation(GLFWwindow* window, double xpos, double ypos);
-	void cursorPos_callback(GLFWwindow* window, int xpos, int ypos);
-	void mouseButton_callback(GLFWwindow* window, int button, int action, int mods); //!< mouse button callback (press / release)
-	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+	virtual void setOrientation(GLFWwindow* window, double xpos, double ypos); // !< method to set the Camera orientation
+	virtual void cursorPos_callback(GLFWwindow* window, int xpos, int ypos);	//!< cursorPos_callback as defined by GLFW
+	virtual void mouseButton_callback(GLFWwindow* window, int button, int action, int mods); //!< mouse button callback (press / release) as defined by GLFW
+	virtual void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	void notify(int key);	//!< notify Listeners attached to a key pess by using the GLFW integer definitions for keys
-	void attachListenerOnKeyPress(Listener* listener, int key);//!< attach a Listener to a key by using the GLFW integer definitions for keys
-	void attachListenerOnMouseButtonPress(Listener* listener, int button);
-	void attachListenerOnCursorPosCallback(Listener* listener);
+	void attachListenerOnKeyPress(Listener* listener, int key); //!< attach a Listener to a key by using the GLFW integer definitions for keys
+	void attachListenerOnMouseButtonPress(Listener* listener, int button); //!< attach a Listener to a button press by using the GLFW integer definitions for buttons
+	void attachListenerOnCursorPosCallback(Listener* listener);	//!< attach a Listener to the cursor pos callback
 };
 
 

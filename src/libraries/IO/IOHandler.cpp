@@ -1,4 +1,5 @@
 #include "IOHandler.h"
+#include <iostream>
 
 IOHandler::IOHandler(){
 	/* @todo	implement state check and change
@@ -10,30 +11,22 @@ IOHandler::IOHandler(){
 	mouseSpeed = 0.005f;
 	xPos = -1;
 	yPos = -1;
+	speed = 5.0;
 
+	selectionHandler = new SelectionHandler();
 	//	glfwGetCursorPos(window, &xPos, &yPos);
 	// Get mouse position
+}
+
+IOHandler::~IOHandler(){
+
 }
 
 
 
 // Compute new orientation
 void IOHandler::setOrientation(GLFWwindow* window, double xpos, double ypos){
-	int Width, Height;
-	glfwGetWindowSize(window, &Width, &Height);
 	
-	if (xPos == -1 && yPos == -1){	//has never been called before
-		xPos = Width/2;
-		yPos = Height/2;
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-    }
-    else{	// has been called before --> mouse somewhere around middle of window and hidden
-	    float gotPhi 	= camObject->getPhi();
-	    float gotTheta 	= camObject->getTheta();
-	    camObject->setPhi(	gotPhi 		+ mouseSpeed * float(Width / 2 - xpos));			//Horizontal
-	    camObject->setTheta(gotTheta 	+ mouseSpeed * float(Height / 2 - ypos));		//Vertikal
-	}
-	glfwSetCursorPos(window, Width/2, Height/2);
 }
 
 void IOHandler::cursorPos_callback(GLFWwindow* window, int xpos, int ypos){
@@ -50,60 +43,6 @@ void IOHandler::mouseButton_callback(GLFWwindow* window, int button, int action,
 
 void IOHandler::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	if (isMenuState == false){
-		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS){
-			//not exit but enter menu state
-			//glfwSetWindowShouldClose(window, GL_TRUE);
-			isMenuState = true;
-		}
-
-		glm::vec3 gotPosition = camObject->getPosition();
-
-		// Move forward
-		if (key == GLFW_KEY_W && action == GLFW_PRESS){
-			camObject->setSpeedForward(speed_movement);
-		}
-
-		// Move backward
-		if (key == GLFW_KEY_S && action == GLFW_PRESS){
-			camObject->setSpeedForward(-speed_movement);
-		}
-
-		// Strafe right
-		if (key == GLFW_KEY_D && action == GLFW_PRESS){
-			camObject->setSpeedRight(speed_movement);
-		}
-
-		// Strafe left
-		if (key == GLFW_KEY_A && action == GLFW_PRESS){
-			camObject->setSpeedRight(-speed_movement);
-		}
-
-		if (key == GLFW_KEY_W && action == GLFW_RELEASE){
-			camObject->setSpeedForward(0.0);
-		}
-
-		if (key == GLFW_KEY_S && action == GLFW_RELEASE){
-			camObject->setSpeedForward(0.0);
-		}
-
-		if (key == GLFW_KEY_D && action == GLFW_RELEASE){
-			camObject->setSpeedRight(0.0);
-		}
-
-		if (key == GLFW_KEY_A && action == GLFW_RELEASE){
-			camObject->setSpeedRight(0.0);
-		}
-
-		// Fast movement
-		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS){
-			float currentSpeedRight = camObject->getSpeedRight();
-			float currentSpeedForward = camObject->getSpeedForward();
-			camObject->setSpeedRight(  currentSpeedRight*2.0);
-			camObject->setSpeedForward(currentSpeedForward*2.0);
-		}
-
-	}
 	if (action != GLFW_RELEASE){	// 	so listeners are only called on pess event, not on release ( i.e. twice )
 		notify(key);				//	notify listeners
 	}
@@ -115,6 +54,14 @@ void IOHandler::setCameraObject(Camera* camera){
 
 Camera* IOHandler::getCameraObject(){
 	return camObject;
+}
+
+void IOHandler::setSelectionHandler(SelectionHandler* selectionHandler){
+	this->selectionHandler = selectionHandler;
+}
+
+SelectionHandler* IOHandler::getSelectionHandler(){
+	return selectionHandler;
 }
 
 glm::mat4 IOHandler::getViewMatrix(){

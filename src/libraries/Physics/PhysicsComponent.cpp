@@ -15,7 +15,7 @@ PhysicsComponent::PhysicsComponent(){
 	hit = false;
 }
 
-PhysicsComponent::PhysicsComponent(glm::vec3 min, glm::vec3 max) {
+PhysicsComponent::PhysicsComponent(glm::vec3 min, glm::vec3 max, float mass) {
 
 	glm::vec3 boxValue = max-min;
 
@@ -27,11 +27,10 @@ PhysicsComponent::PhysicsComponent(glm::vec3 min, glm::vec3 max) {
 	float y = height / 2;
 	float z = depth / 2;
 
-	int mass = 0;
-
 	hit = false;
 
 	rigidBody = addBox(width, height, depth, x, y, z, mass);
+	rigidBody->setUserPointer(this);	// use bullet's user pointer to refer to this Object
 	addCollisionFlag(8);	//momentan noch fest, muesste eig auch zusaetzlicher input wert sein
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
@@ -41,6 +40,7 @@ PhysicsComponent::PhysicsComponent(float radius, float x, float y, float z, floa
 	hit = false;
 
 	rigidBody = addSphere(radius,x,y,z,mass);
+	rigidBody->setUserPointer(this);	// use bullet's user pointer to refer to this Object
 	addCollisionFlag(8);
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
@@ -49,14 +49,16 @@ PhysicsComponent::PhysicsComponent(float width, float height, float depth, float
 
 	hit = false;
 	rigidBody = addBox(width,height,depth,x,y,z,mass);
+	rigidBody->setUserPointer(this);	// use bullet's user pointer to refer to this Object
 	addCollisionFlag(8);
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
 
-PhysicsComponent::PhysicsComponent(float x, float y, float z, btVector3 normal, float mass){	//todo: change the type of normal
+PhysicsComponent::PhysicsComponent(float x, float y, float z, btVector3& normal, float mass){	//todo: change the type of normal
 
 	hit = false;
 	rigidBody = addPlane(x,y,z,normal,mass);
+	rigidBody->setUserPointer(this);	// use bullet's user pointer to refer to this Object
 	addCollisionFlag(8);
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
@@ -140,7 +142,7 @@ btRigidBody* PhysicsComponent::addSphere(float radius, float x, float y, float z
 	return body;
 }
 
-btRigidBody* PhysicsComponent::addPlane(float x, float y, float z, btVector3 normal, float mass){
+btRigidBody* PhysicsComponent::addPlane(float x, float y, float z, btVector3& normal, float mass){
 
 	btTransform t;
 	t.setIdentity();

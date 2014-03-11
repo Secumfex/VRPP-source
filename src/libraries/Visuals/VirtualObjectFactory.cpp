@@ -7,7 +7,12 @@
  */
 
 #include <Visuals/VirtualObjectFactory.h>
-#include <string>
+
+VirtualObjectFactory::VirtualObjectFactory(){
+	mCube = NULL;
+	mScreenFillTriangle = NULL;
+}
+
 
 //eingefügt
 void VirtualObjectFactory::set_float4(float f[4], float a, float b, float c, float d)
@@ -80,9 +85,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(){
 	return new VirtualObject();
 }
 
-
-
-VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
+VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, float mass){
 	VirtualObject* virtualObject = new VirtualObject();
 
 	Assimp::Importer Importer;
@@ -434,9 +437,11 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 
 
 		virtualObject->addGraphicsComponent(gc);
-		virtualObject->setPhysicsComponent(aabbMin, aabbMax);
-        
-        }
+
+
+		virtualObject->setPhysicsComponent(aabbMin, aabbMax, mass);
+	}
+
 
 	return virtualObject;
 }

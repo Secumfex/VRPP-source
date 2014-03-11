@@ -3,6 +3,9 @@
 
 #include "Visuals/VirtualObject.h"
 
+
+/// a workaround class which is able to create a generic cube Virtual Object without relying on Assimp libraries, for testing or trouble-shooting purposes
+
 class NoAssimpVirtualObjectFactory{
 private:
 	GLuint createCubeVAO();		//!< create a VAO from Cube Geometry

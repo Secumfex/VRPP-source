@@ -11,7 +11,7 @@
 #include <string>
 
 using namespace std;
-
+/// a simple Subject class, for testing purposes only
 class ConcreteSubject : public Subject {
 private:
 	string data;

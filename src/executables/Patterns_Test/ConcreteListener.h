@@ -14,6 +14,7 @@ class ConcreteSubject;
 
 using namespace std;
 
+/// a basic Listener which reads ConcreteSubjects' data info, for testing purposes only
 class ConcreteListener : public Listener {
 
 private:

@@ -40,7 +40,7 @@ public:
 	* constructor to create a box shaped rigid body.
 	* @param min,max contain smallest and largest x, y, z values of a given model (in VirtualObjectFactory class)
 	*/
-	PhysicsComponent(glm::vec3 min, glm::vec3 max);
+	PhysicsComponent(glm::vec3 min, glm::vec3 max, float mass = 0.0);
 
 	/** \brief constructor
 	*
@@ -66,7 +66,7 @@ public:
 	 * @param normal normal vector of the plane
 	 * @param mass defines the behavior of the rigid body in the physics world
 	 */
-	PhysicsComponent(float x, float y, float z, btVector3 normal, float mass);	//todo: change the type of normal
+	PhysicsComponent(float x, float y, float z, btVector3& normal, float mass);	//todo: change the type of normal
 
 	/** \brief destructor
 	*
@@ -130,7 +130,7 @@ public:
 	 * @param mass defines the behavior of the rigid body in the physics world
 	 * @return a bullet rigid body
 	 */
-	btRigidBody* addPlane(float x, float y, float z, btVector3 normal, float mass);
+	btRigidBody* addPlane(float x, float y, float z, btVector3& normal, float mass);
 
 
 	/** \brief getter

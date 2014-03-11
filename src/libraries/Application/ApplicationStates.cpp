@@ -11,15 +11,16 @@ using namespace std;
 #include "Visuals/VirtualObjectFactory.h"
 
 #include "IO/IOManager.h"
+#include "IO/IngameHandler.h"
 #include "IO/IOListeners.h"
 
 ApplicationState::ApplicationState(){
 	camera = new Camera();
 	renderQueue = new RenderQueue();
-	iOHandler = new IOHandler();
+	iOHandler = new IngameHandler();
 	frustum = new Frustum(camera);
 	iOHandler->setCameraObject(camera);
-	attachListenerOnBeginningProgramCycle(	new UpdateCameraPositionListener(camera));
+	attachListenerOnBeginningProgramCycle(	new UpdateCameraPositionListener(camera, IOManager::getInstance()->getDeltaTimePointer()));
 	
 
 	perspectiveMatrix = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
@@ -43,6 +44,24 @@ IOHandler* ApplicationState::getIOHandler(){
 
 glm::mat4 ApplicationState::getPerspectiveMatrix(){
 	return perspectiveMatrix;
+}
+
+void ApplicationState::setCamera(				Camera* camera){
+	this->camera = camera;
+	this->iOHandler->setCameraObject(camera);
+	attachListenerOnBeginningProgramCycle(	new UpdateCameraPositionListener(camera, IOManager::getInstance()->getDeltaTimePointer()));
+}
+
+void ApplicationState::setRenderQueue(		RenderQueue* renderQueue){
+	this->renderQueue = renderQueue;
+}
+
+void ApplicationState::setIOHandler(			IOHandler* iOHandler){
+	this->iOHandler = iOHandler;
+	this->iOHandler->setCameraObject(camera);
+}
+void ApplicationState::setperspectiveMatrix(	glm::mat4 perspectiveMatrix){
+	this->perspectiveMatrix = perspectiveMatrix;
 }
 
 void ApplicationState::activate(){

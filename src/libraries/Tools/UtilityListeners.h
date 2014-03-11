@@ -8,11 +8,14 @@
 #include <time.h>
 
 
-/// PrintMessageListener prints a predefined message on the console when notified
+/// Listener which prints a predefined message on the console when notified
 class PrintMessageListener : public Listener{
 private: 
 	std::string message;
 public:
+	/** \brief Constructor
+	 * @param message string to be printed to the console upon update
+	 */
 	PrintMessageListener(std::string message);
 	void update();
 	std::string getMessage();
@@ -20,16 +23,19 @@ public:
 };
 
 class StateMachine;
-/// Prints the name of the current state of the state machine
+/// Listener which prints the name of the current state of the state machine
 class PrintCurrentStateListener : public Listener{
 private:
 	StateMachine* stateMachine;
 public:
+	/** \brief Constructor
+	 * @param stateMachine state machine of interest
+	 */
 	PrintCurrentStateListener(StateMachine* stateMachine);
 	void update();
 };
 
-/// TimedTriggerListener will call another listener after being called after a set amount of time
+/// Listener which will call another listener when called after after a set amount of time
 class TimedTriggerListener : public Listener{
 private:
 	Listener* target;
@@ -39,17 +45,26 @@ private:
 	bool listener_triggered;	//!< true after time is greater than 
 	clock_t last_clock_call;
 public:
+	/** \brief Constructor
+	 * @param target pointer to the Listener supposed to be callable after a set amount of time
+	 * @param milliseconds time before target listener becomes will be called upon the next update
+	 */
 	TimedTriggerListener(Listener* target, float milliseconds);
 	void update();
 };
 
-/// Print Value Listener will print the value pointed and print that other stuff in front of it
+/// Listener which prints the value pointed and print that other stuff in front of it
 class PrintValueListener : public Listener{
 private:
 	float* value;
 	std::string message;
 public:
-	PrintValueListener(float* value, std::string message);
+
+	/** \brief Constructor
+	 * @param value pointer to the float variable of interest
+	 * @param message string to be printed in front of it
+	 */
+	PrintValueListener(float* value, std::string message = "");
 	void update();
 };
 

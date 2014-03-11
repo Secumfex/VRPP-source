@@ -5,6 +5,7 @@
 
 using namespace std;
 
+/// a class which is able to attach and call listeners
 class Subject{
 
 public:

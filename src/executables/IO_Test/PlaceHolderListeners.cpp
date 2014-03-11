@@ -72,21 +72,21 @@ void PrintCameraStatusListener::update(){
 	float phi 		= cam->getPhi();
 	float theta		= cam->getTheta();
 
-	std::cout << "Cam pos : " << pos.x << " , " << pos.y << " , " << pos.z << std::endl;
-	std::cout << "Cam dir : " << dir.x << " , " << dir.y << " , " << dir.z << std::endl;
+	std::cout << "Cam pos : "      << pos.x << " , " << pos.y << " , "    << pos.z << std::endl;
+	std::cout << "Cam dir : "      << dir.x << " , " << dir.y << " , "    << dir.z << std::endl;
 	std::cout << "rotation phi : " << phi   << " , pitch theta : " 		  << theta << std::endl;
 }
 
-TurnCameraListener::TurnCameraListener(Camera* cam, float phi, float theta){
-	this->cam 	= cam;
-	this->theta = theta;
-	this->phi 	= phi;
+TurnCameraListener::TurnCameraListener(Camera* cam, float delta_phi, float delta_theta){
+	this->cam 			= cam;
+	this->delta_theta 	= delta_theta;
+	this->delta_phi 	= delta_phi;
 }
 
 void TurnCameraListener::update(){
 	float old_phi   = cam->getPhi();
 	float old_theta = cam->getTheta();
 
-	cam->setPhi(  old_phi   + phi);
-	cam->setTheta(old_theta + theta);
+	cam->setPhi(  old_phi   + delta_phi);
+	cam->setTheta(old_theta + delta_theta);
 }

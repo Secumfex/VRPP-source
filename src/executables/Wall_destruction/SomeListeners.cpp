@@ -174,8 +174,8 @@ void TurnCameraListener::update(){
 #include "IO/IOHandler.h"
 #include "Physics/PhysicWorld.h"
 
-PickRayListener::PickRayListener(){
-
+PickRayListener::PickRayListener(Camera* cam){
+	this->cam = cam;
 	this->phWorld = PhysicWorld::getInstance();
 }
 
@@ -195,8 +195,8 @@ void PickRayListener::update(){
 	int currentWidth,currentHeight;
 	glfwGetWindowSize(window,&currentWidth,&currentHeight);
 
-	glm::vec3 outOrigin;
-	glm::vec3 outDirection;
+	glm::vec3 outOrigin= cam->getPosition();
+	glm::vec3 outDirection= cam->getViewDirection();;
 	glm::mat4 projectionMatrix = RenderManager::getInstance()->getPerspectiveMatrix();
 	glm::mat4 viewMatrix = IOManager::getInstance()->getCurrentIOHandler()->getViewMatrix();
 	phWorld->screenPosToWorldRay(currentXPos,currentYPos,currentWidth,currentHeight,viewMatrix,projectionMatrix,outOrigin,outDirection);
@@ -214,23 +214,35 @@ void ShootSphereListener::update(){
 	glm::vec3 start = cam->getPosition();
 	glm::vec3 view = cam->getViewDirection();
 	btVector3 dir = btVector3(view.x, view.y, view.z);
+	btScalar speed = 30;
+
+	VirtualObject* 	sphere = 	VirtualObjectFactory::getInstance()->createVirtualObject(RESOURCES_PATH "/sphere.obj");
+
+	state->addVirtualObject(sphere);
+	sphere->setModelMatrix(glm::translate(glm::mat4(1.0f), glm::vec3(start.x, start.y, start.z)));
+	sphere->getPhysicsComponent()->~PhysicsComponent();
+	sphere->setPhysicsComponent(2.0f, start.x, start.y, start.z, 3.0f);
+	sphere->physicsComponent->getRigidBody()->setLinearVelocity(dir*speed);
+	state->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(sphere));
 
 
+	/*
+	VirtualObject* sphere = new VirtualObject(0.2f, 0.2f, 0.2f, start.x, start.y, start.z, 1.0f);
+	VirtualObject* sphere = new VirtualObject(0.2f, start.x, start.y, start.z, 1.0f);
+	sphere->addGraphicsComponent(new GraphicsComponent);
+	VirtualObject* cube = VirtualObjectFactory::getInstance()->createNonAssimpVO();
+	 */
 
-	//VirtualObject* sphere = new VirtualObject(0.2f, 0.2f, 0.2f, start.x, start.y, start.z, 1.0f);
-	//VirtualObject* sphere = new VirtualObject(0.2f, start.x, start.y, start.z, 1.0f);
-	//sphere->addGraphicsComponent(new GraphicsComponent);
-	//VirtualObject* cube = VirtualObjectFactory::getInstance()->createNonAssimpVO();
-
+	/*
 	VirtualObject* 	cube = 	VirtualObjectFactory::getInstance()->createVirtualObject(RESOURCES_PATH "/cube.obj");
 
 	state->addVirtualObject(cube);
 	cube->setModelMatrix(glm::translate(glm::mat4(1.0f), glm::vec3(start.x, start.y, start.z)));
 	cube->getPhysicsComponent()->~PhysicsComponent();
-	cube->setPhysicsComponent(1.0f, 1.0f, 1.0f, start.x, start.y, start.z, 1.0f);
-	cube->physicsComponent->getRigidBody()->setLinearVelocity(dir*20);
+	cube->setPhysicsComponent(1.0f, 1.0f, 1.0f, start.x, start.y, start.z, 3.0f);
+	cube->physicsComponent->getRigidBody()->setLinearVelocity(dir*speed);
 	std::cout << PhysicWorld::getInstance()->dynamicsWorld->getNumCollisionObjects() << endl;
 
-
 	state->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube));
+	*/
 }

@@ -43,7 +43,7 @@ public:
 	void update();
 };
 
-// Listener which prints the current configuration of the given Camera Object
+/// Listener which prints the current configuration of the given Camera Object
 class PrintCameraStatusListener : public Listener {
 private:
 	Camera* cam;
@@ -52,13 +52,13 @@ public:
 	void update();
 };
 
-// Listener which sets the direction of the given Camera Object
+/// Listener which sets the direction of the given Camera Object
 class TurnCameraListener : public Listener {
 private:
 	Camera* 	cam;
-	float theta; // inlcination step
-	float phi;   // rotation step
+	float delta_theta; // inlcination step
+	float delta_phi;   // rotation step
 public:
-	TurnCameraListener(Camera* cam, float phi, float theta);
+	TurnCameraListener(Camera* cam, float delta_phi, float delta_theta);
 	void update();
 };

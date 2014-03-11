@@ -8,6 +8,7 @@
 
 class RenderQueue;
 
+/// represents a 3D-Model in the scene 
 class VirtualObject{
 
 	private:
@@ -114,7 +115,7 @@ public:
 	 * @param min,max smallest and largest x, y, z values of a given model
 	 * @return void
 	 */
-	void setPhysicsComponent(glm::vec3 min, glm::vec3 max);
+	void setPhysicsComponent(glm::vec3 min, glm::vec3 max, float mass = 0.0);
 
 	/** \brief sets PhysicsComponent
 	 *
@@ -144,7 +145,7 @@ public:
  	 * @param mass defines the behavior of the rigid body in the physics world
  	 * @return void
 	 */
-	void setPhysicComponent(float x, float y, float z, btVector3 normal, float mass);	//todo: change the type of normal
+	void setPhysicComponent(float x, float y, float z, btVector3& normal, float mass);	//todo: change the type of normal
 
 	/** \brief getter
 	 *

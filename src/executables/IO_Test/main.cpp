@@ -4,7 +4,9 @@
 #include "Tools/UtilityListeners.h"
 #include "PlaceHolderListeners.h"
 #include "IO/IOManager.h"
-
+#include "IO/PlayerCamera.h"
+#include "Physics/PhysicWorld.h"
+#include "Physics/PhysicWorldSimulationListener.h"
 /*
 *	This executable tests various Input/Output related functionalities
 */	
@@ -13,10 +15,15 @@ Application* 	testingApp;
 VRState* 		testingState;
 IOHandler*   	testingInputHandler;
 VirtualObject*  cubeObject;
+PlayerCamera*   playercam;
 
 void configureTestingApplication(){
 	testingApp->attachListenerOnProgramInitialization(	new PrintMessageListener(		string("Application is booting")));
 	testingApp->attachListenerOnProgramTermination(		new PrintMessageListener(		string("Application is terminating")));
+	
+	testingApp->attachListenerOnBeginningProgramCycle( 	new PhysicWorldSimulationListener(IOManager::getInstance()->getDeltaTimePointer()));
+	playercam = new PlayerCamera();
+	testingState->setCamera(playercam);
 }
 
 void configureVirtualObjects(){
@@ -24,11 +31,20 @@ void configureVirtualObjects(){
 }
 
 void configurePhysics(){
+	btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,1,0),0);
+	//create an invisible ground plane
+		btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,-4,5)));
+    	btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0,groundMotionState,groundShape,btVector3(0,0,0));
+   	 	btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
+    	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(groundRigidBody);
 
+	btRigidBody* camBody = playercam->getRigidBody();
+	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(camBody);
 }
 
 void configureInputHandler(){
 	/* customization of input handling */
+
 	testingInputHandler->attachListenerOnKeyPress(new TerminateApplicationListener(testingApp), GLFW_KEY_ESCAPE);
 
 	testingInputHandler->attachListenerOnKeyPress(new TurnCameraListener(		 testingState->getCamera(), 0.1f, 0.0f), 	GLFW_KEY_LEFT );	// pressing '<-'   : turn camera to the left  by 0.1 radians
@@ -74,9 +90,9 @@ void configureApplication(){
 
 int main() {
 
-	configureApplication();		// 1 do some customization
+	configureApplication();	// 1 do some customization
 
-	testingApp->run();			// 2 run application
+	testingApp->run();		// 2 run application
 
 	return 0;				// 3 end :)
 }

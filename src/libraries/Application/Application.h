@@ -9,7 +9,11 @@
 
 /*! @brief Application is a Singleton State Machine (ApplicationContext).
  *
- *	@todo detailed description pls
+ *	Application is the biggest interface to build your own Executable with our libraries.
+ *  Application will initialize a GLFW window by itself and initializes Render Manager and other core functionality.
+ *  Application, as a state machine, can switch between states with ease. Application States are supposed to contain everything
+ *  which decides what you can see on the window at any given time. I.e. the Render Loop, the Scene itself, Camera settings and Bullet Physics settings.
+ *  Especially it's Listener-Interfaces are empowering the user for endless customization
  */
 class Application : public Singleton<Application>, public StateMachine, public Subject{
 friend class Singleton<Application>;
@@ -26,8 +30,7 @@ public:
 	bool setState(State* state);	//!< calls statechange listener @return true if successful @return false if unsuccessful
 	bool setState(std::string state);	//!<returns true if successful, false if unsuccessful, calls statechange listeners
 
-	/*Constructor initializes GLFW Window and GLEW for further functionality*/
-	Application(std::string label = "");
+	Application(std::string label = "");	//!<Constructor initializes GLFW Window and GLEW for further functionality
 
 	/*! @brief sets the label.
 	 *

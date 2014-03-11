@@ -82,8 +82,8 @@ void VirtualObject::setPhysicsComponent(){
 	physicsComponent = new PhysicsComponent();
 }
 
-void VirtualObject::setPhysicsComponent(glm::vec3 min, glm::vec3 max){
-	physicsComponent = new PhysicsComponent(min, max);
+void VirtualObject::setPhysicsComponent(glm::vec3 min, glm::vec3 max, float mass){
+	physicsComponent = new PhysicsComponent(min, max, mass);
 }
 
 void VirtualObject::setPhysicsComponent(float radius, float x, float y, float z, float mass){
@@ -94,7 +94,7 @@ void VirtualObject::setPhysicsComponent(float width, float height, float depth, 
 	physicsComponent = new PhysicsComponent(width, height, depth, x, y, z, mass);
 }
 
-void VirtualObject::setPhysicComponent(float x, float y, float z, btVector3 normal, float mass){	//todo: change the type of normal
+void VirtualObject::setPhysicComponent(float x, float y, float z, btVector3& normal, float mass){	//todo: change the type of normal
 	physicsComponent = new PhysicsComponent(x,y,z,normal,mass);
 }
 

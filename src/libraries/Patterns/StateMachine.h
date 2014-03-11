@@ -4,7 +4,8 @@
 #include <map>
 #include <list>
 
-class StateMachine {		//the new Context
+/// State Machine enabled classes can add and remove states, switch between states and forbid state transitions 
+class StateMachine {
 friend class State;
 
 protected:

@@ -33,6 +33,11 @@ public:
 	IOHandler* 		getIOHandler();
 	glm::mat4 		getPerspectiveMatrix();
 
+	void setCamera(				Camera* camera);
+	void setRenderQueue(		RenderQueue* renderQueue);
+	void setIOHandler(			IOHandler* iOHandler);
+	void setperspectiveMatrix(	glm::mat4 perspectiveMatrix);
+
 	virtual void activate(); //!< activation of state --> binding objects
 
 	VirtualObject* createVirtualObject(std::string path); //!< create Object from path and add it to renderQueue
@@ -47,14 +52,17 @@ public:
 	void attachListenerOnBeginningProgramCycle(Listener* listener); //!< attach Listener on beginning Program Cycle
 };
 
+/// An ApplicationState with no added functionality
 class IdleState : public ApplicationState {
 };
 
+/// An  ApplicationState supposed to contain a mouse click enabled IOHandler
 class MenuState : public ApplicationState {
 public:
 	MenuState(std::string name = "");
 };
 
+/// An ApplicationState supposed to contain a Camera Movement enabled IOHandler
 class VRState : public ApplicationState {
 public:
 	VRState(std::string name = "");
