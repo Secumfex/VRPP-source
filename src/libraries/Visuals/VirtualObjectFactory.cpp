@@ -374,31 +374,12 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 
         	float c[4];
 
-        	aiColor3D color(3.0f,0.0f,0.0f);
-
-        	mtl->Get(AI_MATKEY_COLOR_DIFFUSE,color);
-
-        	std::cout<<color.r<<color.g<<color.b<<"anderer weg"<<endl;
-
 		set_float4(c, 0.8f, 0.8f, 0.8f, 1.0f);
 		aiColor4D diffuse;
-		std::cout<<"-------------------------------------------------";
-		std::cout<<diffuse.r<<diffuse.g<<diffuse.b<<endl;
-		std::cout<<"-------------------------------------------------";
 		if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_DIFFUSE, &diffuse)){
-
-		std::cout<<diffuse.r<<diffuse.g<<diffuse.b<<endl;
-
 		color4_to_float4(&diffuse, c);
 		}
-
-		glm::vec3 temp=aMat->getDiffuse();
-		std::cout<<temp.r<< temp.g<< temp.b <<endl;
-
 		aMat->setDiffuse(glm::vec3(c[0], c[1], c[2]));
-
-		std::cout<<c[0]<< c[1]<< c[2]<<endl;
-
 
 
         // ambient
