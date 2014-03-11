@@ -79,22 +79,32 @@ vector<GraphicsComponent*> VirtualObject:: getGraphicsComponent(std::string tag)
 }
 
 void VirtualObject::setPhysicsComponent(){
+	if(physicsComponent != NULL)
+	physicsComponent->~PhysicsComponent();
 	physicsComponent = new PhysicsComponent();
 }
 
 void VirtualObject::setPhysicsComponent(glm::vec3 min, glm::vec3 max){
+	if(physicsComponent != NULL)
+	physicsComponent->~PhysicsComponent();
 	physicsComponent = new PhysicsComponent(min, max);
 }
 
 void VirtualObject::setPhysicsComponent(float radius, float x, float y, float z, float mass){
+	if(physicsComponent != NULL)
+	physicsComponent->~PhysicsComponent();
 	physicsComponent = new PhysicsComponent(radius, x, y, z, mass);
 }
 
 void VirtualObject::setPhysicsComponent(float width, float height, float depth, float x, float y, float z, float mass){
+	if(physicsComponent != NULL)
+	physicsComponent->~PhysicsComponent();
 	physicsComponent = new PhysicsComponent(width, height, depth, x, y, z, mass);
 }
 
 void VirtualObject::setPhysicComponent(float x, float y, float z, btVector3& normal, float mass){	//todo: change the type of normal
+	if(physicsComponent != NULL)
+	physicsComponent->~PhysicsComponent();
 	physicsComponent = new PhysicsComponent(x,y,z,normal,mass);
 }
 

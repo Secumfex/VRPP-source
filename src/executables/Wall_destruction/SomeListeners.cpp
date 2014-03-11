@@ -220,7 +220,6 @@ void ShootSphereListener::update(){
 
 	state->addVirtualObject(sphere);
 	sphere->setModelMatrix(glm::translate(glm::mat4(1.0f), glm::vec3(start.x, start.y, start.z)));
-	sphere->getPhysicsComponent()->~PhysicsComponent();
 	sphere->setPhysicsComponent(0.5f, start.x, start.y, start.z, 3.0f);
 	sphere->physicsComponent->getRigidBody()->setLinearVelocity(dir*speed);
 	state->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(sphere));
