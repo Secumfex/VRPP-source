@@ -23,13 +23,13 @@ PhysicsComponent::PhysicsComponent(glm::vec3 min, glm::vec3 max, float mass) {
 	float height = boxValue.y;
 	float depth = boxValue.z;
 
-	float x = width / 2;
-	float y = height / 2;
-	float z = depth / 2;
+	float x = min.x + width / 2.0f;
+	float y = min.y + height / 2.0f;
+	float z = min.z + depth / 2.0f;
 
 	hit = false;
 
-	rigidBody = addBox(width, height, depth, x, y, z, mass);
+	rigidBody = addBox(width / 2.0f, height / 2.0f, depth / 2.0f, x, y, z, mass);
 	rigidBody->setUserPointer(this);	// use bullet's user pointer to refer to this Object
 	addCollisionFlag(8);	//momentan noch fest, muesste eig auch zusaetzlicher input wert sein
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);

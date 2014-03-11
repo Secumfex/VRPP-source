@@ -107,3 +107,20 @@ void UpdateVirtualObjectModelMatrixListener::update(){
 	vo->updateModelMatrixViaPhysics();
 }
 
+ApplyLinearImpulseOnRigidBody::ApplyLinearImpulseOnRigidBody(btRigidBody* rigidBody, btVector3 force){
+	this->rigidBody = rigidBody;
+	this->force = force;
+}
+
+void ApplyLinearImpulseOnRigidBody::update(){
+	rigidBody->applyCentralImpulse(btVector3(force));	
+}
+
+SetCameraPositionListener::SetCameraPositionListener(Camera* cam, glm::vec3 position){
+	this->cam 			= cam;
+	this->position = position;
+}
+
+void SetCameraPositionListener::update(){
+	cam->setPosition(position);
+}
