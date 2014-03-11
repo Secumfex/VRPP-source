@@ -82,8 +82,8 @@ void VirtualObject::setPhysicsComponent(){
 	physicsComponent = new PhysicsComponent();
 }
 
-void VirtualObject::setPhysicsComponent(glm::vec3 min, glm::vec3 max){
-	physicsComponent = new PhysicsComponent(min, max);
+void VirtualObject::setPhysicsComponent(glm::vec3 min, glm::vec3 max, float mass){
+	physicsComponent = new PhysicsComponent(min, max, mass);
 }
 
 void VirtualObject::setPhysicsComponent(float radius, float x, float y, float z, float mass){
@@ -104,6 +104,10 @@ glm::mat4 VirtualObject::getModelMatrix(){
 
 void VirtualObject::setModelMatrix(glm::mat4 modelmatrix){
 	modelMatrix = modelmatrix;
+	unsigned int i = 0;
+	for(i=0; i< mGraphComponent.size();i++){
+		mGraphComponent[i]->setModelMatrixGc(modelmatrix);
+	}
 }
 
 PhysicsComponent* VirtualObject::getPhysicsComponent(){

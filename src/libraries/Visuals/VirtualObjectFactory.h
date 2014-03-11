@@ -13,6 +13,7 @@
 
 #include <Patterns/Singleton.h>
 #include <Visuals/VirtualObject.h>
+#include "MaterialManager.h"
 #include <vector>
 #include <Tools/NoAssimpVirtualObjectFactory.h>
 
@@ -30,42 +31,7 @@ class VirtualObjectFactory : public Singleton<VirtualObjectFactory> {
 
 //---------------MEMBER VARIABLES--------------------
 
-
-
-
-
-
-	  struct MyMesh{
-        GLuint vao;
-		//wurde im fix einfach weggelassen. jedoch wurde auch devil benutzt, kenne noch keinen zusammenhang
-		/*
-        GLuint texUnits[MAX_TEXTURES];
-        GLuint texTypes[MAX_TEXTURES];
-		*/
-
-        GLuint uniformBlockIndex;
-        float transform[16];
-        int numIndices;
-		int numFaces;
-        unsigned int type;
-
-        Material mat;
-        unsigned int *indexes;
-        float *positions;
-        float *normals;
-		int texIndex;
-    };
-
-	
-	//auch dazu gebastelt. okay, dass es static ist??
-std::vector<struct MyMesh> myMeshes;
-
-	 // ebenfalls aus dem fix
-
-std::map<std::string, GLuint> textureIdMap;
-
 VirtualObject* mCube;
-VirtualObject* mSphere;
 GraphicsComponent* mScreenFillTriangle;
 
 
@@ -75,11 +41,10 @@ public:
 
 
 VirtualObject* createNonAssimpVO();
-VirtualObject* createNonAssimpSphere();
 GraphicsComponent* getTriangle();
 
 VirtualObject* createVirtualObject();
-VirtualObject* createVirtualObject(std::string filename);
+VirtualObject* createVirtualObject(std::string filename, float mass = 0.0);
 VirtualObject* createVirtualObject(vector<GraphicsComponent*> graphcomps);
 VirtualObject* copyVirtualObject(VirtualObject vo);
 
