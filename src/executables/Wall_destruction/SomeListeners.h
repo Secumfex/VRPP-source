@@ -138,3 +138,14 @@ public:
 	ShootSphereListener(Camera* cam, VRState* state);
 	void update();
 };
+
+/// Listener which applies an impulse to a rigid body in direction of the provided cam
+class ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener : public Listener {
+private:
+	SelectionHandler* selectionHandler;
+	Camera* cam;
+	float strength;
+public:
+	ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener(SelectionHandler* selectionHandler, Camera* cam, float strength = 100.0f);
+	void update();
+};

@@ -90,3 +90,19 @@ void TurnCameraListener::update(){
 	cam->setPhi(  old_phi   + delta_phi);
 	cam->setTheta(old_theta + delta_theta);
 }
+
+ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener::ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener(SelectionHandler* selectionHandler, Camera* cam, float strength){
+	this->selectionHandler = selectionHandler;
+	this->cam = cam;
+	this->strength = strength; 
+}
+
+void ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener::update(){
+	if (selectionHandler->somethingIsSelected()){
+		/*Pray and Cast*/
+		btRigidBody* rigidBody = (static_cast< PhysicsComponent* > (selectionHandler->getCurrentSelection()->getUserPointer()))->getRigidBody();
+		/*pray some more and apply force*/
+		glm::vec3 force = cam->getViewDirection() * strength;
+		rigidBody->applyForce(btVector3(force.x,force.y,force.z),btVector3(0.0f,0.0f,0.0f));
+	}
+}

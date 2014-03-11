@@ -25,15 +25,15 @@ void SelectionHandler::trySelection(glm::vec3& from, glm::vec3& to){
 	physicWorld->dynamicsWorld->rayTest(btVector3(from.x, from.y, from.z), btVector3(to.x, to.y, to.z), RayCallback);
 
 	if(RayCallback.hasHit()) {
-	    currentSelection = RayCallback.m_collisionObject->getUserPointer();
+	    currentSelection = RayCallback.m_collisionObject;
 	}
 	else{
-	    currentSelection = 0;
+		currentSelection = 0;
 	}
 	notify("TRY_SELECTION_LISTENER");
 }
 
-void* SelectionHandler::getCurrentSelection(){
+const btCollisionObject* SelectionHandler::getCurrentSelection(){
 	return currentSelection;
 }
 

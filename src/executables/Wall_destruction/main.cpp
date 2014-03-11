@@ -215,6 +215,10 @@ void configureMyApp(){
 	myVRStateIOHandler->attachListenerOnMouseButtonPress(new PickRayListener(myVRState->getCamera()), GLFW_MOUSE_BUTTON_2);		//
 	myVRStateIOHandler->attachListenerOnMouseButtonPress(new ShootSphereListener(myVRState->getCamera(), myVRState), GLFW_MOUSE_BUTTON_LEFT);
 
+	SelectionHandler* sh = myVRStateIOHandler->getSelectionHandler();
+	myVRStateIOHandler->attachListenerOnMouseButtonPress(new ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener(sh, myVRState->getCamera(),50.0f), GLFW_MOUSE_BUTTON_RIGHT);
+
+
 	/*	further customize application functionality by adding various listeners */
 	myApp->attachListenerOnProgramInitialization(	new PrintMessageListener(		string("Application is booting")));
 	myApp->attachListenerOnProgramTermination(		new PrintMessageListener(		string("Application is terminating")));

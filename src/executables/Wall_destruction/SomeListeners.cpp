@@ -246,3 +246,21 @@ void ShootSphereListener::update(){
 	state->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube));
 	*/
 }
+
+
+ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener::ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener(SelectionHandler* selectionHandler, Camera* cam, float strength){
+	this->selectionHandler = selectionHandler;
+	this->cam = cam;
+	this->strength = strength; 
+}
+
+void ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener::update(){
+	if (selectionHandler->somethingIsSelected()){
+		/*Pray and Cast*/
+		btRigidBody* rigidBody = (static_cast< PhysicsComponent* > (selectionHandler->getCurrentSelection()->getUserPointer()))->getRigidBody();
+		/*pray some more and apply force*/
+		glm::vec3 force = cam->getViewDirection() * strength;
+		std::cout << force.x <<", "<< force.y <<", "<< force.z << std::endl;
+		rigidBody->applyCentralImpulse(btVector3(force.x,force.y,force.z));
+	}
+}
