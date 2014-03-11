@@ -182,8 +182,8 @@ btRigidBody* PhysicsComponent::addHeightfield(char* filename){
 	heightfieldFile = fopen(filename,"r");
 	//btHeightfieldTerrainShape* heightmap = new btHeightfieldTerrainShape();
 
-	btRigidBody* body = new btRigidBody();
-	return body;
+	//btRigidBody* body = new btRigidBody();
+	//return body;
 }
 
 btRigidBody* PhysicsComponent::getRigidBody(){
