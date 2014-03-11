@@ -17,28 +17,39 @@
 #include "Visuals/FrameBufferObject.h"
 #include "Visuals/VirtualObjectFactory.h"
 #include "Visuals/RenderManager.h"
-#include "Application/Application.h"
-#include "Application/ApplicationStates.h"
 
-Application *myApp;
 
 int main() {
 
 	// render window
-	myApp = Application::getInstance();
+	glfwInit();
 
-	myApp->setLabel("GBUFFER_CLONE_extreme");
+#ifdef __APPLE__
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glewExperimental= GL_TRUE;
+#endif
 
-	GLFWwindow* window = RenderManager::getInstance()->getWindow();
+	GLFWwindow* window = glfwCreateWindow(800, 800, "Compositing", NULL, NULL);
+	glfwMakeContextCurrent(window);
+	glClearColor(1,1,1,0);
 
-	VRState *myVRState = new VRState("LET IT SNOW");
-
+	// get framebuffer size
 	int width, height;
 	glfwGetFramebufferSize(window, &width, &height);
-	RenderQueue* rq = myVRState->getRenderQueue();
-	RenderManager* rm = RenderManager::getInstance();
-	Camera* cam = myVRState->getCamera();
-	Frustum* frustum = myVRState->getFrustum();
+
+	//init opengl 3 extension
+	glewInit();
+
+	// print out some info about the graphics drivers
+	std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
+	std::cout << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+	std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
+	std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
+
+
 
 	//load, compile and link simple texture rendering program for a screen filling plane
 
@@ -51,14 +62,14 @@ int main() {
 	Shader *gbufferShader = new Shader(		SHADERS_PATH "/GBuffer_clone/GBuffer.vert",
 			SHADERS_PATH "/GBuffer_clone/GBuffer.frag");
 
+//	Shader *gbufferShader = new Shader();
+
 	Shader *gbuffer_normalMap_Shader = new Shader(		SHADERS_PATH "/GBuffer_clone/GBuffer.vert",
 			SHADERS_PATH "/GBuffer_clone/GBuffer_normalTexture.frag");
 
-	rq->addShader(gbufferShader);
-	rq->addShader(gbuffer_normalMap_Shader);
-	rq->addCompositingShader(simpleTexShader);
-	rq->addCompositingShader(finalCompShader);
-
+	RenderQueue* rq = new RenderQueue();
+	RenderManager* rm = RenderManager::getInstance();
+	Camera* cam = new Camera();
 
 
 	//--------------------------------------------//
@@ -88,7 +99,6 @@ int main() {
 	fbo->createNormalTexture();
 	fbo->createColorTexture();
 	fbo->createMaterialTexture();
-	fbo->createShadowMap();
 
 	//set the list of draw buffers.
 	fbo->makeDrawBuffers();
@@ -100,6 +110,9 @@ int main() {
 	//Statisches "binden" unserer Uniforms/Objekte
 	//Muss man also nur einmal machen
 
+	gbufferShader->setBlurStrength(0);
+	gbuffer_normalMap_Shader->setBlurStrength(0);
+
 	rq->addVirtualObject(object01);
 	rq->addVirtualObject(object02);
 	rq->addVirtualObject(object03);
@@ -107,17 +120,13 @@ int main() {
 
 	rm->setRenderQueue(rq);
 	rm->setCurrentFBO(fbo);
+	//rm->setProjectionMatrix(glm::perspective(40.0f, 1.0f, 0.1f, 100.f));
+	rm->setProjectionMatrix(glm::perspective(40.0f, 1.0f, 0.1f, 100.f));
 	rm->setCamera(cam);
-	rm->setCurrentFrustum(frustum);
-	rm->setProjectionMatrix(40.0f, 1.0f, 0.1f, 100.f);
-	rm->setLightPosition(glm::vec3(5,2,-2),0);
 
 	cam->setPosition(glm::vec3(0.0f, 1.0f, -6.0f));
 	cam->setCenter(glm::vec3(0.0f, 0.0f, 0.0f));
 
-	frustum->updateModelMatrix();
-
-	rq->sortByAttributes();
 
 	while(!glfwWindowShouldClose(window)) {
 
@@ -161,6 +170,7 @@ int main() {
 
 		        glViewport(0, 0, width, (height/4)*3);
 
+
 		gbufferShader->useProgram();
 		rm->setCurrentShader(gbufferShader);
 		//----------------------------------------------------------------------------------------//
@@ -168,11 +178,7 @@ int main() {
 		//----------------------------------------------------------------------------------------//
 
 		list<VirtualObject*> vo_list = rm->getRenderQueue()->getVirtualObjectList();
-
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		vo_list = rm->getRenderQueue()->getVirtualObjectList();
-
+		unsigned int i= 0;
 		while (!vo_list.empty()) {
 			unsigned int j= 0;
 			VirtualObject* vo_temp = vo_list.front();
@@ -181,7 +187,7 @@ int main() {
 				GraphicsComponent *gc_temp = vo_temp->getGraphicsComponent()[j];
 				rm->setCurrentGC(gc_temp);
 
-				if(gc_temp->getMaterial()->hasNormalTexture()){
+				if(gc_temp->getMaterial()->hasNormalMap()){
 					gbuffer_normalMap_Shader->useProgram();
 					rm->setCurrentShader(gbuffer_normalMap_Shader);
 					gbuffer_normalMap_Shader->uploadAllUniforms();
@@ -190,9 +196,6 @@ int main() {
 					rm->setCurrentShader(gbufferShader);
 					gbufferShader->uploadAllUniforms();
 				}
-
-				if(gc_temp->getGhostObject()->getNumOverlappingObjects() > 0)
-				std::cout << gc_temp->getGhostObject()->getNumOverlappingObjects() << " SO VIELE ÜBERSCHNEIDUNGEN BEI" << gc_temp->getMaterial()->getName() << endl;
 
 				gbufferShader->render(gc_temp);
 			}
