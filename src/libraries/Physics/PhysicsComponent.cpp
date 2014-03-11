@@ -32,6 +32,7 @@ PhysicsComponent::PhysicsComponent(glm::vec3 min, glm::vec3 max) {
 	hit = false;
 
 	rigidBody = addBox(width, height, depth, x, y, z, mass);
+	rigidBody->setUserPointer(this);	// use bullet's user pointer to refer to this Object
 	addCollisionFlag(8);	//momentan noch fest, muesste eig auch zusaetzlicher input wert sein
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
@@ -41,6 +42,7 @@ PhysicsComponent::PhysicsComponent(float radius, float x, float y, float z, floa
 	hit = false;
 
 	rigidBody = addSphere(radius,x,y,z,mass);
+	rigidBody->setUserPointer(this);	// use bullet's user pointer to refer to this Object
 	addCollisionFlag(8);
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
@@ -49,6 +51,7 @@ PhysicsComponent::PhysicsComponent(float width, float height, float depth, float
 
 	hit = false;
 	rigidBody = addBox(width,height,depth,x,y,z,mass);
+	rigidBody->setUserPointer(this);	// use bullet's user pointer to refer to this Object
 	addCollisionFlag(8);
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
@@ -57,6 +60,7 @@ PhysicsComponent::PhysicsComponent(float x, float y, float z, btVector3& normal,
 
 	hit = false;
 	rigidBody = addPlane(x,y,z,normal,mass);
+	rigidBody->setUserPointer(this);	// use bullet's user pointer to refer to this Object
 	addCollisionFlag(8);
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }

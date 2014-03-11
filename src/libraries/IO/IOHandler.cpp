@@ -13,6 +13,7 @@ IOHandler::IOHandler(){
 	yPos = -1;
 	speed = 5.0;
 
+	selectionHandler = new SelectionHandler();
 	//	glfwGetCursorPos(window, &xPos, &yPos);
 	// Get mouse position
 }
@@ -53,6 +54,14 @@ void IOHandler::setCameraObject(Camera* camera){
 
 Camera* IOHandler::getCameraObject(){
 	return camObject;
+}
+
+void IOHandler::setSelectionHandler(SelectionHandler* selectionHandler){
+	this->selectionHandler = selectionHandler;
+}
+
+SelectionHandler* IOHandler::getSelectionHandler(){
+	return selectionHandler;
 }
 
 glm::mat4 IOHandler::getViewMatrix(){

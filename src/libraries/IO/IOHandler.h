@@ -6,8 +6,9 @@
 #include <glm/glm.hpp>
 #include <sstream>
 
-#include "Camera.h"
 #include "Patterns/Subject.h"
+#include "SelectionHandler.h"
+#include "Camera.h"
 
 /// a class which implements specific input interpretation, i.e. camera movement
 class IOHandler : public Subject{
@@ -24,6 +25,8 @@ protected:
 		Camera* camObject;
 
 		std	::	stringstream sstream; /**<* mostly used to convert ints to strings */
+
+		SelectionHandler* selectionHandler;
 public:
 	IOHandler();
 	virtual ~IOHandler();
@@ -31,6 +34,8 @@ public:
 
 	void setCameraObject(Camera* camera);
 	Camera* getCameraObject();
+	void setSelectionHandler(SelectionHandler* selectionHandler);
+	SelectionHandler* getSelectionHandler();
 
 	/**\brief getter
 	 * returns current ViewMatrix
@@ -47,8 +52,8 @@ public:
 	 *
 	 */
 	virtual void setOrientation(GLFWwindow* window, double xpos, double ypos); // !< method to set the Camera orientation
-	void cursorPos_callback(GLFWwindow* window, int xpos, int ypos);	//!< cursorPos_callback as defined by GLFW
-	void mouseButton_callback(GLFWwindow* window, int button, int action, int mods); //!< mouse button callback (press / release) as defined by GLFW
+	virtual void cursorPos_callback(GLFWwindow* window, int xpos, int ypos);	//!< cursorPos_callback as defined by GLFW
+	virtual void mouseButton_callback(GLFWwindow* window, int button, int action, int mods); //!< mouse button callback (press / release) as defined by GLFW
 	virtual void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	void notify(int key);	//!< notify Listeners attached to a key pess by using the GLFW integer definitions for keys
 	void attachListenerOnKeyPress(Listener* listener, int key); //!< attach a Listener to a key by using the GLFW integer definitions for keys

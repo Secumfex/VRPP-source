@@ -1,5 +1,6 @@
 #include "IngameHandler.h"
 
+#include <iostream>
 
 IngameHandler::IngameHandler(){
 
@@ -94,8 +95,16 @@ void IngameHandler::key_callback(GLFWwindow* window, int key, int scancode, int 
 		}
 
 
+void IngameHandler::mouseButton_callback(GLFWwindow* window, int button, int action, int mods){
+	if(action == GLFW_PRESS){
 
+		glm::vec3 from = camObject->getPosition();
+		from += camObject->getViewDirection() * 0.6f;
+		glm::vec3 to = from + camObject->getViewDirection()*1000.0f;
+		
+		selectionHandler->trySelection(from, to);
 
-
-
-
+		std::cout<<selectionHandler->somethingIsSelected()<< " , " << selectionHandler->getCurrentSelection() << std::endl;
+	}
+	IOHandler::mouseButton_callback(window,button,action,mods);
+}
