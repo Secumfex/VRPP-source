@@ -79,23 +79,11 @@ public:
 	glm::vec3 getSpecular();
 	glm::vec3 getEmission();
 	GLfloat getShininess();
-
+	GLfloat getReflectivity();
 
 	std::string getName();
 
-	bool hasNormalTexture();
-	bool hasDiffuseTexture();
-	bool hasAmbientTexture();
-	bool hasEmissiveTexture();
-	bool hasHeightTexture();
-	bool hasOpacityTexture();
-	bool hasSpecularTexture();
-	bool hasReflectionTexture();
-	bool hasShininessTexture();
-	bool hasDisplacementTexture();
-	bool hasLightTexture();
-
-
+	bool hasNormalMap();
 	//---------------MEMBER VARIABLES--------------------
 private:
 	std::string mName;
@@ -107,6 +95,10 @@ private:
 	glm::vec3 mEmissColor;
 
 	GLfloat mShininess;
+	GLfloat mReflectivity;
+
+
+
 
 };
 

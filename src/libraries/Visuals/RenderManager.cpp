@@ -63,7 +63,7 @@ void RenderManager::setCamera(Camera* camera){
     mCamera = camera;
 }
 
-void RenderManager::setProjectionMatrix(mat4 _projectionMatrix){
+void RenderManager::setProjectionMatrix(glm::mat4 _projectionMatrix){
     projectionMatrix = _projectionMatrix;
 }
 
