@@ -22,8 +22,14 @@ void RenderQueue::addShader(Shader* sh) {
 	shaderList.push_back(sh);
 }
 
+void RenderQueue::addCompositingShader(Shader* sh){
+	cout << "Adding Shader to compositingList." << endl;
+	compositingList.push_back(sh);
+}
+
 /** \brief adds a VO to the member list of VOs, also maps GC->VO and vice versa
  */
+
 void RenderQueue::addVirtualObject(VirtualObject* vo) {
 	cout << "Adding VO." << endl; // <-- REMOVE IN FINAL
 	voList.push_back(vo);

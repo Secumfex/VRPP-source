@@ -17,39 +17,28 @@
 #include "Visuals/FrameBufferObject.h"
 #include "Visuals/VirtualObjectFactory.h"
 #include "Visuals/RenderManager.h"
+#include "Application/Application.h"
+#include "Application/ApplicationStates.h"
 
+Application *myApp;
 
 int main() {
 
 	// render window
-	glfwInit();
+	myApp = Application::getInstance();
 
-#ifdef __APPLE__
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glewExperimental= GL_TRUE;
-#endif
+	myApp->setLabel("GBUFFER_CLONE_extreme");
 
-	GLFWwindow* window = glfwCreateWindow(800, 800, "Compositing", NULL, NULL);
-	glfwMakeContextCurrent(window);
-	glClearColor(1,1,1,0);
+	GLFWwindow* window = RenderManager::getInstance()->getWindow();
 
-	// get framebuffer size
+	VRState *myVRState = new VRState("LET IT SNOW");
+
 	int width, height;
 	glfwGetFramebufferSize(window, &width, &height);
-
-	//init opengl 3 extension
-	glewInit();
-
-	// print out some info about the graphics drivers
-	std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
-	std::cout << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
-	std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
-	std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
-
-
+	RenderQueue* rq = myVRState->getRenderQueue();
+	RenderManager* rm = RenderManager::getInstance();
+	Camera* cam = myVRState->getCamera();
+	Frustum* frustum = myVRState->getFrustum();
 
 	//load, compile and link simple texture rendering program for a screen filling plane
 
@@ -65,13 +54,11 @@ int main() {
 	Shader *gbuffer_normalMap_Shader = new Shader(		SHADERS_PATH "/GBuffer_clone/GBuffer.vert",
 			SHADERS_PATH "/GBuffer_clone/GBuffer_normalTexture.frag");
 
-	Shader *depthwrite_Shader = new Shader(		SHADERS_PATH "/GBuffer_clone/Depthwrite.vert",
-			SHADERS_PATH "/GBuffer_clone/Depthwrite.frag");
+	rq->addShader(gbufferShader);
+	rq->addShader(gbuffer_normalMap_Shader);
+	rq->addCompositingShader(simpleTexShader);
+	rq->addCompositingShader(finalCompShader);
 
-	RenderQueue* rq = new RenderQueue();
-	RenderManager* rm = RenderManager::getInstance();
-	Camera* cam = new Camera();
-	Frustum* frustum = new Frustum(cam);
 
 
 	//--------------------------------------------//
@@ -113,9 +100,6 @@ int main() {
 	//Statisches "binden" unserer Uniforms/Objekte
 	//Muss man also nur einmal machen
 
-	gbufferShader->setBlurStrength(0);
-	gbuffer_normalMap_Shader->setBlurStrength(0);
-
 	rq->addVirtualObject(object01);
 	rq->addVirtualObject(object02);
 	rq->addVirtualObject(object03);
@@ -129,9 +113,11 @@ int main() {
 	rm->setLightPosition(glm::vec3(5,2,-2),0);
 
 	cam->setPosition(glm::vec3(0.0f, 1.0f, -6.0f));
-	cam->setCenter(glm::vec3(1.0f, 3.0f, 1.0f));
+	cam->setCenter(glm::vec3(0.0f, 0.0f, 0.0f));
 
 	frustum->updateModelMatrix();
+
+	rq->sortByAttributes();
 
 	while(!glfwWindowShouldClose(window)) {
 
@@ -182,27 +168,11 @@ int main() {
 		//----------------------------------------------------------------------------------------//
 
 		list<VirtualObject*> vo_list = rm->getRenderQueue()->getVirtualObjectList();
-		unsigned int i= 0;
-		while (!vo_list.empty()) {
-			unsigned int j= 0;
-			VirtualObject* vo_temp = vo_list.front();
-			vo_list.pop_front();
-			for (j = 0; j < vo_temp->getGraphicsComponent().size(); ++j) {
-				GraphicsComponent *gc_temp = vo_temp->getGraphicsComponent()[j];
-				rm->setCurrentGC(gc_temp);
 
-
-					depthwrite_Shader->useProgram();
-					rm->setCurrentShader(depthwrite_Shader);
-					depthwrite_Shader->uploadAllUniforms();
-
-
-				depthwrite_Shader->render(gc_temp);
-			}
-		}
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		vo_list = rm->getRenderQueue()->getVirtualObjectList();
-		i= 0;
+
 		while (!vo_list.empty()) {
 			unsigned int j= 0;
 			VirtualObject* vo_temp = vo_list.front();
@@ -272,7 +242,7 @@ int main() {
 		        glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		        glViewport((width/4)*3, (height/4)*3, width/4, height/4);
-		        glBindTexture(GL_TEXTURE_2D, fbo->getShadowMapHandle());
+		        glBindTexture(GL_TEXTURE_2D, fbo->getMaterialTextureHandle());
 		        glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		//show what's been drawn

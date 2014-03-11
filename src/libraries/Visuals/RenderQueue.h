@@ -20,6 +20,7 @@ public:
 	~RenderQueue();
 	RenderQueue* getRenderQueue(); 
 	void addShader(Shader* sh); //add Shader to ShaderList
+	void addCompositingShader(Shader* sh); //add Shader to ShaderList
 	void addVirtualObject(VirtualObject* vo); //add VO to VO list
 	void removeVirtualObject(VirtualObject* vo); //remove VO from list
 	VirtualObject* getNextObject(); //iterate list
@@ -31,6 +32,7 @@ public:
 	map<string, vector<GraphicsComponent* > > getGcTexStorage();
 	map<VirtualObject*, vector<GraphicsComponent* > > getVo2GcMap();
 	map<GraphicsComponent*, VirtualObject* > getGc2VoMap();
+
 	void sortByAttributes();
 	void sortByShaders(); //extracts GCs from all VOs in VO list and sorts them into the gcStorage map
 	void sortByTextures(); //extracts GCs from all VOs in VO list and sorts them into the gcTexStorage map
@@ -50,6 +52,7 @@ private:
 	map<GraphicsComponent*, vector<Shader*> > gc2shaderStorage;
 
 	list<Shader*> shaderList;
+	list<Shader*> compositingList;
 	list<Shader*> shaderListCopy;
 	list<Shader*> shaderListAlternate;
 	list<GraphicsComponent*> gcList;
