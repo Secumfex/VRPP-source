@@ -31,6 +31,7 @@ public:
 	void setModelMatrixGc(glm::mat4 matrix);
 	glm::mat4 getModelMatrix();
 
+
 	void setEmission(bool value);	//!< turns the emission either "on" or "off" @todo default value? @todo which value means what? Please use [at]param
 	void setShadow(bool value);		//!< turns the the ability to cast shadows of this component either "on" or "off" @todo default value? @todo which value means what? Please use [at]param
 	void setTransparency(bool value);	//!< sets if the component is transparent or not @todo default value? @todo which value means what? Please use [at]param
@@ -43,6 +44,7 @@ public:
 
 	void setGhostObject(glm::vec3 min, glm::vec3 max);
 	btGhostObject* getGhostObject();
+
 
 
 

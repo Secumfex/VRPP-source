@@ -7,6 +7,8 @@
  */
 
 #include <Visuals/VirtualObjectFactory.h>
+#include <string>
+
 
 VirtualObjectFactory::VirtualObjectFactory(){
 	mCube = NULL;
@@ -15,6 +17,7 @@ VirtualObjectFactory::VirtualObjectFactory(){
 
 
 //eingefügt
+
 void VirtualObjectFactory::set_float4(float f[4], float a, float b, float c, float d)
 {
 	f[0] = a;
@@ -113,7 +116,6 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, f
 			aiProcess_GenSmoothNormals|
 			aiProcess_GenUVCoords |
 			aiProcess_FlipUVs|
-			aiProcess_FlipUVs |
 			aiProcess_PreTransformVertices |
 			aiProcess_CalcTangentSpace
 
@@ -358,29 +360,23 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, f
         
 		GraphicsComponent* gc=new GraphicsComponent(aMesh,aMat);
         MaterialManager* mm= MaterialManager::getInstance();
-       /* GraphicsComponent* copie=new GraphicsComponent();
-        try {
-            copie=mm->makeMaterial(aMat->getName(),gc);
-            cout<<"SUCCESS: generated MATERIAL by name"<<endl;
-            }
-        catch (string param){
-            cout<<"\nFAILED: generate material by name"<<endl;;
-            }
-        */
 
-        //GraphicsComponent* copy=new GraphicsComponent();
 
         if(aMat->getName().find("custom") != std::string::npos){
         	cout<<"\nRead from mtl\n";
 
+
+ // diffuse
+
         	float c[4];
-        // diffuse
+
 		set_float4(c, 0.8f, 0.8f, 0.8f, 1.0f);
 		aiColor4D diffuse;
-		if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_DIFFUSE, &diffuse))
-			color4_to_float4(&diffuse, c);
-		//memcpy(aMat.diffuse, c, sizeof(c));
-		aMat->setDiffuse(glm::vec3(diffuse.r,diffuse.g, diffuse.b));
+		if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_DIFFUSE, &diffuse)){
+		color4_to_float4(&diffuse, c);
+		}
+		aMat->setDiffuse(glm::vec3(c[0], c[1], c[2]));
+
 
         // ambient
 		set_float4(c, 0.2f, 0.2f, 0.2f, 1.0f);
@@ -411,7 +407,9 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, f
 		//unsigned int max;
 		if(AI_SUCCESS != mtl->Get(AI_MATKEY_SHININESS, shininess))
 			shininess = 50.0;
-		aMat->setShininess(shininess/1000.0f);
+
+		aMat->setShininess(1.0f);
+//shininess/1000.0f
 
         }
         else{
@@ -426,16 +424,12 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, f
             }
         }
 
-
 		//Mesh und Material wird gelesen und in neuer GraphicsComponent gespeichert
 		gc->setGhostObject(aabbMin, aabbMax);
 
-
-		virtualObject->addGraphicsComponent(gc);
-
-
 		virtualObject->setPhysicsComponent(aabbMin, aabbMax, mass);
 	}
+
 
 
 	return virtualObject;

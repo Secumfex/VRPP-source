@@ -63,6 +63,13 @@ private:
     void makeMaterial_mat(GraphicsComponent* gc);
 
     void makeMaterial_genericSpecific(GraphicsComponent* gc);
+    //==================================
+    /*
+    void makeMaterial_shiny(GraphicsComponent* gc, std::string amount);
+    void makeMaterial_transparency(GraphicsComponent* gc, std::string amount);
+    void makeMaterial_black(GraphicsComponent* gc);
+     */
+
 
 };
 

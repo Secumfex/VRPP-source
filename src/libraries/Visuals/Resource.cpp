@@ -75,6 +75,7 @@ void Material :: setAmbient(glm::vec3 ambient){
 }
 void Material :: setDiffuse(glm::vec3 diffuse){
 	mDiffColor = diffuse;
+
 }
 void Material :: setSpecular(glm::vec3 specular){
 	mSpecColor = specular;
@@ -88,8 +89,6 @@ void Material :: setShininess(GLfloat term){
 void Material:: setTransparency(GLfloat term){
     mTransparency = term;
 }
-
-
 Texture* Material ::getAmbientMap(){
 	return mTextures[0];
 }

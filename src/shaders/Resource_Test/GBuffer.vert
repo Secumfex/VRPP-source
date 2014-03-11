@@ -20,6 +20,7 @@ void main(){
     passUVCoord = uvCoordAttribute;
 
     passPosition = uniformView * uniformModel * positionAttribute;
+
     gl_Position =  uniformPerspective * uniformView * uniformModel * positionAttribute;
 
     passNormal = vec3(transpose(inverse(uniformView * uniformModel)) * normalAttribute);

@@ -14,7 +14,7 @@ MaterialManager::MaterialManager() {
 MaterialManager::~MaterialManager() {
     
 	}
-    
+
 
 void MaterialManager::makeMaterial(std:: string matName, GraphicsComponent* gc){
 
@@ -122,18 +122,39 @@ void MaterialManager::makeMaterial(std:: string matName, GraphicsComponent* gc){
 		 makeMaterial_rough(gc);
 	}
 
-	else if(matName.find("mat") != std::string::npos){
+	else if(matName.find("matted") != std::string::npos){
 			 makeMaterial_mat(gc);
 		}
 
 	else if(matName.find("none") != std::string::npos){
 					makeMaterial_none(gc);}
 
-	else {makeMaterial_genericSpecific(gc);
-    }
+	else {makeMaterial_genericSpecific(gc);}
+
+    //=================================================
+   /* if(matName.find("shiny") != std::string::npos)
+		makeMaterial_shiny(gc,matName);
+    if(matName.find("transparency") != std::string::npos)
+	    makeMaterial_transparency(gc,matName);
+    
+    */
+    
+    //    emerald - Smaragd(grün)
+    
+    //    jade - Jade (grün)
+    //    obsidian - Obsidian (schwarz)
+    //    pearl - Perl
+    //    ruby - Rubin (rot)
+    //    turquoise - Türkis
 
 }
 
+
+/*
+void MaterialManager::makeMaterial_wood(GraphicsComponent* gc){
+
+}
+*/
 
 //basic
 
@@ -151,21 +172,20 @@ void MaterialManager::makeMaterial(std:: string matName, GraphicsComponent* gc){
 	    gc->setEmission(false);
 	    gc->setShadow(true);
 	    gc->setTransparency(false);
+	    gc->getMaterial()->setAmbient(glm::vec3(0.329412f,0.223529f,0.027451f));
+	    gc->getMaterial()->setDiffuse(glm::vec3(0.54f,0.26f,0.07f));
 	    gc->getMaterial()->setSpecular(glm::vec3(0.992157f,0.941176f,0.807843f));
 	    gc->getMaterial()->setShininess(27.89743616f/1000.0f);
 	    gc->getMaterial()->setName("Wood");
 	    std::cout<<"\n'wood' set"<<endl;
-            /*
-            Texture *tex_temp = new Texture();
-            tex_temp = new Texture(RESOURCES_PATH "/Wood.jpg");
-            gc->getMaterial()->setDiffuseMap(tex_temp);
-            */
 		}
 
 	void MaterialManager::makeMaterial_stone(GraphicsComponent* gc){
 	    gc->setEmission(false);
 	    gc->setShadow(true);
 	    gc->setTransparency(false);
+	    gc->getMaterial()->setAmbient(glm::vec3(0.329412f,0.223529f,0.027451f));
+	    gc->getMaterial()->setDiffuse(glm::vec3(0.48f,0.48f,0.48f));
 	    gc->getMaterial()->setSpecular(glm::vec3(0.992157f,0.941176f,0.807843f));
 	    gc->getMaterial()->setShininess(27.89743616f/1000.0f);
 	    gc->getMaterial()->setName("Stone");
@@ -197,6 +217,7 @@ void MaterialManager::makeMaterial(std:: string matName, GraphicsComponent* gc){
 
 }
 
+
 // Bronze
 	void MaterialManager::makeMaterial_bronze(GraphicsComponent* gc){
     gc->setEmission(false);
@@ -212,9 +233,10 @@ void MaterialManager::makeMaterial(std:: string matName, GraphicsComponent* gc){
     Texture *tex_temp = new Texture();
     tex_temp = new Texture(RESOURCES_PATH "/bronze.jpg");
     gc->getMaterial()->setDiffuseMap(tex_temp);
-     */
     std::cout<<"\n'bronze' set"<<endl;
+     */
 }
+
 
 // Chrom
 	void MaterialManager::makeMaterial_chrome(GraphicsComponent* gc){
@@ -222,7 +244,7 @@ void MaterialManager::makeMaterial(std:: string matName, GraphicsComponent* gc){
     gc->setShadow(true);
     gc->setTransparency(false);
     gc->getMaterial()->setAmbient(glm::vec3(0.25f,0.25f,0.25f));
-    gc->getMaterial()->setDiffuse(glm::vec3(0.4f,0.4f,0.4f));
+    gc->getMaterial()->setDiffuse(glm::vec3(0.62f,0.62f,0.62f));
     gc->getMaterial()->setSpecular(glm::vec3(0.774597f,0.774597f,0.774597f));
     gc->getMaterial()->setShininess(76.8f/1000.0f);
     gc->getMaterial()->setName("Chrome");
@@ -309,15 +331,15 @@ void MaterialManager::makeMaterial(std:: string matName, GraphicsComponent* gc){
 	    gc->getMaterial()->setAmbient(glm::vec3(gc->getMaterial()->getAmbient()) * 0.7f);
 	    gc->getMaterial()->setDiffuse(glm::vec3(gc->getMaterial()->getDiffuse()) *0.7f);
 	    gc->getMaterial()->setSpecular(glm::vec3(0.3f));
-	  	gc->getMaterial()->setShininess(32.0f);
+	  	gc->getMaterial()->setShininess((gc->getMaterial()->getShininess())/1000.0f*0.7f);
 	    std::cout<<"\n'darker' set"<<endl;
 	}
 
 	void MaterialManager::makeMaterial_brighter(GraphicsComponent* gc){
 		    gc->getMaterial()->setAmbient(glm::vec3(gc->getMaterial()->getAmbient()) * 1.3f);
 		    gc->getMaterial()->setDiffuse(glm::vec3(gc->getMaterial()->getDiffuse()) * 1.3f);
-		    gc->getMaterial()->setSpecular(glm::vec3(0.3f));
-		  	gc->getMaterial()->setShininess(32.0f);
+		 //   gc->getMaterial()->setSpecular(glm::vec3(0.3f));
+		  	//gc->getMaterial()->setShininess((gc->getMaterial()->getShininess())/1000.0f*1.3f);
 		    std::cout<<"\n'brighter' set"<<endl;
 		}
 
@@ -374,23 +396,23 @@ void MaterialManager::makeMaterial(std:: string matName, GraphicsComponent* gc){
 	 //   gc->getMaterial()->setAmbient(glm::vec3(0.01f));
 	//    gc->getMaterial()->setDiffuse(glm::vec3(0.01f,0.01f,0.01f));
 	    gc->getMaterial()->setSpecular(glm::vec3(0.75f));
-	    gc->getMaterial()->setShininess(0.5f);
+	    gc->getMaterial()->setShininess(50.0f/1000.0f);
 	    std::cout<<"\n'polished' set"<<endl;
 	}
 
 	void MaterialManager::makeMaterial_rough(GraphicsComponent* gc){
 //		    gc->getMaterial()->setAmbient(glm::vec3(0.01f));
 //		    gc->getMaterial()->setDiffuse(glm::vec3(0.01f,0.01f,0.01f));
-		    gc->getMaterial()->setSpecular(glm::vec3(0.5f));
-		    gc->getMaterial()->setShininess(32.0f);
+		    gc->getMaterial()->setSpecular(glm::vec3(0.1f));
+		    gc->getMaterial()->setShininess(1000.0f/1000.0f);
 		    std::cout<<"\n'rough' set"<<endl;
 		}
 
 	void MaterialManager::makeMaterial_mat(GraphicsComponent* gc){
 			  //  gc->getMaterial()->setAmbient(glm::vec3(0.01f));
 			 //   gc->getMaterial()->setDiffuse(glm::vec3(0.01f,0.01f,0.01f));
-			    gc->getMaterial()->setSpecular(glm::vec3(0.5f));
-			    gc->getMaterial()->setShininess(2.0f);
+			    gc->getMaterial()->setSpecular(gc->getMaterial()->getDiffuse());
+			    gc->getMaterial()->setShininess(15.0f/1000.f);
 			    std::cout<<"\n'mat' set"<<endl;
 			}
 
@@ -403,8 +425,7 @@ void MaterialManager::makeMaterial(std:: string matName, GraphicsComponent* gc){
 		}
 
 
-
-void MaterialManager::makeMaterial(std:: string matName, vector<GraphicsComponent*> gc){
+	void MaterialManager::makeMaterial(std:: string matName, vector<GraphicsComponent*> gc){
 
 		for(vector<GraphicsComponent*>::iterator it = gc.begin();it != gc.end(); ++it){
 			MaterialManager::makeMaterial(matName,*it);

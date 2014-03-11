@@ -54,7 +54,7 @@ int main() {
 
 	VirtualObjectFactory *voFactory = VirtualObjectFactory::getInstance();
 
-	//VirtualObject *object01 = voFactory->createVirtualObject(RESOURCES_PATH "/soda_can1.obj");
+	VirtualObject *object01 = voFactory->createVirtualObject(RESOURCES_PATH "/untitled.dae");
 	VirtualObject *object02 = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj");
 	VirtualObject *object03 = voFactory->createVirtualObject(RESOURCES_PATH "/cube.obj");
     VirtualObject *object04 = voFactory->createVirtualObject(RESOURCES_PATH "/cow.obj");
@@ -109,14 +109,14 @@ int main() {
 
 	while(!glfwWindowShouldClose(window)) {
 
-        // anpassen von Framebuffer
 		glfwMakeContextCurrent(window);
 
 		int newwidth, newheight;
 		glfwGetFramebufferSize(window, &newwidth, &newheight);
 		if(newwidth != width || newheight != height){
 			fbo->resize(newwidth, newheight);
-					rm->setPerspectiveMatrix(45.0f, (newwidth * 1.0f) / newheight , 0.1f, 100.f);
+			rm->setPerspectiveMatrix(45.0f, (newwidth * 1.0f) / newheight , 0.1f, 100.f);
+
 			width = newwidth;
 			height = newheight;
 		}
@@ -135,8 +135,8 @@ int main() {
 		//nice rotation of a small cube
 		mat4 modelMatrix02 = scale(translate(rotate(mat4(1.0f), degrees(angle), vec3(1.0f, 1.0f, 0.0f)), vec3(2.0f, 0.8f, -0.5f)), vec3(0.9f, 0.9f, 0.9f));
 
-		//mat4 modelMatrix03 = scale(translate(rotate(mat4(1.0f), degrees(angle), vec3(0.0f, 1.0f, 1.0f)), vec3(-2.0f, 0.2f, -0.5f)), vec3(0.3f, 0.3f, 0.3f));
-        // modelMatrix03=scale(mat4(1.0f), vec3(0.5f,0.5f,0.5f))*modelMatrix03;
+		mat4 modelMatrix03 = scale(translate(rotate(mat4(1.0f), degrees(angle), vec3(0.0f, 1.0f, 1.0f)), vec3(-2.0f, 0.2f, -0.5f)), vec3(0.3f, 0.3f, 0.3f));
+        modelMatrix03=scale(mat4(1.0f), vec3(0.5f,0.5f,0.5f))*modelMatrix03;
         mat4 modelMatrix04 = scale(translate(rotate(mat4(1.0f), degrees(angle), vec3(1.0f, 0.0f, 1.0f)), vec3(0.7f)),vec3(2.5f));
 
 		object03->setModelMatrix(modelMatrix01);
@@ -154,7 +154,7 @@ int main() {
 		gbufferShader->useProgram();
 		rm->setCurrentShader(gbufferShader);
 		//----------------------------------------------------------------------------------------//
-		//        This is da Main-Renderloop. Hier werden alle GC für den GBuffer gerendert       //
+		//        This is da Main-Renderloop. Hier werden alle GC fï¿½r den GBuffer gerendert     //
 		//----------------------------------------------------------------------------------------//
 
 		list<VirtualObject*> vo_list = rm->getRenderQueue()->getVirtualObjectList();
@@ -167,6 +167,7 @@ int main() {
 				GraphicsComponent *gc_temp = vo_temp->getGraphicsComponent()[j];
 				rm->setCurrentGC(gc_temp);
 
+
 				if(gc_temp->getMaterial()->hasNormalTexture()){
 					gbuffer_normalMap_Shader->useProgram();
 					rm->setCurrentShader(gbuffer_normalMap_Shader);
@@ -176,6 +177,7 @@ int main() {
 					rm->setCurrentShader(gbufferShader);
 					gbufferShader->uploadAllUniforms();
 				}
+
 
 				gbufferShader->render(gc_temp);
 			}

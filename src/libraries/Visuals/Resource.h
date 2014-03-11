@@ -40,6 +40,7 @@ public:
 
 
 
+
 	void setName(std::string name);//sets name
 	void setAmbient(glm::vec3 ambient);//sets ambient color
 	void setDiffuse(glm::vec3 diffuse);//sets diffuse color
@@ -55,10 +56,12 @@ public:
 	void setHeightMap(Texture* tex);//sets height texture
 	void setOpacityMap(Texture* tex);//sets opacity texture
 	void setSpecularMap(Texture* tex);//sets specular texture
+
 	void setReflectionMap(Texture* tex);
 	void setShininessMap(Texture* tex);
 	void setDisplacementMap(Texture* tex);
 	void setLightMap(Texture* tex);
+
 
 	Texture* getAmbientMap();//returns ambient texture
 	Texture* getDiffuseMap();//returns diffuse texture
@@ -94,6 +97,7 @@ public:
 	bool hasLightTexture();//checks wheather there's a light texture or not
 
 
+
 	//---------------MEMBER VARIABLES--------------------
 private:
 	std::string mName;
@@ -106,6 +110,7 @@ private:
 
 	GLfloat mShininess;
     GLfloat mTransparency;
+
 
 };
 

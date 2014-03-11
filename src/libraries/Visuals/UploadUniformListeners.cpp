@@ -191,6 +191,7 @@ void UploadUniformShininessListener::update(){
 }
 
 void UploadUniformTransparencyListener::update(){
+
 	Shader* shader = RenderManager::getInstance()->getCurrentShader();
 	GraphicsComponent* gc = RenderManager::getInstance()->getCurrentGC();
 

@@ -29,9 +29,13 @@ int main() {
 
 	myApp->setLabel("GBUFFER_CLONE_extreme");
 
+
 	GLFWwindow* window = RenderManager::getInstance()->getWindow();
 
 	VRState *myVRState = new VRState("LET IT SNOW");
+
+	glClearColor(1,1,1,0);
+
 
 	int width, height;
 	glfwGetFramebufferSize(window, &width, &height);
