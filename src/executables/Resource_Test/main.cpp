@@ -56,7 +56,6 @@ int main() {
 
 
 	VirtualObject *object01 = voFactory->createVirtualObject(RESOURCES_PATH "/untitled.dae");
-
 	VirtualObject *object02 = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj");
 	VirtualObject *object03 = voFactory->createVirtualObject(RESOURCES_PATH "/cube.obj");
     VirtualObject *object04 = voFactory->createVirtualObject(RESOURCES_PATH "/cow.obj");
@@ -93,7 +92,7 @@ int main() {
 	gbufferShader->setBlurStrength(0.5);
 	gbuffer_normalMap_Shader->setBlurStrength(0);
 
-	//rq->addVirtualObject(object01);
+	rq->addVirtualObject(object01);
 	rq->addVirtualObject(object02);
     rq->addVirtualObject(object04);
 	rq->addVirtualObject(object03);
@@ -142,7 +141,7 @@ int main() {
 
 		object03->setModelMatrix(modelMatrix01);
 		object02->setModelMatrix(modelMatrix02);
-		//object01->setModelMatrix(modelMatrix03);
+		object01->setModelMatrix(modelMatrix03);
         object04->setModelMatrix(modelMatrix04);
 
 		//--------------------------------------------//
