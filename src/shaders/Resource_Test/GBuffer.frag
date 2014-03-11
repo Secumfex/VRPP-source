@@ -23,6 +23,6 @@ void main(){
     positionOutput = passPosition;
     normalOutput = vec4(normalize(passNormal), 0);
     colorOutput = vec4(diffuseColor,0);
-    //texture(diffuseTexture, passUVCoord);
+   // texture(diffuseTexture, passUVCoord);
     materialOutput = vec4(shininess,specularColor);
 }
