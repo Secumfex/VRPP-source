@@ -7,12 +7,12 @@ class PhysicWorld;
 
 class PhysicWorldSimulationListener : public Listener {
 private:
-	float* delta_time_source;
+	float* delta_time_source;	/**< ?TODO */
 public:
 
-	/** \brief listener
+	/** \brief listener constructor
 	 *
-	 * currently not used
+	 * @param delta_time_source ?TODO
 	 */
 	PhysicWorldSimulationListener(float* delta_time_source = 0);
 

@@ -7,6 +7,7 @@
 
 #include "Visuals/VirtualObject.h"
 
+#include "BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h"
 
 using namespace std;
 
@@ -54,8 +55,7 @@ PhysicsComponent::PhysicsComponent(float width, float height, float depth, float
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
 
-PhysicsComponent::PhysicsComponent(float x, float y, float z, btVector3& normal, float mass){	//todo: change the type of normal
-
+PhysicsComponent::PhysicsComponent(float x, float y, float z, glm::vec3 normal, float mass){
 	hit = false;
 	rigidBody = addPlane(x,y,z,normal,mass);
 	rigidBody->setUserPointer(this);	// use bullet's user pointer to refer to this Object
@@ -63,14 +63,38 @@ PhysicsComponent::PhysicsComponent(float x, float y, float z, btVector3& normal,
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
 
+PhysicsComponent::PhysicsComponent(char* filename, float x, float y, float z){
+
+	hit = false;
+	rigidBody = addHeightfield(filename,x,y,z);
+	addCollisionFlag(1);	//static object
+	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
+
+	/*
+	FILE* heightfieldFile;
+	//char* path = "test/";		//pfad zum entspr. ordner
+	//char* temp = path + filename;		//char+char
+	heightfieldFile = fopen(filename,"r");
+	//btHeightfieldTerrainShape* heightmap = new btHeightfieldTerrainShape();
+	 */
+
+}
+
 PhysicsComponent::~PhysicsComponent() {
 
-	PhysicWorld::getInstance()->dynamicsWorld->removeCollisionObject(rigidBody);
-	btMotionState* motionState = rigidBody->getMotionState();
-	btCollisionShape* shape = rigidBody->getCollisionShape();
-	delete shape;
-	delete motionState;
-	delete rigidBody;
+	if(rigidBody != 0){
+		PhysicWorld::getInstance()->dynamicsWorld->removeCollisionObject(rigidBody);
+		btMotionState* motionState = rigidBody->getMotionState();
+		btCollisionShape* shape = rigidBody->getCollisionShape();
+		delete shape;
+		delete motionState;
+		delete rigidBody;
+	}
+
+	else
+		delete rigidBody;
+
+
 }
 
 void PhysicsComponent::translate(glm::vec3 pos){
@@ -94,6 +118,17 @@ void PhysicsComponent::addCollisionFlag(int flag) {
 	    case 16: rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_CHARACTER_OBJECT); break;
 	    case 32: rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_DISABLE_VISUALIZE_OBJECT); break;
 	    case 64: rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_DISABLE_SPU_COLLISION_PROCESSING); break;}
+}
+
+void PhysicsComponent::setCollisionFlag(int flag){
+	switch( flag)
+	  { case 1: rigidBody->setCollisionFlags(btCollisionObject::CF_STATIC_OBJECT); break;
+		case 2: rigidBody->setCollisionFlags(btCollisionObject::CF_KINEMATIC_OBJECT); break;
+		case 4: rigidBody->setCollisionFlags(btCollisionObject::CF_NO_CONTACT_RESPONSE); break;
+		case 8: rigidBody->setCollisionFlags(btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK); break;
+		case 16: rigidBody->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT); break;
+		case 32: rigidBody->setCollisionFlags(btCollisionObject::CF_DISABLE_VISUALIZE_OBJECT); break;
+		case 64: rigidBody->setCollisionFlags(btCollisionObject::CF_DISABLE_SPU_COLLISION_PROCESSING); break;}
 }
 
 btRigidBody* PhysicsComponent::addBox(float width, float height, float depth, float x, float y, float z, float mass){
@@ -136,25 +171,54 @@ btRigidBody* PhysicsComponent::addSphere(float radius, float x, float y, float z
 
 
 	btMotionState* motion = new btDefaultMotionState(t);
-	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,sphere);
+	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,sphere,inertia);
 	btRigidBody* body = new btRigidBody(info);
 	body->setLinearFactor(btVector3(1,1,1));
 	return body;
 }
 
-btRigidBody* PhysicsComponent::addPlane(float x, float y, float z, btVector3& normal, float mass){
+btRigidBody* PhysicsComponent::addPlane(float x, float y, float z, glm::vec3 normal, float mass){
 
 	btTransform t;
 	t.setIdentity();
-	t.setOrigin(btVector3(x,y,z));
+	t.setOrigin(btVector3(x ,y,z));
 	//btVector3 normal = btVector3(u,v,w);
 
-	btStaticPlaneShape* plane = new btStaticPlaneShape(normal,0);
+	btStaticPlaneShape* plane = new btStaticPlaneShape(btVector3(normal.x,normal.y,normal.z),0);
 
 	btMotionState* motion = new btDefaultMotionState(t);
 	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,plane);
 	btRigidBody* body = new btRigidBody(info);
 	body->setLinearFactor(btVector3(1,1,1));
+	return body;
+}
+
+btRigidBody* PhysicsComponent::addHeightfield(char* filename, float x, float y, float z){
+
+	int width,length;
+
+	FILE* heightfieldFile;
+	//char* path = "test/";		//pfad zum entspr. ordner
+	//char* temp = path + filename;		//char+char
+	heightfieldFile = fopen(filename,"r");
+
+	char* heightfieldData;
+	btScalar heightScale;
+	btScalar minHeight,maxHeight;
+	int upAxis;
+	PHY_ScalarType heightDataType;
+	bool flipQuadEdges;
+	btHeightfieldTerrainShape* groundShape = new btHeightfieldTerrainShape(width, length, heightfieldData, heightScale, minHeight, maxHeight, upAxis, heightDataType, flipQuadEdges);
+
+	btTransform t;
+	t.setIdentity();
+	t.setOrigin(btVector3(x,y,z));
+
+	float mass = 0.0;	//damit dann static
+
+	btDefaultMotionState* motion = new btDefaultMotionState(t);
+	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,groundShape);
+	btRigidBody* body = new btRigidBody(info);
 	return body;
 }
 

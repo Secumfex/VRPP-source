@@ -80,9 +80,9 @@ int main() {
 
 	VirtualObjectFactory *voFactory = VirtualObjectFactory::getInstance();
 
-	VirtualObject *object03 = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj");
-	VirtualObject *object02 = voFactory->createVirtualObject(RESOURCES_PATH "/cow.obj");
-	VirtualObject *object01 = voFactory->createVirtualObject(RESOURCES_PATH "/cube.obj");
+	VirtualObject *object03 = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj", VirtualObjectFactory::OTHER);
+	VirtualObject *object02 = voFactory->createVirtualObject(RESOURCES_PATH "/cow.obj", VirtualObjectFactory::OTHER);
+	VirtualObject *object01 = voFactory->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE);
 
 	GraphicsComponent* triangle = voFactory->getTriangle();
 
@@ -173,7 +173,7 @@ int main() {
 		gbufferShader->useProgram();
 		rm->setCurrentShader(gbufferShader);
 		//----------------------------------------------------------------------------------------//
-		//        This is da Main-Renderloop. Hier werden alle GC für den GBuffer gerendert       //
+		//        This is da Main-Renderloop. Hier werden alle GC fï¿½r den GBuffer gerendert       //
 		//----------------------------------------------------------------------------------------//
 
 		list<VirtualObject*> vo_list = rm->getRenderQueue()->getVirtualObjectList();
@@ -210,7 +210,7 @@ int main() {
 		//      to compose them on an image plane     //
 		//--------------------------------------------//
 
-		//      Hier findet das Compositing statt :) ist schon einiges kürzer, nicht wahr?
+		//      Hier findet das Compositing statt :) ist schon einiges kï¿½rzer, nicht wahr?
 
 		finalCompShader->useProgram();
 		rm->setCurrentShader(finalCompShader);

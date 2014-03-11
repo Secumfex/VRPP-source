@@ -78,8 +78,9 @@ void ApplicationState::bindObjects(){
 	notify("BINDING_OBJECTS_LISTENER");
 }
 
-VirtualObject* ApplicationState::createVirtualObject(std::string path, float mass){
-	VirtualObject* vo = VirtualObjectFactory::getInstance()->createVirtualObject(path, mass);
+
+VirtualObject* ApplicationState::createVirtualObject(std::string path, VirtualObjectFactory::BodyType bodyType, float mass){
+	VirtualObject* vo = VirtualObjectFactory::getInstance()->createVirtualObject(path, bodyType, mass);
 	renderQueue->addVirtualObject(vo);
 
 
