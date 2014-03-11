@@ -18,9 +18,9 @@ public:
 	FrameBufferObject(int width=800, int height=800);
 	virtual ~FrameBufferObject();
 
-	void createPositionTexture();
-	void createNormalTexture();
-	void createColorTexture();
+	void createPositionTexture();//creates a positionmap for a color attachment to write in
+	void createNormalTexture();//creates a normalmap for a color attachment to write in
+	void createColorTexture();//creates a colormap for a color attachment to write in
 	void createMaterialTexture();
 	void createShadowMap();
 	void createDepthBuffer();
