@@ -38,13 +38,12 @@ GraphicsComponent* mScreenFillTriangle;
 //---------------MEMBER FUNCTIONS--------------------
 public:
 
-VirtualObject* createNonAssimpVO();//creates a Cube from the NonAssimpFactory
+VirtualObject* createNonAssimpVO(float mass = 0.0);//creates a Cube from the NonAssimpFactory
 GraphicsComponent* getTriangle();//creates a single triangle for screenfilling
 
 VirtualObject* createVirtualObject(std::string filename, float mass = 0.0);//creates a VO from a system file with a certain mass
 
 private:
-
 void set_float4(float f[4], float a, float b, float c, float d);
 void color4_to_float4(const aiColor4D *c, float f[4]);
 };

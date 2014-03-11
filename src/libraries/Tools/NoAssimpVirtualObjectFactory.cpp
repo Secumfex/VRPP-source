@@ -72,7 +72,7 @@ Mesh* NoAssimpVirtualObjectFactory::createCubeMesh(){
 	return cubeMesh;
 }
 
-VirtualObject* NoAssimpVirtualObjectFactory::createCubeObject(){
+VirtualObject* NoAssimpVirtualObjectFactory::createCubeObject(float mass){
 	// create Virtual Object Instance with default PhysicsComponent
 	VirtualObject* cube = new VirtualObject(); 
 
@@ -81,7 +81,7 @@ VirtualObject* NoAssimpVirtualObjectFactory::createCubeObject(){
 	cube_gc->setGhostObject(glm::vec3((-1.0) * CubeGeometry::size,(-1.0) *CubeGeometry::size,(-1.0) *CubeGeometry::size) ,glm::vec3(CubeGeometry::size,CubeGeometry::size,CubeGeometry::size));
 	cube->addGraphicsComponent(cube_gc);	//add GraphicsComponent
 
-	cube->setPhysicsComponent(glm::vec3((-1.0) * CubeGeometry::size,(-1.0) *CubeGeometry::size,(-1.0) *CubeGeometry::size) ,glm::vec3(CubeGeometry::size,CubeGeometry::size,CubeGeometry::size));
+	cube->setPhysicsComponent(glm::vec3((-1.0) * CubeGeometry::size,(-1.0) *CubeGeometry::size,(-1.0) *CubeGeometry::size) ,glm::vec3(CubeGeometry::size,CubeGeometry::size,CubeGeometry::size), mass);
 
 	//return cube
 	return cube;

@@ -70,11 +70,11 @@ GraphicsComponent* VirtualObjectFactory::getTriangle(){
 	} return mScreenFillTriangle;
 }
 
-VirtualObject* VirtualObjectFactory::createNonAssimpVO(){
+VirtualObject* VirtualObjectFactory::createNonAssimpVO(float mass){
 
 	if(mCube == NULL){
 	NoAssimpVirtualObjectFactory *voFactory = new NoAssimpVirtualObjectFactory();
-	mCube = voFactory->createCubeObject();
+	mCube = voFactory->createCubeObject(mass);
 	}
 
 	return mCube;
