@@ -292,7 +292,7 @@ void MaterialManager::makeMaterial(std:: string matName, GraphicsComponent* gc){
     gc->setTransparency(false);
     gc->getMaterial()->setAmbient(glm::vec3(0.1f));
     gc->getMaterial()->setDiffuse(glm::vec3(0.01f,0.01f,0.01f));
-    gc->getMaterial()->setSpecular(glm::vec3(0.5f));
+    gc->getMaterial()->setSpecular(glm::vec3(0.0f,0.3f,0.9f));
     gc->getMaterial()->setShininess(32.0f);
     gc->getMaterial()->setName("Generic");
     std::cout<<"\n'generic material' set"<<endl;
@@ -307,7 +307,7 @@ void MaterialManager::makeMaterial(std:: string matName, GraphicsComponent* gc){
 
 	void MaterialManager::makeMaterial_darker(GraphicsComponent* gc){
 	    gc->getMaterial()->setAmbient(glm::vec3(gc->getMaterial()->getAmbient()) * 0.7f);
-	    gc->getMaterial()->setDiffuse(glm::vec3(gc->getMaterial()->getDiffuse()) *0.7f);
+	    gc->getMaterial()->setDiffuse(glm::vec3(gc->getMaterial()->getDiffuse()) * 0.7f);
 	    gc->getMaterial()->setSpecular(glm::vec3(0.3f));
 	  	gc->getMaterial()->setShininess(32.0f);
 	    std::cout<<"\n'darker' set"<<endl;
@@ -360,10 +360,10 @@ void MaterialManager::makeMaterial(std:: string matName, GraphicsComponent* gc){
 		}
 
 	void MaterialManager::makeMaterial_genericColor(GraphicsComponent* gc){
-	    gc->getMaterial()->setAmbient(glm::vec3(0.5f));
-	    gc->getMaterial()->setDiffuse(glm::vec3(0.01f,0.9f,0.9f));
-	    gc->getMaterial()->setSpecular(glm::vec3(0.3f));
-	    gc->getMaterial()->setShininess(20.0f);
+	  //  gc->getMaterial()->setAmbient(glm::vec3(0.5f));
+	  //  gc->getMaterial()->setDiffuse(glm::vec3(0.0f,0.3f,0.1f));
+	  //  gc->getMaterial()->setSpecular(glm::vec3(0.9f,0.7f,0.0f));
+	  //   gc->getMaterial()->setShininess(0.05f);
 	    std::cout<<"\n'generic color' set"<<endl;
 	}
 

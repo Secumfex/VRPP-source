@@ -397,7 +397,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 		aMat->setAmbient(glm::vec3(ambient.r, ambient.g, ambient.b));
 
         // specular
-		set_float4(c, 0.0f, 0.0f, 0.0f, 1.0f);
+		set_float4(c, 1.0f, 0.0f, 0.0f, 1.0f);
 		aiColor4D specular;
 		if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_SPECULAR, &specular))
 			color4_to_float4(&specular, c);

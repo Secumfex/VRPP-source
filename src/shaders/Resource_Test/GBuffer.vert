@@ -9,19 +9,15 @@ uniform mat4 uniformModel;
 uniform mat4 uniformView;
 uniform mat4 uniformProjection;
 
-out vec4 passPosition;
 out vec2 passUVCoord;
+out vec4 passPosition;
 out vec3 passNormal;
-out vec3 passTangent;
-
 
 
 void main(){
     passUVCoord = uvCoordAttribute;
-
     passPosition = uniformView * uniformModel * positionAttribute;
-    gl_Position =  uniformProjection * uniformView * uniformModel * positionAttribute;
-
     passNormal = vec3(transpose(inverse(uniformView * uniformModel)) * normalAttribute);
-    passTangent = vec3(transpose(inverse(uniformView * uniformModel)) * tangentAttribute);
+    
+    gl_Position =  uniformProjection * uniformView * uniformModel * positionAttribute;
 }
