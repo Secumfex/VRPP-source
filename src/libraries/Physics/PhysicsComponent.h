@@ -74,7 +74,7 @@ public:
 	 * constructor to create a heightfieldterrainshaped rigid body (btHeightfieldTerrainShape).
 	 * @param filename filename of the heightfield picture
 	 */
-	PhysicsComponent(char* filename);
+	PhysicsComponent(char* filename, float x, float y, float z);
 
 	/** \brief destructor
 	*
@@ -144,9 +144,10 @@ public:
 	 *
 	 * creates a heightfield rigid body with all necessary parts
 	 * @param filename name of the heightfield picture
+	 * @param x,y,z start position in the world
 	 * @return a bullet rigid body
 	 */
-	btRigidBody* addHeightfield(char* filename);
+	btRigidBody* addHeightfield(char* filename, float x, float y, float z);
 
 
 	/** \brief getter

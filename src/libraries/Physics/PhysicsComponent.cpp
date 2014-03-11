@@ -62,10 +62,10 @@ PhysicsComponent::PhysicsComponent(float x, float y, float z, btVector3& normal,
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
 
-PhysicsComponent::PhysicsComponent(char* filename){
+PhysicsComponent::PhysicsComponent(char* filename, float x, float y, float z){
 
 	hit = false;
-	rigidBody = addHeightfield(filename);
+	rigidBody = addHeightfield(filename,x,y,z);
 	addCollisionFlag(1);	//static object
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 
@@ -152,7 +152,7 @@ btRigidBody* PhysicsComponent::addSphere(float radius, float x, float y, float z
 
 
 	btMotionState* motion = new btDefaultMotionState(t);
-	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,sphere);
+	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,sphere,inertia);
 	btRigidBody* body = new btRigidBody(info);
 	body->setLinearFactor(btVector3(1,1,1));
 	return body;
@@ -162,7 +162,7 @@ btRigidBody* PhysicsComponent::addPlane(float x, float y, float z, btVector3& no
 
 	btTransform t;
 	t.setIdentity();
-	t.setOrigin(btVector3(x,y,z));
+	t.setOrigin(btVector3(x ,y,z));
 	//btVector3 normal = btVector3(u,v,w);
 
 	btStaticPlaneShape* plane = new btStaticPlaneShape(normal,0);
@@ -174,16 +174,33 @@ btRigidBody* PhysicsComponent::addPlane(float x, float y, float z, btVector3& no
 	return body;
 }
 
-btRigidBody* PhysicsComponent::addHeightfield(char* filename){
+btRigidBody* PhysicsComponent::addHeightfield(char* filename, float x, float y, float z){
+
+	int width,length;
 
 	FILE* heightfieldFile;
 	//char* path = "test/";		//pfad zum entspr. ordner
 	//char* temp = path + filename;		//char+char
 	heightfieldFile = fopen(filename,"r");
-	//btHeightfieldTerrainShape* heightmap = new btHeightfieldTerrainShape();
 
-	//btRigidBody* body = new btRigidBody();
-	//return body;
+	char* heightfieldData;
+	btScalar heightScale;
+	btScalar minHeight,maxHeight;
+	int upAxis;
+	PHY_ScalarType heightDataType;
+	bool flipQuadEdges;
+	btHeightfieldTerrainShape* groundShape = new btHeightfieldTerrainShape(width, length, heightfieldData, heightScale, minHeight, maxHeight, upAxis, heightDataType, flipQuadEdges);
+
+	btTransform t;
+	t.setIdentity();
+	t.setOrigin(btVector3(x,y,z));
+
+	float mass = 0.0;	//damit dann static
+
+	btDefaultMotionState* motion = new btDefaultMotionState(t);
+	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,groundShape);
+	btRigidBody* body = new btRigidBody(info);
+	return body;
 }
 
 btRigidBody* PhysicsComponent::getRigidBody(){
