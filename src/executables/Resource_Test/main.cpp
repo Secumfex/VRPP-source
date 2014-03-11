@@ -109,6 +109,7 @@ int main() {
 
 	while(!glfwWindowShouldClose(window)) {
 
+        // anpassen von Framebuffer
 		glfwMakeContextCurrent(window);
 
 		int newwidth, newheight;
