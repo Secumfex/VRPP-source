@@ -40,7 +40,7 @@ public:
 	* constructor to create a box shaped rigid body.
 	* @param min,max contain smallest and largest x, y, z values of a given model (in VirtualObjectFactory class)
 	*/
-	PhysicsComponent(glm::vec3 min, glm::vec3 max);
+	PhysicsComponent(glm::vec3 min, glm::vec3 max, float mass = 0.0);
 
 	/** \brief constructor
 	*

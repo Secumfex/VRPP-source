@@ -82,8 +82,8 @@ void VirtualObject::setPhysicsComponent(){
 	physicsComponent = new PhysicsComponent();
 }
 
-void VirtualObject::setPhysicsComponent(glm::vec3 min, glm::vec3 max){
-	physicsComponent = new PhysicsComponent(min, max);
+void VirtualObject::setPhysicsComponent(glm::vec3 min, glm::vec3 max, float mass){
+	physicsComponent = new PhysicsComponent(min, max, mass);
 }
 
 void VirtualObject::setPhysicsComponent(float radius, float x, float y, float z, float mass){

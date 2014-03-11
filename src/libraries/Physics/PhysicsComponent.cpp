@@ -15,7 +15,7 @@ PhysicsComponent::PhysicsComponent(){
 	hit = false;
 }
 
-PhysicsComponent::PhysicsComponent(glm::vec3 min, glm::vec3 max) {
+PhysicsComponent::PhysicsComponent(glm::vec3 min, glm::vec3 max, float mass) {
 
 	glm::vec3 boxValue = max-min;
 
@@ -26,8 +26,6 @@ PhysicsComponent::PhysicsComponent(glm::vec3 min, glm::vec3 max) {
 	float x = width / 2;
 	float y = height / 2;
 	float z = depth / 2;
-
-	int mass = 0;
 
 	hit = false;
 

@@ -93,9 +93,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(){
 	return new VirtualObject();
 }
 
-
-
-VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
+VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, float mass){
 	VirtualObject* virtualObject = new VirtualObject();
 
 	Assimp::Importer Importer;
@@ -473,7 +471,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 
 		virtualObject->addGraphicsComponent(gc);
 
-		virtualObject->setPhysicsComponent(aabbMin, aabbMax);
+		virtualObject->setPhysicsComponent(aabbMin, aabbMax, mass);
 	}
 
 
