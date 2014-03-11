@@ -27,7 +27,7 @@ void configureTestingApplication(){
 }
 
 void configureVirtualObjects(){
-	cubeObject = testingState->createVirtualObject(RESOURCES_PATH "/cube.obj");	// to have something in the scene
+	cubeObject = testingState->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE);	// to have something in the scene
 }
 
 void configurePhysics(){

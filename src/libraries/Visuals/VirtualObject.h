@@ -17,7 +17,6 @@ class VirtualObject{
 	vector<GraphicsComponent*> mGraphComponent;		/**< vector of graphic-components */
 
 public:
-
 //	vector<GraphicsComponent> graphicsComponent;	/**< pointer to the graphics Component of the VO*/
 
 	/** \brief constructor
@@ -145,7 +144,7 @@ public:
  	 * @param mass defines the behavior of the rigid body in the physics world
  	 * @return void
 	 */
-	void setPhysicComponent(float x, float y, float z, btVector3& normal, float mass);	//todo: change the type of normal
+	void setPhysicComponent(float x, float y, float z, glm::vec3 normal, float mass);
 
 	/** \brief getter
 	 *
