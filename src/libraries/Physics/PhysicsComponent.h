@@ -72,7 +72,7 @@ public:
 	/** \brief constructor
 	 *
 	 * constructor to create a heightfieldterrainshaped rigid body (btHeightfieldTerrainShape).
-	 * @param filename filename
+	 * @param filename filename of the heightfield picture
 	 */
 	PhysicsComponent(char* filename);
 
@@ -139,6 +139,14 @@ public:
 	 * @return a bullet rigid body
 	 */
 	btRigidBody* addPlane(float x, float y, float z, btVector3& normal, float mass);
+
+	/** \brief defines the rigid body as heightfield
+	 *
+	 * creates a heightfield rigid body with all necessary parts
+	 * @param filename name of the heightfield picture
+	 * @return a bullet rigid body
+	 */
+	btRigidBody* addHeightfield(char* filename);
 
 
 	/** \brief getter

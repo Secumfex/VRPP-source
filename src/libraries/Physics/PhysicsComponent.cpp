@@ -64,11 +64,18 @@ PhysicsComponent::PhysicsComponent(float x, float y, float z, btVector3& normal,
 
 PhysicsComponent::PhysicsComponent(char* filename){
 
+	hit = false;
+	rigidBody = addHeightfield(filename);
+	addCollisionFlag(1);	//static object
+	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
+
+	/*
 	FILE* heightfieldFile;
 	//char* path = "test/";		//pfad zum entspr. ordner
 	//char* temp = path + filename;		//char+char
 	heightfieldFile = fopen(filename,"r");
 	//btHeightfieldTerrainShape* heightmap = new btHeightfieldTerrainShape();
+	 */
 
 }
 
@@ -164,6 +171,18 @@ btRigidBody* PhysicsComponent::addPlane(float x, float y, float z, btVector3& no
 	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,plane);
 	btRigidBody* body = new btRigidBody(info);
 	body->setLinearFactor(btVector3(1,1,1));
+	return body;
+}
+
+btRigidBody* PhysicsComponent::addHeightfield(char* filename){
+
+	FILE* heightfieldFile;
+	//char* path = "test/";		//pfad zum entspr. ordner
+	//char* temp = path + filename;		//char+char
+	heightfieldFile = fopen(filename,"r");
+	//btHeightfieldTerrainShape* heightmap = new btHeightfieldTerrainShape();
+
+	btRigidBody* body = new btRigidBody();
 	return body;
 }
 
