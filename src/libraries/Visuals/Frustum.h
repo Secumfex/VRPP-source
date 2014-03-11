@@ -27,9 +27,9 @@ public:
 	Frustum();
 	Frustum(Camera *cam);
 	virtual ~Frustum();
-	bool inFrustum(GraphicsComponent *gc);
-	void setProjectionMatrix(GLfloat fovy, GLfloat aspect, GLfloat near, GLfloat far);
-	glm::mat4 getProjectionMatrix();
+	bool inFrustum(GraphicsComponent *gc);//return wheather or not a GC is (partially) inside of this frustum
+	void setPerspectiveMatrix(GLfloat fovy, GLfloat aspect, GLfloat near, GLfloat far);//sets the perspective matrix
+	glm::mat4 getPerspectiveMatrix();
 	void updateModelMatrix();
 	void setCamera(Camera *cam);
 
@@ -37,7 +37,7 @@ protected:
 
 	Camera *mCam;
 	btGhostObject *mFrustumVolume;
-	glm::mat4 mProjectionMatrix;
+	glm::mat4 mPerspectiveMatrix;
 };
 
 #endif /* FRUSTUM_H_ */
