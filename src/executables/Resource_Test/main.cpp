@@ -57,7 +57,7 @@ int main() {
 	VirtualObject *object01 = voFactory->createVirtualObject(RESOURCES_PATH "/soda_can1.obj");
 	VirtualObject *object02 = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj");
 	VirtualObject *object03 = voFactory->createVirtualObject(RESOURCES_PATH "/cube.obj");
-    VirtualObject *object04 = voFactory->createVirtualObject(RESOURCES_PATH "/cow.obj");
+    VirtualObject *object04 = voFactory->createVirtualObject(RESOURCES_PATH "/untitled.dae");
 
 	GraphicsComponent* triangle = voFactory->getTriangle();
 

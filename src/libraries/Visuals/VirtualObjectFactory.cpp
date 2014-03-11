@@ -113,7 +113,6 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 			aiProcess_GenSmoothNormals|
 			aiProcess_GenUVCoords |
 			aiProcess_FlipUVs|
-			aiProcess_FlipUVs |
 			aiProcess_PreTransformVertices |
 			aiProcess_CalcTangentSpace
 
@@ -364,7 +363,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
         
 		GraphicsComponent* gc=new GraphicsComponent(aMesh,aMat);
         MaterialManager* mm= MaterialManager::getInstance();
-        //GraphicsComponent* copy=new GraphicsComponent();
+
 
         if(aMat->getName().find("custom") != std::string::npos){
         	cout<<"\nRead from mtl\n";
@@ -375,8 +374,17 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 
         	float c[4];
 
+        	aiColor3D color(3.0f,0.0f,0.0f);
+
+        	mtl->Get(AI_MATKEY_COLOR_DIFFUSE,color);
+
+        	std::cout<<color.r<<color.g<<color.b<<"anderer weg"<<endl;
+
 		set_float4(c, 0.8f, 0.8f, 0.8f, 1.0f);
 		aiColor4D diffuse;
+		std::cout<<"-------------------------------------------------";
+		std::cout<<diffuse.r<<diffuse.g<<diffuse.b<<endl;
+		std::cout<<"-------------------------------------------------";
 		if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_DIFFUSE, &diffuse)){
 
 		std::cout<<diffuse.r<<diffuse.g<<diffuse.b<<endl;
@@ -400,6 +408,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 			color4_to_float4(&ambient, c);
 		//memcpy(aMat.ambient, c, sizeof(c));
 		aMat->setAmbient(glm::vec3(ambient.r, ambient.g, ambient.b));
+		std::cout<<ambient.r<<ambient.g<<ambient.b<<"das war ambient"<<endl;
 
         // specular
 		set_float4(c, 0.0f, 0.0f, 0.0f, 1.0f);

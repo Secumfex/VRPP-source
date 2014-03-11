@@ -122,7 +122,7 @@ void MaterialManager::makeMaterial(std:: string matName, GraphicsComponent* gc){
 		 makeMaterial_rough(gc);
 	}
 
-	else if(matName.find("mat") != std::string::npos){
+	else if(matName.find("matted") != std::string::npos){
 			 makeMaterial_mat(gc);
 		}
 
