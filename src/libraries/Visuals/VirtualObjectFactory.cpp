@@ -80,11 +80,6 @@ VirtualObject* VirtualObjectFactory::createNonAssimpVO(){
 	return mCube;
 }
 
-
-VirtualObject* VirtualObjectFactory::createVirtualObject(){
-	return new VirtualObject();
-}
-
 VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, float mass){
 	VirtualObject* virtualObject = new VirtualObject();
 
@@ -444,19 +439,4 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, f
 
 
 	return virtualObject;
-}
-
-// TODO: complete them
-    VirtualObject* VirtualObjectFactory::createVirtualObject(vector<GraphicsComponent*> graphcomps){
-	VirtualObject* virtualObject = new VirtualObject();
-	//TODO: alle GraphicsComponents werden an das VO übergeben
-
-	return virtualObject;
-}
-
-VirtualObject* VirtualObjectFactory::copyVirtualObject(VirtualObject vo){
-	VirtualObject* virtualObject = new VirtualObject();
-	//TODO: variable wird überfuehrt
-
-	return createNonAssimpVO();
 }

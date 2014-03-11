@@ -38,15 +38,10 @@ GraphicsComponent* mScreenFillTriangle;
 //---------------MEMBER FUNCTIONS--------------------
 public:
 
+VirtualObject* createNonAssimpVO();//creates a Cube from the NonAssimpFactory
+GraphicsComponent* getTriangle();//creates a single triangle for screenfilling
 
-
-VirtualObject* createNonAssimpVO();
-GraphicsComponent* getTriangle();
-
-VirtualObject* createVirtualObject();
-VirtualObject* createVirtualObject(std::string filename, float mass = 0.0);
-VirtualObject* createVirtualObject(vector<GraphicsComponent*> graphcomps);
-VirtualObject* copyVirtualObject(VirtualObject vo);
+VirtualObject* createVirtualObject(std::string filename, float mass = 0.0);//creates a VO from a system file with a certain mass
 
 private:
 

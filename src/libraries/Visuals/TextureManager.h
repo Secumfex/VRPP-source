@@ -22,8 +22,10 @@ public:
 	friend class Singleton<TextureManager>;
 	TextureManager();
 	virtual ~TextureManager();
-	bool createTextureHandle(string filename);
-	GLuint getTextureHandle(string filename);
+	bool createTextureHandle(string filename);//creates a Texture and inserts a texture handle into a map
+	GLuint getTextureHandle(string filename);//returns the desired Texture by its name
+
+protected:
 	map<string, GLuint> mTextureHandles;
 
 };

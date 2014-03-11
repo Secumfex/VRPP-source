@@ -29,9 +29,9 @@ public:
 	virtual ~Frustum();
 	bool inFrustum(GraphicsComponent *gc);//return wheather or not a GC is (partially) inside of this frustum
 	void setPerspectiveMatrix(GLfloat fovy, GLfloat aspect, GLfloat near, GLfloat far);//sets the perspective matrix
-	glm::mat4 getPerspectiveMatrix();
-	void updateModelMatrix();
-	void setCamera(Camera *cam);
+	glm::mat4 getPerspectiveMatrix();//returns the perspective matrix
+	void updateModelMatrix();//updates the model matrix of the frustum from the camera
+	void setCamera(Camera *cam);//sets a camera, the frustum takes it physical appearance from
 
 protected:
 

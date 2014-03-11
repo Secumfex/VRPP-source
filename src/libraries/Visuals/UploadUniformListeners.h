@@ -3,6 +3,18 @@
 
 #include "Patterns/Listener.h"
 
+
+
+	/*
+	 * This class provides a number of Listeners for our Shaders.
+	 * These Listeners are able to upload uniform variables
+	 * from our OpenGL program to our GLSL program.
+	 * The Shader class creates them, directly after compiling
+	 * the shader, in order to just notify them. This way, we
+	 * don't have to upload every uniform variable seperately,
+	 * but they can get all they need by themselves.
+	 */
+
 class UploadUniformModelMatrixListener : public Listener{
 
  	public:
