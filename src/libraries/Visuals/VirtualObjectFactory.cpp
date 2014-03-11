@@ -389,7 +389,6 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename){
 			color4_to_float4(&ambient, c);
 		//memcpy(aMat.ambient, c, sizeof(c));
 		aMat->setAmbient(glm::vec3(ambient.r, ambient.g, ambient.b));
-		std::cout<<ambient.r<<ambient.g<<ambient.b<<"das war ambient"<<endl;
 
         // specular
 		set_float4(c, 0.0f, 0.0f, 0.0f, 1.0f);
