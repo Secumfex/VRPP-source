@@ -64,3 +64,20 @@ PrintValueListener::PrintValueListener(float* value, std::string message){
 void PrintValueListener::update(){
 	std::cout << message << *value << std::endl;
 }
+
+#include "IO/Camera.h"
+
+PrintCameraStatusListener::PrintCameraStatusListener(Camera* cam){
+	this->cam = cam;
+}
+
+void PrintCameraStatusListener::update(){
+	glm::vec3 pos 	= cam->getPosition();
+	glm::vec3 dir 	= cam->getViewDirection();
+	float phi 		= cam->getPhi();
+	float theta		= cam->getTheta();
+
+	std::cout << "Cam pos : "      << pos.x << " , " << pos.y << " , "    << pos.z << std::endl;
+	std::cout << "Cam dir : "      << dir.x << " , " << dir.y << " , "    << dir.z << std::endl;
+	std::cout << "rotation phi : " << phi   << " , pitch theta : " 		  << theta << std::endl;
+}

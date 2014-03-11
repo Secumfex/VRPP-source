@@ -37,7 +37,7 @@ public:
 
 	virtual void activate(); //!< activation of state --> binding objects
 
-	VirtualObject* createVirtualObject(std::string path); //!< create Object from path and add it to renderQueue
+	VirtualObject* createVirtualObject(std::string path, float mass = 0.0f); //!< create Object from path and add it to renderQueue
 	void addVirtualObject(VirtualObject* vo); //!< add existing VO to renderQueue
 
 	/*Application State Listeners*/

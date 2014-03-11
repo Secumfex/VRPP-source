@@ -27,7 +27,8 @@ void configureTestingApplication(){
 }
 
 void configureVirtualObjects(){
-	cubeObject = testingState->createVirtualObject(RESOURCES_PATH "/cube.obj");	// to have something in the scene
+	cubeObject = testingState->createVirtualObject(RESOURCES_PATH "/cow.obj", 5.0f);	// to have something in the scene
+	testingState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cubeObject));
 }
 
 void configurePhysics(){
@@ -40,6 +41,7 @@ void configurePhysics(){
 
 	btRigidBody* camBody = playercam->getRigidBody();
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(camBody);
+
 }
 
 void configureInputHandler(){
@@ -57,6 +59,10 @@ void configureInputHandler(){
 	testingInputHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( testingState->getCamera()), 				GLFW_KEY_DOWN );
 
 	testingInputHandler->attachListenerOnKeyPress(new PrintValueListener( IOManager::getInstance()->getDeltaTimePointer(), "d_t : "), GLFW_KEY_SPACE );
+	testingInputHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( testingState->getCamera()), GLFW_KEY_SPACE );
+
+	SelectionHandler* sh = testingInputHandler->getSelectionHandler();
+	testingInputHandler->attachListenerOnMouseButtonPress(new ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener(sh, testingState->getCamera(),50.0f), GLFW_MOUSE_BUTTON_RIGHT);
 
 }
 

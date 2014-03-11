@@ -44,14 +44,7 @@ public:
 	void update();
 };
 
-/// Listener which prints the current configuration of the given Camera Object
-class PrintCameraStatusListener : public Listener {
-private:
-	Camera* cam;
-public:
-	PrintCameraStatusListener(Camera* cam);
-	void update();
-};
+
 
 /// Listener which sets the direction of the given Camera Object
 class TurnCameraListener : public Listener {
@@ -71,5 +64,14 @@ private:
 	float strength;
 public:
 	ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener(SelectionHandler* selectionHandler, Camera* cam, float strength = 100.0f);
+	void update();
+};
+
+/// Listener which updates the VirtualObject Modelmatrix by reading the PhysicsComponent Modelmatrix
+class UpdateVirtualObjectModelMatrixListener : public Listener{
+private:
+	VirtualObject* vo;
+public:
+	UpdateVirtualObjectModelMatrixListener(VirtualObject* vo);
 	void update();
 };

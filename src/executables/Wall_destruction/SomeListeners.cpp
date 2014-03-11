@@ -133,21 +133,6 @@ void UpdatePhysicsWorldListener::update(){
 	pw->dynamicsWorld->stepSimulation(0.1,5,0.02);
 }
 
-PrintCameraStatusListener :: PrintCameraStatusListener(Camera* cam){
-	this->cam = cam;
-}
-
-void PrintCameraStatusListener::update(){
-	glm::vec3 pos 	= cam->getPosition();
-	glm::vec3 dir 	= cam->getViewDirection();
-	float phi 		= cam->getPhi();
-	float theta		= cam->getTheta();
-
-	std::cout << "Cam pos : " << pos.x << " , " << pos.y << " , " << pos.z << std::endl;
-	std::cout << "Cam dir : " << dir.x << " , " << dir.y << " , " << dir.z << std::endl;
-	std::cout << "rotation phi : " << phi   << " , pitch theta : " 		  << theta << std::endl;
-}
-
 SetCameraDirectionListener::SetCameraDirectionListener(Camera* cam, glm::vec3 direction){
 	this->cam = cam;
 	this->direction = direction;
