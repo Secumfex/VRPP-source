@@ -5,22 +5,42 @@
 
 using namespace std;
 
-/// a class which is able to attach and call listeners
+/** \brief a class which is able to attach and call listeners
+ *
+ */
 class Subject{
 
 public:
-	void attach(Listener* listener); //method to subscribe to the subject
+	/** \brief method to subscribe to the subject
+	 *
+	 * @param listener
+	 */
+	void attach(Listener* listener);
 
-	void detach(Listener* listener); 	//method to "de-subscribe" a listener
+	/** \brief method to "de-subscribe" a listener
+	 *
+	 * @param listener
+	 */
+	void detach(Listener* listener);
 
-	void notify();		//this method sends the updates to the attached listeners
+	/** \brief this method sends the updates to the attached listeners
+	 *
+	 */
+	void notify();
 
-	void notify(string name); 	//method to notify specific listeners
+	/** \brief method to notify specific listeners
+	 *
+	 * @param name
+	 */
+	void notify(string name);
 private:
-	list<Listener*> listeners;	//list of all listeners attached to the Subject
+	list<Listener*> listeners;	/**<  list of all listeners attached to the Subject */
 
 protected:
-	Subject() {};	//protected-constructor so the class becomes abstract
+	/** \brief protected-constructor so the class becomes abstract
+	 *
+	 */
+	Subject() {};
 };
 
 #endif /* SUBJECT_H_ */

@@ -19,18 +19,41 @@ class Application : public Singleton<Application>, public StateMachine, public S
 friend class Singleton<Application>;
 
 private:
-	string label;
-	bool shouldTerminate;
-	bool initialized;
+	string label;			/**< !docu pls! */
+	bool shouldTerminate;	/**< !docu pls! */
+	bool initialized;		/**< !docu pls! */
 
 public:
-	void initialize(); //!< initialize RenderManager and open window
-	void terminate();	//!< break program cycle loop
+	/** \brief initialize RenderManager and open window
+	 *
+	 */
+	void initialize();
 
-	bool setState(State* state);	//!< calls statechange listener @return true if successful @return false if unsuccessful
-	bool setState(std::string state);	//!<returns true if successful, false if unsuccessful, calls statechange listeners
+	/** \brief break program cycle loop
+	 *
+	 */
+	void terminate();
 
-	Application(std::string label = "");	//!<Constructor initializes GLFW Window and GLEW for further functionality
+	/** \brief calls statechange listener
+	 *
+	 * @param state state as State reference
+	 * @return true if successful
+	 * @return false if unsuccessful
+	 */
+	bool setState(State* state);
+
+	/** \brief calls statechange listeners
+	 *
+	 * @param state state as string
+	 * @return true if successful
+	 * @return false if unsuccessful
+	 */
+	bool setState(std::string state);
+
+	/** \brief Constructor initializes GLFW Window and GLEW for further functionality
+	 *
+	 */
+	Application(std::string label = "");
 
 	/*! @brief sets the label.
 	 *
@@ -38,17 +61,52 @@ public:
 	 */
 	void setLabel(std::string label);
 
+	/** \brief getter
+	 *
+	 * @return label (string)
+	 */
 	std::string getLabel();
 
 	/*Application Listeners*/
-	void attachListenerOnStateChange(Listener* listener);           //!< attach a listener that will be called at any successful statechange
-	void attachListenerOnBeginningProgramCycle(Listener* listener); //!< attach a listener that will be called at a beginning program cycle (run()-method)
-	void attachListenerOnProgramTermination(Listener* listener);    //!< attach a listener that will be called at program termination
-	void attachListenerOnProgramInitialization(Listener* listener);    //!< attach a listener that will be called at program initialization
-	void attachListenerOnRenderManagerFrameLoop(Listener* listener);	//!< attach a listener to RenderManager through Application, will be called at beginning Frame Rendering Process
+	/** \brief attach listener
+	 *
+	 * attach a listener that will be called at any successful statechange
+	 * @param listener
+	 */
+	void attachListenerOnStateChange(Listener* listener);
 
-	void run(); //!< enter program cycle loop
+	/** \brief attach listener
+	 *
+	 * attach a listener that will be called at a beginning program cycle (run()-method)
+	 * @param listener
+	 */
+	void attachListenerOnBeginningProgramCycle(Listener* listener);
 
+	/** \brief attach listener
+	 *
+	 * attach a listener that will be called at program termination
+	 * @param listener
+	 */
+	void attachListenerOnProgramTermination(Listener* listener);
+
+	/** \brief attach listener
+	 *
+	 * attach a listener that will be called at program initialization
+	 * @param listener
+	 */
+	void attachListenerOnProgramInitialization(Listener* listener);
+
+	/** \brief attach listener
+	 *
+	 * attach a listener to RenderManager through Application, will be called at beginning Frame Rendering Process
+	 * @param listener
+	 */
+	void attachListenerOnRenderManagerFrameLoop(Listener* listener);
+
+	/** \brief enter program cycle loop
+	 *
+	 */
+	void run();
 
 };
 
