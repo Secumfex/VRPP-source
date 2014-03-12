@@ -14,7 +14,7 @@
 Application* 	testingApp;
 VRState* 		testingState;
 IOHandler*   	testingInputHandler;
-VirtualObject*  cubeObject;
+VirtualObject*  cowObject;
 PlayerCamera*   playercam;
 
 void configureTestingApplication(){
@@ -27,7 +27,18 @@ void configureTestingApplication(){
 }
 
 void configureVirtualObjects(){
-	cubeObject = testingState->createVirtualObject(RESOURCES_PATH "/cube.obj");	// to have something in the scene
+	cowObject = testingState->createVirtualObject(RESOURCES_PATH "/cow.obj", VirtualObjectFactory::OTHER, 5.0f);	// to have something in the scene
+	cowObject->translate(glm::vec3(0.0f,4.0f,0.0f));
+	testingState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cowObject));
+	
+	VirtualObject* groundObject = testingState->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_ground.dae", VirtualObjectFactory::OTHER);
+
+	VirtualObject* wallObject1 = testingState->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_wall1.dae", VirtualObjectFactory::OTHER);	// to have something in the scene
+	VirtualObject* wallObject2 = testingState->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_wall2.dae", VirtualObjectFactory::OTHER);	// to have something in the scene
+	VirtualObject* cubeObject2 = testingState->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::OTHER, 10.0f);	// to have something in the scene
+	cubeObject2->translate(glm::vec3(0.0f,2.0f,0.0f));
+	testingState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cubeObject2));
+	
 }
 
 void configurePhysics(){
@@ -39,7 +50,9 @@ void configurePhysics(){
     	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(groundRigidBody);
 
 	btRigidBody* camBody = playercam->getRigidBody();
+	playercam->setPosition(0.0f,2.0f,5.0f);
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(camBody);
+
 }
 
 void configureInputHandler(){
@@ -56,13 +69,20 @@ void configureInputHandler(){
 	testingInputHandler->attachListenerOnKeyPress(new TurnCameraListener(		 testingState->getCamera(), 0.0f, -0.1f),	GLFW_KEY_DOWN );	// pressing 'down' : turn camera down by 0.1 radiens
 	testingInputHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( testingState->getCamera()), 				GLFW_KEY_DOWN );
 
-	testingInputHandler->attachListenerOnKeyPress(new PrintValueListener( IOManager::getInstance()->getDeltaTimePointer(), "d_t : "), GLFW_KEY_SPACE );
+	testingInputHandler->attachListenerOnKeyPress(new PrintValueListener( IOManager::getInstance()->getDeltaTimePointer(), "d_t : "), GLFW_KEY_T );
+	testingInputHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( testingState->getCamera()), GLFW_KEY_I );
+	testingInputHandler->attachListenerOnKeyPress(new ApplyLinearImpulseOnRigidBody(playercam->getRigidBody(), btVector3(0.0f,5.0f,0.0f)), GLFW_KEY_SPACE );
+	testingInputHandler->attachListenerOnKeyPress(new SetCameraPositionListener(playercam, glm::vec3(0.0f,5.0f,0.0f)), GLFW_KEY_R );
+
+
+	SelectionHandler* sh = testingInputHandler->getSelectionHandler();
+	testingInputHandler->attachListenerOnMouseButtonPress(new ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener(sh, testingState->getCamera(),50.0f), GLFW_MOUSE_BUTTON_RIGHT);
 
 }
 
 void configureRendering(){
 	/*customize Rendermanager, Renderloop, etc. via framelisteners and such*/
-	testingApp->attachListenerOnProgramInitialization(	new SetDefaultShaderListener( new Shader (SHADERS_PATH "/Phong_Test/phong.vert", SHADERS_PATH "/Phong_Test/phong.frag")));
+	testingApp->attachListenerOnProgramInitialization(	new SetDefaultShaderListener( new Shader (SHADERS_PATH "/Phong_Test_Textures/phong.vert", SHADERS_PATH "/Phong_Test_Textures/phong.frag")));
 	testingApp->attachListenerOnRenderManagerFrameLoop(	new RenderloopPlaceHolderListener());
 
 	testingApp->attachListenerOnProgramInitialization(	new SetClearColorListener(1.0f,1.0f,1.0f));	// white background

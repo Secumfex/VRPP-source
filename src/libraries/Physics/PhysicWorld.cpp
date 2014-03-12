@@ -57,6 +57,7 @@ void PhysicWorld::screenPosToWorldRay(double mouseX, double mouseY, int screenWi
 	glm::vec3 rayDirection_world(rayEnd_world - rayStart_world);
 	rayDirection_world = glm::normalize(rayDirection_world);
 
+	//outOrigin = outOrigin + 0.5f;		//uncomment if PlayerCamera is used
 	outDirection = outDirection*1000.0f;
 
 	btCollisionWorld::ClosestRayResultCallback RayCallback(btVector3(outOrigin.x, outOrigin.y, outOrigin.z), btVector3(outDirection.x, outDirection.y, outDirection.z));

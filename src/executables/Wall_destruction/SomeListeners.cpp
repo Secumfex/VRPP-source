@@ -133,21 +133,6 @@ void UpdatePhysicsWorldListener::update(){
 	pw->dynamicsWorld->stepSimulation(0.1,5,0.02);
 }
 
-PrintCameraStatusListener :: PrintCameraStatusListener(Camera* cam){
-	this->cam = cam;
-}
-
-void PrintCameraStatusListener::update(){
-	glm::vec3 pos 	= cam->getPosition();
-	glm::vec3 dir 	= cam->getViewDirection();
-	float phi 		= cam->getPhi();
-	float theta		= cam->getTheta();
-
-	std::cout << "Cam pos : " << pos.x << " , " << pos.y << " , " << pos.z << std::endl;
-	std::cout << "Cam dir : " << dir.x << " , " << dir.y << " , " << dir.z << std::endl;
-	std::cout << "rotation phi : " << phi   << " , pitch theta : " 		  << theta << std::endl;
-}
-
 SetCameraDirectionListener::SetCameraDirectionListener(Camera* cam, glm::vec3 direction){
 	this->cam = cam;
 	this->direction = direction;
@@ -216,12 +201,13 @@ void ShootSphereListener::update(){
 	btVector3 dir = btVector3(view.x, view.y, view.z);
 	btScalar speed = 30;
 
-	VirtualObject* 	sphere = 	VirtualObjectFactory::getInstance()->createVirtualObject(RESOURCES_PATH "/sphere.obj");
+	VirtualObject* 	sphere = 	VirtualObjectFactory::getInstance()->createVirtualObject(RESOURCES_PATH "/sphere.obj", VirtualObjectFactory::SPHERE);
 
 	state->addVirtualObject(sphere);
-	sphere->setModelMatrix(glm::translate(glm::mat4(1.0f), glm::vec3(start.x, start.y, start.z)));
-	sphere->getPhysicsComponent()->~PhysicsComponent();
-	sphere->setPhysicsComponent(2.0f, start.x, start.y, start.z, 3.0f);
+
+	//sphere->setModelMatrix(glm::translate(glm::mat4(1.0f), glm::vec3(start.x, start.y, start.z)));
+	//sphere->getPhysicsComponent()->~PhysicsComponent();
+	//sphere->setPhysicsComponent(0.5f, start.x, start.y, start.z, 3.0f);
 	sphere->physicsComponent->getRigidBody()->setLinearVelocity(dir*speed);
 	state->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(sphere));
 
@@ -245,4 +231,22 @@ void ShootSphereListener::update(){
 
 	state->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube));
 	*/
+}
+
+
+ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener::ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener(SelectionHandler* selectionHandler, Camera* cam, float strength){
+	this->selectionHandler = selectionHandler;
+	this->cam = cam;
+	this->strength = strength; 
+}
+
+void ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener::update(){
+	if (selectionHandler->somethingIsSelected()){
+		/*Pray and Cast*/
+		btRigidBody* rigidBody = (static_cast< PhysicsComponent* > (selectionHandler->getCurrentSelection()->getUserPointer()))->getRigidBody();
+		/*pray some more and apply force*/
+		glm::vec3 force = cam->getViewDirection() * strength;
+		std::cout << force.x <<", "<< force.y <<", "<< force.z << std::endl;
+		rigidBody->applyCentralImpulse(btVector3(force.x,force.y,force.z));
+	}
 }

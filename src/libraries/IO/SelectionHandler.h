@@ -8,7 +8,7 @@ class PhysicWorld;
 
 class SelectionHandler : public Subject{
 protected:
-	void* currentSelection;
+	const btCollisionObject* currentSelection;
 	PhysicWorld* physicWorld;
 public:
 	SelectionHandler(PhysicWorld* pw = 0);
@@ -17,7 +17,7 @@ public:
 	void trySelection(glm::vec3& from, glm::vec3& to);	//!< attempt ray picking from origin in direction of to
 	virtual void handleSelection();	//!< handle selection
 
-	void* getCurrentSelection();	//!< get current selection pointer (to where-ever) 
+	const btCollisionObject* getCurrentSelection();	//!< get current selection pointer (to where-ever) 
 
 	void attachListenerOnHandleSelection(Listener* listener);	//!< attach Listener on Selection Handling 
 	void attachListenerOnTrySelection(Listener* listener); 	//!< attach Listener on Selection attempt
