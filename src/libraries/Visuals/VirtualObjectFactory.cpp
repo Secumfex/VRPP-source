@@ -469,8 +469,12 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 		gc->setBoundingBox(aabbMin, aabbMax);
 
 
-		glm::vec3 normal=aabbMax;
+
 		virtualObject->addGraphicsComponent(gc);
+		glm::vec3 normal;
+		normal.x= aabbMin.y*aabbMax.z - aabbMin.z*aabbMax.y;
+		normal.y= aabbMin.z*aabbMax.x - aabbMin.x*aabbMax.z;
+		normal.z= aabbMin.x*aabbMax.y - aabbMin.y*aabbMax.x;
 
 		switch(bodyType){
 		case CUBE:		virtualObject->setPhysicsComponent(aabbMax.x-aabbMin.x, aabbMax.y-aabbMin.y, aabbMax.z-aabbMin.z, aabbMax.x, aabbMax.y, aabbMax.z, mass);
