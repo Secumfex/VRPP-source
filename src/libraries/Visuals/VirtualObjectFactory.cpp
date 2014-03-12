@@ -131,6 +131,9 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, f
 
 	cout<<"Import of scene " <<filename.c_str()<<" succeeded."<<endl;
 
+	glm::vec3 physics_min = glm::vec3(FLT_MAX,FLT_MAX,FLT_MAX);
+	glm::vec3 physics_max = glm::vec3(FLT_MIN,FLT_MIN,FLT_MIN);
+
     
 	// For each mesh of the loaded object
 	for (unsigned int n = 0; n < pScene->mNumMeshes; ++n)
@@ -427,8 +430,23 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, f
 		//Mesh und Material wird gelesen und in neuer GraphicsComponent gespeichert
 		gc->setGhostObject(aabbMin, aabbMax);
 
-		virtualObject->setPhysicsComponent(aabbMin, aabbMax, mass);
+		virtualObject->addGraphicsComponent(gc);
+
+		if(aabbMin.x < physics_min.x)
+			physics_min.x = aabbMin.x;
+		if(aabbMin.y < physics_min.y)
+			physics_min.y = aabbMin.y;
+		if(aabbMin.z < physics_min.z)
+			physics_min.z = aabbMin.z;
+		if(aabbMax.x > physics_max.x)
+			physics_max.x = aabbMax.x;
+		if(aabbMax.y > physics_max.y)
+			physics_max.y = aabbMax.y;
+		if(aabbMax.z > physics_max.z)
+			physics_max.z = aabbMax.z;
+
 	}
+		virtualObject->setPhysicsComponent(physics_min, physics_max, mass);
 
 
 

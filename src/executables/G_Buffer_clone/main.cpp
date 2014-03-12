@@ -79,7 +79,7 @@ int main() {
 
 	GraphicsComponent* triangle = voFactory->getTriangle();
 
-	object03->getGraphicsComponent()[0]->getMaterial()->setSpecular(glm::vec3(0.0, 0.0, 1.0));
+	MaterialManager::getInstance()->makeMaterial("polished_chrome", object02->getGraphicsComponent());
 
 	//--------------------------------------------//
 	//         Create a Framebuffer Object        //

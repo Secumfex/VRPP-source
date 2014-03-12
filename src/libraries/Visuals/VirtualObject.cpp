@@ -70,10 +70,10 @@ vector<GraphicsComponent*> VirtualObject:: getGraphicsComponent(){
 vector<GraphicsComponent*> VirtualObject:: getGraphicsComponent(std::string tag){
 	vector<GraphicsComponent*> cg_list;
 	unsigned int i = 0;
-	for (i = 1; i <= mGraphComponent.size(); ++i) {
-		std::string temp = mGraphComponent[mGraphComponent.size()-i]->getMaterial()->getName();
+	for (i = 0; i < mGraphComponent.size(); ++i) {
+		std::string temp = mGraphComponent[i]->getMaterial()->getName();
 		if(temp.find(tag) != std::string::npos )
-			cg_list.push_back(mGraphComponent[mGraphComponent.size()-i]);
+			cg_list.push_back(mGraphComponent[i]);
 	}
 	return cg_list;
 }
