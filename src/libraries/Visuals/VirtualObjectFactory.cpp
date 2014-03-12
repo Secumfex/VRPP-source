@@ -447,7 +447,15 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 		gc->setGhostObject(aabbMin, aabbMax);
 
 
+
+
+
 		virtualObject->addGraphicsComponent(gc);
+		//set normal fpr creating physicComponent of sphere
+		glm::vec3 normal;
+		normal.x= aabbMin.y*aabbMax.z - aabbMin.z*aabbMax.y;
+		normal.y= aabbMin.z*aabbMax.x - aabbMin.x*aabbMax.z;
+		normal.z= aabbMin.x*aabbMax.y - aabbMin.y*aabbMax.x;
 
 
 
