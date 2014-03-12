@@ -86,8 +86,8 @@ void ApplicationState::bindObjects(){
 }
 
 
-VirtualObject* ApplicationState::createVirtualObject(std::string path, VirtualObjectFactory::BodyType bodyType, float mass){
-	VirtualObject* vo = VirtualObjectFactory::getInstance()->createVirtualObject(path, bodyType, mass);
+VirtualObject* ApplicationState::createVirtualObject(std::string path, VirtualObjectFactory::BodyType bodyType, float mass, int collisionFlag){
+	VirtualObject* vo = VirtualObjectFactory::getInstance()->createVirtualObject(path, bodyType, mass, collisionFlag);
 	renderQueue->addVirtualObject(vo);
 
 

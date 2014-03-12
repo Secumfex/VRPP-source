@@ -88,7 +88,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(){
 	return new VirtualObject();
 }
 
-VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, BodyType bodyType, float mass){
+VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, BodyType bodyType, float mass, int collisionFlag){
 
 	VirtualObject* virtualObject = new VirtualObject();
 
@@ -136,13 +136,12 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 	cout<<"Import of scene " <<filename.c_str()<<" succeeded."<<endl;
 
-
 	glm::vec3 physics_min = glm::vec3(FLT_MAX,FLT_MAX,FLT_MAX);
 	glm::vec3 physics_max = glm::vec3(-FLT_MAX,-FLT_MAX,-FLT_MAX);
 
 
+	// For each mesh
 
-	// For each mesh of the loaded object
 	for (unsigned int n = 0; n < pScene->mNumMeshes; ++n)
 	{
 		const aiMesh* mesh = pScene->mMeshes[n];
@@ -451,42 +450,55 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 
 		virtualObject->addGraphicsComponent(gc);
-		//set normal fpr creating physicComponent of sphere
-		glm::vec3 normal;
-		normal.x= aabbMin.y*aabbMax.z - aabbMin.z*aabbMax.y;
-		normal.y= aabbMin.z*aabbMax.x - aabbMin.x*aabbMax.z;
-		normal.z= aabbMin.x*aabbMax.y - aabbMin.y*aabbMax.x;
+
 
 
 
 		if(aabbMin.x < physics_min.x)
-			physics_min.x = aabbMin.x;
-		if(aabbMin.y < physics_min.y)
-			physics_min.y = aabbMin.y;
-		if(aabbMin.z < physics_min.z)
-			physics_min.z = aabbMin.z;
-		if(aabbMax.x > physics_max.x)
-			physics_max.x = aabbMax.x;
-		if(aabbMax.y > physics_max.y)
-			physics_max.y = aabbMax.y;
-		if(aabbMax.z > physics_max.z)
-			physics_max.z = aabbMax.z;
-
-		std::cout << "max: " << physics_max.x << " , "<< physics_max.y << " , "<< physics_max.z << std::endl;
-		std::cout << "min: " << physics_min.x << " , "<< physics_min.y << " , "<< physics_min.z << std::endl;
+		 			physics_min.x = aabbMin.x;
+		 		if(aabbMin.y < physics_min.y)
+		 			physics_min.y = aabbMin.y;
+		 		if(aabbMin.z < physics_min.z)
+		 			physics_min.z = aabbMin.z;
+		 		if(aabbMax.x > physics_max.x)
+		 			physics_max.x = aabbMax.x;
+		 		if(aabbMax.y > physics_max.y)
+		 			physics_max.y = aabbMax.y;
+		 		if(aabbMax.z > physics_max.z)
+		 			physics_max.z = aabbMax.z;
 
 	}
+
+	glm::vec3 boxValue = physics_max-physics_min;
+	float width = boxValue.x;
+	float height = boxValue.y;
+	float depth = boxValue.z;
+
+	float x = physics_min.x + width / 2.0f;
+	float y = physics_min.y + height / 2.0f;
+	float z = physics_min.z + depth / 2.0f;
+
+
+	//set normal for creating physicComponent of sphere
+	glm::vec3 normal;
+	normal.x= physics_min.y*physics_max.z - physics_min.z*physics_max.y;
+	normal.y= physics_min.z*physics_max.x - physics_min.x*physics_max.z;
+	normal.z= physics_min.x*physics_max.y - physics_min.y*physics_max.x;
+
+	std::cout << "max: " << physics_max.x << " , "<< physics_max.y << " , "<< physics_max.z << std::endl;
+	std::cout << "min: " << physics_min.x << " , "<< physics_min.y << " , "<< physics_min.z << std::endl;
 
 	glm::vec3 normal=physics_max;
 
 		switch(bodyType){
-		case CUBE:		virtualObject->setPhysicsComponent(physics_max.x-physics_min.x, physics_max.y-physics_min.y, physics_max.z-physics_min.z, physics_max.x, physics_max.y, physics_max.z, mass);
+
+		case CUBE:		virtualObject->setPhysicsComponent(width, height, depth, x, y, z, mass, collisionFlag);
 			break;
-		case PLANE:		virtualObject->setPhysicComponent(physics_min.x,physics_min.y,physics_min.z,normal,mass);
+		case PLANE:		virtualObject->setPhysicComponent(x, y, z, normal, mass, collisionFlag);
 			break;
-		case SPHERE:	virtualObject->setPhysicsComponent(physics_max.x-physics_min.x, (physics_max.x-physics_min.x)/2.0+physics_min.x, (physics_max.y-physics_min.y)/2.0+physics_min.y, (physics_max.z-physics_min.z)/2.0+physics_min.z, mass);
+		case SPHERE:	virtualObject->setPhysicsComponent((physics_max.x-physics_min.x)/2.0, (physics_max.x-physics_min.x)/2.0+physics_min.x, (physics_max.y-physics_min.y)/2.0+physics_min.y, (physics_max.z-physics_min.z)/2.0+physics_min.z, mass, collisionFlag);
 			break;
-		case OTHER:		virtualObject->setPhysicsComponent(physics_min, physics_max, mass);
+		case OTHER:		virtualObject->setPhysicsComponent(physics_min, physics_max, mass, collisionFlag);
 			break;
 		}
     

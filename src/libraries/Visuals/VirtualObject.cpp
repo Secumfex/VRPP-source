@@ -84,31 +84,32 @@ void VirtualObject::setPhysicsComponent(){
 	physicsComponent = new PhysicsComponent();
 }
 
-void VirtualObject::setPhysicsComponent(glm::vec3 min, glm::vec3 max, float mass){
+void VirtualObject::setPhysicsComponent(glm::vec3 min, glm::vec3 max, float mass, int collisionFlag){
 	if(physicsComponent != NULL)
 	physicsComponent->~PhysicsComponent();
 
-	physicsComponent = new PhysicsComponent(min, max, mass);
+	physicsComponent = new PhysicsComponent(min, max, mass,collisionFlag);
 }
 
-void VirtualObject::setPhysicsComponent(float radius, float x, float y, float z, float mass){
+void VirtualObject::setPhysicsComponent(float radius, float x, float y, float z, float mass, int collisionFlag){
 	if(physicsComponent != NULL)
 	physicsComponent->~PhysicsComponent();
-	physicsComponent = new PhysicsComponent(radius, x, y, z, mass);
+	physicsComponent = new PhysicsComponent(radius, x, y, z, mass,collisionFlag);
 }
 
-void VirtualObject::setPhysicsComponent(float width, float height, float depth, float x, float y, float z, float mass){
+void VirtualObject::setPhysicsComponent(float width, float height, float depth, float x, float y, float z, float mass, int collisionFlag){
 	if(physicsComponent != NULL)
 	physicsComponent->~PhysicsComponent();
-	physicsComponent = new PhysicsComponent(width, height, depth, x, y, z, mass);
+	physicsComponent = new PhysicsComponent(width, height, depth, x, y, z, mass,collisionFlag);
 }
 
 
-void VirtualObject::setPhysicComponent(float x, float y, float z, glm::vec3 normal, float mass){	//TODO: change the type of normal
+void VirtualObject::setPhysicComponent(float x, float y, float z, glm::vec3 normal, float mass, int collisionFlag){
 	if(physicsComponent != NULL)
 	physicsComponent->~PhysicsComponent();
 
-	physicsComponent = new PhysicsComponent(x,y,z,normal,mass);
+	physicsComponent = new PhysicsComponent(x,y,z,normal,mass,collisionFlag);
+
 }
 
 glm::mat4 VirtualObject::getModelMatrix(){
