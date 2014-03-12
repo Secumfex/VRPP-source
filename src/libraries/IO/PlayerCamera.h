@@ -6,30 +6,73 @@
 
 using namespace std;
 
-/*! @brief A First Person Camera with Bullet-Physics behaviour
+/** @brief A First Person Camera with Bullet-Physics behaviour
  * a PlayerCamera is derived from Camera and behaves in very similar ways
  * additionally, a PlayerCamera's position is based on it's Bullet Bounding Box 
  * thus, a PlayerCamera cann collide with other Virtual Objects, and is influenced by gravity
  */
 class PlayerCamera : public Camera{
 private:
-	btCollisionShape* collisionShape; //!< bullet Collision Shape associated with this Player Camera (cylinder shape by default)
+	btCollisionShape* collisionShape; 	/**< bullet Collision Shape associated with this Player Camera (cylinder shape by default) */
 	
-	bool isRigid;			//!< true, if rigid body functionality is wanted in this Camera
-	btRigidBody* rigidBody; //!< Rigid Body, incase Gravity and other Physical Interaction is wanted 
+	bool isRigid;						/**< true, if rigid body functionality is wanted in this Camera */
+	btRigidBody* rigidBody; 			/**< Rigid Body, incase Gravity and other Physical Interaction is wanted */
 
-	void createCollisionShape(); //!< create a btCylinderShape as collision Shape 
+	/** \brief !docu pls!
+	 *
+	 * create a btCylinderShape as collision Shape
+	 */
+	void createCollisionShape();
+
+	/** \brief !docu pls!
+	 *
+	 */
 	void createRigidBody();
+
+
 public:
-	PlayerCamera();	//!< constructor @param createRigidBody is false by default
-	~PlayerCamera();	//!< destructor
+	/** \brief constructor
+	 *
+	 * @param createRigidBody is false by default
+	 */
+	PlayerCamera();
 
-	virtual void updatePosition(float deltaTime);	//!< updates Position by updating and reading the CollisionShape's Position
+	/** \brief destructor
+	 *
+	 */
+	~PlayerCamera();
 
+	/** \brief updates position
+	 *
+	 * updates Position by updating and reading the CollisionShape's Position
+	 * @param deltaTime
+	 */
+	virtual void updatePosition(float deltaTime);
+
+	/** \brief setter
+	 *
+	 * sets/changes the x,y,and z value of position
+	 * @param x,y,z position as float values
+	 */
 	virtual void setPosition(float x, float y, float z);
+
+	/** \brief setter
+	 *
+	 * sets/changes the x,y,and z value of position
+	 * @param newPos position as glm vec3
+	 */
 	virtual void setPosition(glm::vec3 newPos);
 
+	/** \brief getter
+	 *
+	 * @return bullet rigid body (rigidBody)
+	 */
 	btRigidBody* 		getRigidBody();
+
+	/** \brief getter
+	 *
+	 * @return bullet collision shape (collisionShape)
+	 */
 	btCollisionShape* 	getCollisionShape();
 };
 

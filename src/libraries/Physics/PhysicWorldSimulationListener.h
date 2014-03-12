@@ -7,7 +7,7 @@ class PhysicWorld;
 
 class PhysicWorldSimulationListener : public Listener {
 private:
-	float* delta_time_source;	/**< ?TODO */
+	float* delta_time_source;	/**< !docu pls! */
 public:
 
 	/** \brief listener constructor

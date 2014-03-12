@@ -8,19 +8,55 @@ class PhysicWorld;
 
 class SelectionHandler : public Subject{
 protected:
-	const btCollisionObject* currentSelection;
-	PhysicWorld* physicWorld;
+	const btCollisionObject* currentSelection;	/**< currently selected collision shape */
+	PhysicWorld* physicWorld;					/**< PhysicWorld */
 public:
+	/** \brief constructor
+	 *
+	 * @param pw
+	 */
 	SelectionHandler(PhysicWorld* pw = 0);
-	bool somethingIsSelected();		//!< true if currentSelection != 0
 
-	void trySelection(glm::vec3& from, glm::vec3& to);	//!< attempt ray picking from origin in direction of to
-	virtual void handleSelection();	//!< handle selection
+	/** \brief !docu pls!
+	 *
+	 * true if currentSelection != 0
+	 */
+	bool somethingIsSelected();
 
-	const btCollisionObject* getCurrentSelection();	//!< get current selection pointer (to where-ever) 
+	/** \brief !docu pls!
+	 *
+	 * attempt ray picking from origin in direction of to
+	 * @param from
+	 * @param to
+	 */
+	void trySelection(glm::vec3& from, glm::vec3& to);
 
-	void attachListenerOnHandleSelection(Listener* listener);	//!< attach Listener on Selection Handling 
-	void attachListenerOnTrySelection(Listener* listener); 	//!< attach Listener on Selection attempt
+	/** \brief handle selection
+	 *
+	 * !docu pls!
+	 */
+	virtual void handleSelection();
+
+	/** \brief getter
+	 *
+	 * get current selection pointer (to where-ever)
+	 * @return bullet collision object (currentShape)
+	 */
+	const btCollisionObject* getCurrentSelection();
+
+	/** \brief attach listener
+	 *
+	 * attach Listener on Selection Handling
+	 * @param listener
+	 */
+	void attachListenerOnHandleSelection(Listener* listener);
+
+	/** \brief attach listener
+	 *
+	 * attach Listener on Selection attempt
+	 * @param listener
+	 */
+	void attachListenerOnTrySelection(Listener* listener);
 };
 
 #endif
