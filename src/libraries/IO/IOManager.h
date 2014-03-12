@@ -47,7 +47,7 @@ public:
 	/** \brief setter
 	 *
 	 * sets/changes currentIOHandler
-	 * @param ioHandler
+	 * @param iOHandler
 	 */
 	void setCurrentIOHandler(IOHandler* iOHandler);
 

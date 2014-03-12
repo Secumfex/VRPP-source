@@ -33,7 +33,7 @@ private:
 public:
 	/** \brief constructor
 	 *
-	 * @param createRigidBody is false by default
+	 * createRigidBody is false by default
 	 */
 	PlayerCamera();
 

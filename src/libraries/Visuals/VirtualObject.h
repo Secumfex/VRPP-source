@@ -112,6 +112,7 @@ public:
 	 *
 	 * creates PhysicComponent with box shaped rigid Body
 	 * @param min,max smallest and largest x, y, z values of a given model
+	 * @param mass
 	 * @return void
 	 */
 	void setPhysicsComponent(glm::vec3 min, glm::vec3 max, float mass = 0.0);

@@ -40,7 +40,7 @@ public:
 	/** \brief !docu pls!
 	 *
 	 * @param window
-	 * @param xpos,xpos
+	 * @param xpos,ypos
 	 */
 	virtual void setOrientation(GLFWwindow* window, double xpos, double ypos);
 };
