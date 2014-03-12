@@ -93,7 +93,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(){
 	return new VirtualObject();
 }
 
-VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, float mass){
+VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, BodyType bodyType, float mass){
 	VirtualObject* virtualObject = new VirtualObject();
 
 	Assimp::Importer Importer;
@@ -469,9 +469,19 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, f
 		gc->setBoundingBox(aabbMin, aabbMax);
 
 
+		glm::vec3 normal=aabbMax;
 		virtualObject->addGraphicsComponent(gc);
 
-		virtualObject->setPhysicsComponent(aabbMin, aabbMax, mass);
+		switch(bodyType){
+		case CUBE:		virtualObject->setPhysicsComponent(aabbMax.x-aabbMin.x, aabbMax.y-aabbMin.y, aabbMax.z-aabbMin.z, aabbMax.x, aabbMax.y, aabbMax.z, mass);
+			break;
+		case PLANE:		virtualObject->setPhysicComponent(aabbMin.x,aabbMin.y,aabbMin.z,normal,mass);
+			break;
+		case SPHERE:	virtualObject->setPhysicsComponent(aabbMax.x-aabbMin.x, (aabbMax.x-aabbMin.x)/2.0+aabbMin.x, (aabbMax.y-aabbMin.y)/2.0+aabbMin.y, (aabbMax.z-aabbMin.z)/2.0+aabbMin.z, mass);
+			break;
+		case OTHER:		virtualObject->setPhysicsComponent(aabbMin, aabbMax, mass);
+			break;
+		}
 	}
 
 

@@ -10,6 +10,7 @@
 
 #include "Visuals/RenderManager.h"
 #include "Visuals/Shader.h"
+#include "IO/SelectionHandler.h"
 
 /// Listener which renders a frame by using current Instance pointers of RenderManager
 class RenderloopPlaceHolderListener : public Listener{
@@ -43,14 +44,7 @@ public:
 	void update();
 };
 
-/// Listener which prints the current configuration of the given Camera Object
-class PrintCameraStatusListener : public Listener {
-private:
-	Camera* cam;
-public:
-	PrintCameraStatusListener(Camera* cam);
-	void update();
-};
+
 
 /// Listener which sets the direction of the given Camera Object
 class TurnCameraListener : public Listener {
@@ -60,5 +54,45 @@ private:
 	float delta_phi;   // rotation step
 public:
 	TurnCameraListener(Camera* cam, float delta_phi, float delta_theta);
+	void update();
+};
+
+/// Listener which sets the Position of the given Camera Object
+class SetCameraPositionListener : public Listener {
+private:
+	Camera* 	cam;
+	glm::vec3 position;
+public:
+	SetCameraPositionListener(Camera* cam, glm::vec3 position);
+	void update();
+};
+
+class ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener : public Listener {
+private:
+	SelectionHandler* selectionHandler;
+	Camera* cam;
+	float strength;
+public:
+	ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener(SelectionHandler* selectionHandler, Camera* cam, float strength = 100.0f);
+	void update();
+};
+
+/// Listener which updates the VirtualObject Modelmatrix by reading the PhysicsComponent Modelmatrix
+class UpdateVirtualObjectModelMatrixListener : public Listener{
+private:
+	VirtualObject* vo;
+public:
+	UpdateVirtualObjectModelMatrixListener(VirtualObject* vo);
+	void update();
+};
+
+class btRigidBody; class btVector3;
+
+class ApplyLinearImpulseOnRigidBody : public Listener{
+private:
+	btRigidBody* rigidBody;
+	btVector3 force;
+public:
+	ApplyLinearImpulseOnRigidBody(btRigidBody* rigidBody, btVector3 force);
 	void update();
 };

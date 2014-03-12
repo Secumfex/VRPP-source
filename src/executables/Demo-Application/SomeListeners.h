@@ -86,14 +86,6 @@ public:
 	void update();
 };
 
-/// Listener which prints the current configuration of the given Camera Object
-class PrintCameraStatusListener : public Listener {
-private:
-	Camera* cam;
-public:
-	PrintCameraStatusListener(Camera* cam);
-	void update();
-};
 
 /// Listener which sets the direction of the given Camera Object
 class SetCameraDirectionListener : public Listener {
@@ -113,7 +105,8 @@ private:
 	glm::vec3 	position;
 	std::string path;
 	float random_offset;
+	VirtualObjectFactory::BodyType bodyType;
 public:
-	CreateVirtualObjectListener(string path, glm::vec3 position, ApplicationState* state, float random_offset = 0.0f);
+	CreateVirtualObjectListener(string path, glm::vec3 position, ApplicationState* state, float random_offset = 0.0f, VirtualObjectFactory::BodyType bodyType= VirtualObjectFactory::OTHER);
 	void update();
 };

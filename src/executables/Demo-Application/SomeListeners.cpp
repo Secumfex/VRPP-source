@@ -144,21 +144,6 @@ void UpdatePhysicsWorldListener::update(){
 	pw->dynamicsWorld->stepSimulation(0.1,5,0.02);
 }
 
-PrintCameraStatusListener :: PrintCameraStatusListener(Camera* cam){
-	this->cam = cam;
-}
-
-void PrintCameraStatusListener::update(){
-	glm::vec3 pos 	= cam->getPosition();
-	glm::vec3 dir 	= cam->getViewDirection();
-	float phi 		= cam->getPhi();
-	float theta		= cam->getTheta();
-
-	std::cout << "Cam pos : " << pos.x << " , " << pos.y << " , " << pos.z << std::endl;
-	std::cout << "Cam dir : " << dir.x << " , " << dir.y << " , " << dir.z << std::endl;
-	std::cout << "rotation phi : " << phi   << " , pitch theta : " 		  << theta << std::endl;
-}
-
 SetCameraDirectionListener::SetCameraDirectionListener(Camera* cam, glm::vec3 direction){
 	this->cam = cam;
 	this->direction = direction;
@@ -171,27 +156,28 @@ void SetCameraDirectionListener::update(){
 #include <stdlib.h>
 #include <time.h>
 
-CreateVirtualObjectListener::CreateVirtualObjectListener(string path, glm::vec3 position, ApplicationState* state, float random_offset){
+CreateVirtualObjectListener::CreateVirtualObjectListener(string path, glm::vec3 position, ApplicationState* state, float random_offset, VirtualObjectFactory::BodyType bodyType){
 	this->state = state;
 	this->position = position;
 	this->path = path;
 	this->random_offset = random_offset;
 	std::srand (time(NULL));	// rand dat
+	this->bodyType = bodyType;
 }
 
 #include "Physics/UpdatePhysicsComponentListener.h"
 
 void CreateVirtualObjectListener::update(){
-	VirtualObject* vo = state->createVirtualObject(path);		// create new Virtual Object
+	VirtualObject* vo = state->createVirtualObject(path, bodyType);		// create new Virtual Object
 	if (random_offset != 0.0){
 		glm::vec3 randPos = position;	
 		randPos.x += ( (((float) std::rand() / (float) RAND_MAX) * random_offset) * 2.0 ) - random_offset; // randomize a little bit by adding [-random_offset, random_offset] to the mix 
 		randPos.y += ( (((float) std::rand() / (float) RAND_MAX) * random_offset) * 2.0 ) - random_offset; // randomize a little bit by adding [-random_offset, random_offset] to the mix 
 		randPos.z += ( (((float) std::rand() / (float) RAND_MAX) * random_offset) * 2.0 ) - random_offset; // randomize a little bit by adding [-random_offset, random_offset] to the mix 
-		vo->setPhysicsComponent(0.5,randPos.x,randPos.y,randPos.z,0.5);
+		vo->translate(randPos);
 	}
 	else{
-		vo->setPhysicsComponent(0.5,position.x ,position.y ,position.z,0.5);	// assign PhysicsComponent
+		vo->translate(position);	// assign PhysicsComponent
 	}
 	state->		attachListenerOnBeginningProgramCycle(  new UpdatePhysicsComponentListener(			vo));	// update PhysicsComponent on every program cycle iteration
 	state->		attachListenerOnBeginningProgramCycle(  new UpdateVirtualObjectModelMatrixListener(	vo ));	// update VirtualObject Model Matrix on every program cycle iteration

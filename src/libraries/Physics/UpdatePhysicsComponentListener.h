@@ -9,13 +9,14 @@ class UpdatePhysicsComponentListener : public Listener {
 
 protected:
 
-	VirtualObject* vo;
+	VirtualObject* vo;		/**< virtual object reference */
 
 public:
 
-	/** \brief listener
+	/** \brief listener constructor
 	 *
 	 * sets the physicComponent
+	 * @param vo reference to virtual object from which this function is called
 	 */
 	UpdatePhysicsComponentListener(VirtualObject* vo);
 

@@ -18,7 +18,7 @@ private:
 
 	btRigidBody *rigidBody;	/**< bullet rigid body */
 
-	bool hit;	/**< true if hit by an other object, else false */
+	bool hit;				/**< true if hit by an other object, else false */
 
 public:
 
@@ -62,11 +62,19 @@ public:
 
 	/** \brief constructor
 	 *
+	 * constructor to create a static plane shaped rigid body.
 	 * @param x,y,z start position in the world
 	 * @param normal normal vector of the plane
 	 * @param mass defines the behavior of the rigid body in the physics world
 	 */
-	PhysicsComponent(float x, float y, float z, btVector3& normal, float mass);	//todo: change the type of normal
+	PhysicsComponent(float x, float y, float z, glm::vec3 normal, float mass);	//todo: change the type of normal
+
+	/** \brief constructor
+	 *
+	 * constructor to create a heightfieldterrainshaped rigid body (btHeightfieldTerrainShape).
+	 * @param filename filename of the heightfield picture
+	 */
+	PhysicsComponent(char* filename, float x, float y, float z);
 
 	/** \brief destructor
 	*
@@ -102,6 +110,22 @@ public:
 	*/
 	void addCollisionFlag(int flag);
 
+	/** \brief changes the collision flag of the rigid body
+	*
+	* deletes current flag and sets the wanted one.
+	* possible flags are:
+	*  CF_STATIC_OBJECT = 1, ->no gravity
+	*  CF_KINEMATIC_OBJECT = 2,
+  	*  CF_NO_CONTACT_RESPONSE = 4, ->no interaction/collision with other objects
+  	*  CF_CUSTOM_MATERIAL_CALLBACK = 8,
+  	*  CF_CHARACTER_OBJECT = 16,
+  	*  CF_DISABLE_VISUALIZE_OBJECT = 32,
+  	*  CF_DISABLE_SPU_COLLISION_PROCESSING = 64
+	* @param flag number of the wanted flag, 1 for ..., 4 for CF_CUSTOM_MATERIAL_CALLBACK, ...
+	* @return void
+	*/
+	void setCollisionFlag(int flag);
+
 	/** \brief defines the rigid body as a box
 	*
 	* creates a box shaped rigid body with all necessary parts.
@@ -130,7 +154,16 @@ public:
 	 * @param mass defines the behavior of the rigid body in the physics world
 	 * @return a bullet rigid body
 	 */
-	btRigidBody* addPlane(float x, float y, float z, btVector3& normal, float mass);
+	btRigidBody* addPlane(float x, float y, float z, glm::vec3 normal, float mass);
+
+	/** \brief defines the rigid body as heightfield
+	 *
+	 * creates a heightfield rigid body with all necessary parts
+	 * @param filename name of the heightfield picture
+	 * @param x,y,z start position in the world
+	 * @return a bullet rigid body
+	 */
+	btRigidBody* addHeightfield(char* filename, float x, float y, float z);
 
 
 	/** \brief getter

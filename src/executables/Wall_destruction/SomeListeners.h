@@ -85,15 +85,6 @@ public:
 	void update();
 };
 
-// Listener which prints the current configuration of the given Camera Object
-class PrintCameraStatusListener : public Listener {
-private:
-	Camera* cam;
-public:
-	PrintCameraStatusListener(Camera* cam);
-	void update();
-};
-
 // Listener which sets the direction of the given Camera Object
 class SetCameraDirectionListener : public Listener {
 private:
@@ -136,5 +127,16 @@ private:
 	VRState* state;
 public:
 	ShootSphereListener(Camera* cam, VRState* state);
+	void update();
+};
+
+/// Listener which applies an impulse to a rigid body in direction of the provided cam
+class ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener : public Listener {
+private:
+	SelectionHandler* selectionHandler;
+	Camera* cam;
+	float strength;
+public:
+	ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener(SelectionHandler* selectionHandler, Camera* cam, float strength = 100.0f);
 	void update();
 };
