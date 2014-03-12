@@ -144,6 +144,7 @@ public:
  	 * @param mass defines the behavior of the rigid body in the physics world
  	 * @return void
 	 */
+
 	void setPhysicComponent(float x, float y, float z, glm::vec3 normal, float mass);
 
 	/** \brief getter

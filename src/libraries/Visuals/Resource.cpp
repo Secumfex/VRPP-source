@@ -21,13 +21,16 @@ Material :: Material(){
 	mTextures.push_back(tex);
 	mTextures.push_back(tex);
 
+
 	mAmbColor = glm::vec3(1,1,1);
 	mDiffColor = glm::vec3(1,1,1);
 	mName = "";
 	mShininess = 0;
 	mEmissColor = mAmbColor;
+    mTransparency = 0.0f;
 }
 Material :: ~Material(){}
+
 void Material ::setAmbientMap(Texture* tex){ //ändern
 	mTextures[0] = tex;
 }
@@ -63,6 +66,7 @@ void Material ::setLightMap(Texture* tex){
 }
 
 
+
 void Material :: setName(std::string name){
 	mName = name;
 }
@@ -71,18 +75,20 @@ void Material :: setAmbient(glm::vec3 ambient){
 }
 void Material :: setDiffuse(glm::vec3 diffuse){
 	mDiffColor = diffuse;
+
 }
 void Material :: setSpecular(glm::vec3 specular){
 	mSpecColor = specular;
 }
-void Material :: setEmission(glm::vec3 emission){}
+void Material :: setEmission(glm::vec3 emission){
+    mEmissColor = emission;
+}
 void Material :: setShininess(GLfloat term){
 	mShininess = term;
 }
-void Material :: setReflectivity(GLfloat term){
-	mReflectivity = term;
+void Material:: setTransparency(GLfloat term){
+    mTransparency = term;
 }
-
 Texture* Material ::getAmbientMap(){
 	return mTextures[0];
 }
@@ -101,6 +107,7 @@ Texture* Material ::getHeightMap(){
 Texture* Material ::getOpacityMap(){
 	return mTextures[5];
 }
+
 glm::vec3 Material ::getAmbient(){
 	return mAmbColor;
 }
@@ -116,8 +123,9 @@ glm::vec3 Material ::getEmission(){
 GLfloat Material::getShininess(){
 	return mShininess;
 }
-GLfloat Material::getReflectivity(){
-	return mReflectivity;
+
+GLfloat Material::getTransparency(){
+	return mTransparency;
 }
 Texture* Material ::getSpecularMap(){
 	return mTextures[6];
@@ -135,15 +143,58 @@ Texture* Material ::getLightMap(){
 	return mTextures[10];
 }
 
+
 std::string Material::getName(){
 	return mName;
 }
 
-bool Material::hasNormalMap(){
-	Texture *tex = new Texture();
-	return getNormalMap()->getTextureHandle() != tex->getTextureHandle();
+
+bool Material::hasNormalTexture(){
+Texture *tex = new Texture();
+return getNormalMap()->getTextureHandle() != tex->getTextureHandle();
+}
+bool Material::hasDiffuseTexture(){
+Texture *tex = new Texture();
+return getDiffuseMap()->getTextureHandle() != tex->getTextureHandle();
+}
+bool Material::hasAmbientTexture(){
+Texture *tex = new Texture();
+return getAmbientMap()->getTextureHandle() != tex->getTextureHandle();
+}
+bool Material::hasEmissiveTexture(){
+Texture *tex = new Texture();
+return getEmissiveMap()->getTextureHandle() != tex->getTextureHandle();
+}
+bool Material::hasHeightTexture(){
+Texture *tex = new Texture();
+return getHeightMap()->getTextureHandle() != tex->getTextureHandle();
+}
+bool Material::hasOpacityTexture(){
+Texture *tex = new Texture();
+return getOpacityMap()->getTextureHandle() != tex->getTextureHandle();
+}
+bool Material::hasSpecularTexture(){
+Texture *tex = new Texture();
+return getSpecularMap()->getTextureHandle() != tex->getTextureHandle();
+}
+bool Material::hasReflectionTexture(){
+Texture *tex = new Texture();
+return getReflectionMap()->getTextureHandle() != tex->getTextureHandle();
+}
+bool Material::hasShininessTexture(){
+Texture *tex = new Texture();
+return getShininessMap()->getTextureHandle() != tex->getTextureHandle();
+}
+bool Material::hasDisplacementTexture(){
+Texture *tex = new Texture();
+return getDisplacementMap()->getTextureHandle() != tex->getTextureHandle();
+}
+bool Material::hasLightTexture(){
+Texture *tex = new Texture();
+return getLightMap()->getTextureHandle() != tex->getTextureHandle();
 
 }
+
 
 //---------------MESH SCOPE--------------------
 

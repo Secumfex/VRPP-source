@@ -18,7 +18,6 @@ public:
 	virtual void handleSelection();	//!< handle selection
 
 	const btCollisionObject* getCurrentSelection();	//!< get current selection pointer (to where-ever) 
-
 	void attachListenerOnHandleSelection(Listener* listener);	//!< attach Listener on Selection Handling 
 	void attachListenerOnTrySelection(Listener* listener); 	//!< attach Listener on Selection attempt
 };

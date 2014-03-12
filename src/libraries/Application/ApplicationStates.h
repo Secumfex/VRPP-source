@@ -8,6 +8,7 @@
 #include "Patterns/Subject.h"
 #include "IO/IOHandler.h"
 #include "Visuals/VirtualObjectFactory.h"
+#include "Visuals/Frustum.h"
 
 class Camera; class RenderQueue; class VirtualObject;
 
@@ -17,24 +18,26 @@ class ApplicationState : public State{
 
 protected: 
 	/*Member variables*/
+	Frustum* frustum;
 	Camera* camera;
 	RenderQueue* renderQueue;
 	IOHandler* iOHandler;
-	glm::mat4 projectionMatrix;
+	glm::mat4 perspectiveMatrix;
 
 	virtual void bindObjects(); //!< bind objects to RenderManager, IOManager, PhysicsWorld etc.
 public:
 	ApplicationState();
 
+	Frustum*		getFrustum();
 	Camera* 		getCamera();
 	RenderQueue* 	getRenderQueue();
 	IOHandler* 		getIOHandler();
-	glm::mat4 		getProjectionMatrix();
+	glm::mat4 		getPerspectiveMatrix();
 
 	void setCamera(				Camera* camera);
 	void setRenderQueue(		RenderQueue* renderQueue);
 	void setIOHandler(			IOHandler* iOHandler);
-	void setProjectionMatrix(	glm::mat4 projectionMatrix);
+	void setPerspectiveMatrix(	glm::mat4 projectionMatrix);
 
 	virtual void activate(); //!< activation of state --> binding objects
 

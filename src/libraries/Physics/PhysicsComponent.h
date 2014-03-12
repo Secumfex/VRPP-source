@@ -154,6 +154,7 @@ public:
 	 * @param mass defines the behavior of the rigid body in the physics world
 	 * @return a bullet rigid body
 	 */
+
 	btRigidBody* addPlane(float x, float y, float z, glm::vec3 normal, float mass);
 
 	/** \brief defines the rigid body as heightfield
