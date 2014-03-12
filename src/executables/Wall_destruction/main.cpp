@@ -32,12 +32,19 @@ void configureMyApp(){
 	*/
 	//VirtualObject* 	myCubeObject2 = 	myVRState->	createVirtualObject(RESOURCES_PATH "/cube.obj");	// create another Virtual Object from the same geometry
 
-	VirtualObject* 	cube1 = 	myVRState->	createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE);
+	//VirtualObject* 	cube1 = 	myVRState->	createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 1.0, 1);
+	//myVRState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube1));
+
+	VirtualObject* 	cube3 = 	myVRState->	createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 0.0, 8);
+	//glm::mat4		cube3M = 	glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, 0.0f, 0.0f));
+	//cube3-> setModelMatrix(		cube3M); 	// override default Model Matrix
+	//cube3->	setPhysicsComponent(1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,0.0f, 8);
+	myVRState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube3));
 	//glm::mat4		cube1M = 	glm::translate(glm::mat4(1.0f), glm::vec3(-2.5f, 3.0f, 0.0f));
 	//cube1->getPhysicsComponent()->~PhysicsComponent();
 	//cube1-> setModelMatrix(		cube1M); 	// override default Model Matrix
 	//cube1->	setPhysicsComponent(1.0f, 1.0f, 1.0f, -2.5f, 3.0f, 0.0f, 1.0f);
-	myVRState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube1));
+	//myVRState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube1));
 
 	/*
 	VirtualObject* 	cube2 = 	myVRState->	createVirtualObject(RESOURCES_PATH "/cube.obj");

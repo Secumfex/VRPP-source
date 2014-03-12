@@ -44,7 +44,7 @@ VirtualObject* createNonAssimpSphere();
 GraphicsComponent* getTriangle();
 
 VirtualObject* createVirtualObject();
-VirtualObject* createVirtualObject(std::string filename, BodyType bodyType = OTHER, float mass = 0.0f);
+VirtualObject* createVirtualObject(std::string filename, BodyType bodyType = OTHER, float mass = 0.0f, int collisionFlag = 1);
 VirtualObject* createVirtualObject(vector<GraphicsComponent*> graphcomps);
 VirtualObject* copyVirtualObject(VirtualObject vo);
 

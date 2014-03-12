@@ -114,7 +114,7 @@ public:
 	 * @param min,max smallest and largest x, y, z values of a given model
 	 * @return void
 	 */
-	void setPhysicsComponent(glm::vec3 min, glm::vec3 max, float mass = 0.0);
+	void setPhysicsComponent(glm::vec3 min, glm::vec3 max, float mass = 0.0, int collisionFlag = 1);
 
 	/** \brief sets PhysicsComponent
 	 *
@@ -124,7 +124,7 @@ public:
 	 * @param mass defines the behavior of the rigid body in the physics world
 	 * @return void
 	 */
-	void setPhysicsComponent(float radius, float x, float y, float z, float mass);
+	void setPhysicsComponent(float radius, float x, float y, float z, float mass = 0.0, int collisionFlag = 1);
 
 	/** \brief sets PhysicsComponent
 	 *
@@ -134,7 +134,7 @@ public:
 	 * @param mass defines the behavior of the rigid body in the physics world
 	 * @return void
 	 */
-	void setPhysicsComponent(float width, float height, float depth, float x, float y, float z, float mass);
+	void setPhysicsComponent(float width, float height, float depth, float x, float y, float z, float mass = 0.0, int collisionFlag = 1);
 
 	/** \brief sets PhysicsComponent
 	 *
@@ -144,7 +144,7 @@ public:
  	 * @param mass defines the behavior of the rigid body in the physics world
  	 * @return void
 	 */
-	void setPhysicComponent(float x, float y, float z, glm::vec3 normal, float mass);
+	void setPhysicComponent(float x, float y, float z, glm::vec3 normal, float mass = 0.0, int collisionFlag = 1);
 
 	/** \brief getter
 	 *

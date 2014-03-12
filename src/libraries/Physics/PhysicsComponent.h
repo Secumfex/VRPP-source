@@ -40,7 +40,7 @@ public:
 	* constructor to create a box shaped rigid body.
 	* @param min,max contain smallest and largest x, y, z values of a given model (in VirtualObjectFactory class)
 	*/
-	PhysicsComponent(glm::vec3 min, glm::vec3 max, float mass = 0.0);
+	PhysicsComponent(glm::vec3 min, glm::vec3 max, float mass = 0.0, int collisionFlag = 1);
 
 	/** \brief constructor
 	*
@@ -49,7 +49,7 @@ public:
 	* @param x,y,z start position in the world
 	* @param mass defines the behavior of the rigid body in the physics world
 	*/
-	PhysicsComponent(float radius, float x, float y, float z, float mass);
+	PhysicsComponent(float radius, float x, float y, float z, float mass= 0.0, int collisionFlag = 1);
 
 	/** \brief constructor
 	*
@@ -58,7 +58,7 @@ public:
 	* @param x,y,z start position in the world
 	* @param mass defines the behavior of the rigid body in the physics world
 	*/
-	PhysicsComponent(float width, float height, float depth, float x, float y, float z, float mass);
+	PhysicsComponent(float width, float height, float depth, float x, float y, float z, float mass= 0.0, int collisionFlag = 1);
 
 	/** \brief constructor
 	 *
@@ -67,7 +67,7 @@ public:
 	 * @param normal normal vector of the plane
 	 * @param mass defines the behavior of the rigid body in the physics world
 	 */
-	PhysicsComponent(float x, float y, float z, glm::vec3 normal, float mass);	//todo: change the type of normal
+	PhysicsComponent(float x, float y, float z, glm::vec3 normal, float mass= 0.0, int collisionFlag = 1);	//todo: change the type of normal
 
 	/** \brief constructor
 	 *
