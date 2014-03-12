@@ -24,6 +24,7 @@ PhysicsComponent::PhysicsComponent(glm::vec3 min, glm::vec3 max, float mass) {
 	float height = boxValue.y;
 	float depth = boxValue.z;
 
+
 	float x = min.x + width / 2.0f;
 	float y = min.y + height / 2.0f;
 	float z = min.z + depth / 2.0f;
@@ -56,6 +57,7 @@ PhysicsComponent::PhysicsComponent(float width, float height, float depth, float
 }
 
 PhysicsComponent::PhysicsComponent(float x, float y, float z, glm::vec3 normal, float mass){
+
 	hit = false;
 	rigidBody = addPlane(x,y,z,normal,mass);
 	rigidBody->setUserPointer(this);	// use bullet's user pointer to refer to this Object

@@ -65,6 +65,7 @@ public:
 	 * @param message string to be printed in front of it
 	 */
 	PrintValueListener(float* value, std::string message = "");
+
 	void update();
 };
 
@@ -76,6 +77,7 @@ private:
 	Camera* cam;
 public:
 	PrintCameraStatusListener(Camera* cam);
+
 	void update();
 };
 

@@ -7,6 +7,7 @@
 #include "IO/Camera.h"
 #include "Visuals/Shader.h"
 #include "Visuals/FrameBufferObject.h"
+#include "Visuals/Frustum.h"
 
 
 // RenderManager is a Singleton and can be called by getInstance(), it is also a Subject
@@ -23,8 +24,10 @@ public:
 	void setCurrentGC(GraphicsComponent* gc);
 	void setCurrentShader(Shader* shader);
 	void setCurrentFBO(FrameBufferObject* fbo);
-	void setProjectionMatrix(glm::mat4 _projectionMatrix);
-	void setDefaultProjectionMatrix();
+	void setPerspectiveMatrix(float fovy, float aspect, float near, float far);
+	void setDefaultPerspectiveMatrix();
+	void setCurrentFrustum(Frustum* frustum);
+	void setLightPosition (glm::vec3 pos, int index);
 
 	VirtualObject* getCurrentVO();
 	GraphicsComponent* getCurrentGC();
@@ -33,7 +36,10 @@ public:
 	FrameBufferObject* getCurrentFBO();
 	GLFWwindow* getWindow();
 	RenderQueue* getRenderQueue();
-	glm::mat4 getProjectionMatrix();
+	Frustum* getCurrentFrustum();
+	glm::mat4 getPerspectiveMatrix();
+	glm::mat4 getLightPerspectiveMatrix(int index);
+
 
 	void libInit();
 	void manageShaderProgram();
@@ -43,21 +49,23 @@ public:
 
 
 private:
+
+	void createFourLightsources();
+
 	GLuint vbo;
 	GLuint MVPHandle;
 	GLuint shaderProgramHandle;
 
-	glm::mat4 projectionMatrix;
-
 	GLFWwindow* window;
 
-
+	Frustum *mFrustum;
 	Camera* mCamera;
 	RenderQueue* mRenderqueue;
 	Shader* mCurrentShader;
 	GraphicsComponent* mCurrentGC;
 	VirtualObject* mCurrentVO;
 	FrameBufferObject* mCurrentFBO;
+	vector<glm::vec3> mLightPositions;
 
 };
 

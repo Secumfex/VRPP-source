@@ -1,6 +1,6 @@
 #version 330
 
-in vec2 positionAttribute;
+layout(location = 0) in vec2 positionAttribute;
 out vec2 passUV;
 
 void main() {

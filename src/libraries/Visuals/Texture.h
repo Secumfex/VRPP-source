@@ -25,11 +25,11 @@ public:
 	virtual ~Texture();
 	std::string getTexName();
 
-	/** Das Handle wird übergeben */
+	/** returns the Texture's handle */
 	GLuint getTextureHandle();
-	/** Textur wird gebunden*/
+	/** binds Texture*/
 	void bindTexture();
-	/** Textur wird entbunden*/
+	/** unbinds Texture*/
 	void unbindTexture();
 
 	//-----------------MEMBER VARIABLES-----------------

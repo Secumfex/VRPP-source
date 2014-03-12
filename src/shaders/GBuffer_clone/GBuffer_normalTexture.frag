@@ -8,6 +8,7 @@ in vec3 passTangent;
 
 uniform sampler2D diffuseTexture;
 uniform sampler2D normalTexture;
+uniform vec3 specularColor;
 
 uniform float shininess;
 
@@ -15,7 +16,7 @@ uniform float shininess;
 layout(location = 0) out vec4 positionOutput;
 layout(location = 1) out vec4 normalOutput;
 layout(location = 2) out vec4 colorOutput;
-layout(location = 3) out vec4 materialOutput;
+layout(location = 3) out vec4 specularOutput;
  
 void main(){  
 
@@ -33,5 +34,5 @@ void main(){
     positionOutput = passPosition;
     normalOutput = normalize(vec4((tangentSpace * (texture(normalTexture, passUVCoord).rgb * 2.0 - 1.0)), 0.0));
     colorOutput = texture(diffuseTexture, passUVCoord);
-    materialOutput = vec4(shininess , 0.0, 0.0, 0.0);
+    specularOutput = vec4(specularColor, shininess);
 }

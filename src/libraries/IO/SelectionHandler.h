@@ -56,7 +56,7 @@ public:
 	 * attach Listener on Selection attempt
 	 * @param listener
 	 */
-	void attachListenerOnTrySelection(Listener* listener);
+	void attachListenerOnTrySelection(Listener* listener);	
 };
 
 #endif

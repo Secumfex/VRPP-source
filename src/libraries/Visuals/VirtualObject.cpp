@@ -70,10 +70,10 @@ vector<GraphicsComponent*> VirtualObject:: getGraphicsComponent(){
 vector<GraphicsComponent*> VirtualObject:: getGraphicsComponent(std::string tag){
 	vector<GraphicsComponent*> cg_list;
 	unsigned int i = 0;
-	for (i = 1; i <= mGraphComponent.size(); ++i) {
-		std::string temp = mGraphComponent[mGraphComponent.size()-i]->getMaterial()->getName();
+	for (i = 0; i < mGraphComponent.size(); ++i) {
+		std::string temp = mGraphComponent[i]->getMaterial()->getName();
 		if(temp.find(tag) != std::string::npos )
-			cg_list.push_back(mGraphComponent[mGraphComponent.size()-i]);
+			cg_list.push_back(mGraphComponent[i]);
 	}
 	return cg_list;
 }
@@ -107,6 +107,7 @@ void VirtualObject::setPhysicsComponent(float width, float height, float depth, 
 void VirtualObject::setPhysicComponent(float x, float y, float z, glm::vec3 normal, float mass){	//TODO: change the type of normal
 	if(physicsComponent != NULL)
 	physicsComponent->~PhysicsComponent();
+
 	physicsComponent = new PhysicsComponent(x,y,z,normal,mass);
 }
 
@@ -116,6 +117,10 @@ glm::mat4 VirtualObject::getModelMatrix(){
 
 void VirtualObject::setModelMatrix(glm::mat4 modelmatrix){
 	modelMatrix = modelmatrix;
+	unsigned int i = 0;
+	for(i=0; i< mGraphComponent.size();i++){
+		mGraphComponent[i]->setModelMatrixGc(modelmatrix);
+	}
 }
 
 PhysicsComponent* VirtualObject::getPhysicsComponent(){

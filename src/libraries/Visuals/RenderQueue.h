@@ -5,6 +5,7 @@
 #include <map>
 
 #include "VirtualObject.h"
+#include "Shader.h"
 
 using namespace std;
 
@@ -18,6 +19,8 @@ public:
 	RenderQueue(); //create and reset RQ
 	~RenderQueue();
 	RenderQueue* getRenderQueue(); 
+	void addShader(Shader* sh); //add Shader to ShaderList
+	void addCompositingShader(Shader* sh); //add Shader to ShaderList
 	void addVirtualObject(VirtualObject* vo); //add VO to VO list
 	void removeVirtualObject(VirtualObject* vo); //remove VO from list
 	VirtualObject* getNextObject(); //iterate list
@@ -29,6 +32,8 @@ public:
 	map<string, vector<GraphicsComponent* > > getGcTexStorage();
 	map<VirtualObject*, vector<GraphicsComponent* > > getVo2GcMap();
 	map<GraphicsComponent*, VirtualObject* > getGc2VoMap();
+
+	void sortByAttributes();
 	void sortByShaders(); //extracts GCs from all VOs in VO list and sorts them into the gcStorage map
 	void sortByTextures(); //extracts GCs from all VOs in VO list and sorts them into the gcTexStorage map
 	void sortByFlags(); //extracts GCs from all VOs and sorts them into gcFlagStorage by checking for transparency, shadow, etc
@@ -43,6 +48,14 @@ private:
 	map<GraphicsComponent*, VirtualObject*> gc2voMap; ///< each VO is assigned to some GC
 	map<GraphicsComponent*, VirtualObject*> vo2gcTexMap; ///< each VO is assigned to some GC
 	map<string, vector<GraphicsComponent* > > gcFlagStorage; ///< GC map sorted by flags
+	map<Shader*, vector<GraphicsComponent* > > shader2gcStorage; //Shader pointers to gc pointers
+	map<GraphicsComponent*, vector<Shader*> > gc2shaderStorage;
+
+	list<Shader*> shaderList;
+	list<Shader*> compositingList;
+	list<Shader*> shaderListCopy;
+	list<Shader*> shaderListAlternate;
+	list<GraphicsComponent*> gcList;
 };
 
 #endif /* RENDERQUEUE_H */

@@ -13,6 +13,7 @@
 
 #include <Patterns/Singleton.h>
 #include <Visuals/VirtualObject.h>
+#include "MaterialManager.h"
 #include <vector>
 #include <Tools/NoAssimpVirtualObjectFactory.h>
 
@@ -31,16 +32,15 @@ class VirtualObjectFactory : public Singleton<VirtualObjectFactory> {
 //---------------MEMBER VARIABLES--------------------
 
 VirtualObject* mCube;
-VirtualObject* mSphere;
 GraphicsComponent* mScreenFillTriangle;
 
 
 //---------------MEMBER FUNCTIONS--------------------
 public:
+
 enum BodyType {CUBE, SPHERE, PLANE, OTHER};
 
-VirtualObject* createNonAssimpVO();
-VirtualObject* createNonAssimpSphere();
+VirtualObject* createNonAssimpVO(float mass = 0.0f);
 GraphicsComponent* getTriangle();
 
 VirtualObject* createVirtualObject();
@@ -52,7 +52,6 @@ VirtualObject* copyVirtualObject(VirtualObject vo);
 
 
 private:
-
 void set_float4(float f[4], float a, float b, float c, float d);
 void color4_to_float4(const aiColor4D *c, float f[4]);
 };
