@@ -19,54 +19,139 @@ class GraphicsComponent{
 public:
 
 
-	void setMesh(Mesh* mesh);	//!< @todo description please use "[at]param" to describe which constraints exist to the parameter
-	void setMaterial(Material* material);	//!< @todo description please use "[at]param" to describe which constraints exist to the parameter
+	/** \brief setter
+	 *
+	 * sets/changes mMesh
+	 * @param mesh
+	 */
+	void setMesh(Mesh* mesh);
 
+	/** \brief setter
+	 *
+	 * sets/changes mMaterial
+	 * @param material
+	 */
+	void setMaterial(Material* material);
+
+	/** \brief getter
+	 *
+	 * @return mMesh
+	 */
 	Mesh* getMesh();
+
+	/** \brief getter
+	 *
+	 * @return mMaterial
+	 */
 	Material* getMaterial();
 
+	/** \brief setter
+	 *
+	 * sets/changes mDynamic
+	 * @param value
+	 */
 	void setDynamic(bool value);
+
+	/** \brief checks if graphic component is dynamic
+	 *
+	 * @return true or false
+	 */
 	bool isDynamic();
 
+	/** \brief setter
+	 *
+	 * sets/changes the modelMatrixGc
+	 * @param matrix
+	 */
 	void setModelMatrixGc(glm::mat4 matrix);
+
+	/** \brief getter
+	 *
+	 * @return the modelMatrixGc
+	 */
 	glm::mat4 getModelMatrix();
 
+	/** \brief setter
+	 *
+	 * turns the emission either "on" or "off"
+	 * @param value @todo default value? @todo which value means what?
+	 */
+	void setEmission(bool value);
 
-	void setEmission(bool value);	//!< turns the emission either "on" or "off" @todo default value? @todo which value means what? Please use [at]param
-	void setShadow(bool value);		//!< turns the the ability to cast shadows of this component either "on" or "off" @todo default value? @todo which value means what? Please use [at]param
-	void setTransparency(bool value);	//!< sets if the component is transparent or not @todo default value? @todo which value means what? Please use [at]param
+	/** \brief setter
+	 *
+	 * turns the the ability to cast shadows of this component either "on" or "off"
+	 * @param value @todo default value? @todo which value means what?
+	 */
+	void setShadow(bool value);
 
+	/** \brief setter
+	 *
+	 * sets if the component is transparent or not
+	 * @param value @todo default value? @todo which value means what?
+	 */
+	void setTransparency(bool value);
 
-	bool hasEmission();	//!< @return 1 if component has emission turned on @return 0 if it has emission turned off
+	/** \brief checks if graphic component has emission
+	 *
+	 * @return 1 if component has emission turned on
+	 * @return 0 if it has emission turned off
+	 */
+	bool hasEmission();
 
-	bool hasShadow();	//!< @return 1 if component casts shadows @return 0 if component has shadows turned off
-	bool hasTransparency();	//!< @return 1 if component is transparent @return 0 if component is not transparent
+	/** \brief checks if graphic component has shadow
+	 *
+	 * @return 1 if component casts shadows
+	 * @return 0 if component has shadows turned off
+	 */
+	bool hasShadow();
 
+	/** \brief checks if graphic component has transparency
+	 *
+	 * @return 1 if component is transparent
+	 * @return 0 if component is not transparent
+	 */
+	bool hasTransparency();
+
+	/** brief setter
+	 *
+	 * @param min,max
+	 */
 	void setGhostObject(glm::vec3 min, glm::vec3 max);
+
+	/** brief getter
+	 *
+	 * @return mGhostObject
+	 */
 	btGhostObject* getGhostObject();
 
 
+	/** \brief default constructor without parameters
+	 *
+	 */
+	GraphicsComponent();
 
-
-	GraphicsComponent();		//!< default constructor without parameters
-
-
+	/** \brief constructor
+	 *
+	 * @param mesh
+	 * @param material
+	 */
 	GraphicsComponent(Mesh* mesh, Material* material);
 
 
 private:
-	Mesh *mMesh;
-	Material *mMaterial;
+	Mesh *mMesh;					/**< !docu pls! */
+	Material *mMaterial;			/**< !docu pls! */
 
 
-	glm::mat4 modelMatrixGc;
+	glm::mat4 modelMatrixGc;		/**< !docu pls! */
 
-	btGhostObject *mGhostObject;
+	btGhostObject *mGhostObject;	/**< !docu pls! */
 
-	bool mDynamic;
-	bool mEmission;
-	bool mShadow;
-	bool mTranparency;
+	bool mDynamic;					/**< !docu pls! */
+	bool mEmission;					/**< !docu pls! */
+	bool mShadow;					/**< !docu pls! */
+	bool mTranparency;				/**< !docu pls! */
 
 
 };

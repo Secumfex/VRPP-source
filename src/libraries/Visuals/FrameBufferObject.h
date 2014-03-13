@@ -15,57 +15,176 @@
 
 class FrameBufferObject {
 public:
+	/** \brief constructor
+	 *
+	 * @param width,height
+	 */
 	FrameBufferObject(int width=800, int height=800);
+
+	/** \brief destructor
+	 *
+	 */
 	virtual ~FrameBufferObject();
 
-	void createPositionTexture();//creates a positionmap for a color attachment to write in
-	void createNormalTexture();//creates a normalmap for a color attachment to write in
-	void createColorTexture();//creates a colormap for a color attachment to write in
-	void createSpecularTexture();//creates a specularmap for a color attachment to write in
-	void createShadowMap();//creates a shadowmap for a color attachment to write in
+	/** \brief creates a positionmap for a color attachment to write in
+	 *
+	 */
+	void createPositionTexture();
 
-	void createDepthBuffer();//creates a depthbuffer for this fbo
+	/** \brief creates a normalmap for a color attachment to write in
+	 *
+	 */
+	void createNormalTexture();
 
-	GLuint getFboHandle();//returns FBO handle
-	GLuint getPositionTextureHandle();//returns position texture handle
-	GLuint getNormalTextureHandle();//returns normal texture handle
-	GLuint getColorTextureHandle();//returns color texture handle
-	GLuint getSpecularTextureHandle();//returns specular texture handle
-	GLuint getShadowMapHandle();//returns shadow texture handle
-	GLuint getDepthBufferHandle();//returns depth buffer handle
+	/** \brief creates a colormap for a color attachment to write in
+	 *
+	 */
+	void createColorTexture();
 
+	/** \brief creates a specularmap for a color attachment to write in
+	 *
+	 */
+	void createSpecularTexture();
 
-	void bindFBO();//binds this fbo
-	void unbindFBO();//unbinds this fbo
-	void bindPositionTexture();//binds position map of this fbo
-	void bindNormalTexture();//binds normal map of this fbo
-	void bindColorTexture();//binds color map of this fbo
-	void bindSpecularTexture();//binds specular map of this fbo
-	void bindShadowMap();//binds shadow map of this fbo
-	void bindDepthBuffer();//binds depthbuffer of this fbo
-	void unbindTexture();//unbinds texture from current active texture
-	void unbindAllTextures();//undbinds all textures from all active textures of this fbo
-	void makeDrawBuffers();//makes draw buffers for shaders to draw into our textures
-	void resize(int width, int height);//resizes the resolution of our fbo
+	/** \brief creates a shadowmap for a color attachment to write in
+	 *
+	 */
+	void createShadowMap();
 
-	GLfloat getWidth();//returns the width
-	GLfloat getHeight();//returns the height
+	/** \brief creates a depthbuffer for this fbo
+	 *
+	 */
+	void createDepthBuffer();
+
+	/** \brief getter
+	 *
+	 * @eturn FBO handle
+	 */
+	GLuint getFboHandle();
+
+	/** \brief getter
+	 *
+	 * @return position texture handle
+	 */
+	GLuint getPositionTextureHandle();
+
+	/** \brief getter
+	 *
+	 * @return normal texture handle
+	 */
+	GLuint getNormalTextureHandle();
+
+	/** \brief getter
+	 *
+	 * @return color texture handle
+	 */
+	GLuint getColorTextureHandle();
+
+	/** \brief getter
+	 *
+	 * @return specular texture handle
+	 */
+	GLuint getSpecularTextureHandle();
+
+	/** \brief getter
+	 *
+	 * @return shadow texture handle
+	 */
+	GLuint getShadowMapHandle();
+
+	/** \brief getter
+	 *
+	 * @return depth buffer handle
+	 */
+	GLuint getDepthBufferHandle();
+
+	/** \brief binds this fbo
+	 *
+	 */
+	void bindFBO();
+
+	/** \brief unbinds this fbo
+	 *
+	 */
+	void unbindFBO();
+
+	/** \brief binds position map of this fbo
+	 *
+	 */
+	void bindPositionTexture();
+
+	/** \brief binds normal map of this fbo
+	 *
+	 */
+	void bindNormalTexture();
+
+	/** \brief binds color map of this fbo
+	 *
+	 */
+	void bindColorTexture();
+
+	/** \brief binds specular map of this fbo
+	 *
+	 */
+	void bindSpecularTexture();
+
+	/** \brief binds shadow map of this fbo
+	 *
+	 */
+	void bindShadowMap();
+
+	/** \brief binds depthbuffer of this fbo
+	 *
+	 */
+	void bindDepthBuffer();
+
+	/** \brief unbinds texture from current active texture
+	 *
+	 */
+	void unbindTexture();
+
+	/** \brief undbinds all textures from all active textures of this fbo
+	 *
+	 */
+	void unbindAllTextures();
+
+	/** \brief makes draw buffers for shaders to draw into our textures
+	 *
+	 */
+	void makeDrawBuffers();
+
+	/** \brief resizes the resolution of our fbo
+	 *
+	 */
+	void resize(int width, int height);
+
+	/** \brief getter
+	 *
+	 * @return the width
+	 */
+	GLfloat getWidth();
+
+	/** \brief getter
+	 *
+	 * @return the height
+	 */
+	GLfloat getHeight();
 
 
 protected:
 
-	int mHeight, mWidth;
+	int mHeight, mWidth;				/**< !docu pls! */
 
-    GLuint mFramebufferHandle;
+    GLuint mFramebufferHandle;			/**< !docu pls! */
 
-    GLuint mPositionTextureHandle;
-    GLuint mNormalTextureHandle;
-    GLuint mColorTextureHandle;
-    GLuint mSpecularTextureHandle;
-    GLuint mShadowMapHandle;
-    GLuint mDepthbufferHandle;
+    GLuint mPositionTextureHandle;		/**< !docu pls! */
+    GLuint mNormalTextureHandle;		/**< !docu pls! */
+    GLuint mColorTextureHandle;			/**< !docu pls! */
+    GLuint mSpecularTextureHandle;		/**< !docu pls! */
+    GLuint mShadowMapHandle;			/**< !docu pls! */
+    GLuint mDepthbufferHandle;			/**< !docu pls! */
 
-    std::vector <GLenum> mDrawBuffers;
+    std::vector <GLenum> mDrawBuffers;	/**< !docu pls! */
 
 };
 
