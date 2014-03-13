@@ -24,52 +24,128 @@ class Shader : public Subject{
 	//-----------------MEMBER FUNCTIONS-----------------
 public:
 
-
+	/** \brief constructor
+	 *
+	 * @param vertexShader
+	 * @param fragmentShader
+	 */
 	Shader(std::string vertexShader, std::string fragmentShader);
+
+	/** \brief destructor
+	 *
+	 */
 	virtual ~Shader();
+
+	/** \brief setter
+	 *
+	 * sets/changes mShaderName
+	 * @param name
+	 */
 	void setShaderName(std::string name);
+
+	/** \brief !docu pls!
+	 *
+	 */
 	void uploadAllUniforms();
 
-	std::string getShaderName();//returns shader name
-	GLuint getProgramHandle();//return program handle
+	/** \brief getter
+	 *
+	 * @return shader name
+	 */
+	std::string getShaderName();
+
+	/** \brief getter
+	 *
+	 * @return program handle
+	 */
+	GLuint getProgramHandle();
 
 
-	bool uploadUniform(glm::mat4 uniformMatrix, std::string uniformName);//this uploads a single uniform to this shader program
-	bool uploadUniform(glm::vec3 uniformVector, std::string uniformName);//this uploads a single uniform to this shader program
-	bool uploadUniform(GLfloat uniformVariable, std::string uniformName);//this uploads a single uniform to this shader program
-	bool uploadUniform(GLint uniformVariable, std::string uniformName);//this uploads a single uniform to this shader program
+	/** \brief this uploads a single uniform to this shader program
+	 *
+	 * @param uniformMatrix
+	 * @param uniformName
+	 */
+	bool uploadUniform(glm::mat4 uniformMatrix, std::string uniformName);
 
-	bool hasUniform(std::string uniformName);//checks on wheather the shader program owns a certain uniform variable
+	/** \brief this uploads a single uniform to this shader program
+	 *
+	 * @param uniformVector
+	 * @param uniformName
+	 */
+	bool uploadUniform(glm::vec3 uniformVector, std::string uniformName);
 
+	/** \brief this uploads a single uniform to this shader program
+	 *
+	 * @param uniformVariable as GLfloat
+	 * @param uniformName
+	 */
+	bool uploadUniform(GLfloat uniformVariable, std::string uniformName);
+
+	/** \brief this uploads a single uniform to this shader program
+	 *
+	 * @param uniformVariable as GLuint
+	 * @param uniformName
+	 */
+	bool uploadUniform(GLint uniformVariable, std::string uniformName);
+
+
+	/** \brief checks on wheather the shader program owns a certain uniform variable
+	 *
+	 * @param uniformName
+	 * @return true or false
+	 */
+	bool hasUniform(std::string uniformName);
+
+	/** \brief getter
+	 *
+	 *@return vector of uniform names
+	 */
 	std::vector<std::string> getUniformNames();
 
 
+	/** \brief binds the shader program
+	 *
+	 */
+	void useProgram();
 
-	void useProgram();//binds the shader program
+	/** \brief renders a GraphicsComponent
+	 *
+	 * @param gc
+	 */
+	void render(GraphicsComponent *gc);
 
-	void render(GraphicsComponent *gc);//renders a GraphicsComponent
-
-	void attachUniformListener(std::string uniform);//attaches UniformListeners to our Shader
+	/** \brief attach listener
+	 *
+	 * attaches UniformListeners to our Shader
+	 * @param uniform
+	 */
+	void attachUniformListener(std::string uniform);
 
 	void setBlurStrength(int strength);//TODO: this will be moved out of this class
 	GLint getBlurStrength();//TODO: this will be moved out of this class
 
 private:
+	/** \brief !docu pls!
+	 *
+	 * @param vert
+	 * @param frag
+	 */
 	void makeShader(std::string vert, std::string frag); //
 
 	//-----------------MEMBER VARIABLES-----------------
 protected:
 
 
-	std::map<std::string, GLuint> mUniformHandles;
+	std::map<std::string, GLuint> mUniformHandles;	/**< !docu pls! */
 
-	std::vector<std::string> mUniformNames;
+	std::vector<std::string> mUniformNames;			/**< !docu pls! */
 
-	std::string mShaderName;
+	std::string mShaderName;						/**< !docu pls! */
 
-	GLuint mProgramHandle;
+	GLuint mProgramHandle;							/**< !docu pls! */
 
-	GLint blurStrength;
+	GLint blurStrength;								/**< !docu pls! */
 
 };
 

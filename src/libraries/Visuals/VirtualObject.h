@@ -12,7 +12,7 @@ class RenderQueue;
 class VirtualObject{
 
 	private:
-	glm::mat4 modelMatrix;							/**< 4x4Matrix */										/**< identification number */
+	glm::mat4 modelMatrix;							/**< 4x4Matrix */
 
 	vector<GraphicsComponent*> mGraphComponent;		/**< vector of graphic-components */
 
@@ -21,14 +21,14 @@ public:
 
 	/** \brief constructor
 	 *
-	 * void constructor, sets modelMatrix to zero, sets the id to last id+1 and creates a new physicsComponent.
+	 * void constructor, sets modelMatrix to zero and creates a new physicsComponent.
 	 */
 	VirtualObject();
 
 	/** \brief constructor
 	 *
 	 * if you know a modelMAtrix you can start with this constructor.
-	 * it sets modelMatrix to the given one, sets the id to last id+1  and creates a new physicsComponent.
+	 * it sets modelMatrix to the given one and creates a new physicsComponent.
 	 * @param modelMatrix 4x4Matrix
 	 */
 	VirtualObject(glm::mat4 modelMatrix);
@@ -67,8 +67,16 @@ public:
 	 */
 	~VirtualObject();
 
+	/** \brief translates the physic and graphic component of the virtual object
+	 *
+	 * @param trans glm::vec3 translation vector
+	 */
 	void translate(glm::vec3 trans);
 
+	/** \brief scales the physic and graphic component of the virtual object
+	 *
+	 * @param scale glm::vec3 scale vector
+	 */
 	void scale(glm::vec3 scale);
 
 	/** \brief updates the modelMatrix
@@ -92,6 +100,12 @@ public:
 	*/
 	vector<GraphicsComponent*> getGraphicsComponent();
 
+	/** \brief getter
+	 *
+	 * returns graphic components with a specific/given material name
+	 * @param tag graphic component material name
+	 * @return vector with graphic components which have the material name of "tag"
+	 */
 	vector<GraphicsComponent*> getGraphicsComponent(std::string tag);
 
 	/** \brief sets PhysicsComponent
@@ -165,6 +179,10 @@ public:
 
 	PhysicsComponent *physicsComponent; 			/**< pointer to the physics component of the VO */
 
+	/** \brief getter
+	 *
+	 * @return the virtual objects physic component
+	 */
 	PhysicsComponent* getPhysicsComponent();
 };
 
