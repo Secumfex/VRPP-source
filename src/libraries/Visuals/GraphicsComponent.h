@@ -74,21 +74,27 @@ public:
 	/** \brief setter
 	 *
 	 * turns the emission either "on" or "off"
-	 * @param value @todo default value? @todo which value means what?
+	 * @param value
+	 * @todo default value?
+	 * @todo which value means what?
 	 */
 	void setEmission(bool value);
 
 	/** \brief setter
 	 *
 	 * turns the the ability to cast shadows of this component either "on" or "off"
-	 * @param value @todo default value? @todo which value means what?
+	 * @param value
+	 * @todo default value?
+	 * @todo which value means what?
 	 */
 	void setShadow(bool value);
 
 	/** \brief setter
 	 *
 	 * sets if the component is transparent or not
-	 * @param value @todo default value? @todo which value means what?
+	 * @param value
+	 * @todo default value?
+	 * @todo which value means what?
 	 */
 	void setTransparency(bool value);
 

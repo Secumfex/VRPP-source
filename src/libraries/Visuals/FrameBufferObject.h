@@ -58,7 +58,7 @@ public:
 
 	/** \brief getter
 	 *
-	 * @eturn FBO handle
+	 * @return FBO handle
 	 */
 	GLuint getFboHandle();
 
