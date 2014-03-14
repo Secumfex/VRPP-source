@@ -202,7 +202,7 @@ void ShootSphereListener::update(){
 	btScalar speed = 30;
 
 
-	VirtualObject* 	sphere = 	VirtualObjectFactory::getInstance()->createVirtualObject(RESOURCES_PATH "/sphere.obj", VirtualObjectFactory::SPHERE);
+	VirtualObject* 	sphere = 	VirtualObjectFactory::getInstance()->createVirtualObject(RESOURCES_PATH "/sphere.obj", VirtualObjectFactory::SPHERE, 2.0f);
 
 	state->addVirtualObject(sphere);
 

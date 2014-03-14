@@ -139,7 +139,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 	cout<<"Import of scene " <<filename.c_str()<<" succeeded."<<endl;
 
 	glm::vec3 physics_min = glm::vec3(FLT_MAX,FLT_MAX,FLT_MAX);
-	glm::vec3 physics_max = glm::vec3(FLT_MIN,FLT_MIN,FLT_MIN);
+	glm::vec3 physics_max = glm::vec3(-FLT_MAX,-FLT_MAX,-FLT_MAX);
 
     
 	// For each mesh of the loaded object
@@ -454,6 +454,8 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 		if(aabbMax.z > physics_max.z)
 			physics_max.z = aabbMax.z;
 
+		std::cout << "max: " << physics_max.x << " , "<< physics_max.y << " , "<< physics_max.z << std::endl;
+		std::cout << "min: " << physics_min.x << " , "<< physics_min.y << " , "<< physics_min.z << std::endl;
 
 	}
 
