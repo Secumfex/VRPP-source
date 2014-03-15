@@ -6,6 +6,7 @@
 
 #include "VirtualObject.h"
 #include "Shader.h"
+#include "Patterns/Visitor.h"
 
 using namespace std;
 
@@ -133,6 +134,13 @@ public:
 	 * extracts GCs from all VOs and sorts them into gcFlagStorage by checking for transparency, shadow, etc
 	 */
 	void sortByFlags();
+
+	/** \brief accept visitor method
+	 *
+	 * accepts a visitor to the RenderQueue object
+	 */
+	void accept(Visitor v);
+
 private:
 	list<VirtualObject* >::iterator currentFirstElement; 			/**< VO pointer used with voList */
 //	vector<GraphicsComponent>::iterator gcIterator; 				/**< iterator for gc-vectors */
