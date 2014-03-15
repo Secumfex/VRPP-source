@@ -139,7 +139,7 @@ public:
 	 *
 	 * accepts a visitor to the RenderQueue object
 	 */
-	void accept(Visitor v);
+	void accept(Visitor* v);
 
 private:
 	list<VirtualObject* >::iterator currentFirstElement; 			/**< VO pointer used with voList */

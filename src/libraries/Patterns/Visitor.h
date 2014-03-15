@@ -1,7 +1,9 @@
 #ifndef VISITOR_H
 #define VISITOR_H
 
-using namespace std;
+#include "Visuals/RenderQueue.h"
+
+//using namespace std;
 
 /*! @brief Visitor is the super  class of more specific visitor.
  *
@@ -10,7 +12,8 @@ using namespace std;
 class Visitor{
 private:
 public:
-
+	Visitor();
+	void visitRenderQueue(RenderQueue* rq);
 };
 
 #endif

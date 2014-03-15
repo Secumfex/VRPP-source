@@ -17,6 +17,10 @@ RenderQueue* RenderQueue::getRenderQueue() {
 	return this;
 }
 
+void RenderQueue::accept(Visitor* v){
+	v->visitRenderQueue(this);
+}
+
 void RenderQueue::addShader(Shader* sh) {
 	cout << "Adding Shader to shaderList." << endl;
 	shaderList.push_back(sh);
