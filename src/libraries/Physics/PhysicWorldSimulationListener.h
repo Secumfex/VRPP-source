@@ -12,7 +12,7 @@ public:
 
 	/** \brief listener constructor
 	 *
-	 * @param delta_time_source speed in which the physic simulation should run
+	 * @param delta_time_source pointer to float used as time step within simulation ( fps at best ) 
 	 */
 	PhysicWorldSimulationListener(float* delta_time_source = 0);
 

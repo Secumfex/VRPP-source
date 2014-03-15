@@ -9,7 +9,7 @@ class State : public Subject{	//a state of a context
 protected:
 
 private:
-	std::string name;	/**< !docu pls! */
+	std::string name;	/**< name of this state */
 
 public:
 	/** \brief destructor
@@ -35,7 +35,7 @@ public:
 	 */
 	void setName(std::string name);
 
-	/** \brief !docu pls!
+	/** \brief actions to be performed when this state becomes active
 	 *
 	 */
 	virtual void activate();

@@ -3,6 +3,10 @@
 #include <iostream>
 
 IngameHandler::IngameHandler(){
+	
+	mouseSpeed = 0.005f;
+	speed_movement = 3.0f; // 3 units / second
+	speed = 5.0;
 
 }
 

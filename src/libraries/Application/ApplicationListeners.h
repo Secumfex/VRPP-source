@@ -9,7 +9,7 @@ class Application;
 /// base class for application listeners, has no functionality
 class ApplicationListener : public Listener {
 protected:	
-	Application* application;	/**< !docu pls! */
+	Application* application;	/**< pointer to Application */
 public:
 	/** \brief listener constructor
 	 *
@@ -26,7 +26,7 @@ public:
 /// Activates the Application's current state
 class ActivateStateListener : public ApplicationListener{
 private:
-	Application* application;	/**< !docu pls! */
+	Application* application;	/**< pointer to Application to activate state */
 public:
 	/** \brief listener constructor
 	 *
@@ -43,7 +43,7 @@ public:
 /// sets the Application State to whatever (think about buttons)
 class SetStateListener : public ApplicationListener{
 private:
-	std::string state;	/**< !docu pls! */
+	std::string state;	/**< name of state to be set */
 public:
 	/** \brief listener constructor
 	 *
@@ -61,7 +61,7 @@ public:
 /// terminates the Application (breaks the program cycle loop)
 class TerminateApplicationListener : public ApplicationListener{
 private:
-	Application* application;	/**< !docu pls! */
+	Application* application;	/**< pointer to Application to be terminated */
 public:
 	/** \brief listener constructor
 	 *

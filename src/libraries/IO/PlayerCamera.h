@@ -18,13 +18,12 @@ private:
 	bool isRigid;						/**< true, if rigid body functionality is wanted in this Camera */
 	btRigidBody* rigidBody; 			/**< Rigid Body, incase Gravity and other Physical Interaction is wanted */
 
-	/** \brief !docu pls!
-	 *
+	/** \brief auxillary method to create a Bullet Collision shape
 	 * create a btCylinderShape as collision Shape
 	 */
 	void createCollisionShape();
 
-	/** \brief !docu pls!
+	/** \brief auxillary method to create and register a Bullet Rigid Body which resembles this Camera
 	 *
 	 */
 	void createRigidBody();

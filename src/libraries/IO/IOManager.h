@@ -29,7 +29,7 @@ private:
 	std	::	stringstream sstream; 	/**< mostly used to convert ints to strings */
 
 	/** \brief constructor
-	 *
+	 *	initializes all pointers and variables with NULL
 	 */
 	IOManager();
 public:
@@ -41,7 +41,7 @@ public:
 	 */
 	void setWindow(GLFWwindow* window);
 
-	GLFWwindow* window;		/**< !docu pls! */
+	GLFWwindow* window;		/**< GLFW window used to call GLFW methods */
 
 
 	/** \brief setter
@@ -78,13 +78,13 @@ public:
 	 */
 	float getLastTime ();
 
-	/** \brief !docu pls!
+	/** \brief compute time difference since last call of this method
 	 *
-	 * compute time difference since last call of this method
+	 * compute time difference since last call of this method, which is usually used for last frame time
 	 */
 	void computeFrameTimeDifference();
 
-	/** \brief key callback function
+	/** \brief key callback function - active IOHandler::key_callback
 	 * @param window where the callback is used
 	 * @param key the keyboard key that was pressed or released
 	 * @param scancode system-specefic scancode of the key
@@ -94,7 +94,7 @@ public:
 	 */
 	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	
-	/** \brief !docu pls!
+	/** \brief cursor position callback method - calls active IOHandler::cursorPos_callback
 	 *
 	 * cursor position callback (movement)
 	 * @param window
@@ -102,7 +102,7 @@ public:
 	 */
 	void cursorPos_callback(GLFWwindow* window, double xpos, double ypos);
 
-	/** \brief !docu pls!
+	/** \brief mouse button callback method - calls active IOHandler::mouseButton_callback
 	 *
 	 * mouse button callback (press / release)
 	 * @param window
@@ -113,26 +113,26 @@ public:
 	void mouseButton_callback(GLFWwindow* window, int button, int action, int mods);
 
 
-	/** \brief method to register at glfwKeyCallback
+	/** \brief method to register at glfwSetKeyCallback
 	 * @details GLFW needs to use a static method which cannot be provided by instance methods
 	 * static method to be registered at GLFW
-	 * @param window
-	 * @param key
+	 * @param window 
+	 * @param key GLFW_KEY_...
 	 * @param scancode
-	 * @param action
+	 * @param action GLFW_PRESS, GLFW_RELEASE or GLFW_REPEAT
 	 * @param mods
 	 */
 	static void staticKey_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
-	/** \brief !docu pls!
+	/** \brief method to register at glfwSetCursorPosCallback
 	 *
 	 * static method to be registered at GLFW
 	 * @param window
-	 * @param xpos,ypos
+	 * @param xpos,ypos current mouse position
 	 */
 	static void staticCursorPos_callback(GLFWwindow* window, double xpos, double ypos);
 
-	/** \brief !docu pls!
+	/** \brief method to register at glfwSetMouseButtonCallback
 	 *
 	 * static method to be registerted at GLFW
 	 * @param window
@@ -149,7 +149,7 @@ public:
 	void bindCallbackFuncs();
 
 
-	/** \brief !docu pls!
+	/** \brief notify Listeners attached to a certain GLFW key 
 	 *
 	 * notify Listeners attached to a key pess by using the GLFW integer definitions for keys
 	 * @param key

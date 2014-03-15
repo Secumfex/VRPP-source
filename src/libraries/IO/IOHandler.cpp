@@ -7,11 +7,8 @@ IOHandler::IOHandler(){
 	 */
 	isMenuState = false;
 	camObject = new Camera();
-	speed_movement = 3.0f; // 3 units / second
-	mouseSpeed = 0.005f;
 	xPos = -1;
 	yPos = -1;
-	speed = 5.0;
 
 	selectionHandler = new SelectionHandler();
 	//	glfwGetCursorPos(window, &xPos, &yPos);

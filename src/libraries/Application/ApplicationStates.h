@@ -18,14 +18,14 @@ class ApplicationState : public State{
 
 protected: 
 	/*Member variables*/
-	Frustum* frustum;				/**< !docu pls! */
-	Camera* camera;					/**< !docu pls! */
-	RenderQueue* renderQueue;		/**< !docu pls! */
-	IOHandler* iOHandler;			/**< !docu pls! */
-	glm::mat4 perspectiveMatrix;	/**< !docu pls! */
+	Frustum* frustum;				/**< frustum associated with camera, used for frustum culling */
+	Camera* camera;					/**< camera to be used for view in this state */
+	RenderQueue* renderQueue;		/**< renderqueue to be used for rendering in this state */
+	IOHandler* iOHandler;			/**< IOHandler to be used for input interpretation */
+	glm::mat4 perspectiveMatrix;	/**< perspective matrix to be used by rendering! */
 
 	/** \brief bind objects to RenderManager, IOManager, PhysicsWorld etc.
-	 *
+	 *	
 	 */
 	virtual void bindObjects();
 public:

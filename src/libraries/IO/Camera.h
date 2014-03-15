@@ -8,35 +8,38 @@
 using namespace std;
 
 /** @brief Camera here means a first person camera.
- *
+ *	a Camera is a construct consisting only of a position and a view direction
+ *  it can return a view matrix
  */
 class Camera{
 protected:
-	glm::vec3 position;		/**< !docu pls! */
-	glm::vec3 direction;	/**< !docu pls! */
+	glm::vec3 position;		/**< current world position */
+	glm::vec3 direction;	/**< current world normalized view direction */
 
-	float xPosition;		/**< !docu pls! */
-	float yPosition;		/**< !docu pls! */
-	float zPosition;		/**< !docu pls! */
+	float xPosition;		/**< current world position x */
+	float yPosition;		/**< current world position y */
+	float zPosition;		/**< current world position z */
 	float phi;				/**< rotation, horizontal */
 	float theta;			/**< inclination, vertical */
-	float speedRight;		/**< !docu pls! */
-	float speedForward;		/**< !docu pls! */
+	float speedRight;		/**< horizontal velocity */
+	float speedForward;		/**< forward velocity */
 
-	/** \brief !docu pls!
-	 *
+	/** \brief returns an Up vector
+	 * @return Up vector
 	 */
 	glm::vec3 getUp();
 
-	/** \brief !docu pls!
+	/** \brief clamps Phi and Thetha 
 	 *
 	 * clip Phi, Theta into [-PI; PI] and [0, 2*PI]
 	 */
 	inline void clampPhiTheta();
 
 public:
-	/** \brief constructor
-	 *
+	/** \brief construct a camera in at default position
+	 *	default position is ( 0.0, 0.0, 5.0 ) 
+	 *	default view direction is negatie z axis
+	 *  default velocity is 0.0
 	 */
 	Camera();
 
@@ -46,7 +49,7 @@ public:
 	~Camera();
 
 	/* GETTER AND SETTER BEGIN */
-	// TODO remove unnecessary methods
+
 	/** \brief getter
 	 *
 	 * @return x value
@@ -128,8 +131,8 @@ public:
 	 */
 	void setSpeedForward(float speed);
 
-	/** \brief !docu pls!
-	 *
+	/** \brief update position by evaluating current velocity over provided time step
+	 * @param deltaTime : time step in seconds
 	 */
 	virtual void updatePosition(float deltaTime);
 
@@ -192,13 +195,13 @@ public:
 	void setCenter(glm::vec3 center);
 	/* GETTER AND SETTER END */
 
-	/** \brief !docu pls!
+	/** \brief compute normalized view direction from current inclination and rotation
 	 *
 	 * compute ViewDirection from Phi and Theta
 	 */
 	inline void updateViewDirection();
 
-	/** \brief !docu pls!
+	/** \brief compute inclination and rotation angles from current view direction
 	 *
 	 * compute Phi and Theta from View Direction
 	 */

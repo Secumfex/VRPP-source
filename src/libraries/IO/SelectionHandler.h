@@ -6,6 +6,7 @@
 
 class PhysicWorld;
 
+/// class to handle object selection via bullet ray casting
 class SelectionHandler : public Subject{
 protected:
 	const btCollisionObject* currentSelection;	/**< currently selected collision shape */
@@ -17,23 +18,23 @@ public:
 	 */
 	SelectionHandler(PhysicWorld* pw = 0);
 
-	/** \brief !docu pls!
+	/** \brief check whether anything is currently selected
 	 *
 	 * true if currentSelection != 0
 	 */
 	bool somethingIsSelected();
 
-	/** \brief !docu pls!
+	/** \brief perform a selection attempt from one point to another 
 	 *
-	 * attempt ray picking from origin in direction of to
-	 * @param from
-	 * @param to
+	 * attempt ray picking from one point to another
+	 * @param from : origin of ray
+	 * @param to : end of ray
 	 */
 	void trySelection(glm::vec3& from, glm::vec3& to);
 
 	/** \brief handle selection
 	 *
-	 * !docu pls!
+	 * perform custom action on selection. simply calls listeners by default
 	 */
 	virtual void handleSelection();
 

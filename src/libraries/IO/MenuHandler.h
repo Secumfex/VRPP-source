@@ -4,7 +4,7 @@
 #include "IOHandler.h"
 #include "Camera.h"
 
-
+/// IOHandler which comes with Mouse selection and a visible mouse
 class MenuHandler : public IOHandler{
 private:
 public:
@@ -18,7 +18,7 @@ public:
 	 */
 	virtual ~MenuHandler();
 
-	/** \brief !docu pls!
+	/** \brief key callback function without any predefined handling
 	 *
 	 * @param window
 	 * @param key
@@ -28,7 +28,7 @@ public:
 	 */
 	virtual void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
-	/** \brief !docu pls!
+	/** \brief auxillary function to set mouse visibility and behaviour
 	 *
 	 * @param window
 	 * @param xpos,ypos

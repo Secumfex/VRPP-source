@@ -10,8 +10,8 @@
  */
 class UpdateCameraPositionListener : public Listener{
 private:
-	Camera* cam;				/**< !docu pls! */
-	float* delta_time_source;	/**< !docu pls! */
+	Camera* cam;				/**< camera object to be updated */
+	float* delta_time_source;	/**< pointer to time step value (optional) */
 public:
 	/** \brief listener constructor
 	 *

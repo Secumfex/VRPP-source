@@ -19,9 +19,9 @@ class Application : public Singleton<Application>, public StateMachine, public S
 friend class Singleton<Application>;
 
 private:
-	string label;			/**< !docu pls! */
-	bool shouldTerminate;	/**< !docu pls! */
-	bool initialized;		/**< !docu pls! */
+	string label;			/**< label of this Application, displayed in Window Header */
+	bool shouldTerminate;	/**< auxillary bool to determine whether the application should terminate */
+	bool initialized;		/**< auxillary bool to determine whether the application has been initialized yet */
 
 public:
 	/** \brief initialize RenderManager and open window

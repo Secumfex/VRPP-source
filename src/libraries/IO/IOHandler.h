@@ -15,18 +15,15 @@ class IOHandler : public Subject{
 protected:
 		// TODO implement state check and change
 		bool isMenuState; 				/**< Boolean for changing State between Menu und InGame */
-		double speed;					/**< !docu pls! */
 		double xPos, yPos; 				/**< Mouse Position */
-		float speed_movement; 			/**< Float for adding to Position */
-		float mouseSpeed; 				/**< Float for adding to Theta, Phi */
 
 		glm::mat4 mViewMatrix;			/**< 4*4-Matrix */
 
-		Camera* camObject;				/**< !docu pls! */
+		Camera* camObject;				/**< camera object which may be manipulated through input callbacks */
 
-		std	::	stringstream sstream; 	/**<* mostly used to convert ints to strings */
+		std	::	stringstream sstream; 	/**<* mostly used to convert ints to strings */	
 
-		SelectionHandler* selectionHandler;	/**< !docu pls! */
+		SelectionHandler* selectionHandler;	/**< Mouse selection handler class which uses Bullet Ray Casting */
 public:
 
 	/** \brief constructor
@@ -78,7 +75,7 @@ public:
 	 */
 	virtual void setOrientation(GLFWwindow* window, double xpos, double ypos);
 
-	/** \brief !docu pls!
+	/** \brief custom mouse position handling function
 	 *
 	 * cursorPos_callback as defined by GLFW
 	 * @param window
@@ -86,7 +83,7 @@ public:
 	 */
 	virtual void cursorPos_callback(GLFWwindow* window, int xpos, int ypos);
 
-	/** \brief !docu pls!
+	/** \brief custom mouse button handling function
 	 *
 	 * mouse button callback (press / release) as defined by GLFW
 	 * @param window
@@ -96,7 +93,7 @@ public:
 	 */
 	virtual void mouseButton_callback(GLFWwindow* window, int button, int action, int mods);
 
-	/** \brief key callback function
+	/** \brief custom key callback interpretation
 	 *
 	 * @param window window where the callback is used
 	 * @param key the keyboard key that was pressed or released
@@ -107,7 +104,7 @@ public:
 	 */
 	virtual void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
-	/** \brief !docu pls!
+	/** \brief notify listeners attached to a certain GLFW key
 	 *
 	 * notify Listeners attached to a key pess by using the GLFW integer definitions for keys
 	 * @param key
