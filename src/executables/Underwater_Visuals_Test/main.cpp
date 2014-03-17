@@ -3,6 +3,10 @@
 #include "Application/ApplicationListeners.h"
 #include "Tools/UtilityListeners.h"
 
+#include "IO/IOManager.h"
+
+#include "Physics/PhysicWorldSimulationListener.h"
+
 #include "UnderwaterScene.h"
 
 /*
@@ -33,6 +37,7 @@ void configureVirtualObjects(){
 
 void configurePhysics(){
 	/* customization of Bullet / Physicsworld */
+	testingApp->attachListenerOnBeginningProgramCycle( 	new PhysicWorldSimulationListener(IOManager::getInstance()->getDeltaTimePointer()));
 
 }
 
@@ -51,13 +56,10 @@ void configureRendering(){
 	
 	Shader* shader =  new Shader (SHADERS_PATH "/Underwater_Visuals_Test/phong.vert", SHADERS_PATH "/Underwater_Visuals_Test/phong.frag");
 	Listener* uniLightPos = new UploadUniformVec3Listener("UNIFORMUPLOADLISTENER", UnderwaterScene::lightPosition, "uniformLightPosition");
-	Listener* uniLightDir = new UploadUniformVec3Listener("UNIFORMUPLOADLISTENER", UnderwaterScene::lightDirection, "uniformLightDirection");
 	
 	shader-> attach(uniLightPos);
-	shader-> attach(uniLightDir);
 
 	testingApp->attachListenerOnProgramInitialization(	new SetDefaultShaderListener( shader ));
-	
 	testingApp->attachListenerOnRenderManagerFrameLoop(	new RenderloopPlaceHolderListener());
 
 	std::vector<std::string> uniforms = shader->getUniformNames();

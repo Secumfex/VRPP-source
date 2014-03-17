@@ -10,7 +10,6 @@ uniform mat4 uniformInverse;
 uniform mat4 uniformPerspective;
 
 uniform vec3 uniformLightPosition;
-uniform vec3 uniformLightDirection;
 
 out vec3 passNormal;
 out vec3 passLightPosition;
@@ -20,7 +19,6 @@ out vec2 passUVCoords;
 
 void main() {
     passLightPosition  = (uniformView * vec4(uniformLightPosition, 1)).xyz;
-    passLightDirection = (uniformView * vec4(uniformLightDirection,0)).xyz;
 
     gl_Position = uniformPerspective * uniformView * uniformModel * positionAttribute;
 

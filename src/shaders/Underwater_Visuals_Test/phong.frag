@@ -3,7 +3,6 @@
 in vec3 passNormal;
 in vec3 passPosition;
 in vec3 passLightPosition;
-in vec3 passLightDirection;
 in vec2 passUVCoords;
 
 out vec4 fragmentColor;
@@ -14,9 +13,8 @@ uniform vec3 emissiveColor;
 void main() { 
     //compute the light vector as the normalized vector between 
     //the vertex position and the light position:
-    vec3 lightVector = normalize(-passLightDirection);
-//    float distance = dot((passLightPosition - passPosition),(passLightPosition - passPosition));
-    float distance = 10.0;
+    vec3 lightVector = normalize(passLightPosition - passPosition);
+    float distance = dot((passLightPosition - passPosition),(passLightPosition - passPosition));
 
     //compute the eye vector as the normalized negative vertex 
     //position in camera coordinates:
@@ -26,8 +24,8 @@ void main() {
     //GLSL's built-in reflect() function:
     vec3 reflection = normalize(reflect(-lightVector, passNormal));
 
-    float diffuse = (max(dot(passNormal, lightVector), 0) / distance) *15.0;
-    float specular = (pow(max(dot(reflection, eye), 0), 15) / distance) *10.0;
+    float diffuse = (max(dot(passNormal, lightVector), 0) );
+    float specular = (pow(max(dot(reflection, eye), 0), 15) ) *1.0;
     float ambient = 0.2;
 
     vec3 diffuse_color = texture(diffuseTexture, passUVCoords).xyz;

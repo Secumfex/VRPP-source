@@ -51,3 +51,16 @@ public:
 	UploadUniformVec3Listener(std::string name = std::string("UNIFORMUPLOADLISTENER"), glm::vec3 vector = glm::vec3(0.0f,0.0f,0.0f), std::string uniform_name = "custom_uniform");
 	void update();	
 };
+
+/// listener on above or under water
+class UnderOrAboveWaterListener : public Listener{
+private:
+	Camera* cam;
+	bool underwater;
+	float sea_level_y;
+	Listener* EnterWaterListener;
+	Listener* ExitWaterListener;
+public:
+	UnderOrAboveWaterListener(Camera* cam, float sea_level_y = 0.0f, Listener* EnterWaterListener = 0, Listener* ExitWaterListener = 0);
+	void update();
+};

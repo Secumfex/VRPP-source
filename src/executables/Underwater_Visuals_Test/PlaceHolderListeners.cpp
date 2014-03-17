@@ -72,3 +72,30 @@ void UploadUniformVec3Listener::update(){
 	Shader* shader = RenderManager::getInstance()->getCurrentShader();
 	shader->uploadUniform(vector, uniform_name);
 }
+
+UnderOrAboveWaterListener::UnderOrAboveWaterListener(Camera* cam, float sea_level_y, Listener* EnterWaterListener, Listener* ExitWaterListener){
+	this->cam = cam;
+	this->sea_level_y = sea_level_y;
+	this->EnterWaterListener = EnterWaterListener;
+	this->ExitWaterListener  = ExitWaterListener;
+	underwater = false;
+}
+
+void UnderOrAboveWaterListener::update(){
+	if ( cam->getPosition().y < this->sea_level_y ){
+		if (!underwater){
+			if (EnterWaterListener != 0){
+				EnterWaterListener->update(); 
+			}
+			underwater = true;
+		}
+	}
+	else{
+		if (underwater){
+			if (ExitWaterListener != 0){
+				ExitWaterListener->update();
+			}
+			underwater = false;
+		}
+	}
+}
