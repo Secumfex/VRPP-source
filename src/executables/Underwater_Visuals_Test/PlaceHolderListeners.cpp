@@ -73,6 +73,17 @@ void UploadUniformVec3Listener::update(){
 	shader->uploadUniform(vector, uniform_name);
 }
 
+UploadUniformFloatListener::UploadUniformFloatListener(std::string name, float value, std::string uniform_name){
+	setName(name);
+	this->value 	= value;
+	this->uniform_name 	= uniform_name;
+}
+
+void UploadUniformFloatListener::update(){
+	Shader* shader = RenderManager::getInstance()->getCurrentShader();
+	shader->uploadUniform(value, uniform_name);
+}
+
 UnderOrAboveWaterListener::UnderOrAboveWaterListener(Camera* cam, float sea_level_y, Listener* EnterWaterListener, Listener* ExitWaterListener){
 	this->cam = cam;
 	this->sea_level_y = sea_level_y;
@@ -99,3 +110,16 @@ void UnderOrAboveWaterListener::update(){
 		}
 	}
 }
+
+RecompileAndSetShaderListener::RecompileAndSetShaderListener(std::string vertex_shader, std::string fragment_shader){
+	this->vertex_shader = vertex_shader;
+	this->fragment_shader = fragment_shader;
+}
+
+void RecompileAndSetShaderListener::update(){
+	Shader* shader = new Shader ( vertex_shader, fragment_shader);
+
+	RenderManager::getInstance()->setCurrentShader(shader);
+	shader->useProgram();
+}
+

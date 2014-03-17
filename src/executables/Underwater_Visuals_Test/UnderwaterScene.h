@@ -9,9 +9,13 @@ namespace UnderwaterScene{
 
 	float water_height = 10.0f;
 
+	float fog_begin = 2.0f;
+	float fog_end	= 200.0f;
+
 	glm::vec4 watercolor(95.0f / 255.0f * 0.7f, 158.0f / 255.0f * 0.7f, 160.0f/ 255.0f * 0.7f, 0.0f);
 	glm::vec3 lightPosition(0.0f,1000.0f,0.0f);
 	glm::vec4 skycolor(135.0f / 255.0f, 206.0f / 255.0f, 250.0f / 255.0f, 0.0f);
+	glm::vec3 fog_color(95.0f / 255.0f * 0.7f, 158.0f / 255.0f * 0.7f, 160.0f/ 255.0f * 0.7f);
 	
 	VirtualObject* scene_groundObject;
 	VirtualObject* scene_stoneObject1;
@@ -35,8 +39,8 @@ namespace UnderwaterScene{
 		scene_stoneObject1 		= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_stone_01.dae", VirtualObjectFactory::OTHER);
 		scene_stoneObject2 		= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_stone_01.dae", VirtualObjectFactory::OTHER);
 		
-		// scene_stoneObject1->translate(glm::vec3(3.0f, 0.0f, 3.0f));
-		// scene_stoneObject2->translate(glm::vec3(5.0f, 0.0f, 3.0f));
+//		scene_stoneObject1->translate(glm::vec3(3.0f, 0.0f, 3.0f));
+//		scene_stoneObject2->translate(glm::vec3(5.0f, 0.0f, 3.0f));
 
 		scene_sun_Object 		= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_sun_shape.dae", VirtualObjectFactory::OTHER);
 

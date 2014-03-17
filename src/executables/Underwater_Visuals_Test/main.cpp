@@ -5,6 +5,7 @@
 
 #include "IO/IOManager.h"
 
+#include "Physics/UpdatePhysicsComponentListener.h"
 #include "Physics/PhysicWorldSimulationListener.h"
 
 #include "UnderwaterScene.h"
@@ -33,18 +34,19 @@ void configureVirtualObjects(){
 	
 	UnderwaterScene::createScene(testingState);
 
+	
 }
 
 void configurePhysics(){
 	/* customization of Bullet / Physicsworld */
 	testingApp->attachListenerOnBeginningProgramCycle( 	new PhysicWorldSimulationListener(IOManager::getInstance()->getDeltaTimePointer()));
-
 }
 
 void configureInputHandler(){
 	/* customization of input handling */
 	/* use listener interfaces for: what should happen when a specific key is pressed, etc. */
 	testingInputHandler->attachListenerOnKeyPress(		new TerminateApplicationListener(testingApp), GLFW_KEY_ESCAPE);
+	testingInputHandler->attachListenerOnKeyPress( 		new RecompileAndSetShaderListener(SHADERS_PATH "/Underwater_Visuals_Test/phong.vert", SHADERS_PATH "/Underwater_Visuals_Test/phong.frag"), GLFW_KEY_F5);
 
 }
 
@@ -55,9 +57,17 @@ void configureRendering(){
 	/*comment in to use placeholders for Renderloop, rendering every VO of the testingState; change Shader paths to use a different shader*/
 	
 	Shader* shader =  new Shader (SHADERS_PATH "/Underwater_Visuals_Test/phong.vert", SHADERS_PATH "/Underwater_Visuals_Test/phong.frag");
-	Listener* uniLightPos = new UploadUniformVec3Listener("UNIFORMUPLOADLISTENER", UnderwaterScene::lightPosition, "uniformLightPosition");
 	
-	shader-> attach(uniLightPos);
+	Listener* uniLightPos 	= new UploadUniformVec3Listener ("UNIFORMUPLOADLISTENER", UnderwaterScene::lightPosition, "uniformLightPosition");
+	Listener* uniFogColor 	= new UploadUniformVec3Listener ("UNIFORMUPLOADLISTENER", UnderwaterScene::fog_color, "uniformFogColor");
+	Listener* uniFogBegin 	= new UploadUniformFloatListener("UNIFORMUPLOADLISTENER", UnderwaterScene::fog_begin, "uniformFogBegin");
+	Listener* uniFogEnd 	= new UploadUniformFloatListener("UNIFORMUPLOADLISTENER", UnderwaterScene::fog_end, "uniformFogEnd");
+	
+
+	testingApp->attachListenerOnBeginningProgramCycle(uniLightPos);	// not clean, but easier to handle cuz of shader recompilation
+	testingApp->attachListenerOnBeginningProgramCycle(uniFogColor);	// not clean, but easier to handle cuz of shader recompilation
+	testingApp->attachListenerOnBeginningProgramCycle(uniFogBegin);	// not clean, but easier to handle cuz of shader recompilation
+	testingApp->attachListenerOnBeginningProgramCycle(uniFogEnd);	// not clean, but easier to handle cuz of shader recompilation
 
 	testingApp->attachListenerOnProgramInitialization(	new SetDefaultShaderListener( shader ));
 	testingApp->attachListenerOnRenderManagerFrameLoop(	new RenderloopPlaceHolderListener());

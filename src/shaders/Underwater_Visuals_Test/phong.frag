@@ -8,7 +8,11 @@ in vec2 passUVCoords;
 out vec4 fragmentColor;
 
 uniform sampler2D diffuseTexture;
-uniform vec3 emissiveColor;
+uniform vec3  emissiveColor;
+
+uniform float uniformFogBegin;
+uniform float uniformFogEnd;
+uniform vec3  uniformFogColor;
 
 void main() { 
     //compute the light vector as the normalized vector between 
@@ -16,6 +20,10 @@ void main() {
     vec3 lightVector = normalize(passLightPosition - passPosition);
     float distance = dot((passLightPosition - passPosition),(passLightPosition - passPosition));
 
+    float frag_distance = dot(passPosition,passPosition);
+
+    float fog_strength = min(max((frag_distance - uniformFogBegin) / (uniformFogEnd - uniformFogBegin),0.0),1.0);
+    float diff_strength = 1.0 - fog_strength;
     //compute the eye vector as the normalized negative vertex 
     //position in camera coordinates:
     vec3 eye = normalize(-passPosition);
@@ -31,9 +39,12 @@ void main() {
     vec3 diffuse_color = texture(diffuseTexture, passUVCoords).xyz;
     
     fragmentColor = vec4(
+        vec3(
         diffuse  * diffuse_color + 
         specular * vec3(1, 1, 1) + 
         ambient  * diffuse_color 
+        ) 
+        * diff_strength + fog_strength *uniformFogColor
         + emissiveColor 
         ,1);
 }
