@@ -238,8 +238,11 @@ UploadUniformEmissiveColorListener::UploadUniformEmissiveColorListener(std::stri
 void UploadUniformEmissiveColorListener::update(){
 	Shader* shader = RenderManager::getInstance()->getCurrentShader();
 	GraphicsComponent* gc = RenderManager::getInstance()->getCurrentGC();
-
-	shader->uploadUniform(gc->getMaterial()->getEmission(), "specularEmissive");
+	if (gc->hasEmission()){
+		shader->uploadUniform(gc->getMaterial()->getEmission(), "emissiveColor");
+	}else{
+		shader->uploadUniform(glm::vec3(0.0, 0.0, 0.0) , "emissiveColor");
+	}
 }
 
 UploadUniformBlurStrengthListener::UploadUniformBlurStrengthListener(std::string name){

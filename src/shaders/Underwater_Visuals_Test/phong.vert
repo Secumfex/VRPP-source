@@ -9,13 +9,18 @@ uniform mat4 uniformView;
 uniform mat4 uniformInverse;
 uniform mat4 uniformPerspective;
 
+uniform vec3 uniformLightPosition;
+uniform vec3 uniformLightDirection;
+
 out vec3 passNormal;
 out vec3 passLightPosition;
+out vec3 passLightDirection;
 out vec3 passPosition;
 out vec2 passUVCoords;
 
 void main() {
-    passLightPosition = (uniformView * vec4(3,3,3,1)).xyz;
+    passLightPosition  = (uniformView * vec4(uniformLightPosition, 1)).xyz;
+    passLightDirection = (uniformView * vec4(uniformLightDirection,0)).xyz;
 
     gl_Position = uniformPerspective * uniformView * uniformModel * positionAttribute;
 
@@ -26,6 +31,6 @@ void main() {
     //transform the normal correctly into view space 
     //and pass it to the fragment shader
     passNormal = normalize((uniformInverse * normalAttribute).xyz);
-	
-	passUVCoords = uvCoordAttribute;
+    
+    passUVCoords = uvCoordAttribute;
 }

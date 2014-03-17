@@ -50,12 +50,14 @@ void configureRendering(){
 	/*comment in to use placeholders for Renderloop, rendering every VO of the testingState; change Shader paths to use a different shader*/
 	
 	Shader* shader =  new Shader (SHADERS_PATH "/Underwater_Visuals_Test/phong.vert", SHADERS_PATH "/Underwater_Visuals_Test/phong.frag");
-	Listener* uniLight = new UploadUniformVec3Listener("UNIFORMUPLOADLISTENER", UnderwaterScene::lightPosition, "uniformLightPosition");
-	shader-> attach(uniLight);
+	Listener* uniLightPos = new UploadUniformVec3Listener("UNIFORMUPLOADLISTENER", UnderwaterScene::lightPosition, "uniformLightPosition");
+	Listener* uniLightDir = new UploadUniformVec3Listener("UNIFORMUPLOADLISTENER", UnderwaterScene::lightDirection, "uniformLightDirection");
+	
+	shader-> attach(uniLightPos);
+	shader-> attach(uniLightDir);
 
 	testingApp->attachListenerOnProgramInitialization(	new SetDefaultShaderListener( shader ));
-
-	testingApp->attachListenerOnRenderManagerFrameLoop(	new RenderloopPlaceHolderListener());
+	
 	testingApp->attachListenerOnRenderManagerFrameLoop(	new RenderloopPlaceHolderListener());
 
 	std::vector<std::string> uniforms = shader->getUniformNames();
