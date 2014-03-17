@@ -273,3 +273,37 @@ void UploadUniformResolutionYListener::update(){
 	FrameBufferObject* fbo = RenderManager::getInstance()->getCurrentFBO();
 	shader->uploadUniform(fbo->getHeight(), "resY");
 }
+
+UploadUniformVec3Listener::UploadUniformVec3Listener(std::string name, glm::vec3 vector, std::string uniform_name){
+	setName(name);
+	this->vector 	= new glm::vec3( vector );
+	this->uniform_name 	= uniform_name;
+}
+
+UploadUniformVec3Listener::UploadUniformVec3Listener(std::string name, glm::vec3* vector, std::string uniform_name){
+	setName(name);
+	this->vector 	= vector;
+	this->uniform_name 	= uniform_name;
+}
+
+void UploadUniformVec3Listener::update(){
+	Shader* shader = RenderManager::getInstance()->getCurrentShader();
+	shader->uploadUniform( *vector, uniform_name);
+}
+
+UploadUniformFloatListener::UploadUniformFloatListener(std::string name, float value, std::string uniform_name){
+	setName(name);
+	this->value 	= new float(value);
+	this->uniform_name 	= uniform_name;
+}
+
+UploadUniformFloatListener::UploadUniformFloatListener(std::string name, float* value, std::string uniform_name){
+	setName(name);
+	this->value 	= value;
+	this->uniform_name 	= uniform_name;
+}
+
+void UploadUniformFloatListener::update(){
+	Shader* shader = RenderManager::getInstance()->getCurrentShader();
+	shader->uploadUniform( *value, uniform_name);
+}

@@ -62,28 +62,6 @@ void SetClearColorListener::update(){
 		glClearColor(r,g,b,a);
 }
 
-UploadUniformVec3Listener::UploadUniformVec3Listener(std::string name, glm::vec3 vector, std::string uniform_name){
-	setName(name);
-	this->vector 	= vector;
-	this->uniform_name 	= uniform_name;
-}
-
-void UploadUniformVec3Listener::update(){
-	Shader* shader = RenderManager::getInstance()->getCurrentShader();
-	shader->uploadUniform(vector, uniform_name);
-}
-
-UploadUniformFloatListener::UploadUniformFloatListener(std::string name, float value, std::string uniform_name){
-	setName(name);
-	this->value 	= value;
-	this->uniform_name 	= uniform_name;
-}
-
-void UploadUniformFloatListener::update(){
-	Shader* shader = RenderManager::getInstance()->getCurrentShader();
-	shader->uploadUniform(value, uniform_name);
-}
-
 UnderOrAboveWaterListener::UnderOrAboveWaterListener(Camera* cam, float sea_level_y, Listener* EnterWaterListener, Listener* ExitWaterListener){
 	this->cam = cam;
 	this->sea_level_y = sea_level_y;

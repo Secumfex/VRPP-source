@@ -12,11 +12,20 @@ namespace UnderwaterScene{
 	float fog_begin = 2.0f;
 	float fog_end	= 200.0f;
 
+	float fog_begin_under_water = 2.0f;
+	float fog_end_under_water = 200.0f;
+	float fog_end_above_water = 10000.0f;
+	float fog_begin_above_water = 100.0f;
+
 	glm::vec4 watercolor(95.0f / 255.0f * 0.7f, 158.0f / 255.0f * 0.7f, 160.0f/ 255.0f * 0.7f, 0.0f);
 	glm::vec3 lightPosition(0.0f,1000.0f,0.0f);
 	glm::vec4 skycolor(135.0f / 255.0f, 206.0f / 255.0f, 250.0f / 255.0f, 0.0f);
 	glm::vec3 fog_color(95.0f / 255.0f * 0.7f, 158.0f / 255.0f * 0.7f, 160.0f/ 255.0f * 0.7f);
-	
+
+	glm::vec3 fog_color_above_water(135.0f / 255.0f, 206.0f / 255.0f, 250.0f / 255.0f);
+	glm::vec3 fog_color_under_water(95.0f / 255.0f * 0.7f, 158.0f / 255.0f * 0.7f, 160.0f/ 255.0f * 0.7f);
+
+
 	VirtualObject* scene_groundObject;
 	VirtualObject* scene_stoneObject1;
 	VirtualObject* scene_stoneObject2;
@@ -26,10 +35,24 @@ namespace UnderwaterScene{
 	VirtualObject* scene_waterPlaneObject;
 
 	static void createScene(ApplicationState* target){
-		SetClearColorListener* enterWater = new SetClearColorListener( watercolor.x, watercolor.y, watercolor.z, watercolor.w );
-		SetClearColorListener* exitWater =  new SetClearColorListener( skycolor.x, skycolor.y, skycolor.z, skycolor.w );
-		UnderOrAboveWaterListener* waterlistener = new UnderOrAboveWaterListener(target->getCamera(), water_height, enterWater, exitWater);
-		target->attachListenerOnBeginningProgramCycle(waterlistener);
+		SetClearColorListener* enterWater_1 = new SetClearColorListener( watercolor.x, watercolor.y, watercolor.z, watercolor.w );
+		SetClearColorListener*  exitWater_1 = new SetClearColorListener( skycolor.x, skycolor.y, skycolor.z, skycolor.w );
+		SetFloatValueListener* enterWater_2 = new SetFloatValueListener( &fog_begin, &fog_begin_under_water);
+		SetFloatValueListener*  exitWater_2 = new SetFloatValueListener( &fog_begin, &fog_begin_above_water);
+		SetFloatValueListener* enterWater_3 = new SetFloatValueListener( &fog_end,   &fog_end_under_water);
+		SetFloatValueListener*  exitWater_3 = new SetFloatValueListener( &fog_end,   &fog_end_above_water);
+		SetVec3ValuesListener* enterWater_4 = new SetVec3ValuesListener( &fog_color, &fog_color_under_water);
+		SetVec3ValuesListener*  exitWater_4 = new SetVec3ValuesListener( &fog_color, &fog_color_above_water);
+
+		UnderOrAboveWaterListener* waterlistener1 = new UnderOrAboveWaterListener(target->getCamera(), water_height, enterWater_1, exitWater_1);
+		UnderOrAboveWaterListener* waterlistener2 = new UnderOrAboveWaterListener(target->getCamera(), water_height, enterWater_2, exitWater_2);
+		UnderOrAboveWaterListener* waterlistener3 = new UnderOrAboveWaterListener(target->getCamera(), water_height, enterWater_3, exitWater_3);
+		UnderOrAboveWaterListener* waterlistener4 = new UnderOrAboveWaterListener(target->getCamera(), water_height, enterWater_4, exitWater_4);
+		
+		target->attachListenerOnBeginningProgramCycle(waterlistener1);
+		target->attachListenerOnBeginningProgramCycle(waterlistener2);
+		target->attachListenerOnBeginningProgramCycle(waterlistener3);
+		target->attachListenerOnBeginningProgramCycle(waterlistener4);
 
 		scene_groundObject 		= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_ground.dae", VirtualObjectFactory::OTHER);
 		scene_waterPlaneObject 	= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_water_plane.dae", VirtualObjectFactory::OTHER);

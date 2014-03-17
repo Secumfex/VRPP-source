@@ -2,6 +2,7 @@
 #define UPLOADUNIFORMLISTENERS_H_
 
 #include "Patterns/Listener.h"
+#include <glm/glm.hpp>
 
 
 
@@ -208,5 +209,28 @@ public:
   	 ///
 	 void update();
   };
+	
+	/// listener to upload a custom Uniform Vec3
+	class UploadUniformVec3Listener : public Listener {
+	private:
+		glm::vec3* vector;
+		std::string uniform_name;
+	public:		
+		UploadUniformVec3Listener(std::string name = std::string("UNIFORMUPLOADLISTENER"), glm::vec3 vector = glm::vec3(0.0f,0.0f,0.0f), std::string uniform_name = "custom_uniform");
+		UploadUniformVec3Listener(std::string name, glm::vec3* vector, std::string uniform_name);
+		void update();	
+	};
+
+	/// listener to upload a custom Uniform Float
+	class UploadUniformFloatListener : public Listener {
+	private:
+		float* value;
+		std::string uniform_name;
+	public:
+		UploadUniformFloatListener(std::string name = std::string("UNIFORMUPLOADLISTENER"), float value = 0.0f, std::string uniform_name = "custom_uniform");
+		UploadUniformFloatListener(std::string name, float* value, std::string uniform_name);
+		void update();
+	};
+
 
 #endif /* UPLOADUNIFORMLISTENERS_H_ */

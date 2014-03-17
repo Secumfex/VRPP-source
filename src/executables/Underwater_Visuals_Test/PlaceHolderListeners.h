@@ -43,24 +43,7 @@ public:
 	void update();
 };
 
-/// listener to upload a UniformVec3
-class UploadUniformVec3Listener : public Listener {
-private:
-	glm::vec3 vector;
-	std::string uniform_name;
-public:		
-	UploadUniformVec3Listener(std::string name = std::string("UNIFORMUPLOADLISTENER"), glm::vec3 vector = glm::vec3(0.0f,0.0f,0.0f), std::string uniform_name = "custom_uniform");
-	void update();	
-};
 
-class UploadUniformFloatListener : public Listener {
-private:
-	float value;
-	std::string uniform_name;
-public:
-	UploadUniformFloatListener(std::string name = std::string("UNIFORMUPLOADLISTENER"), float value = 0.0f, std::string uniform_name = "custom_uniform");
-	void update();
-};
 
 /// listener on above or under water
 class UnderOrAboveWaterListener : public Listener{

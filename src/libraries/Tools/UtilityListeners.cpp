@@ -81,3 +81,31 @@ void PrintCameraStatusListener::update(){
 	std::cout << "Cam dir : "      << dir.x << " , " << dir.y << " , "    << dir.z << std::endl;
 	std::cout << "rotation phi : " << phi   << " , pitch theta : " 		  << theta << std::endl;
 }
+
+SetFloatValueListener::SetFloatValueListener(float* target, float* source){
+	this->source = source;
+	this->target = target;
+}
+
+SetFloatValueListener::SetFloatValueListener(float* target, float source){
+	this->target = target;
+	this->source = new float(source);
+}
+
+void SetFloatValueListener::update(){
+	*target = *source;
+}
+
+SetVec3ValuesListener::SetVec3ValuesListener(glm::vec3* target, glm::vec3* source){
+	this->source = source;
+	this->target = target;
+}
+
+SetVec3ValuesListener::SetVec3ValuesListener(glm::vec3* target, glm::vec3 source){
+	this->target = target;
+	this->source = new glm::vec3(source);
+}
+
+void SetVec3ValuesListener::update(){
+	*target = *source;
+}

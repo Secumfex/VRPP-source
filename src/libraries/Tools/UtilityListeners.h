@@ -6,6 +6,7 @@
 #include <Patterns/Listener.h>
 #include <string.h>
 #include <time.h>
+#include <glm/glm.hpp>
 
 
 /// Listener which prints a predefined message on the console when notified
@@ -120,6 +121,28 @@ public:
 	 *
 	 * prints the camera status to console
 	 */
+	void update();
+};
+
+/// Listener which sets target to value pointed at
+class SetFloatValueListener : public Listener{
+private:
+	float* source;
+	float* target;
+public:
+	SetFloatValueListener(float* target, float* value);
+	SetFloatValueListener(float* target, float value);
+	void update();
+};
+
+/// Listener which sets target to value pointed at
+class SetVec3ValuesListener : public Listener{
+private:
+	glm::vec3* source;
+	glm::vec3* target;
+public:
+	SetVec3ValuesListener(glm::vec3* target, glm::vec3* value);
+	SetVec3ValuesListener(glm::vec3* target, glm::vec3 value);
 	void update();
 };
 

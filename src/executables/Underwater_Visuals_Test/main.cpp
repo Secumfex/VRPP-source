@@ -58,10 +58,10 @@ void configureRendering(){
 	
 	Shader* shader =  new Shader (SHADERS_PATH "/Underwater_Visuals_Test/phong.vert", SHADERS_PATH "/Underwater_Visuals_Test/phong.frag");
 	
-	Listener* uniLightPos 	= new UploadUniformVec3Listener ("UNIFORMUPLOADLISTENER", UnderwaterScene::lightPosition, "uniformLightPosition");
-	Listener* uniFogColor 	= new UploadUniformVec3Listener ("UNIFORMUPLOADLISTENER", UnderwaterScene::fog_color, "uniformFogColor");
-	Listener* uniFogBegin 	= new UploadUniformFloatListener("UNIFORMUPLOADLISTENER", UnderwaterScene::fog_begin, "uniformFogBegin");
-	Listener* uniFogEnd 	= new UploadUniformFloatListener("UNIFORMUPLOADLISTENER", UnderwaterScene::fog_end, "uniformFogEnd");
+	Listener* uniLightPos 	= new UploadUniformVec3Listener ("UNIFORMUPLOADLISTENER", &UnderwaterScene::lightPosition, "uniformLightPosition");
+	Listener* uniFogColor 	= new UploadUniformVec3Listener ("UNIFORMUPLOADLISTENER", &UnderwaterScene::fog_color, "uniformFogColor");
+	Listener* uniFogBegin 	= new UploadUniformFloatListener("UNIFORMUPLOADLISTENER", &UnderwaterScene::fog_begin, "uniformFogBegin");
+	Listener* uniFogEnd 	= new UploadUniformFloatListener("UNIFORMUPLOADLISTENER", &UnderwaterScene::fog_end, "uniformFogEnd");
 	
 
 	testingApp->attachListenerOnBeginningProgramCycle(uniLightPos);	// not clean, but easier to handle cuz of shader recompilation
