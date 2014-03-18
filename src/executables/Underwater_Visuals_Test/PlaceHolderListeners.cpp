@@ -25,10 +25,7 @@ void ReflectionMapRenderPass::update(){
 
     	glViewport(0, 0, fbo->getWidth(), fbo->getHeight());
 
-		currentShader = rm->getCurrentShader();
-		if (currentShader != 0){
-			currentShader->useProgram();
-		}
+    	currentShader = rm->getCurrentShader();
 		currentRenderQueue = rm->getRenderQueue(); 
 
         /***************** render objects ***************/
@@ -71,12 +68,8 @@ void RenderloopPlaceHolderListener::update(){
         glClear(GL_DEPTH_BUFFER_BIT);
     	glViewport(0, 0, 800, 600);
 
-
-		//activate the current shader
 		currentShader = rm->getCurrentShader();
-		if (currentShader != 0){
-			currentShader->useProgram();
-		}
+
 		
 		//get renderQueue	
 		currentRenderQueue = rm->getRenderQueue(); 
@@ -146,6 +139,7 @@ SetCurrentShaderListener::SetCurrentShaderListener(Shader* shader){
 
 void SetCurrentShaderListener::update(){
 	rm->setCurrentShader(shader);
+	shader->useProgram();
 }	
 
 SetClearColorListener::SetClearColorListener(float r, float g, float b, float a){

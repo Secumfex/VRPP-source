@@ -16,8 +16,11 @@ out vec3 passLightPosition;
 out vec3 passLightDirection;
 out vec3 passPosition;
 out vec2 passUVCoords;
+out vec3 passWorldPos;
 
 void main() {
+	passWorldPos = (uniformModel * positionAttribute).xyz;
+	
     passLightPosition  = (uniformView * vec4(uniformLightPosition, 1)).xyz;
 
     gl_Position = uniformPerspective * uniformView * uniformModel * positionAttribute;

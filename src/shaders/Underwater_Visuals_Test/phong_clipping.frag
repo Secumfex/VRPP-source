@@ -4,21 +4,23 @@ in vec3 passNormal;
 in vec3 passPosition;
 in vec3 passLightPosition;
 in vec2 passUVCoords;
+in vec3 passWorldPos;
 
 out vec4 fragmentColor;
 
-uniform sampler2D positionMap;
 uniform sampler2D diffuseTexture;
-uniform sampler2D normalTexture;
+uniform vec3  emissiveColor;
 
 uniform float uniformFogBegin;
 uniform float uniformFogEnd;
 uniform vec3  uniformFogColor;
 
 void main() { 
-    //compute the light vector as the normalized vector between 
-    //the vertex position and the light position:
-    vec3 lightVector = normalize(passLightPosition - passPosition);
+	if (passWorldPos.y < 10.0f){
+		discard;
+	}
+    
+	vec3 lightVector = normalize(passLightPosition - passPosition);
     float distance = dot((passLightPosition - passPosition),(passLightPosition - passPosition));
 
     float frag_distance = dot(passPosition,passPosition);
@@ -37,25 +39,15 @@ void main() {
     float specular = (pow(max(dot(reflection, eye), 0), 15) ) *1.0;
     float ambient = 0.2;
 
-    vec2 reflection_uvs = vec2(gl_FragCoord.x / 800.0, 1.0f - gl_FragCoord.y / 800.0f);
- //   vec2 reflection_uvs = vec2(gl_FragCoord.x, gl_FragCoord.y);
-
- //   vec3 diffuse_color_texture = texture(diffuseTexture, passUVCoords).xyz;
-    vec3 diffuse_color_texture = texture(normalTexture, passUVCoords).xyz;
-    vec3 diffuse_color_reflection = texture(positionMap, reflection_uvs).xyz;
-
-    vec3 diffuse_color = diffuse_color_reflection + diffuse_color_texture / 2.0f;
- //   vec3 diffuse_color = texture(positionMap, passUVCoords).xyz;
+    vec3 diffuse_color = texture(diffuseTexture, passUVCoords).xyz;
     
     fragmentColor = vec4(
         vec3(
-        diffuse  * 
-         diffuse_color 
-         + 
+        diffuse  * diffuse_color + 
         specular * vec3(1, 1, 1) + 
         ambient  * diffuse_color 
         ) 
- //       * diff_strength + fog_strength *uniformFogColor
- //       + emissiveColor 
+        * diff_strength + fog_strength *uniformFogColor
+        + emissiveColor 
         ,1);
 }
