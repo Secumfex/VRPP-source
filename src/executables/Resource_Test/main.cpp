@@ -29,6 +29,8 @@ int main() {
 	RenderManager* rm = RenderManager::getInstance();
     RenderQueue* rq = new RenderQueue();
     Camera* cam = new Camera();
+    Frustum* frusti = new Frustum(cam);
+    
     
     
     rm->libInit();
@@ -111,7 +113,8 @@ int main() {
 
 	rm->setRenderQueue(rq);
 	rm->setCurrentFBO(fbo);
-	rm->setProjectionMatrix(glm::perspective(45.0f, 1.0f, 0.1f, 100.f));
+    rm->setCurrentFrustum(frusti);
+	rm->setPerspectiveMatrix(45.0f, 1.0f, 0.1f, 100.f);
     
 	rm->setCamera(cam);
 
@@ -127,7 +130,7 @@ int main() {
 		glfwGetFramebufferSize(window, &newwidth, &newheight);
 		if(newwidth != width || newheight != height){
 			fbo->resize(newwidth, newheight);
-					rm->setProjectionMatrix(glm::perspective(45.0f, (newwidth * 1.0f) / newheight , 0.1f, 100.f));
+					rm->setPerspectiveMatrix(45.0f, (newwidth * 1.0f) / newheight , 0.1f, 100.f);
 			width = newwidth;
 			height = newheight;
             }

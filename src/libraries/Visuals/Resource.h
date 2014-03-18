@@ -89,10 +89,6 @@ public:
 	 */
 	void setShininess(GLfloat term);
 
-	void setReflectivity(GLfloat term);
-
-
-
 	/** \brief setter
 	 *
 	 * sets amount of transparancy
@@ -274,9 +270,6 @@ public:
 	 * @return shininess value
 	 */
 	GLfloat getShininess();
-
-	GLfloat getReflectivity();
-
 
 	/** \brief getter
 	 *
