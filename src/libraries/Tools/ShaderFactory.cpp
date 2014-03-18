@@ -18,8 +18,10 @@ ShaderFactory::~ShaderFactory() {
 
 Shader* ShaderFactory::createGBuffer(GraphicsComponent* gc){
 
+	key = "";
 	std::string vert = createGBuffer_vertex(gc);
 	std::string frag = createGBuffer_fragment(gc);
+
 
 	vector<const char*> shaders;
 	shaders.push_back(vert.c_str());
@@ -98,11 +100,12 @@ out vec2 passUVCoord;\n\
 out vec3 passNormal;\n\
 ";
 
-	if (gc->getMaterial()->hasNormalTexture())
+	if (gc->getMaterial()->hasNormalTexture()){
 		vertexUniforms += "\
 out vec3 passTangent;\n\
 \n\
 ";
+	}
 
 	return vertexUniforms;
 }
@@ -186,4 +189,12 @@ colorOutput = texture(diffuseTexture, passUVCoord);\n\
 		return "\
 colorOutput = vec4(diffuseColor,0);\n\
 ";
+}
+
+std::string ShaderFactory::makeKey(GraphicsComponent){
+	std::string key;
+
+
+
+	return "";
 }

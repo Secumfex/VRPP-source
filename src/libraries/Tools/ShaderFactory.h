@@ -19,8 +19,12 @@ public:
 	virtual ~ShaderFactory();
 
 	Shader* createGBuffer(GraphicsComponent* gc);
+	std::string makeKey(GraphicsComponent);
 
 protected:
+
+	std::string key;
+
 	std::string createGBuffer_vertex(GraphicsComponent* gc);
 	std::string createGBuffer_fragment(GraphicsComponent* gc);
 	std::string createGBuffer_vertexUniforms(GraphicsComponent* gc);
