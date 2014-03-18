@@ -99,7 +99,9 @@ PhysicsComponent::~PhysicsComponent() {
 
 void PhysicsComponent::translate(glm::vec3 pos){
 	btVector3 trans = btVector3(pos.x, pos.y, pos.z);
-	this->rigidBody->translate(trans);
+	rigidBody->translate(trans);
+	glm::vec3 origin = this->getPosition();
+	this->setPosition(origin.x+pos.x,origin.y+pos.y,origin.z+pos.z);
 }
 
 void PhysicsComponent::scale(glm::vec3 scale){
