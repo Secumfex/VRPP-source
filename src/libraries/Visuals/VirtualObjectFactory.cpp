@@ -479,43 +479,91 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 		virtualObject->addGraphicsComponent(gc);
 
 		if(aabbMin.x < physics_min.x)
-		 			physics_min.x = aabbMin.x;
-		 		if(aabbMin.y < physics_min.y)
-		 			physics_min.y = aabbMin.y;
-		 		if(aabbMin.z < physics_min.z)
-		 			physics_min.z = aabbMin.z;
-		 		if(aabbMax.x > physics_max.x)
-		 			physics_max.x = aabbMax.x;
-		 		if(aabbMax.y > physics_max.y)
-		 			physics_max.y = aabbMax.y;
-		 		if(aabbMax.z > physics_max.z)
-		 			physics_max.z = aabbMax.z;
+			physics_min.x = aabbMin.x;
+		if(aabbMin.y < physics_min.y)
+			physics_min.y = aabbMin.y;
+		if(aabbMin.z < physics_min.z)
+			physics_min.z = aabbMin.z;
+		if(aabbMax.x > physics_max.x)
+			physics_max.x = aabbMax.x;
+		if(aabbMax.y > physics_max.y)
+			physics_max.y = aabbMax.y;
+		if(aabbMax.z > physics_max.z)
+			physics_max.z = aabbMax.z;
 
-		glm::vec3 boxValue = physics_max-physics_min;
-		float width = boxValue.x;
-		float height = boxValue.y;
-		float depth = boxValue.z;
-
-		float x = physics_min.x + width / 2.0f;
-		float y = physics_min.y + height / 2.0f;
-		float z = physics_min.z + depth / 2.0f;
-
-		glm::vec3 normal;
-		normal.x= physics_min.y*physics_max.z - physics_min.z*physics_max.y;
-		normal.y= physics_min.z*physics_max.x - physics_min.x*physics_max.z;
-		normal.z= physics_min.x*physics_max.y - physics_min.y*physics_max.x;
-
-		switch(bodyType){
-		case CUBE:		virtualObject->setPhysicsComponent(width, height, depth, x, y, z, mass, collisionFlag);
-			break;
-		case PLANE:		virtualObject->setPhysicComponent(x, y, z, normal, mass, collisionFlag);
-			break;
-		case SPHERE:	virtualObject->setPhysicsComponent((physics_max.x-physics_min.x)/2.0, (physics_max.x-physics_min.x)/2.0+physics_min.x, (physics_max.y-physics_min.y)/2.0+physics_min.y, (physics_max.z-physics_min.z)/2.0+physics_min.z, mass, collisionFlag);
-			break;
-		case OTHER:		virtualObject->setPhysicsComponent(physics_min, physics_max, mass, collisionFlag);
-			break;
-		}
 	}
+	glm::vec3 boxValue = physics_max-physics_min;
+	float width = boxValue.x;
+	float height = boxValue.y;
+	float depth = boxValue.z;
+
+	float x = physics_min.x + width / 2.0f;
+	float y = physics_min.y + height / 2.0f;
+	float z = physics_min.z + depth / 2.0f;
+
+	cout << "physics from graphics width " << width << endl;
+	cout << "physics from graphics height " << height << endl;
+	cout << "physics from graphics depth " << depth << endl;
+	cout << "physics from graphics x " << x << endl;
+	cout << "physics from graphics y " << y << endl;
+	cout << "physics from graphics z " << z << endl;
+
+	glm::vec3 boxValueGraphMaxTotal;
+	glm::vec3 boxValueGraphMinTotal;
+	glm::vec3 boxValueGraphMax;
+	glm::vec3 boxValueGraphMin;
+	vector<GraphicsComponent*> mGraphComponent = virtualObject->getGraphicsComponent() ;
+	for(unsigned int i=0; i< mGraphComponent.size();i++){
+		boxValueGraphMax = mGraphComponent[i]->getBoundingBox_Max();
+		boxValueGraphMin = mGraphComponent[i]->getBoundingBox_Min();
+		if(boxValueGraphMin.x < boxValueGraphMinTotal.x)
+			boxValueGraphMinTotal.x = boxValueGraphMin.x;
+		if(boxValueGraphMin.y < boxValueGraphMinTotal.y)
+			boxValueGraphMinTotal.y = boxValueGraphMin.y;
+		if(boxValueGraphMin.z < boxValueGraphMinTotal.z)
+			boxValueGraphMinTotal.z = boxValueGraphMin.z;
+		if(boxValueGraphMax.x > boxValueGraphMaxTotal.x)
+			boxValueGraphMaxTotal.x = boxValueGraphMax.x;
+		if(boxValueGraphMax.y > boxValueGraphMaxTotal.y)
+			boxValueGraphMaxTotal.y = boxValueGraphMax.y;
+		if(boxValueGraphMax.z > boxValueGraphMaxTotal.z)
+			boxValueGraphMaxTotal.z = boxValueGraphMax.z;
+	}
+
+	glm::vec3 boxValueG = boxValueGraphMaxTotal-boxValueGraphMinTotal;
+
+	float widthG = boxValueG.x;
+	float heightG = boxValueG.y;
+	float depthG = boxValueG.z;
+
+	float xG = boxValueGraphMinTotal.x + widthG / 2.0f;
+	float yG = boxValueGraphMinTotal.y + heightG / 2.0f;
+	float zG = boxValueGraphMinTotal.z + depthG / 2.0f;
+
+	cout << "G physics from graphics width " << widthG << endl;
+	cout << "G physics from graphics height " << heightG << endl;
+	cout << "G physics from graphics depth " << depthG << endl;
+	cout << "G physics from graphics x " << xG << endl;
+	cout << "G physics from graphics y " << yG << endl;
+	cout << "G physics from graphics z " << zG << endl;
+
+
+	glm::vec3 normal;
+	normal.x= physics_min.y*physics_max.z - physics_min.z*physics_max.y;
+	normal.y= physics_min.z*physics_max.x - physics_min.x*physics_max.z;
+	normal.z= physics_min.x*physics_max.y - physics_min.y*physics_max.x;
+
+	switch(bodyType){
+	case CUBE:		virtualObject->setPhysicsComponent(width, height, depth, x, y, z, mass, collisionFlag);
+		break;
+	case PLANE:		virtualObject->setPhysicComponent(x, y, z, normal, mass, collisionFlag);
+		break;
+	case SPHERE:	virtualObject->setPhysicsComponent((physics_max.x-physics_min.x)/2.0, (physics_max.x-physics_min.x)/2.0+physics_min.x, (physics_max.y-physics_min.y)/2.0+physics_min.y, (physics_max.z-physics_min.z)/2.0+physics_min.z, mass, collisionFlag);
+		break;
+	case OTHER:		virtualObject->setPhysicsComponent(physics_min, physics_max, mass, collisionFlag);
+		break;
+	}
+
 
 
 	return virtualObject;

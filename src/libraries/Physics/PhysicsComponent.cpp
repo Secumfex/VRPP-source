@@ -9,6 +9,7 @@
 
 #include "BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h"
 
+
 using namespace std;
 
 PhysicsComponent::PhysicsComponent(){
@@ -47,7 +48,6 @@ PhysicsComponent::PhysicsComponent(float radius, float x, float y, float z, floa
 }
 
 PhysicsComponent::PhysicsComponent(float width, float height, float depth, float x, float y, float z, float mass, int collisionFlag) {
-
 	hit = false;
 	rigidBody = addBox(width,height,depth,x,y,z,mass);
 	rigidBody->setUserPointer(this);	// use bullet's user pointer to refer to this Object
@@ -99,14 +99,16 @@ PhysicsComponent::~PhysicsComponent() {
 
 void PhysicsComponent::translate(glm::vec3 pos){
 	btVector3 trans = btVector3(pos.x, pos.y, pos.z);
-
 	this->rigidBody->translate(trans);
 }
 
 void PhysicsComponent::scale(glm::vec3 scale){
 	btVector3 scalevec = btVector3(scale.x, scale.y, scale.z);
 
-		rigidBody->getCollisionShape()->setLocalScaling(scalevec);
+		//vo->setModelMatrix(glm::make_mat4(mat)*scale);
+
+
+	this->rigidBody->getCollisionShape()->setLocalScaling(scalevec);
 }
 
 void PhysicsComponent::addCollisionFlag(int flag) {
@@ -137,8 +139,7 @@ btRigidBody* PhysicsComponent::addBox(float width, float height, float depth, fl
 	t.setIdentity();
 	t.setOrigin(btVector3(x,y,z));
 
-	btBoxShape* box = new btBoxShape(btVector3(width/2.0,height/2.0,depth/2.0));
-
+	btBoxShape* box = new btBoxShape(btVector3(width/1.5f,height/1.5f,depth/1.5f));
 	btVector3 inertia;
 	if(mass != 0.0) {
 		box->calculateLocalInertia(mass,inertia);
@@ -152,6 +153,7 @@ btRigidBody* PhysicsComponent::addBox(float width, float height, float depth, fl
 
 	btRigidBody* body = new btRigidBody(info);
 	body->setLinearFactor(btVector3(1,1,1));
+
 	return body;
 }
 
