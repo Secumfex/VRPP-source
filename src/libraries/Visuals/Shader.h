@@ -29,6 +29,12 @@ public:
 	 * @param vertexShader
 	 * @param fragmentShader
 	 */
+	Shader(std::vector<const char*> shaders);
+	/** \brief constructor
+	 *
+	 * @param vertexShader
+	 * @param fragmentShader
+	 */
 	Shader(std::string vertexShader, std::string fragmentShader);
 
 	/** \brief destructor
