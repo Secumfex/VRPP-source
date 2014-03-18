@@ -25,6 +25,10 @@ namespace UnderwaterScene{
 	glm::vec3 fog_color_above_water(135.0f / 255.0f, 206.0f / 255.0f, 250.0f / 255.0f);
 	glm::vec3 fog_color_under_water(95.0f / 255.0f * 0.7f, 158.0f / 255.0f * 0.7f, 160.0f/ 255.0f * 0.7f);
 
+	glm::mat4 water_reflection_matrix( 	1.0f,  0.0f, 0.0f, 0.0f, 
+ 										0.0f, -1.0f, 0.0f, 0.0f, 
+ 										0.0f,  0.0f, 1.0f, 0.0f, 
+ 										0.0f,  2.0f * water_height, 0.0f, 1.0f ); 
 
 	VirtualObject* scene_groundObject;
 	VirtualObject* scene_stoneObject1;
@@ -34,7 +38,10 @@ namespace UnderwaterScene{
 	VirtualObject* scene_wallObject2;
 	VirtualObject* scene_waterPlaneObject;
 
+	FrameBufferObject* framebuffer_water_reflection;
+
 	static void createScene(ApplicationState* target){
+		/******************* above or underneath water surface handling *****************/
 		SetClearColorListener* enterWater_1 = new SetClearColorListener( watercolor.x, watercolor.y, watercolor.z, watercolor.w );
 		SetClearColorListener*  exitWater_1 = new SetClearColorListener( skycolor.x, skycolor.y, skycolor.z, skycolor.w );
 		SetFloatValueListener* enterWater_2 = new SetFloatValueListener( &fog_begin, &fog_begin_under_water);
@@ -53,7 +60,9 @@ namespace UnderwaterScene{
 		target->attachListenerOnBeginningProgramCycle(waterlistener2);
 		target->attachListenerOnBeginningProgramCycle(waterlistener3);
 		target->attachListenerOnBeginningProgramCycle(waterlistener4);
+		/*********************************************************************************/
 
+		/******************* scene creation **********************************************/
 		scene_groundObject 		= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_ground.dae", VirtualObjectFactory::OTHER);
 		scene_waterPlaneObject 	= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_water_plane.dae", VirtualObjectFactory::OTHER);
 		
@@ -70,10 +79,23 @@ namespace UnderwaterScene{
 		if (scene_sun_Object->getGraphicsComponent().size() > 0){
 				scene_sun_Object->getGraphicsComponent()[0]->setEmission(true);
 		}
+		
+		/*********************************************************************************/
 
-		// set CameraPosition
+		/******************* framebuffer objects *****************************************/
+		framebuffer_water_reflection = new FrameBufferObject(512,512);
+		framebuffer_water_reflection->createPositionTexture();
+		framebuffer_water_reflection->createNormalTexture();
+		framebuffer_water_reflection->createColorTexture();
+		framebuffer_water_reflection->createDepthBuffer();
+		framebuffer_water_reflection->unbindFBO();
+		/*********************************************************************************/
+
+		/******************* default cam position ****************************************/
 		Camera* cam =  target->getCamera();
 		cam->setPosition( cam->getPosition() + glm::vec3(0.0,1.5,0.0));
+		/*********************************************************************************/
+
 	}
 
 	static void getLightPosition(glm::vec3 &position){

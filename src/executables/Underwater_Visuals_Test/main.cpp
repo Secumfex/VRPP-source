@@ -22,7 +22,6 @@ IOHandler*   	testingInputHandler;
 
 void configureTestingApplication(){
 	/* customization of application or state*/
-	/* use listener interfaces for: what should happen on initialization, every program cycle, termination etc. */
 	testingApp->attachListenerOnProgramInitialization(	new PrintMessageListener(		string("Application is booting")));
 	testingApp->attachListenerOnProgramTermination(		new PrintMessageListener(		string("Application is terminating")));
 
@@ -30,8 +29,6 @@ void configureTestingApplication(){
 
 void configureVirtualObjects(){
 	/* creation and customization of Virtual Objects */
-	/* use testingState->createVirtualObject() to create a Virtual Object */
-	
 	UnderwaterScene::createScene(testingState);
 
 	
@@ -44,7 +41,6 @@ void configurePhysics(){
 
 void configureInputHandler(){
 	/* customization of input handling */
-	/* use listener interfaces for: what should happen when a specific key is pressed, etc. */
 	testingInputHandler->attachListenerOnKeyPress(		new TerminateApplicationListener(testingApp), GLFW_KEY_ESCAPE);
 	testingInputHandler->attachListenerOnKeyPress( 		new RecompileAndSetShaderListener(SHADERS_PATH "/Underwater_Visuals_Test/phong.vert", SHADERS_PATH "/Underwater_Visuals_Test/phong.frag"), GLFW_KEY_F5);
 
@@ -52,10 +48,6 @@ void configureInputHandler(){
 
 void configureRendering(){
 	/*customize Rendermanager, Renderloop, etc. via framelisteners and such*/
-	/* use listener interfaces for: what should happen everytime a frame is drawn */
-
-	/*comment in to use placeholders for Renderloop, rendering every VO of the testingState; change Shader paths to use a different shader*/
-	
 	Shader* shader =  new Shader (SHADERS_PATH "/Underwater_Visuals_Test/phong.vert", SHADERS_PATH "/Underwater_Visuals_Test/phong.frag");
 	
 	Listener* uniLightPos 	= new UploadUniformVec3Listener ("UNIFORMUPLOADLISTENER", &UnderwaterScene::lightPosition, "uniformLightPosition");
@@ -63,7 +55,6 @@ void configureRendering(){
 	Listener* uniFogBegin 	= new UploadUniformFloatListener("UNIFORMUPLOADLISTENER", &UnderwaterScene::fog_begin, "uniformFogBegin");
 	Listener* uniFogEnd 	= new UploadUniformFloatListener("UNIFORMUPLOADLISTENER", &UnderwaterScene::fog_end, "uniformFogEnd");
 	
-
 	testingApp->attachListenerOnBeginningProgramCycle(uniLightPos);	// not clean, but easier to handle cuz of shader recompilation
 	testingApp->attachListenerOnBeginningProgramCycle(uniFogColor);	// not clean, but easier to handle cuz of shader recompilation
 	testingApp->attachListenerOnBeginningProgramCycle(uniFogBegin);	// not clean, but easier to handle cuz of shader recompilation

@@ -232,5 +232,16 @@ public:
 		void update();
 	};
 
+		/// listener to upload a custom Uniform mat4
+	class UploadUniformMat4Listener : public Listener {
+	private:
+		glm::mat4* matrix;
+		std::string uniform_name;
+	public:		
+		UploadUniformMat4Listener(std::string name = std::string("UNIFORMUPLOADLISTENER"), glm::mat4 matrix = glm::mat4(1.0f), std::string uniform_name = "custom_uniform");
+		UploadUniformMat4Listener(std::string name, glm::mat4* matrix, std::string uniform_name);
+		void update();	
+	};
+
 
 #endif /* UPLOADUNIFORMLISTENERS_H_ */
