@@ -118,7 +118,12 @@ void Shader::makeShader(std::string vert, std::string frag){
 	setShaderName(vert + frag);
 }
 
-Shader::~Shader() {}
+Shader::~Shader() {
+	glDeleteProgram(mProgramHandle);
+	for (list<Listener*>::iterator it = listeners.begin(); it != listeners.end(); it++) {
+	 delete &it;
+}
+}
 
 void Shader::setShaderName(std::string name){
 	mShaderName = name;
@@ -174,20 +179,6 @@ void Shader::render(GraphicsComponent *gc){
 	glBindVertexArray(gc->getMesh()->getVAO());
 	glDrawElements(GL_TRIANGLES, gc->getMesh()->getNumIndices(), GL_UNSIGNED_INT, 0);
 }
-/*
-// render VO -> alle GraphicComponents im VO
-void Shader::render(VirtualObject *vo){
-    std::vector<GraphicsComponent*> gc_vec = vo->getGraphicsComponent();
-    for(unsigned int i = 0; i < gc_vec.size(); i++)
-	{
-        GraphicsComponent* gc=gc_vec[i];
-        glBindVertexArray(gc->getMesh()->getVAO());
-        glDrawElements(GL_TRIANGLES, gc->getMesh()->getNumIndices(), GL_UNSIGNED_INT, 0);
-	}
-}
- */
-
-
 
 bool Shader::hasUniform(std::string uniformName){
 

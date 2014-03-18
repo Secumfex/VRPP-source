@@ -130,6 +130,9 @@ void main(){\n\
 
 	Shader *gbuffer_normalMap_Shader = ShaderFactory::getInstance()->createGBuffer(object01->getGraphicsComponent()[0]);
 
+	Shader *shit= ShaderFactory::getInstance()->createGBuffer(object01->getGraphicsComponent()[0]);
+
+	delete shit;
 
 	rq->addShader(gbufferShader);
 	rq->addShader(gbuffer_normalMap_Shader);

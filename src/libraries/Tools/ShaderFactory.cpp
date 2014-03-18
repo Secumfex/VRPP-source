@@ -25,14 +25,12 @@ Shader* ShaderFactory::createGBuffer(GraphicsComponent* gc){
 	shaders.push_back(vert.c_str());
 	shaders.push_back(frag.c_str());
 
-	cout << shaders[0] << endl;
-	cout << shaders[1] << endl;
+//	cout << shaders[0] << endl;
+//	cout << shaders[1] << endl;
 
 	Shader* shader = new Shader(shaders);
 
 	return shader;
-
-
 }
 
 std::string ShaderFactory::createGBuffer_vertex(GraphicsComponent* gc){
