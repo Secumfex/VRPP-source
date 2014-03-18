@@ -74,16 +74,16 @@ void FrameBufferObject::createColorTexture(){
 
 	mDrawBuffers.push_back(GL_COLOR_ATTACHMENT2);
 }
-void FrameBufferObject::createMaterialTexture(){
+void FrameBufferObject::createSpecularTexture(){
 	glBindFramebuffer(GL_FRAMEBUFFER, mFramebufferHandle);
-	glGenTextures(1, &mMaterialTextureHandle);
-	glBindTexture(GL_TEXTURE_2D, mMaterialTextureHandle);
+	glGenTextures(1, &mSpecularTextureHandle);
+	glBindTexture(GL_TEXTURE_2D, mSpecularTextureHandle);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWidth, mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, mMaterialTextureHandle, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, mSpecularTextureHandle, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	mDrawBuffers.push_back(GL_COLOR_ATTACHMENT3);
@@ -92,15 +92,15 @@ void FrameBufferObject::createShadowMap(){
 	glBindFramebuffer(GL_FRAMEBUFFER, mFramebufferHandle);
 	glGenTextures(1, &mShadowMapHandle);
 	glBindTexture(GL_TEXTURE_2D, mShadowMapHandle);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, mWidth, mHeight, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWidth, mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, mShadowMapHandle, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT4, GL_TEXTURE_2D, mShadowMapHandle, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	mDrawBuffers.push_back(GL_DEPTH_ATTACHMENT);
+	mDrawBuffers.push_back(GL_COLOR_ATTACHMENT4);
 }
 void FrameBufferObject::createDepthBuffer(){
 	glBindFramebuffer(GL_FRAMEBUFFER, mFramebufferHandle);
@@ -123,8 +123,8 @@ GLuint FrameBufferObject::getNormalTextureHandle(){
 GLuint FrameBufferObject::getColorTextureHandle(){
 	return mColorTextureHandle;
 }
-GLuint FrameBufferObject::getMaterialTextureHandle(){
-	return mMaterialTextureHandle;
+GLuint FrameBufferObject::getSpecularTextureHandle(){
+	return mSpecularTextureHandle;
 }
 GLuint FrameBufferObject::getShadowMapHandle(){
 	return mShadowMapHandle;
@@ -149,8 +149,8 @@ void FrameBufferObject::bindNormalTexture(){
 void FrameBufferObject::bindColorTexture(){
 	glBindTexture(GL_TEXTURE_2D, mColorTextureHandle);
 }
-void FrameBufferObject::bindMaterialTexture(){
-	glBindTexture(GL_TEXTURE_2D, mMaterialTextureHandle);
+void FrameBufferObject::bindSpecularTexture(){
+	glBindTexture(GL_TEXTURE_2D, mSpecularTextureHandle);
 }
 void FrameBufferObject::bindShadowMap(){
 	glBindTexture(GL_TEXTURE_2D, mShadowMapHandle);
@@ -205,9 +205,9 @@ void FrameBufferObject::resize(int width, int height){
 		texsToBeDeleted.push_back(getShadowMapHandle());
 		createShadowMap();
 	}
-	if(mMaterialTextureHandle != -1){
-		texsToBeDeleted.push_back(getMaterialTextureHandle());
-		createMaterialTexture();
+	if(mSpecularTextureHandle != -1){
+		texsToBeDeleted.push_back(getSpecularTextureHandle());
+		createSpecularTexture();
 	}
 
 	glDeleteTextures(texsToBeDeleted.size(), &texsToBeDeleted[0]);

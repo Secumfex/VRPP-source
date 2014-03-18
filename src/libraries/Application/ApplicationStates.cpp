@@ -18,10 +18,16 @@ ApplicationState::ApplicationState(){
 	camera = new Camera();
 	renderQueue = new RenderQueue();
 	iOHandler = new IngameHandler();
+	frustum = new Frustum(camera);
 	iOHandler->setCameraObject(camera);
 	attachListenerOnBeginningProgramCycle(	new UpdateCameraPositionListener(camera, IOManager::getInstance()->getDeltaTimePointer()));
 	
-	projectionMatrix = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
+
+	perspectiveMatrix = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
+}
+
+Frustum* ApplicationState::getFrustum(){
+	return frustum;
 }
 
 Camera* ApplicationState::getCamera(){
@@ -36,14 +42,8 @@ IOHandler* ApplicationState::getIOHandler(){
 	return iOHandler;
 }
 
-glm::mat4 ApplicationState::getProjectionMatrix(){
-	return projectionMatrix;
-}
-
-void ApplicationState::setCamera(				Camera* camera){
-	this->camera = camera;
-	this->iOHandler->setCameraObject(camera);
-	attachListenerOnBeginningProgramCycle(	new UpdateCameraPositionListener(camera, IOManager::getInstance()->getDeltaTimePointer()));
+glm::mat4 ApplicationState::getPerspectiveMatrix(){
+	return perspectiveMatrix;
 }
 
 void ApplicationState::setRenderQueue(		RenderQueue* renderQueue){
@@ -54,8 +54,14 @@ void ApplicationState::setIOHandler(			IOHandler* iOHandler){
 	this->iOHandler = iOHandler;
 	this->iOHandler->setCameraObject(camera);
 }
-void ApplicationState::setProjectionMatrix(	glm::mat4 projectionMatrix){
-	this->projectionMatrix = projectionMatrix;
+void ApplicationState::setPerspectiveMatrix(	glm::mat4 perspectiveMatrix){
+	this->perspectiveMatrix = perspectiveMatrix;
+}
+
+void ApplicationState::setCamera(				Camera* camera){
+	this->camera = camera;
+	this->iOHandler->setCameraObject(camera);
+	attachListenerOnBeginningProgramCycle(	new UpdateCameraPositionListener(camera, IOManager::getInstance()->getDeltaTimePointer()));
 }
 
 void ApplicationState::activate(){
@@ -68,9 +74,10 @@ void ApplicationState::activate(){
 void ApplicationState::bindObjects(){
 	RenderManager* rm = RenderManager::getInstance();
 	
-	rm->setProjectionMatrix(projectionMatrix);
-	rm->setRenderQueue(renderQueue);
 	rm->setCamera(camera);
+	rm->setCurrentFrustum(frustum);
+	rm->setPerspectiveMatrix(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
+	rm->setRenderQueue(renderQueue);
 
 	IOManager* io = IOManager::getInstance();
 	io->setCurrentIOHandler(iOHandler);
@@ -100,7 +107,7 @@ VRState::VRState(std::string name){
 
 void VRState::activate(){
 
-	//bind Input-Object, RenderQueue-Object, Camera-Object, Projectionmatrix 
+	//bind Input-Object, RenderQueue-Object, Camera-Object, Perspectivematrix
 	ApplicationState::activate();
 	
 }

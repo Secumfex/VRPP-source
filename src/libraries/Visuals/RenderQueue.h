@@ -5,44 +5,153 @@
 #include <map>
 
 #include "VirtualObject.h"
+#include "Shader.h"
 
 using namespace std;
 
 /*! @brief RenderQueue is a queue that contains all objects to be drawn in the scene.
  *
  *	@todo please write doxygen comments only in header file.
- *	@todo please describe the parameters only if there are any parameters to the method you are commenting ;-)
  */
 class RenderQueue {
 public: 
-	RenderQueue(); //create and reset RQ
+	/** \brief constructor
+	 *
+	 * create and reset RQ
+	 */
+	RenderQueue();
+
+	/** \brief destructor
+	 *
+	 */
 	~RenderQueue();
+
+	/** \brief getter
+	 *
+	 * @return RenderQueue
+	 */
 	RenderQueue* getRenderQueue(); 
-	void addVirtualObject(VirtualObject* vo); //add VO to VO list
-	void removeVirtualObject(VirtualObject* vo); //remove VO from list
-	VirtualObject* getNextObject(); //iterate list
-	bool hasNext(); //is voList empty?
-	void resetQueue();	//resetting iterator to list begin
-	list<VirtualObject* > getVirtualObjectList(); //!< return list of all virtual objects in this queue
+
+	/** \brief add Shader to ShaderList
+	 *
+	 * @param sh
+	 */
+	void addShader(Shader* sh);
+
+	/** \brief add Shader to ShaderList
+	 *
+	 * @param sh
+	 */
+	void addCompositingShader(Shader* sh);
+
+	/** \brief add VO to VO list
+	 *
+	 * @param vo
+	 */
+	void addVirtualObject(VirtualObject* vo);
+
+	/** \brief remove VO from list
+	 *
+	 * @param vo
+	 */
+	void removeVirtualObject(VirtualObject* vo);
+
+	/** \brief getter
+	 *
+	 * iterate list
+	 * @return current first element (virtual object)
+	 */
+	VirtualObject* getNextObject();
+
+	/** \brief is voList empty?
+	 *
+	 * @return true or false
+	 */
+	bool hasNext();
+
+	/** \brief resetting iterator to list begin
+	 *
+	 */
+	void resetQueue();
+
+	/** \brief getter
+	 *
+	 * return list of all virtual objects in this queue
+	 * @return voList
+	 */
+	list<VirtualObject* > getVirtualObjectList();
+
+	/** \brief getter
+	 *
+	 * @return gcFlagStorage
+	 */
 	map<string, vector<GraphicsComponent* > > getGcFlagStorage();
+
+	/** \brief getter
+	 *
+	 * @return gcShaderStorage
+	 */
 	map<string, vector<GraphicsComponent* > > getGcShaderStorage();
+
+	/** \brief getter
+	 *
+	 * @return gcTexStorage
+	 */
 	map<string, vector<GraphicsComponent* > > getGcTexStorage();
+
+	/** \brief getter
+	 *
+	 * @return vo2gcMap
+	 */
 	map<VirtualObject*, vector<GraphicsComponent* > > getVo2GcMap();
+
+	/** \brief getter
+	 *
+	 * @return gc2voMap
+	 */
 	map<GraphicsComponent*, VirtualObject* > getGc2VoMap();
-	void sortByShaders(); //extracts GCs from all VOs in VO list and sorts them into the gcStorage map
-	void sortByTextures(); //extracts GCs from all VOs in VO list and sorts them into the gcTexStorage map
-	void sortByFlags(); //extracts GCs from all VOs and sorts them into gcFlagStorage by checking for transparency, shadow, etc
+
+	/** \brief sort graphic components by attributes
+	 *
+	 */
+	void sortByAttributes();
+
+	/** \brief sort graphic components by shaders
+	 *
+	 * extracts GCs from all VOs in VO list and sorts them into the gcStorage map
+	 */
+	void sortByShaders();
+
+	/** \brief sort graphic components by textures
+	 *
+	 * extracts GCs from all VOs in VO list and sorts them into the gcTexStorage map
+	 */
+	void sortByTextures();
+
+	/** \brief sort graphic components by flags
+	 *
+	 * extracts GCs from all VOs and sorts them into gcFlagStorage by checking for transparency, shadow, etc
+	 */
+	void sortByFlags();
 private:
-	list<VirtualObject* >::iterator currentFirstElement; ///< VO pointer used with voList
-//	vector<GraphicsComponent>::iterator gcIterator; ///< iterator for gc-vectors
-	list<VirtualObject*> voList; ///< list of VOs
-	map<string, vector<GraphicsComponent* > > gcShaderStorage; ///< GC map sorted by shaders
-	map<string, vector<GraphicsComponent* > > gcTexStorage; ///< GC map sorted by Textures
-	map<VirtualObject*, vector<GraphicsComponent* > > vo2gcMap; ///< each GC is assigned to some VO
-	map<VirtualObject*, vector<GraphicsComponent* > > gcTex2voMap; ///< each GC is assigned to some VO
-	map<GraphicsComponent*, VirtualObject*> gc2voMap; ///< each VO is assigned to some GC
-	map<GraphicsComponent*, VirtualObject*> vo2gcTexMap; ///< each VO is assigned to some GC
-	map<string, vector<GraphicsComponent* > > gcFlagStorage; ///< GC map sorted by flags
+	list<VirtualObject* >::iterator currentFirstElement; 			/**< VO pointer used with voList */
+//	vector<GraphicsComponent>::iterator gcIterator; 				/**< iterator for gc-vectors */
+	list<VirtualObject*> voList; 									/**< list of VOs */
+	map<string, vector<GraphicsComponent* > > gcShaderStorage; 		/**< GC map sorted by shaders */
+	map<string, vector<GraphicsComponent* > > gcTexStorage; 		/**< GC map sorted by Textures */
+	map<VirtualObject*, vector<GraphicsComponent* > > vo2gcMap; 	/**< each GC is assigned to some VO */
+	map<VirtualObject*, vector<GraphicsComponent* > > gcTex2voMap; 	/**< each GC is assigned to some VO */
+	map<GraphicsComponent*, VirtualObject*> gc2voMap; 				/**< each VO is assigned to some GC */
+	map<GraphicsComponent*, VirtualObject*> vo2gcTexMap; 			/**< each VO is assigned to some GC*/
+	map<string, vector<GraphicsComponent* > > gcFlagStorage; 		/**< GC map sorted by flags */
+	map<Shader*, vector<GraphicsComponent* > > shader2gcStorage; 	/**< Shader pointers to gc pointers */
+	map<GraphicsComponent*, vector<Shader*> > gc2shaderStorage;		/**< docu pls */
+
+	list<Shader*> shaderList;			/**< docu pls */
+	list<Shader*> compositingList;		/**< docu pls */
+	list<Shader*> shaderListCopy;		/**< docu pls */
+	list<Shader*> shaderListAlternate;	/**< docu pls */
+	list<GraphicsComponent*> gcList;	/**< docu pls */
 };
 
 #endif /* RENDERQUEUE_H */

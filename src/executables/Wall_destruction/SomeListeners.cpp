@@ -182,7 +182,7 @@ void PickRayListener::update(){
 
 	glm::vec3 outOrigin= cam->getPosition();
 	glm::vec3 outDirection= cam->getViewDirection();;
-	glm::mat4 projectionMatrix = RenderManager::getInstance()->getProjectionMatrix();
+	glm::mat4 projectionMatrix = RenderManager::getInstance()->getPerspectiveMatrix();
 	glm::mat4 viewMatrix = IOManager::getInstance()->getCurrentIOHandler()->getViewMatrix();
 	phWorld->screenPosToWorldRay(currentXPos,currentYPos,currentWidth,currentHeight,viewMatrix,projectionMatrix,outOrigin,outDirection);
 }
@@ -201,13 +201,18 @@ void ShootSphereListener::update(){
 	btVector3 dir = btVector3(view.x, view.y, view.z);
 	btScalar speed = 30;
 
+
 	VirtualObject* 	sphere = 	VirtualObjectFactory::getInstance()->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 3.0, 8);
+
 
 	state->addVirtualObject(sphere);
 	sphere->translate(glm::vec3(start.x, start.y, start.z));
 	//sphere->setModelMatrix(glm::translate(glm::mat4(1.0f), glm::vec3(start.x, start.y, start.z)));
+
 	//sphere->getPhysicsComponent()->setPosition(start.x, start.y, start.z);
 	//sphere->setPhysicsComponent(1.0f,1.0f,1.0f,start.x, start.y, start.z, 3.0f, 8);
+
+
 	sphere->physicsComponent->getRigidBody()->setLinearVelocity(dir*speed);
 	state->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(sphere));
 

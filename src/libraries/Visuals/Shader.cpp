@@ -7,40 +7,11 @@
 
 #include <Visuals/Shader.h>
 
-Shader::Shader(){
 
-
-	mProgramHandle = ShaderTools::makeShaderProgram();
-	setShaderName("DefaultShader");
-
-	blurStrength = 0.0f;
-
-	int total = -1;
-
-	glGetProgramiv( mProgramHandle, GL_ACTIVE_UNIFORMS, &total );
-
-	unsigned int i= 0;
-
-	for(i=0; i<total; ++i)  {
-	    int name_len=-1, num=-1;
-	    GLenum type = GL_ZERO;
-	    char name[100];
-	    glGetActiveUniform( mProgramHandle, GLuint(i), sizeof(name)-1,
-	        &name_len, &num, &type, name );
-	    name[name_len] = 0;
-	    GLuint location = glGetUniformLocation( mProgramHandle, name );
-
-
-	    mUniformHandles.insert(std::pair<std::string, GLuint>(name, location));
-	    mUniformNames.push_back(name);
-	    attachUniformListener(name);
-}
-}
 Shader::Shader(std::string vertexShader, std::string fragmentShader) {
 
 	std::string vertexshader = vertexShader ;
 	std::string fragmentshader = fragmentShader ;
-
 	makeShader(vertexShader, fragmentShader);
 
 	blurStrength = 0.0f;
@@ -50,7 +21,6 @@ Shader::Shader(std::string vertexShader, std::string fragmentShader) {
 	glGetProgramiv( mProgramHandle, GL_ACTIVE_UNIFORMS, &total );
 
 	unsigned int i= 0;
-
 	for(i=0; i<total; ++i)  {
 	    int name_len=-1, num=-1;
 	    GLenum type = GL_ZERO;
@@ -62,6 +32,7 @@ Shader::Shader(std::string vertexShader, std::string fragmentShader) {
 
 
 	    mUniformHandles.insert(std::pair<std::string, GLuint>(name, location));
+
 	    mUniformNames.push_back(name);
 	    attachUniformListener(name);
 	}
@@ -130,6 +101,19 @@ void Shader::render(GraphicsComponent *gc){
 	glBindVertexArray(gc->getMesh()->getVAO());
 	glDrawElements(GL_TRIANGLES, gc->getMesh()->getNumIndices(), GL_UNSIGNED_INT, 0);
 }
+/*
+// render VO -> alle GraphicComponents im VO
+void Shader::render(VirtualObject *vo){
+    std::vector<GraphicsComponent*> gc_vec = vo->getGraphicsComponent();
+    for(unsigned int i = 0; i < gc_vec.size(); i++)
+	{
+        GraphicsComponent* gc=gc_vec[i];
+        glBindVertexArray(gc->getMesh()->getVAO());
+        glDrawElements(GL_TRIANGLES, gc->getMesh()->getNumIndices(), GL_UNSIGNED_INT, 0);
+	}
+}
+ */
+
 
 
 bool Shader::hasUniform(std::string uniformName){
@@ -141,6 +125,7 @@ bool Shader::hasUniform(std::string uniformName){
 	}
 	return false;
 }
+
 
 
 std::vector<std::string> Shader::getUniformNames(){
@@ -162,18 +147,22 @@ void Shader::attachUniformListener(std::string uniform){
 		attach(new UploadUniformModelMatrixListener(std::string("UNIFORMUPLOADLISTENER")));}
 	else if(uniform == "uniformView"){
 		attach(new UploadUniformViewMatrixListener(std::string("UNIFORMUPLOADLISTENER")));}
-	else if(uniform == "uniformProjection"){
-		attach(new UploadUniformProjectionMatrixListener(std::string("UNIFORMUPLOADLISTENER")));}
+	else if(uniform == "uniformPerspective"){
+		attach(new UploadUniformPerspectiveMatrixListener(std::string("UNIFORMUPLOADLISTENER")));}
 	else if(uniform == "uniformInverse"){
 		attach(new UploadUniformInverseModelViewMatrixListener(std::string("UNIFORMUPLOADLISTENER")));}
+	else if(uniform == "uniformLightPerspective"){
+		attach(new UploadUniformLightPerspectiveMatrixListener(std::string("UNIFORMUPLOADLISTENER")));}
 	else if(uniform == "positionMap"){
 		attach(new UploadUniformPositionMapListener(std::string("UNIFORMUPLOADLISTENER")));}
 	else if(uniform == "normalMap"){
 		attach(new UploadUniformNormalMapListener(std::string("UNIFORMUPLOADLISTENER")));}
 	else if(uniform == "colorMap"){
 		attach(new UploadUniformColorMapListener("UNIFORMUPLOADLISTENER"));}
-	else if(uniform == "materialMap"){
-		attach(new UploadUniformMaterialMapListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "shadowMap"){
+		attach(new UploadUniformShadowMapListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "specularMap"){
+		attach(new UploadUniformSpecularMapListener("UNIFORMUPLOADLISTENER"));}
 	else if(uniform == "depthMap"){
 		attach(new UploadUniformDepthMapListener("UNIFORMUPLOADLISTENER"));}
 	else if(uniform == "diffuseTexture"){
@@ -197,4 +186,7 @@ void Shader::attachUniformListener(std::string uniform){
 	else {
 		std::cout << "ERROR: Uniform \"" << uniform << "\" is not a valid uniform name." << std:: endl;
 	}
+
+
+
 }

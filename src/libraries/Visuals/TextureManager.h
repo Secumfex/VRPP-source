@@ -20,11 +20,30 @@ using namespace std;
 class TextureManager : public Singleton<TextureManager>{
 public:
 	friend class Singleton<TextureManager>;
+	/** \brief default constructor
+	 *
+	 */
 	TextureManager();
+
+	/** \brief destructor
+	 *
+	 */
 	virtual ~TextureManager();
+
+	/** \brief creates a Texture and inserts a texture handle into a map
+	 *
+	 * @param filename
+	 */
 	bool createTextureHandle(string filename);
+
+	/** \brief getter
+	 *
+	 * @return the desired Texture by its name
+	 */
 	GLuint getTextureHandle(string filename);
-	map<string, GLuint> mTextureHandles;
+
+protected:
+	map<string, GLuint> mTextureHandles;	/**< !docu pls! */
 
 };
 

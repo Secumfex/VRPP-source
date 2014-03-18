@@ -7,65 +7,212 @@
 
 using namespace std;
 
-/*! @brief Camera here means a first person camera.
- *
- *
+/** @brief Camera here means a first person camera.
+ *	a Camera is a construct consisting only of a position and a view direction
+ *  it can return a view matrix
  */
 class Camera{
 protected:
-	glm::vec3 position;
-	glm::vec3 direction;
+	glm::vec3 position;		/**< current world position */
+	glm::vec3 direction;	/**< current world normalized view direction */
 
-	float xPosition;
-	float yPosition;
-	float zPosition;
-	float phi;		// rotation, horizontal
-	float theta;	// inclination, vertical
-	float speedRight;
-	float speedForward;
+	float xPosition;		/**< current world position x */
+	float yPosition;		/**< current world position y */
+	float zPosition;		/**< current world position z */
+	float phi;				/**< rotation, horizontal */
+	float theta;			/**< inclination, vertical */
+	float speedRight;		/**< horizontal velocity */
+	float speedForward;		/**< forward velocity */
 
+	/** \brief returns an Up vector
+	 * @return Up vector
+	 */
 	glm::vec3 getUp();
 
-	inline void clampPhiTheta();	// clip Phi, Theta into [-PI; PI] and [0, 2*PI]
+	/** \brief clamps Phi and Thetha 
+	 *
+	 * clip Phi, Theta into [-PI; PI] and [0, 2*PI]
+	 */
+	inline void clampPhiTheta();
 
 public:
-	Camera();	//!< constructor
-	~Camera();	//!< destructor
+	/** \brief construct a camera in at default position
+	 *	default position is ( 0.0, 0.0, 5.0 ) 
+	 *	default view direction is negatie z axis
+	 *  default velocity is 0.0
+	 */
+	Camera();
+
+	/** \brief destructor
+	 *
+	 */
+	~Camera();
 
 	/* GETTER AND SETTER BEGIN */
-	// TODO remove unnecessary methods
+
+	/** \brief getter
+	 *
+	 * @return x value
+	 */
 	float getX();
+
+	/** \brief setter
+	 *
+	 * sets/changes the x value
+	 * @param updateX
+	 */
 	void setX(float updateX);
+
+	/** \brief getter
+	 *
+	 * @return y value
+	 */
 	float getY();
+
+	/** \brief setter
+	 *
+	 * sets/changes the y value
+	 * @param updateY
+	 */
 	void setY(float updateY);
+
+	/** \brief getter
+	 *
+	 * @return y value
+	 */
 	float getZ();
+
+	/** \brief setter
+	 *
+	 * sets/changes the y value
+	 * @param updateZ
+	 */
 	void setZ(float updateZ);
 
-	float getPhi();		//!< get rotational angle (yaw), always within [0,2*PI]
-	void setPhi(float updatePhi);	//!< set phi to provided float, will be clamped to [0,2*PI]
-	float getTheta();	//!< get inclinational angle (pitch), always within ]-PI , PI[
-	void setTheta(float updateTheta);	//!< set theta to provided float, will be clamped to ] -PI, PI []
+	/** \brief getter
+	 *
+	 * get rotational angle (yaw), always within [0,2*PI]
+	 * @return float value
+	 */
+	float getPhi();
+
+	/** \brief setter
+	 *
+	 * set phi to provided float, will be clamped to [0,2*PI]
+	 * @param updatePhi
+	 */
+	void setPhi(float updatePhi);
+
+	/** \brief getter
+	 *
+	 * get inclinational angle (pitch), always within ]-PI , PI[
+	 * @return float value
+	 */
+	float getTheta();
+
+	/** \brief setter
+	 *
+	 * set theta to provided float, will be clamped to ] -PI, PI []
+	 * @param updateTheta
+	 */
+	void setTheta(float updateTheta);
+
+	/** \brief setter
+	 *
+	 * sets/changes speedRight
+	 * @param speed
+	 */
 	void setSpeedRight(float speed);
+
+	/** \brief setter
+	 *
+	 * sets/changes speedForward
+	 * @param speed
+	 */
 	void setSpeedForward(float speed);
+
+	/** \brief update position by evaluating current velocity over provided time step
+	 * @param deltaTime : time step in seconds
+	 */
 	virtual void updatePosition(float deltaTime);
 
+	/** \brief getter
+	 *
+	 * @return speedRight
+	 */
 	float getSpeedRight();
+
+	/** \brief getter
+	 *
+	 * @return speedForward
+	 */
 	float getSpeedForward();
+
+	/** \brief getter
+	 *
+	 * @return right
+	 */
 	glm::vec3 getRight();
+
+	/** \brief getter
+	 *
+	 * @return the viewDirection (direction)
+	 */
 	glm::vec3 getViewDirection();
+
+	/** \brief getter
+	 *
+	 * @return position
+	 */
 	glm::vec3 getPosition();
+
+	/** \brief setter
+	 *
+	 * sets/changes the x,y,and z value of position
+	 * @param x,y,z position as float values
+	 */
 	virtual void setPosition(float x, float y, float z);
+
+	/** \brief setter
+	 *
+	 * sets/changes the x,y,and z value of position
+	 * @param newPos position as glm vec3
+	 */
 	virtual void setPosition(glm::vec3 newPos);
 
+	/** \brief setter
+	 *
+	 * sets/changes direction
+	 * @param dir
+	 */
 	void setDirection(glm::vec3 dir);
+
+	/** \brief setter
+	 *
+	 * sets/changes center
+	 * @param center
+	 */
 	void setCenter(glm::vec3 center);
 	/* GETTER AND SETTER END */
 
+	/** \brief compute normalized view direction from current inclination and rotation
+	 *
+	 * compute ViewDirection from Phi and Theta
+	 */
+	inline void updateViewDirection();
 
-	inline void updateViewDirection();		//!< compute ViewDirection from Phi and Theta
-	inline void updatePhiTheta();			//!< compute Phi and Theta from View Direction
+	/** \brief compute inclination and rotation angles from current view direction
+	 *
+	 * compute Phi and Theta from View Direction
+	 */
+	inline void updatePhiTheta();
 
-	glm::mat4 getViewMatrix();		//!< compute ViewMatrix
+	/** \brief getter
+	 *
+	 * compute ViewMatrix
+	 * @return viewMatrix
+	 */
+	glm::mat4 getViewMatrix();
 };
 
 #endif

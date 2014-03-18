@@ -13,10 +13,29 @@ private:
 	string name;
 
 public:
-	virtual ~Listener(){}			//!< destructor
-	virtual void update() = 0;		//!< abstract method which must be defined by every concrete Listener class
-	string getName();				//!< returns the name of the listener. It works like a key to be addressable
-	void setName(string name);		//!< sets the name of the listener that works like a key to be addressable
+	/** \brief destructor
+	 *
+	 */
+	virtual ~Listener(){}
+
+	/** \brief abstract method which must be defined by every concrete Listener class
+	 *
+	 */
+	virtual void update() = 0;
+
+	/** \brief getter
+	 *
+	 * returns the name of the listener. It works like a key to be addressable
+	 * @return name (string)
+	 */
+	string getName();
+
+	/** \brief setter
+	 *
+	 * sets the name of the listener that works like a key to be addressable
+	 * @param name
+	 */
+	void setName(string name);
 };
 
 #endif

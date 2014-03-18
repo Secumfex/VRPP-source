@@ -1,4 +1,5 @@
 /*
+
  * VirtualObjectFactory.cpp
  *
  *  Created on: 05.12.2013
@@ -6,6 +7,8 @@
  */
 
 #include <Visuals/VirtualObjectFactory.h>
+#include <string>
+
 
 VirtualObjectFactory::VirtualObjectFactory(){
 	mCube = NULL;
@@ -13,6 +16,7 @@ VirtualObjectFactory::VirtualObjectFactory(){
 }
 
 //eingefügt
+
 void VirtualObjectFactory::set_float4(float f[4], float a, float b, float c, float d)
 {
 	f[0] = a;
@@ -68,38 +72,32 @@ GraphicsComponent* VirtualObjectFactory::getTriangle(){
 	} return mScreenFillTriangle;
 }
 
-VirtualObject* VirtualObjectFactory::createNonAssimpVO(){
+VirtualObject* VirtualObjectFactory::createNonAssimpVO(float mass){
 
 	if(mCube == NULL){
 	NoAssimpVirtualObjectFactory *voFactory = new NoAssimpVirtualObjectFactory();
-	VirtualObject *cube = voFactory->createCubeObject();
+	mCube = voFactory->createCubeObject(mass);
 	}
 
 	return mCube;
 }
 
-VirtualObject* VirtualObjectFactory::createNonAssimpSphere(){
-
-	if(mSphere == NULL){
-	NoAssimpVirtualObjectFactory *voFactory = new NoAssimpVirtualObjectFactory();
-	VirtualObject *cube = voFactory->createCubeObject();
-	}
-
-	return mSphere;
-}
 
 
 VirtualObject* VirtualObjectFactory::createVirtualObject(){
 	return new VirtualObject();
 }
 
+
 VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, BodyType bodyType, float mass, int collisionFlag){
+
 	VirtualObject* virtualObject = new VirtualObject();
 
 	Assimp::Importer Importer;
-	TextureManager* texManager = TextureManager::getInstance();
+	//TextureManager* texManager = TextureManager::getInstance();
 
 	std::string directory = filename.substr( filename.find_last_of( '/' ) + 1 );
+    std::string objName = directory;
 	directory = filename.substr(0, filename.length() - directory.length());
 
 	using namespace std;
@@ -125,7 +123,6 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 			aiProcess_GenSmoothNormals|
 			aiProcess_GenUVCoords |
 			aiProcess_FlipUVs|
-			aiProcess_FlipUVs |
 			aiProcess_PreTransformVertices |
 			aiProcess_CalcTangentSpace
 
@@ -143,11 +140,14 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 
 
-	glm::vec3 physics_min = glm::vec3(FLT_MAX,FLT_MAX,FLT_MAX);
-	glm::vec3 physics_max = glm::vec3(FLT_MIN,FLT_MIN,FLT_MIN);
-
 
 	// For each mesh
+	glm::vec3 physics_min = glm::vec3(FLT_MAX,FLT_MAX,FLT_MAX);
+	glm::vec3 physics_max = glm::vec3(-FLT_MAX,-FLT_MAX,-FLT_MAX);
+
+
+    
+	// For each mesh of the loaded object
 	for (unsigned int n = 0; n < pScene->mNumMeshes; ++n)
 	{
 		const aiMesh* mesh = pScene->mMeshes[n];
@@ -156,6 +156,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 		//Our Material and Mash to be filled
 		Mesh* aMesh = new Mesh();
 		Material* aMat = new Material();
+
 
 		GLuint buffer = 0;
 		glm::vec3 aabbMax = glm::vec3(INT_MIN, INT_MIN, INT_MIN);
@@ -190,7 +191,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 		glBindVertexArray(aMesh->getVAO());
 
 
-		// buffer for faces
+		// buffer for faces (indices)
 		glGenBuffers(1, &buffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), &indices[0], GL_STATIC_DRAW);
@@ -200,8 +201,6 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 			glGenBuffers(1, &buffer);
 			glBindBuffer(GL_ARRAY_BUFFER, buffer);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(aiVector3D) * mesh->mNumVertices, mesh->mVertices, GL_STATIC_DRAW);
-
-
 
 			//vertexLoc wurde hier ersetzt
 			glEnableVertexAttribArray(0);
@@ -216,7 +215,6 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 			glBufferData(GL_ARRAY_BUFFER, sizeof(float)*3*mesh->mNumVertices, mesh->mNormals, GL_STATIC_DRAW);
 
 			// normalLoc wurde hier ersetzt
-
 			glEnableVertexAttribArray(2);
 			glVertexAttribPointer(2, 3, GL_FLOAT, 0, 0, 0);
 
@@ -228,7 +226,6 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 			glBufferData(GL_ARRAY_BUFFER, sizeof(float)*3*mesh->mNumVertices, mesh->mTangents, GL_STATIC_DRAW);
 
 			// normalLoc wurde hier ersetzt
-
 			glEnableVertexAttribArray(3);
 			glVertexAttribPointer(3, 3, GL_FLOAT, 0, 0, 0);
 
@@ -237,7 +234,6 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 		}
 
 		// buffer for vertex texture coordinates
-
 		vector <float>texCoords;
 		float uv_steps = 1.0 / mesh->mNumVertices;
 
@@ -273,8 +269,8 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 		glGenBuffers(1, &buffer);
 		glBindBuffer(GL_ARRAY_BUFFER, buffer);
-
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float)*2*mesh->mNumVertices, &texCoords[0], GL_STATIC_DRAW);
+        
 		//und texCoordLoc wurde dann auch ersetzt
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(1, 2, GL_FLOAT, 0, 0, 0);
@@ -285,198 +281,180 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 		// create material uniform buffer
 		aiMaterial *mtl = pScene->mMaterials[mesh->mMaterialIndex];
+    
 
 		aiString texPath;   //contains filename of texture
+
 		Texture *tex_temp = new Texture();
 
 
 
 		if(AI_SUCCESS == mtl->GetTexture(aiTextureType_DIFFUSE, 0, &texPath)){
-
-
 			cout << "Try to find DiffuseMap: " << texPath.C_Str() << endl;
 			tex_temp = new Texture(directory + texPath.C_Str());
-			aMat->setDiffuseMap(tex_temp);
+            aMat->setDiffuseMap(tex_temp);
 		}
 
-
-
-
-
 		if(AI_SUCCESS == mtl->GetTexture(aiTextureType_AMBIENT, 0, &texPath)){
-
-
 			cout << "Try to find AmbientMap: " << texPath.C_Str() << endl;
 			tex_temp = new Texture(directory + texPath.C_Str());
 			aMat->setAmbientMap(tex_temp);
 		}
 
-
-
-
-
 		if(AI_SUCCESS == mtl->GetTexture(aiTextureType_OPACITY, 0, &texPath)){
-
-
 			cout << "Try to find OpacityMap: " << texPath.C_Str() << endl;
 			tex_temp = new Texture(directory + texPath.C_Str());
 			aMat->setOpacityMap(tex_temp);
 		}
 
-
 		if(AI_SUCCESS == mtl->GetTexture(aiTextureType_HEIGHT, 0, &texPath)){
 			//For some Reason HeightMap and NormalMap are switched in Assimp
-
 			cout << "Try to find NormalMap: " << texPath.C_Str() << endl;
 			tex_temp = new Texture(directory + texPath.C_Str());
 			aMat->setNormalMap(tex_temp);
 		}
 
-
-
-
 		if(AI_SUCCESS == mtl->GetTexture(aiTextureType_NORMALS, 0, &texPath)){
 			//For some Reason HeightMap and NormalMap are switched in Assimp
-
 			cout << "Try to find HeightMap: " << texPath.C_Str() << endl;
 			tex_temp = new Texture(directory + texPath.C_Str());
 			aMat->setHeightMap(tex_temp);
 		}
 
-
-
 		if(AI_SUCCESS == mtl->GetTexture(aiTextureType_EMISSIVE, 0, &texPath)){
-
 			cout << "Try to find EmissiveMap: " << texPath.C_Str() << endl;
 			tex_temp = new Texture(directory + texPath.C_Str());
 			aMat->setEmissiveMap(tex_temp);
 		}
 
-
-
-
 		if(AI_SUCCESS == mtl->GetTexture(aiTextureType_SPECULAR, 0, &texPath)){
-
 			cout << "Try to find SpecularMap: " << texPath.C_Str() << endl;
 			tex_temp = new Texture(directory + texPath.C_Str());
 			aMat->setSpecularMap(tex_temp);
 		}
 
-
-
 		if(AI_SUCCESS == mtl->GetTexture(aiTextureType_REFLECTION, 0, &texPath)){
-
 			cout << "Try to find ReflectionMap: " << texPath.C_Str() << endl;
 			tex_temp = new Texture(directory + texPath.C_Str());
 			aMat->setReflectionMap(tex_temp);
 		}
 
-
-
 		if(AI_SUCCESS == mtl->GetTexture(aiTextureType_SHININESS, 0, &texPath)){
-
 			cout << "Try to find ShininessMap: " << texPath.C_Str() << endl;
 			tex_temp = new Texture(directory + texPath.C_Str());
 			aMat->setShininessMap(tex_temp);
 		}
 
-
-
-
 		if(AI_SUCCESS == mtl->GetTexture(aiTextureType_DISPLACEMENT, 0, &texPath)){
-
 			cout << "Try to find DisplacementMap: " << texPath.C_Str() << endl;
 			tex_temp = new Texture(directory + texPath.C_Str());
 			aMat->setDisplacementMap(tex_temp);
 		}
 
-
-
-
 		if(AI_SUCCESS == mtl->GetTexture(aiTextureType_LIGHTMAP, 0, &texPath)){
-
 			cout << "Try to find LightMap: " << texPath.C_Str() << endl;
 			tex_temp = new Texture(directory + texPath.C_Str());
 			aMat->setLightMap(tex_temp);
 		}
 
-
-
-		float c[4];
-		set_float4(c, 0.8f, 0.8f, 0.8f, 1.0f);
-		aiColor4D diffuse;
-		if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_DIFFUSE, &diffuse))
-			color4_to_float4(&diffuse, c);
-
-
-
-		//memcpy(aMat.diffuse, c, sizeof(c));
-		aMat->setDiffuse(glm::vec3(diffuse.r,diffuse.g, diffuse.b));
-
-
-		set_float4(c, 0.2f, 0.2f, 0.2f, 1.0f);
-		aiColor4D ambient;
-		if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_AMBIENT, &ambient))
-			color4_to_float4(&ambient, c);
-
-
-
-		//memcpy(aMat.ambient, c, sizeof(c));
-
-		aMat->setAmbient(glm::vec3(ambient.r, ambient.g, ambient.b));
-
-
-
-		set_float4(c, 0.0f, 0.0f, 0.0f, 1.0f);
-		aiColor4D specular;
-		if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_SPECULAR, &specular))
-			color4_to_float4(&specular, c);
-
-
-
-		//memcpy(aMat.specular, c, sizeof(c));
-
-		aMat->setSpecular(glm::vec3(specular.r, specular.g, specular.b));
-
-
-
-		set_float4(c, 0.0f, 0.0f, 0.0f, 1.0f);
-		aiColor4D emission;
-		if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_EMISSIVE, &emission))
-			color4_to_float4(&emission, c);
-
-		aiString name;
+        aiString name;
 		if(AI_SUCCESS == aiGetMaterialString(mtl, AI_MATKEY_NAME, &name)){
 			std::string matName = name.C_Str();
 			matName = matName.substr( matName.find_last_of( '/' ) + 1 );
 
-			aMat->setName(matName);
-		}else
-			aMat->setName("genericMaterial");
 
-		//memcpy(aMat.emissive, c, sizeof(c));
+            std::cout<<"\nName des Materials: "<<matName<<endl;
+
+			aMat->setName(matName);
+		}
+        else{
+			aMat->setName("genericMaterial");
+        }
+        
+        
+        /* try to generate material by name */
+        
+		GraphicsComponent* gc=new GraphicsComponent(aMesh,aMat);
+        MaterialManager* mm= MaterialManager::getInstance();
+
+
+
+        if(aMat->getName().find("custom") != std::string::npos){
+        	cout<<"\nRead from mtl\n";
+
+
+
+ // diffuse
+
+        	float c[4];
+
+		set_float4(c, 0.8f, 0.8f, 0.8f, 1.0f);
+		aiColor4D diffuse;
+		if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_DIFFUSE, &diffuse)){
+		color4_to_float4(&diffuse, c);
+		}
+		aMat->setDiffuse(glm::vec3(c[0], c[1], c[2]));
+
+
+        // ambient
+		set_float4(c, 0.2f, 0.2f, 0.2f, 1.0f);
+		aiColor4D ambient;
+		if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_AMBIENT, &ambient))
+			color4_to_float4(&ambient, c);
+		//memcpy(aMat.ambient, c, sizeof(c));
+		aMat->setAmbient(glm::vec3(ambient.r, ambient.g, ambient.b));
+
+        // specular
+
+		set_float4(c, 0.0f, 0.0f, 0.0f, 1.0f);
+
+		aiColor4D specular;
+		if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_SPECULAR, &specular))
+			color4_to_float4(&specular, c);
+		//memcpy(aMat.specular, c, sizeof(c));
+		aMat->setSpecular(glm::vec3(specular.r, specular.g, specular.b));
+
+        // emission
+		set_float4(c, 0.0f, 0.0f, 0.0f, 1.0f);
+		aiColor4D emission;
+		if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_EMISSIVE, &emission))
+			color4_to_float4(&emission, c);
+        //memcpy(aMat.emissive, c, sizeof(c));
 		aMat->setEmission(glm::vec3(emission.r, emission.g, emission.b));
 
-
-
-
-		float shininess = 0.0;
-		unsigned int max;
-
+        // shininess
+        float shininess = 0.0;
+		//unsigned int max;
 		if(AI_SUCCESS != mtl->Get(AI_MATKEY_SHININESS, shininess))
 			shininess = 50.0;
 
-		aMat->setShininess(shininess/1000.0);
+
+		aMat->setShininess(1.0f);
+//shininess/1000.0f
+
+        }
+        else{
+
+        try {
+            mm->makeMaterial(aMat->getName(),gc);
+
+            }
+        catch (string param){
+           cout<<"\nFAILED: generate material by name";
+
+            }
+        }
 
 
 
 		//Mesh und Material wird gelesen und in neuer GraphicsComponent gespeichert
-		GraphicsComponent* gc=new GraphicsComponent(aMesh, aMat);
-		gc->setBoundingBox(aabbMin, aabbMax);
-
+		gc->setGhostObject(aabbMin, aabbMax);
 
 
 		virtualObject->addGraphicsComponent(gc);
+
+
+
 
 		if(aabbMin.x < physics_min.x)
 			physics_min.x = aabbMin.x;
@@ -491,6 +469,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 		if(aabbMax.z > physics_max.z)
 			physics_max.z = aabbMax.z;
 
+
 	}
 	glm::vec3 boxValue = physics_max-physics_min;
 	float width = boxValue.x;
@@ -500,53 +479,6 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 	float x = physics_min.x + width / 2.0f;
 	float y = physics_min.y + height / 2.0f;
 	float z = physics_min.z + depth / 2.0f;
-
-	cout << "physics from graphics width " << width << endl;
-	cout << "physics from graphics height " << height << endl;
-	cout << "physics from graphics depth " << depth << endl;
-	cout << "physics from graphics x " << x << endl;
-	cout << "physics from graphics y " << y << endl;
-	cout << "physics from graphics z " << z << endl;
-
-	glm::vec3 boxValueGraphMaxTotal;
-	glm::vec3 boxValueGraphMinTotal;
-	glm::vec3 boxValueGraphMax;
-	glm::vec3 boxValueGraphMin;
-	vector<GraphicsComponent*> mGraphComponent = virtualObject->getGraphicsComponent() ;
-	for(unsigned int i=0; i< mGraphComponent.size();i++){
-		boxValueGraphMax = mGraphComponent[i]->getBoundingBox_Max();
-		boxValueGraphMin = mGraphComponent[i]->getBoundingBox_Min();
-		if(boxValueGraphMin.x < boxValueGraphMinTotal.x)
-			boxValueGraphMinTotal.x = boxValueGraphMin.x;
-		if(boxValueGraphMin.y < boxValueGraphMinTotal.y)
-			boxValueGraphMinTotal.y = boxValueGraphMin.y;
-		if(boxValueGraphMin.z < boxValueGraphMinTotal.z)
-			boxValueGraphMinTotal.z = boxValueGraphMin.z;
-		if(boxValueGraphMax.x > boxValueGraphMaxTotal.x)
-			boxValueGraphMaxTotal.x = boxValueGraphMax.x;
-		if(boxValueGraphMax.y > boxValueGraphMaxTotal.y)
-			boxValueGraphMaxTotal.y = boxValueGraphMax.y;
-		if(boxValueGraphMax.z > boxValueGraphMaxTotal.z)
-			boxValueGraphMaxTotal.z = boxValueGraphMax.z;
-	}
-
-	glm::vec3 boxValueG = boxValueGraphMaxTotal-boxValueGraphMinTotal;
-
-	float widthG = boxValueG.x;
-	float heightG = boxValueG.y;
-	float depthG = boxValueG.z;
-
-	float xG = boxValueGraphMinTotal.x + widthG / 2.0f;
-	float yG = boxValueGraphMinTotal.y + heightG / 2.0f;
-	float zG = boxValueGraphMinTotal.z + depthG / 2.0f;
-
-	cout << "G physics from graphics width " << widthG << endl;
-	cout << "G physics from graphics height " << heightG << endl;
-	cout << "G physics from graphics depth " << depthG << endl;
-	cout << "G physics from graphics x " << xG << endl;
-	cout << "G physics from graphics y " << yG << endl;
-	cout << "G physics from graphics z " << zG << endl;
-
 
 	glm::vec3 normal;
 	normal.x= physics_min.y*physics_max.z - physics_min.z*physics_max.y;
@@ -565,20 +497,9 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 	}
 
 
+		std::cout << "max: " << physics_max.x << " , "<< physics_max.y << " , "<< physics_max.z << std::endl;
+		std::cout << "min: " << physics_min.x << " , "<< physics_min.y << " , "<< physics_min.z << std::endl;
+
 
 	return virtualObject;
-}
-
-VirtualObject* VirtualObjectFactory::createVirtualObject(vector<GraphicsComponent*> graphcomps){
-	VirtualObject* virtualObject = new VirtualObject();
-	//TODO: alle GraphicsComponents werden an das VO übergeben
-
-	return virtualObject;
-}
-
-VirtualObject* VirtualObjectFactory::copyVirtualObject(VirtualObject vo){
-	VirtualObject* virtualObject = new VirtualObject();
-	//TODO: variable wird überfuehrt
-
-	return createNonAssimpVO();
 }

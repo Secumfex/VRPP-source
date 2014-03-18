@@ -20,24 +20,51 @@ class Texture {
 	//-----------------MEMBER FUNCTIONS-----------------
 public:
 	/** Man macht die Textur direkt mit dem Dateinamen */
+
+	/** \brief constructor
+	 *
+	 * @param filename
+	 */
 	Texture(std::string filename);
+
+	/** \brief default constructor
+	 *
+	 */
 	Texture();
+
+	/** \brief destructor
+	 *
+	 */
 	virtual ~Texture();
+
+	/** \brief getter
+	 *
+	 * @return mFilename
+	 */
 	std::string getTexName();
 
-	/** Das Handle wird übergeben */
+	/** \brief getter
+	 *
+	 * @return the Texture's handle
+	 */
 	GLuint getTextureHandle();
-	/** Textur wird gebunden*/
+
+	/** \brief binds Texture
+	 *
+	 */
 	void bindTexture();
-	/** Textur wird entbunden*/
+
+	/** \brief unbinds Texture
+	 *
+	 */
 	void unbindTexture();
 
 	//-----------------MEMBER VARIABLES-----------------
 protected:
 
-	string mFilename;
+	string mFilename;				/**< !docu pls! */
 
-	TextureManager* mTexManager;
+	TextureManager* mTexManager;	/**< !docu pls! */
 };
 
 #endif /* TEXTURE_H_ */

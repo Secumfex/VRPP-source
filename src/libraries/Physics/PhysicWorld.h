@@ -34,7 +34,7 @@ public:
 
 	/** \brief collision callback function
 	 *
-	 * is called if a collition between two rigidBodies happens.
+	 * is called if a collision between two rigidBodies happens.
 	 * @param collisionPoint point where a collision is detected
 	 * @param obj1,obj2 objects which are involved in the collision
 	 * @param id1,id2 currently not used

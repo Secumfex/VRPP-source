@@ -7,7 +7,7 @@ layout (location = 2) in vec4 normalAttribute;
 uniform mat4 uniformModel;
 uniform mat4 uniformView;
 uniform mat4 uniformInverse;
-uniform mat4 uniformProjection;
+uniform mat4 uniformPerspective;
 
 out vec3 passNormal;
 out vec3 passLightPosition;
@@ -17,7 +17,7 @@ out vec2 passUVCoords;
 void main() {
     passLightPosition = (uniformView * vec4(3,3,3,1)).xyz;
 
-    gl_Position = uniformProjection * uniformView * uniformModel * positionAttribute;
+    gl_Position = uniformPerspective * uniformView * uniformModel * positionAttribute;
 
     //transform the position correctly into view space
     //and pass it to the fragment shader

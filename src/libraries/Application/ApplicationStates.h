@@ -8,6 +8,7 @@
 #include "Patterns/Subject.h"
 #include "IO/IOHandler.h"
 #include "Visuals/VirtualObjectFactory.h"
+#include "Visuals/Frustum.h"
 
 class Camera; class RenderQueue; class VirtualObject;
 
@@ -17,38 +18,142 @@ class ApplicationState : public State{
 
 protected: 
 	/*Member variables*/
-	Camera* camera;
-	RenderQueue* renderQueue;
-	IOHandler* iOHandler;
-	glm::mat4 projectionMatrix;
+	Frustum* frustum;				/**< frustum associated with camera, used for frustum culling */
+	Camera* camera;					/**< camera to be used for view in this state */
+	RenderQueue* renderQueue;		/**< renderqueue to be used for rendering in this state */
+	IOHandler* iOHandler;			/**< IOHandler to be used for input interpretation */
+	glm::mat4 perspectiveMatrix;	/**< perspective matrix to be used by rendering! */
 
-	virtual void bindObjects(); //!< bind objects to RenderManager, IOManager, PhysicsWorld etc.
+	/** \brief bind objects to RenderManager, IOManager, PhysicsWorld etc.
+	 *	
+	 */
+	virtual void bindObjects();
 public:
+	/** \brief constructor
+	 *
+	 */
 	ApplicationState();
 
+	/** \brief getter
+	 *
+	 * @return frustum
+	 */
+	Frustum*		getFrustum();
+
+	/** \brief getter
+	 *
+	 * @return camera
+	 */
 	Camera* 		getCamera();
+
+	/** \brief getter
+	 *
+	 * @return renderQueue
+	 */
 	RenderQueue* 	getRenderQueue();
+
+	/** \brief getter
+	 *
+	 * @return iOHandler
+	 */
 	IOHandler* 		getIOHandler();
-	glm::mat4 		getProjectionMatrix();
 
+	/** \brief getter
+	 *
+	 * @return perspectiveMatrix
+	 */
+	glm::mat4 		getPerspectiveMatrix();
+
+	/** \brief setter
+	 *
+	 * @param camera
+	 */
 	void setCamera(				Camera* camera);
+
+	/** \brief setter
+	 *
+	 * @param renderQueue
+	 */
 	void setRenderQueue(		RenderQueue* renderQueue);
+
+	/** \brief setter
+	 *
+	 * @param iOHandler
+	 */
 	void setIOHandler(			IOHandler* iOHandler);
-	void setProjectionMatrix(	glm::mat4 projectionMatrix);
-
-	virtual void activate(); //!< activation of state --> binding objects
 
 
-	VirtualObject* createVirtualObject(std::string path, VirtualObjectFactory::BodyType bodyType = VirtualObjectFactory::OTHER, float mass = 0.0, int collisionFlag = 1); //!< create Object from path and add it to renderQueue
-	void addVirtualObject(VirtualObject* vo); //!< add existing VO to renderQueue
+
+
+	/** \brief setter
+	 *
+	 * @param projectionMatrix
+	 */
+	void setPerspectiveMatrix(	glm::mat4 projectionMatrix);
+
+	/** \brief activation of state --> binding objects
+	 *
+	 */
+	virtual void activate();
+
+	/** \brief create Object from path and add it to renderQueue
+	 *
+	 * @param path
+	 * @param bodyType
+	 * @param mass
+	 * @return VirtualObject reference
+	 */
+	VirtualObject* createVirtualObject(std::string path, VirtualObjectFactory::BodyType bodyType = VirtualObjectFactory::OTHER, float mass = 0.0, int collisionFlag = 1);
+
+	/** \brief add existing VO to renderQueue
+	 *
+	 * @param vo
+	 */
+	void addVirtualObject(VirtualObject* vo);
+
 
 	/*Application State Listeners*/
-	void attachListenerOnActivation(Listener* listener); //!< attach Listener on Activation
-	void attachListenerOnBindingObjects(Listener* listener); //!< attach Listener on binding objects 
-	void attachListenerOnCreatingVirtualObject(Listener* listener); //!< attach Listener on creating a new object
-	void attachListenerOnAddingVirtualObject(Listener* listener); //!< attach Listener on adding a new object
-	void attachListenerOnButton(Listener* listener); //!< attach Listener on button press or button release
-	void attachListenerOnBeginningProgramCycle(Listener* listener); //!< attach Listener on beginning Program Cycle
+	/** \brief attach listener
+	 *
+	 * attach Listener on Activation
+	 * @param listener
+	 */
+	void attachListenerOnActivation(Listener* listener);
+
+	/** \brief attach listener
+	 *
+	 * attach Listener on binding objects
+	 * @param listener
+	 */
+	void attachListenerOnBindingObjects(Listener* listener);
+
+	/** \brief attach listener
+	 *
+	 * attach Listener on creating a new object
+	 * @param listener
+	 */
+	void attachListenerOnCreatingVirtualObject(Listener* listener);
+
+	/** \brief attach listener
+	 *
+	 * attach Listener on adding a new object
+	 * @param listener
+	 */
+	void attachListenerOnAddingVirtualObject(Listener* listener);
+
+	/** \brief attach listener
+	 *
+	 * attach Listener on button press or button release
+	 * @param listener
+	 */
+	void attachListenerOnButton(Listener* listener);
+
+	/** \brief attach listener
+	 *
+	 * attach Listener on beginning Program Cycle
+	 * @param listener
+	 */
+	void attachListenerOnBeginningProgramCycle(Listener* listener);
 };
 
 /// An ApplicationState with no added functionality
@@ -58,14 +163,23 @@ class IdleState : public ApplicationState {
 /// An  ApplicationState supposed to contain a mouse click enabled IOHandler
 class MenuState : public ApplicationState {
 public:
+	/** \brief constructor
+	 *
+	 */
 	MenuState(std::string name = "");
 };
 
 /// An ApplicationState supposed to contain a Camera Movement enabled IOHandler
 class VRState : public ApplicationState {
 public:
+	/** \brief constructor
+	 *
+	 */
 	VRState(std::string name = "");
 
+	/** \brief activate the VR-State
+	 *
+	 */
 	void activate();
 };
 #endif

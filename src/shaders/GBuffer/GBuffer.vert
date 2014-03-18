@@ -6,7 +6,7 @@ layout(location = 2) in vec4 normalAttribute;
 
 uniform mat4 uniformModel;
 uniform mat4 uniformView;
-uniform mat4 uniformProjection;
+uniform mat4 uniformPerspective;
 
 out vec4 passPosition;
 out vec2 passUVCoord;
@@ -17,7 +17,7 @@ void main(){
     passUVCoord = uvCoordAttribute;
 
     passPosition = uniformView * uniformModel * positionAttribute;
-    gl_Position =  uniformProjection * uniformView * uniformModel * positionAttribute;
+    gl_Position =  uniformPerspective * uniformView * uniformModel * positionAttribute;
 
     passNormal = vec3(transpose(inverse(uniformView * uniformModel)) * normalAttribute);
 }

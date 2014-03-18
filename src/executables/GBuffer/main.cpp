@@ -15,10 +15,9 @@
 #include "Tools/Geometry.h"
 
 
-
 int main() {
     
-    // render window
+    //render window
     glfwInit();
     
 #ifdef __APPLE__
@@ -45,8 +44,6 @@ int main() {
     std::cout << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
     std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
     std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
-    
-    
     
     //load, compile and link simple texture rendering program for a screen filling plane
     GLuint simpleTextureProgramHandle = ShaderTools::makeShaderProgram(
@@ -78,7 +75,6 @@ int main() {
     
     
     
-
     //--------------------------------------------//
     //        Create a Vertex Array Object        //
     //         to render a triangle that          //
@@ -195,15 +191,13 @@ int main() {
         glDrawBuffers(3, drawBufferHandles);
     }
     
-    
-    
     //load a fancy texture
     GLuint textureHandle = TextureTools::loadTexture(RESOURCES_PATH "/cubeTexture.jpg");
     
     //rotation of the cube
     float angle = 0.0f;
     float rotationSpeed = 1.0f;
-	int blurStrength = 4;
+    int blurStrength = 4;
     
     while(!glfwWindowShouldClose(window)) {
         
@@ -212,7 +206,7 @@ int main() {
         using namespace glm;
         
         //rotation angle
-        angle = fmod((float)(angle+rotationSpeed*glfwGetTime()), (float)(pi<float>()*2.0f));
+        angle = fmod(angle + rotationSpeed * glfwGetTime(), pi<float>() * 2.0f);
         glfwSetTime(0.0);
         
         //scale a cube into a flat plane
@@ -267,7 +261,7 @@ int main() {
         
         glUseProgram(finalCompositingProgramHandle);
         
-		glUniform1i(blurStrengthHandle, blurStrength);
+        glUniform1i(blurStrengthHandle, blurStrength);
         glViewport(0, 0, width, (height/4)*3);
         
         glActiveTexture(GL_TEXTURE0);
@@ -326,6 +320,5 @@ int main() {
     
     glfwDestroyWindow(window);
     glfwTerminate();
-    return 0;
-    
+    return 0;   
 };

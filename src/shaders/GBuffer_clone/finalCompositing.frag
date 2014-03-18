@@ -5,7 +5,10 @@ in vec2 passUV;
 uniform sampler2D positionMap;
 uniform sampler2D normalMap;
 uniform sampler2D colorMap;
-uniform sampler2D materialMap;
+uniform sampler2D specularMap;
+uniform sampler2D shadowMap;
+
+uniform mat4 uniformLightPerspective;
 
 uniform float resX;
 uniform float resY;
@@ -16,10 +19,25 @@ void main() {
     vec4 position = texture(positionMap, passUV);
     vec4 normal = texture(normalMap, passUV);
     vec4 color = texture(colorMap, passUV);
-	float shininess = texture(materialMap, passUV).x;
+    vec4 specularColor = texture(specularMap, passUV);
+	float shininess = texture(specularMap, passUV).a;
 
     //lightPosition from camera system
     vec4 lightPos = vec4(5,2,-2,1);
+    
+    vec4 lightPerspective = uniformLightPerspective * position;
+
+	lightPerspective = vec4(lightPerspective.xyz / lightPerspective.w, 0.0);
+    lightPerspective = lightPerspective * 0.5 + 0.5;
+    float lightDepth = texture(shadowMap, lightPerspective.xy).x;
+
+	float visibility = 1.0;
+//    
+//  	if (lightDepth < lightPerspective.z - 0.0005) {
+//       visibility = 0.5;    
+//  } else {
+//     visibility = 1.0;
+// }
     
     //calculate lighting with given position, normal and lightposition
     vec3 nPosToLight = normalize(vec3(lightPos.xyz - position.xyz));
@@ -28,8 +46,9 @@ void main() {
 
     vec3  reflection = normalize(reflect(-nPosToLight,normal.xyz));
     float ambient = 0.1;
-    float diffuse = max(dot(normal.xyz, nPosToLight), 0);
+    float diffuse = max(dot(normal.xyz, nPosToLight), 0) * visibility;
     float specular = pow(max(dot(reflection, -normalize(position.xyz)),0), shininess * 1000.0);
+ 
 
     float resX_temp = 1.0/resX;
     float resY_temp = 1.0/resY;
@@ -47,6 +66,6 @@ void main() {
     }
     glow /= strength * strength * 4;
 
-    fragmentColor = color * ambient + (color * diffuse + color * specular) * lightColor;
+    fragmentColor = color * ambient + (color * diffuse + specularColor * specular) * lightColor;
     fragmentColor += glow;
 }

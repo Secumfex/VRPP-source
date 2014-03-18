@@ -13,6 +13,7 @@
 
 #include <Patterns/Singleton.h>
 #include <Visuals/VirtualObject.h>
+#include "MaterialManager.h"
 #include <vector>
 #include <Tools/NoAssimpVirtualObjectFactory.h>
 
@@ -26,34 +27,80 @@ using namespace std;
 class VirtualObjectFactory : public Singleton<VirtualObjectFactory> {
 	friend class Singleton<VirtualObjectFactory>;
 
+	///constructor
     VirtualObjectFactory();
 
 //---------------MEMBER VARIABLES--------------------
 
-VirtualObject* mCube;
-VirtualObject* mSphere;
-GraphicsComponent* mScreenFillTriangle;
+VirtualObject* mCube;					/**< !docu pls! */
+GraphicsComponent* mScreenFillTriangle;	/**< !docu pls! */
 
 
 //---------------MEMBER FUNCTIONS--------------------
 public:
-enum BodyType {CUBE, SPHERE, PLANE, OTHER};
 
-VirtualObject* createNonAssimpVO();
-VirtualObject* createNonAssimpSphere();
+enum BodyType {CUBE, SPHERE, PLANE, OTHER};	/**< possible body types of a virtual object */
+
+/** \brief
+ *
+ * @param mass defines the behavior of the rigid body in the physics world
+ * @return mCube
+ */
+VirtualObject* createNonAssimpVO(float mass = 0.0f);
+
+/** \brief getter
+ *
+ * @return
+ */
 GraphicsComponent* getTriangle();
 
+
+/** \brief create default VO
+ *
+ * @return virtual object
+ */
 VirtualObject* createVirtualObject();
-VirtualObject* createVirtualObject(std::string filename, BodyType bodyType = OTHER, float mass = 0.0f, int collisionFlag = 1);
+
+
+/** \brief create VO
+ *
+ * @param filename
+ * @param bodyType
+ * @param mass defines the behavior of the rigid body in the physics world
+ * @return virtual object
+ */
+		VirtualObject* createVirtualObject(std::string filename, BodyType bodyType = OTHER, float mass = 0.0f, int collisionFlag = 1);
+
+/** \brief create VO
+ *  @param graphcomps vector of graphic component
+ * @return virtual object
+ */
+
 VirtualObject* createVirtualObject(vector<GraphicsComponent*> graphcomps);
+
+/** \brief !docu pls!
+ *
+ * @param vo
+ * @return virtual object
+ */
 VirtualObject* copyVirtualObject(VirtualObject vo);
 
 
 
 
 private:
-
+/** \brief setter
+ *
+ * @param f[4]
+ * @param a,b,c,d
+ */
 void set_float4(float f[4], float a, float b, float c, float d);
+
+/** \brief !docu pls!
+ *
+ * @param c
+ * @param f[4]
+ */
 void color4_to_float4(const aiColor4D *c, float f[4]);
 };
 
