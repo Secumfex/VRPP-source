@@ -18,36 +18,85 @@
 
 class RenderPass {
 public:
+	/** \brief default constructor
+	 *
+	 */
 	RenderPass();
+
+	/** \brief constructor
+	 *
+	 * @param shader
+	 * @param fbo
+	 * @param gcVector
+	 */
 	RenderPass(Shader* shader, FrameBufferObject* fbo, vector<GraphicsComponent*> gcVector);
+
+	/** \brief destructor
+	 *
+	 */
 	virtual ~RenderPass();
+
+	/** \brief !docu pls!
+	 *
+	 * @param shader
+	 * @param fbo
+	 * @param gcVector
+	 */
 	void addRenderPass(Shader* shader, FrameBufferObject fbo, vector<GraphicsComponent*> gcVector);
+
+	/** \brief !docu pls!
+	 *
+	 */
 	virtual void render();
 
+	/** \brief !docu pls!
+	 *
+	 * @return vector of graphic components references
+	 */
 	std::vector<GraphicsComponent*> willBeRendered();
 
 protected:
 
-	FrameBufferObject *mFBO;
-	vector<GraphicsComponent*> mGcVector;
-	Shader *mShader;
+	FrameBufferObject *mFBO;				/**< !docu pls! */
+	vector<GraphicsComponent*> mGcVector;	/**< !docu pls! */
+	Shader *mShader;						/**< !docu pls! */
 };
 class ShadowPass : public RenderPass {
 public:
+	/** \brief constructor
+	 *
+	 */
 	ShadowPass();
+
+	/** \brief destructor
+	 *
+	 */
 	~ShadowPass();
 
+	/** \brief !docu pls!
+	 *
+	 */
 	void render();
 };
 
 class CompositingPass : public RenderPass {
 public:
+	/** \brief constructor
+	 *
+	 */
 	CompositingPass();
+
+	/** \brief destructor
+	 *
+	 */
 	~CompositingPass();
 
+	/** \brief !docu pls!
+	 *
+	 */
 	void render();
 
-	GraphicsComponent* mTriangle;
+	GraphicsComponent* mTriangle;	/**< !docu pls! */
 
 };
 #endif /* RENDERPASS_H_ */

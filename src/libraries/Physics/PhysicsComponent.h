@@ -39,6 +39,7 @@ public:
 	*
 	* constructor to create a box shaped rigid body.
 	* @param min,max contain smallest and largest x, y, z values of a given model (in VirtualObjectFactory class)
+	* @param mass defines the behavior of the rigid body in the physics world
 	*/
 	PhysicsComponent(glm::vec3 min, glm::vec3 max, float mass = 0.0);
 
@@ -73,6 +74,7 @@ public:
 	 *
 	 * constructor to create a heightfieldterrainshaped rigid body (btHeightfieldTerrainShape).
 	 * @param filename filename of the heightfield picture
+	 * @param x,y,z
 	 */
 	PhysicsComponent(char* filename, float x, float y, float z);
 
@@ -169,46 +171,47 @@ public:
 
 	/** \brief getter
 	 *
-	 * returns current modelMatrix
+	 * @return current modelMatrix
 	 */
 	glm::mat4 getModelMatrix();
 
 	/** \brief getter
 	 *
-	 * returns current rigidBody
+	 * @return current rigidBody
 	 */
 	btRigidBody* getRigidBody();
 
-	/** \brief sets position of a PC
+	/** \brief setter
 	*
 	* sets/changes the position of a PhysicsComponent
 	* @param x,y,z new position in physics world
 	*/
 	void setPosition(float x, float y, float z);
 
-	/** \returns the PC position
+	/** \brief getter
 	*
-	* returns the position of the PhysicsComponent
-	* @return a glm vec 3
+	* @return a glm vec 3, the position of the PhysicsComponent
 	*/
 	glm::vec3 getPosition();
 
 	/** \brief getter
 	 *
-	 * returns current hit state
+	 * @return current hit state
 	 */
 	bool getHit();
 
 	/** \brief setter
 	 *
 	 * sets current hit state
+	 * @param hit true if hit, false if not
 	 */
-	void setHit(bool);
+	void setHit(bool hit);
 
 
 	/** \brief updates the model matrix
 	*
 	* updates the modelMatrix by the rigid body's behavior in the physics world.
+	* @param vo VirtualObject pointer
 	*/
 	void update(VirtualObject* vo);
 

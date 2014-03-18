@@ -10,7 +10,6 @@
 #include <string>
 
 
-
 VirtualObjectFactory::VirtualObjectFactory(){
 	mCube = NULL;
 	mScreenFillTriangle = NULL;
@@ -137,8 +136,10 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 	cout<<"Import of scene " <<filename.c_str()<<" succeeded."<<endl;
 
+
 	glm::vec3 physics_min = glm::vec3(FLT_MAX,FLT_MAX,FLT_MAX);
-	glm::vec3 physics_max = glm::vec3(FLT_MIN,FLT_MIN,FLT_MIN);
+	glm::vec3 physics_max = glm::vec3(-FLT_MAX,-FLT_MAX,-FLT_MAX);
+
 
 
 	// For each mesh of the loaded object
@@ -357,6 +358,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 			std::string matName = name.C_Str();
 			matName = matName.substr( matName.find_last_of( '/' ) + 1 );
 
+
             std::cout<<"\nName des Materials: "<<matName<<endl;
 
 			aMat->setName(matName);
@@ -372,8 +374,10 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
         MaterialManager* mm= MaterialManager::getInstance();
 
 
+
         if(aMat->getName().find("custom") != std::string::npos){
         	cout<<"\nRead from mtl\n";
+
 
 
  // diffuse
@@ -397,7 +401,9 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 		aMat->setAmbient(glm::vec3(ambient.r, ambient.g, ambient.b));
 
         // specular
+
 		set_float4(c, 0.0f, 0.0f, 0.0f, 1.0f);
+
 		aiColor4D specular;
 		if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_SPECULAR, &specular))
 			color4_to_float4(&specular, c);
@@ -418,6 +424,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 		if(AI_SUCCESS != mtl->Get(AI_MATKEY_SHININESS, shininess))
 			shininess = 50.0;
 
+
 		aMat->setShininess(1.0f);
 //shininess/1000.0f
 
@@ -434,8 +441,11 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
             }
         }
 
+
+
 		//Mesh und Material wird gelesen und in neuer GraphicsComponent gespeichert
 		gc->setGhostObject(aabbMin, aabbMax);
+
 
 		virtualObject->addGraphicsComponent(gc);
 
@@ -454,6 +464,8 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 		if(aabbMax.z > physics_max.z)
 			physics_max.z = aabbMax.z;
 
+		std::cout << "max: " << physics_max.x << " , "<< physics_max.y << " , "<< physics_max.z << std::endl;
+		std::cout << "min: " << physics_min.x << " , "<< physics_min.y << " , "<< physics_min.z << std::endl;
 
 	}
 
@@ -469,8 +481,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 		case OTHER:		virtualObject->setPhysicsComponent(physics_min, physics_max, mass);
 			break;
 		}
-
-
+    
 
 	return virtualObject;
 }

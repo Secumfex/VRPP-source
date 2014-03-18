@@ -134,6 +134,7 @@ void UploadUniformSpecularMapListener::update(){
 	FrameBufferObject* fbo = RenderManager::getInstance()->getCurrentFBO();
 	Shader* shader = RenderManager::getInstance()->getCurrentShader();
 
+
 	glActiveTexture(GL_TEXTURE7);
 	glEnable(GL_TEXTURE_2D);
 	fbo->bindSpecularTexture();
@@ -147,6 +148,7 @@ UploadUniformDepthMapListener::UploadUniformDepthMapListener(std::string name){
 void UploadUniformDepthMapListener::update(){
 	//TODO: implementieren (GBUFFER)
 }
+
 
 
 UploadUniformDiffuseTextureListener::UploadUniformDiffuseTextureListener(std::string name){
@@ -202,9 +204,11 @@ UploadUniformDiffuseColorListener::UploadUniformDiffuseColorListener(std::string
 	setName(name);
 }
 
+
 void UploadUniformDiffuseColorListener::update(){
 	Shader* shader = RenderManager::getInstance()->getCurrentShader();
 	GraphicsComponent* gc = RenderManager::getInstance()->getCurrentGC();
+
 
 	shader->uploadUniform(gc->getMaterial()->getDiffuse(), "diffuseColor");
 }

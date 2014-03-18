@@ -12,12 +12,23 @@
 
 class RenderLoop {
 public:
+	/** \brief default constructor
+	 *
+	 */
 	RenderLoop();
+
+	/** \brief destructor
+	 *
+	 */
 	virtual ~RenderLoop();
+
+	/** \brief !docu pls!
+	 *
+	 */
 	void fillLoop();
 private:
-	RenderQueue* mRenderQueue;
-	RenderManager* mRenderManager;
+	RenderQueue* mRenderQueue;		/**< !docu pls! */
+	RenderManager* mRenderManager;	/**< !docu pls! */
 };
 
 #endif /* RENDERLOOP_H_ */

@@ -35,81 +35,337 @@ class Material : public Resource {
 
 	//---------------MEMBER FUNCTIONS--------------------
 public:
+	/** \brief default constructor
+	 *
+	 */
 	Material ();
+
+	/** \brief destructor
+	 *
+	 */
 	~Material ();
 
 
 
+	/** \brief setter
+	 *
+	 * sets name
+	 * @param name
+	 */
+	void setName(std::string name);
 
-	void setName(std::string name);//sets name
-	void setAmbient(glm::vec3 ambient);//sets ambient color
-	void setDiffuse(glm::vec3 diffuse);//sets diffuse color
-	void setSpecular(glm::vec3 specular);//sets specular color
-	void setEmission(glm::vec3 emission);//sets emissive color
-	void setShininess(GLfloat term);//sets shininess
-    void setTransparency(GLfloat term);//sets amount of transparancy
+	/** \brief setter
+	 *
+	 * sets ambient color
+	 * @param ambient
+	 */
+	void setAmbient(glm::vec3 ambient);
 
-	void setAmbientMap(Texture* tex);//sets ambient texture
-	void setDiffuseMap(Texture* tex);//sets diffuse texture
-	void setEmissiveMap(Texture* tex);//sets emissive texture
-	void setNormalMap(Texture* tex);//sets normal texture
-	void setHeightMap(Texture* tex);//sets height texture
-	void setOpacityMap(Texture* tex);//sets opacity texture
-	void setSpecularMap(Texture* tex);//sets specular texture
+	/** \brief setter
+	 *
+	 * sets diffuse color
+	 * @param diffuse
+	 */
+	void setDiffuse(glm::vec3 diffuse);
 
+	/** \brief setter
+	 *
+	 * sets specular color
+	 * @param specular
+	 */
+	void setSpecular(glm::vec3 specular);
+
+	/** \brief setter
+	 *
+	 * sets emissive color
+	 * @param emission
+	 */
+	void setEmission(glm::vec3 emission);
+
+	/** \brief setter
+	 *
+	 * sets shininess
+	 * @param term
+	 */
+	void setShininess(GLfloat term);
+
+	/** \brief setter
+	 *
+	 * sets amount of transparancy
+	 * @param term
+	 */
+	void setTransparency(GLfloat term);
+
+	/** \brief setter
+	 *
+	 * sets ambient texture
+	 * @param tex
+	 */
+	void setAmbientMap(Texture* tex);
+
+	/** \brief setter
+	 *
+	 * sets diffuse texture
+	 * @param tex
+	 */
+	void setDiffuseMap(Texture* tex);
+
+	/** \brief setter
+	 *
+	 * sets emissive texture
+	 * @param tex
+	 */
+	void setEmissiveMap(Texture* tex);
+
+	/** \brief setter
+	 *
+	 * sets normal texture
+	 * @param tex
+	 */
+	void setNormalMap(Texture* tex);
+
+	/** \brief setter
+	 *
+	 * sets height texture
+	 * @param tex
+	 */
+	void setHeightMap(Texture* tex);
+
+	/** \brief setter
+	 *
+	 * sets opacity texture
+	 * @param tex
+	 */
+	void setOpacityMap(Texture* tex);
+
+	/** \brief setter
+	 *
+	 * sets specular texture
+	 * @param tex
+	 */
+	void setSpecularMap(Texture* tex);
+
+	/** \brief setter
+	 *
+	 * sets reflecting texture
+	 * @param tex
+	 */
 	void setReflectionMap(Texture* tex);
+
+	/** \brief setter
+	 *
+	 * sets shining texture
+	 * @param tex
+	 */
 	void setShininessMap(Texture* tex);
+
+	/** \brief setter
+	 *
+	 * @param tex
+	 */
 	void setDisplacementMap(Texture* tex);
+
+	/** \brief setter
+	 *
+	 * @param tex
+	 */
 	void setLightMap(Texture* tex);
 
 
-	Texture* getAmbientMap();//returns ambient texture
-	Texture* getDiffuseMap();//returns diffuse texture
-	Texture* getEmissiveMap();//returns emissive texture
-	Texture* getNormalMap();//returns normal texture
-	Texture* getHeightMap();//returns height texture
-	Texture* getOpacityMap();//returns opacity texture
-	Texture* getSpecularMap();//returns specular texture
-	Texture* getReflectionMap();//returns reflection texture
+	/** \brief getter
+	 *
+	 * @return ambient texture
+	 */
+	Texture* getAmbientMap();
+
+	/** \brief getter
+	 *
+	 * @return diffuse texture
+	 */
+	Texture* getDiffuseMap();
+
+	/** \brief getter
+	 *
+	 * @return emissive texture
+	 */
+	Texture* getEmissiveMap();
+
+	/** \brief getter
+	 *
+	 * @return normal texture
+	 */
+	Texture* getNormalMap();
+
+	/** \brief getter
+	 *
+	 * @return height texture
+	 */
+	Texture* getHeightMap();
+
+	/** \brief getter
+	 *
+	 * @return opacity texture
+	 */
+	Texture* getOpacityMap();
+
+
+	/** \brief getter
+	 *
+	 * @return specular texture
+	 */
+
+	Texture* getSpecularMap();
+
+	/** \brief getter
+	 *
+	 * @return reflection texture
+	 */
+	Texture* getReflectionMap();
+
+	/** \brief getter
+	 *
+	 * @return shining texture
+	 */
 	Texture* getShininessMap();
+
+	/** \brief getter
+	 *
+	 * @return
+	 */
 	Texture* getDisplacementMap();
+
+	/** \brief getter
+	 *
+	 * @return
+	 */
 	Texture* getLightMap();
 
-	glm::vec3 getAmbient();//returns ambient color
-	glm::vec3 getDiffuse();//returns diffuse color
-	glm::vec3 getSpecular();//returns specular color
-	glm::vec3 getEmission();//returns emissive color
-	GLfloat getShininess();//returns shininess value
-    GLfloat getTransparency();//returns transparancy value
 
-	std::string getName();//returns name
+	/** \brief getter
+	 *
+	 * @return ambient color
+	 */
+	glm::vec3 getAmbient();
 
-	bool hasNormalTexture();//checks wheather there's a normal texture or not
-	bool hasDiffuseTexture();//checks wheather there's a diffuse texture or not
-	bool hasAmbientTexture();//checks wheather there's a ambient texture or not
-	bool hasEmissiveTexture();//checks wheather there's a emissive texture or not
-	bool hasHeightTexture();//checks wheather there's a height texture or not
-	bool hasOpacityTexture();//checks wheather there's a opacity texture or not
-	bool hasSpecularTexture();//checks wheather there's a specular texture or not
-	bool hasReflectionTexture();//checks wheather there's a reflection texture or not
-	bool hasShininessTexture();//checks wheather there's a shininess texture or not
-	bool hasDisplacementTexture();//checks wheather there's a displacement texture or not
-	bool hasLightTexture();//checks wheather there's a light texture or not
+	/** \brief getter
+	 *
+	 * @return diffuse color
+	 */
+	glm::vec3 getDiffuse();
+
+	/** \brief getter
+	 *
+	 * @return specular color
+	 */
+	glm::vec3 getSpecular();
+
+	/** \brief getter
+	 *
+	 * @return emissive color
+	 */
+	glm::vec3 getEmission();
+
+	/** \brief getter
+	 *
+	 * @return shininess value
+	 */
+	GLfloat getShininess();
+
+	/** \brief getter
+	 *
+	 * @return transparancy value
+	 */
+	GLfloat getTransparency();
+
+	/** \brief getter
+	 *
+	 * @return name
+	 */
+	std::string getName();
+
+
+	/** \brief checks wheather there's a normal texture or not
+	 *
+	 * @return true or false
+	 */
+	bool hasNormalTexture();
+
+	/** \brief checks wheather there's a diffuse texture or not
+	 *
+	 * @return true or false
+	 */
+	bool hasDiffuseTexture();
+
+	/** \brief checks wheather there's a ambient texture or not
+	 *
+	 * @return true or false
+	 */
+	bool hasAmbientTexture();
+
+	/** \brief checks wheather there's a emissive texture or not
+	 *
+	 * @return true or false
+	 */
+	bool hasEmissiveTexture();
+
+	/** \brief checks wheather there's a height texture or not
+	 *
+	 * @return true or false
+	 */
+	bool hasHeightTexture();
+
+	/** \brief checks wheather there's a opacity texture or not
+	 *
+	 * @return true or false
+	 */
+	bool hasOpacityTexture();
+
+	/** \brief checks wheather there's a specular texture or not
+	 *
+	 * @return true or false
+	 */
+	bool hasSpecularTexture();
+
+	/** \brief checks wheather there's a reflection texture or not
+	 *
+	 * @return true or false
+	 */
+	bool hasReflectionTexture();
+
+	/** \brief checks wheather there's a shininess texture or not
+	 *
+	 * @return true or false
+	 */
+	bool hasShininessTexture();
+
+	/** \brief checks wheather there's a displacement texture or not
+	 *
+	 * @return true or false
+	 */
+	bool hasDisplacementTexture();
+
+	/** \brief checks wheather there's a light texture or not
+	 *
+	 * @return true or false
+	 */
+	bool hasLightTexture();
+
 
 
 
 	//---------------MEMBER VARIABLES--------------------
 private:
-	std::string mName;
-	vector<Texture*> mTextures;
+	std::string mName;			/**< docu pls */
+	vector<Texture*> mTextures;	/**< docu pls */
 
-	glm::vec3 mAmbColor;
-	glm::vec3 mDiffColor;
-	glm::vec3 mSpecColor;
-	glm::vec3 mEmissColor;
 
-	GLfloat mShininess;
-    GLfloat mTransparency;
+	glm::vec3 mAmbColor;		/**< docu pls */
+	glm::vec3 mDiffColor;		/**< docu pls */
+	glm::vec3 mSpecColor;		/**< docu pls */
+	glm::vec3 mEmissColor;		/**< docu pls */
+
+	GLfloat mShininess;			/**< docu pls */
+    GLfloat mTransparency;		/**< docu pls */
 
 
 };
@@ -118,40 +374,105 @@ class Mesh : public Resource{
 
 	//---------------MEMBER FUNCTIONS--------------------
 public:
+	/** \brief constructor
+	 *
+	 */
 	Mesh();
+
+	/** \brief destructor
+	 *
+	 */
 	~Mesh();
 
 
-	void setVAO(GLuint vao);//sets VAO
-	GLuint getVAO();//returns VAO
+	/** \brief setter
+	 *
+	 * sets VAO
+	 * @param vao
+	 */
+	void setVAO(GLuint vao);
 
-	void setNumFaces(int faces);//sets number of faces
-	int getNumFaces();//returns number of faces
+	/** \brief getter
+	 *
+	 * @return VAO
+	 */
+	GLuint getVAO();
 
-	void setNumVertices(int verts);//sets number of vertices
-	int getNumVertices();//returns number of vertices
 
-	void setNumIndices(int verts);//sets number of indices
-	int getNumIndices();//returns number of indices
+	/** \brief setter
+	 *
+	 * sets number of faces
+	 * @param faces
+	 */
+	void setNumFaces(int faces);
 
-	void setVertexPosition(std::vector<glm::vec3> position);//sets an array of vertex positions
-	std::vector<glm::vec3> getVertices();//returns list of vertices
+	/** \brief getter
+	 *
+	 * @return number of faces
+	 */
+	int getNumFaces();
 
-	void addBoneWeight(GLuint boneweight);//list of bufferhandles for bone weights
+
+	/** \brief setter
+	 *
+	 * sets number of vertices
+	 * @param verts
+	 */
+	void setNumVertices(int verts);
+
+	/** \brief getter
+	 *
+	 * @return number of vertices
+	 */
+	int getNumVertices();
+
+
+	/** \brief setter
+	 *
+	 * sets number of indices
+	 * @param verts
+	 */
+	void setNumIndices(int verts);
+
+	/** \brief getter
+	 *
+	 * @return number of indices
+	 */
+	int getNumIndices();
+
+
+	/** \brief setter
+	 *
+	 * sets an array of vertex positions
+	 * @param position
+	 */
+	void setVertexPosition(std::vector<glm::vec3> position);
+
+	/** \brief getter
+	 *
+	 * @return list of vertices
+	 */
+	std::vector<glm::vec3> getVertices();
+
+	/** \brief add boneweight
+	 *
+	 * @param boneweight list of bufferhandles for bone weights
+	 */
+	void addBoneWeight(GLuint boneweight);
 
 
 	//---------------MEMBER VARIABLES--------------------
 private:
 
-		GLuint mVaoHandle;  //gleiche wie unten "vao",  also noch anpassen. (wurde jetzt gel�scht)
+		GLuint mVaoHandle; 		/**< !docu pls! */	 //gleiche wie unten "vao",  also noch anpassen. (wurde jetzt gel�scht)
 
-		int mNumFaces;
-		int mNumVerts;
-		int mNumIndices;
+		int mNumFaces;			/**< !docu pls! */
+		int mNumVerts;			/**< !docu pls! */
+		int mNumIndices;		/**< !docu pls! */
 
-		std::vector<glm::vec3> mVertexPositions;
+		std::vector<glm::vec3> mVertexPositions;	/**< !docu pls! */
 
-		std::vector<GLuint> mBoneWeights;
+		std::vector<GLuint> mBoneWeights;			/**< !docu pls! */
 
 
 

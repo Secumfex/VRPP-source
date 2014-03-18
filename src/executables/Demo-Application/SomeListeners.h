@@ -106,7 +106,8 @@ private:
 	std::string path;
 	float random_offset;
 	VirtualObjectFactory::BodyType bodyType;
+	float mass;
 public:
-	CreateVirtualObjectListener(string path, glm::vec3 position, ApplicationState* state, float random_offset = 0.0f, VirtualObjectFactory::BodyType bodyType= VirtualObjectFactory::OTHER);
+	CreateVirtualObjectListener(string path, glm::vec3 position, ApplicationState* state, float random_offset = 0.0f, VirtualObjectFactory::BodyType bodyType= VirtualObjectFactory::OTHER, float mass = 2.0f);
 	void update();
 };

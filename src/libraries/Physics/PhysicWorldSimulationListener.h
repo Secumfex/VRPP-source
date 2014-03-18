@@ -7,12 +7,12 @@ class PhysicWorld;
 
 class PhysicWorldSimulationListener : public Listener {
 private:
-	float* delta_time_source;	/**< ?TODO */
+	float* delta_time_source;	/**< fps, speed in which the physic simulation should run */
 public:
 
 	/** \brief listener constructor
 	 *
-	 * @param delta_time_source ?TODO
+	 * @param delta_time_source pointer to float used as time step within simulation ( fps at best ) 
 	 */
 	PhysicWorldSimulationListener(float* delta_time_source = 0);
 

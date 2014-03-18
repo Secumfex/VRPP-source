@@ -24,20 +24,59 @@ class RenderManager;
 
 class Frustum {
 public:
+	/** \brief default constructor
+	 *
+	 */
 	Frustum();
+
+	/** \brief constructor
+	 *
+	 * @param cam
+	 */
 	Frustum(Camera *cam);
+
+	/** \brief destructor
+	 *
+	 */
 	virtual ~Frustum();
-	bool inFrustum(GraphicsComponent *gc);//return wheather or not a GC is (partially) inside of this frustum
-	void setPerspectiveMatrix(GLfloat fovy, GLfloat aspect, GLfloat near, GLfloat far);//sets the perspective matrix
-	glm::mat4 getPerspectiveMatrix();//returns the perspective matrix
-	void updateModelMatrix();//updates the model matrix of the frustum from the camera
-	void setCamera(Camera *cam);//sets a camera, the frustum takes it physical appearance from
+
+	/** \brief return wheather or not a GC is (partially) inside of this frustum
+	 *
+	 * @param gc graphic component reference
+	 * @return true or false
+	 */
+	bool inFrustum(GraphicsComponent *gc);
+
+	/** \brief setter
+	 *
+	 * sets the perspective matrix
+	 * @param fovy,aspect,near,far
+	 */
+	void setPerspectiveMatrix(GLfloat fovy, GLfloat aspect, GLfloat near, GLfloat far);
+
+	/** \brief getter
+	 *
+	 * @return the perspective matrix
+	 */
+	glm::mat4 getPerspectiveMatrix();
+
+	/** \brief updates the model matrix of the frustum from the camera
+	 *
+	 */
+	void updateModelMatrix();
+
+	/** \brief setter
+	 *
+	 * sets a camera, the frustum takes it physical appearance from
+	 * @param cam
+	 */
+	void setCamera(Camera *cam);
 
 protected:
 
-	Camera *mCam;
-	btGhostObject *mFrustumVolume;
-	glm::mat4 mPerspectiveMatrix;
+	Camera *mCam;					/**< !docu pls! */
+	btGhostObject *mFrustumVolume;	/**< !docu pls! */
+	glm::mat4 mPerspectiveMatrix;	/**< !docu pls! */
 };
 
 #endif /* FRUSTUM_H_ */
