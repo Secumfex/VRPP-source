@@ -135,13 +135,12 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 		return createNonAssimpVO();
 	}
 
-
 	cout<<"Import of scene " <<filename.c_str()<<" succeeded."<<endl;
 
 	glm::vec3 physics_min = glm::vec3(FLT_MAX,FLT_MAX,FLT_MAX);
 	glm::vec3 physics_max = glm::vec3(FLT_MIN,FLT_MIN,FLT_MIN);
 
-    
+
 	// For each mesh of the loaded object
 	for (unsigned int n = 0; n < pScene->mNumMeshes; ++n)
 	{
