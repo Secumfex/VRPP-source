@@ -89,6 +89,11 @@ void Material :: setShininess(GLfloat term){
 void Material:: setTransparency(GLfloat term){
     mTransparency = term;
 }
+
+void Material:: setTransparency(GLfloat term){
+    mTransparency = term;
+}
+
 Texture* Material ::getAmbientMap(){
 	return mTextures[0];
 }
@@ -127,6 +132,11 @@ GLfloat Material::getShininess(){
 GLfloat Material::getTransparency(){
 	return mTransparency;
 }
+GLfloat Material::getReflectivity(){
+	return mReflectivity;
+
+}
+
 Texture* Material ::getSpecularMap(){
 	return mTextures[6];
 }

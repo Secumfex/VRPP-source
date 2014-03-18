@@ -18,10 +18,13 @@
 #include "Visuals/VirtualObjectFactory.h"
 #include "Visuals/RenderManager.h"
 
+using namespace glm;
+
 
 int main() {
 
-	// render window
+
+	/* render window */
 
 	RenderManager* rm = RenderManager::getInstance();
     RenderQueue* rq = new RenderQueue();
@@ -29,121 +32,128 @@ int main() {
     
     
     rm->libInit();
-    GLFWwindow* window=rm->getWindow();
 
-	//load, compile and link simple texture rendering program for a screen filling plane
+    
+    GLFWwindow* window=rm->getWindow();
+    
+	/*  create a FrameBufferObject 800x800
+        and create a depth Buffer */
+    
+	FrameBufferObject *fbo = new FrameBufferObject();
+    int height=fbo->getHeight();
+    int width=fbo->getWidth();
+    
+
+	/* load, compile and link shaders */
+    /* -> upload and link attributes and uniforms */
+
 
 	Shader *simpleTexShader = new Shader(SHADERS_PATH "/Resource_Test/screenFill.vert",
 			SHADERS_PATH "/Resource_Test/simpleTexture.frag");
 
-	Shader *finalCompShader = new Shader(	SHADERS_PATH "/Resource_Test/screenFill.vert",
+	Shader *finalCompShader = new Shader(SHADERS_PATH "/Resource_Test/screenFill.vert",
 			SHADERS_PATH "/Resource_Test/finalCompositing.frag");
 
-	Shader *gbufferShader = new Shader(		SHADERS_PATH "/Resource_Test/GBuffer.vert",
+	Shader *gbufferShader = new Shader(SHADERS_PATH "/Resource_Test/GBuffer.vert",
 			SHADERS_PATH "/Resource_Test/GBuffer.frag");
 
-	Shader *gbuffer_normalMap_Shader = new Shader(		SHADERS_PATH "/Resource_Test/GBuffer.vert",
-			SHADERS_PATH "/Resource_Test/GBuffer_normalTexture.frag");
     
 
-	//--------------------------------------------//
-	//        Create a Vertex Array Object        //
-	//         containing several buffers         //
-	//             to render a cube               //
-	//--------------------------------------------//
+    /* import objects with textures and materials, set the mat_colors */
 
 	VirtualObjectFactory *voFactory = VirtualObjectFactory::getInstance();
 
-	VirtualObject *object01 = voFactory->createVirtualObject(RESOURCES_PATH "/untitled.dae");
+    VirtualObject *object01 = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj");
 	VirtualObject *object02 = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj");
 	VirtualObject *object03 = voFactory->createVirtualObject(RESOURCES_PATH "/cube.obj");
     VirtualObject *object04 = voFactory->createVirtualObject(RESOURCES_PATH "/cow.obj");
 
+
+    /* create an empty triangle to "draw" on it  */
 	GraphicsComponent* triangle = voFactory->getTriangle();
 
+    // rotation of the cube
+    float angle = 0.0f;
+    float rotationSpeed = 1.0f;
+    
 	//--------------------------------------------//
 	//         Create a Framebuffer Object        //
 	//--------------------------------------------//
-
     
-	//glfwGetFramebufferSize(window, &width, &height);
-	FrameBufferObject *fbo = new FrameBufferObject();
-    int height=fbo->getHeight();
-    int width=fbo->getWidth();
-
+    
+    // void FrameBufferObject::bindFBO(){
+	//      glBindFramebuffer(GL_FRAMEBUFFER, mFramebufferHandle);}
 	fbo->bindFBO();
 
+    // create buffers and bind them
 	fbo->createPositionTexture();
 	fbo->createNormalTexture();
 	fbo->createColorTexture();
 	fbo->createSpecularTexture();
 
-	//set the list of draw buffers.
+
+	// set the list of draw buffers.
 	fbo->makeDrawBuffers();
+    
 
-	//rotation of the cube
-	float angle = 0.0f;
-	float rotationSpeed = 1.0f;
 
+	//gbufferShader->setBlurStrength(0.5);
+    
 	//Statisches "binden" unserer Uniforms/Objekte
 	//Muss man also nur einmal machen
-
-	gbufferShader->setBlurStrength(0.5);
-	gbuffer_normalMap_Shader->setBlurStrength(0);
-
-	//rq->addVirtualObject(object01);
-	rq->addVirtualObject(object02);
-    rq->addVirtualObject(object04);
+	rq->addVirtualObject(object01);
+    rq->addVirtualObject(object02);
 	rq->addVirtualObject(object03);
+    rq->addVirtualObject(object04);
+
     
 
 
 	rm->setRenderQueue(rq);
 	rm->setCurrentFBO(fbo);
-	rm->setPerspectiveMatrix(45.0f, 1.0f, 0.1f, 100.f);
+	rm->setProjectionMatrix(glm::perspective(45.0f, 1.0f, 0.1f, 100.f));
+    
 	rm->setCamera(cam);
 
 	cam->setPosition(glm::vec3(0.0f, 1.0f, -6.0f));
 	cam->setCenter(glm::vec3(0.0f, 0.0f, 0.0f));
-
+    
 
 	while(!glfwWindowShouldClose(window)) {
 
+        /* anpassen von Framebuffer */
 		glfwMakeContextCurrent(window);
-
 		int newwidth, newheight;
 		glfwGetFramebufferSize(window, &newwidth, &newheight);
 		if(newwidth != width || newheight != height){
 			fbo->resize(newwidth, newheight);
-			rm->setPerspectiveMatrix(45.0f, (newwidth * 1.0f) / newheight , 0.1f, 100.f);
-
+					rm->setProjectionMatrix(glm::perspective(45.0f, (newwidth * 1.0f) / newheight , 0.1f, 100.f));
 			width = newwidth;
 			height = newheight;
-		}
+            }
 
-		using namespace glm;
 
 		glEnable(GL_DEPTH_TEST);
-
-		//rotation angle
+        
+        // rotation of the cube
 		angle = fmod((float)(angle+rotationSpeed*glfwGetTime()), (float)(pi<float>()*2.0f));
 		glfwSetTime(0.0);
 
+        /* set the "object positions" */
 		//scale a cube into a flat plane
 		mat4 modelMatrix01 = scale(translate(mat4(1.0f), vec3(0.0f, -1.0f, 0.0f)), vec3(2.5f, 0.2f, 2.5f));
-
 		//nice rotation of a small cube
 		mat4 modelMatrix02 = scale(translate(rotate(mat4(1.0f), degrees(angle), vec3(1.0f, 1.0f, 0.0f)), vec3(2.0f, 0.8f, -0.5f)), vec3(0.9f, 0.9f, 0.9f));
-
-		mat4 modelMatrix03 = scale(translate(rotate(mat4(1.0f), degrees(angle), vec3(0.0f, 1.0f, 1.0f)), vec3(-2.0f, 0.2f, -0.5f)), vec3(0.3f, 0.3f, 0.3f));
-        modelMatrix03=scale(mat4(1.0f), vec3(0.5f,0.5f,0.5f))*modelMatrix03;
+        mat4 modelMatrix03 = scale(translate(rotate(mat4(1.0f), degrees(angle), vec3(0.0f, 0.0f, 1.0f)), vec3(0.3f)),vec3(-0.7f));
         mat4 modelMatrix04 = scale(translate(rotate(mat4(1.0f), degrees(angle), vec3(1.0f, 0.0f, 1.0f)), vec3(0.7f)),vec3(2.5f));
 
+        object01->setModelMatrix(modelMatrix02);
+		object02->setModelMatrix(modelMatrix03);
 		object03->setModelMatrix(modelMatrix01);
-		object02->setModelMatrix(modelMatrix02);
-		//object01->setModelMatrix(modelMatrix03);
         object04->setModelMatrix(modelMatrix04);
 
+        
+        
 		//--------------------------------------------//
 		//        Render the scene into the FBO       //
 		//--------------------------------------------//
@@ -153,12 +163,10 @@ int main() {
         glViewport(0, 0, width, (height/4)*3);
 		gbufferShader->useProgram();
 		rm->setCurrentShader(gbufferShader);
-		//----------------------------------------------------------------------------------------//
-		//        This is da Main-Renderloop. Hier werden alle GC fï¿½r den GBuffer gerendert     //
-		//----------------------------------------------------------------------------------------//
+        
+        // This is the Main-Renderloop. Hier werden alle GC fŸr den GBuffer gerendert
 
 		list<VirtualObject*> vo_list = rm->getRenderQueue()->getVirtualObjectList();
-		//unsigned int i= 0;
 		while (!vo_list.empty()) {
 			unsigned int j= 0;
 			VirtualObject* vo_temp = vo_list.front();
@@ -166,26 +174,16 @@ int main() {
 			for (j = 0; j < vo_temp->getGraphicsComponent().size(); ++j) {
 				GraphicsComponent *gc_temp = vo_temp->getGraphicsComponent()[j];
 				rm->setCurrentGC(gc_temp);
-
-
-				if(gc_temp->getMaterial()->hasNormalTexture()){
-					gbuffer_normalMap_Shader->useProgram();
-					rm->setCurrentShader(gbuffer_normalMap_Shader);
-					gbuffer_normalMap_Shader->uploadAllUniforms();
-				}else{
-					gbufferShader->useProgram();
-					rm->setCurrentShader(gbufferShader);
-					gbufferShader->uploadAllUniforms();
-				}
-
-
+                gbufferShader->useProgram();
+                rm->setCurrentShader(gbufferShader);
+                gbufferShader->uploadAllUniforms();
 				gbufferShader->render(gc_temp);
 			}
 		}
 
+
+        // unbind FBO
 		fbo->unbindFBO();
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glDisable(GL_DEPTH_TEST);
 
 
 		//--------------------------------------------//
@@ -195,6 +193,8 @@ int main() {
 
 		//      Hier findet das Compositing statt :) ist schon einiges kürzer, nicht wahr?
 
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glDisable(GL_DEPTH_TEST);
 		finalCompShader->useProgram();
 		rm->setCurrentShader(finalCompShader);
         

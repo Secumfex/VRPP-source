@@ -89,6 +89,10 @@ public:
 	 */
 	void setShininess(GLfloat term);
 
+	void setReflectivity(GLfloat term);
+
+
+
 	/** \brief setter
 	 *
 	 * sets amount of transparancy
@@ -208,10 +212,12 @@ public:
 	 */
 	Texture* getOpacityMap();
 
+
 	/** \brief getter
 	 *
 	 * @return specular texture
 	 */
+
 	Texture* getSpecularMap();
 
 	/** \brief getter
@@ -268,6 +274,9 @@ public:
 	 * @return shininess value
 	 */
 	GLfloat getShininess();
+
+	GLfloat getReflectivity();
+
 
 	/** \brief getter
 	 *
@@ -350,10 +359,12 @@ public:
 
 
 
+
 	//---------------MEMBER VARIABLES--------------------
 private:
 	std::string mName;			/**< docu pls */
 	vector<Texture*> mTextures;	/**< docu pls */
+
 
 	glm::vec3 mAmbColor;		/**< docu pls */
 	glm::vec3 mDiffColor;		/**< docu pls */

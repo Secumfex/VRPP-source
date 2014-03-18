@@ -114,6 +114,7 @@ public:
 	 * @param gc
 	 */
 	void render(GraphicsComponent *gc);
+    // void render(VirtualObject *vo);
 
 	/** \brief attach listener
 	 *

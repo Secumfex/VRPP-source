@@ -126,10 +126,12 @@ class UploadUniformModelMatrixListener : public Listener{
  class UploadUniformSpecularMapListener : public Listener{
 
   	public:
+
 	 ///constructor @param name
 	 UploadUniformSpecularMapListener(std::string name);
 	 ///
   	 void update();
+
   };
 
  class UploadUniformShininessListener : public Listener{
@@ -144,9 +146,11 @@ class UploadUniformModelMatrixListener : public Listener{
 class UploadUniformTransparencyListener : public Listener{
     
 public:
+
 	 ///constructor @param name
     UploadUniformTransparencyListener(std::string name);
-    ///
+
+
     void update();
 };
 

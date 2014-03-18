@@ -25,6 +25,7 @@ public:
 	 */
 	virtual ~MaterialManager();
 
+
 	/** \brief !docu pls!
 	 *
 	 * @param matName
@@ -37,6 +38,7 @@ public:
 	 * @param matName
 	 * @param gc
 	 */
+
 	void makeMaterial(std:: string matName, vector<GraphicsComponent*> gc);
 
 private:
@@ -47,6 +49,7 @@ private:
      */
 
 	//basic material
+
 	///sets the material properties of a graphic component to plastic
 	void makeMaterial_plastic(GraphicsComponent* gc);
 	///sets the material properties of a graphic component to wood
@@ -109,6 +112,7 @@ private:
     void makeMaterial_transparency(GraphicsComponent* gc, std::string amount);
     void makeMaterial_black(GraphicsComponent* gc);
      */
+
 
 
 };
