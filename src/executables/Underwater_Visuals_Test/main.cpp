@@ -43,6 +43,7 @@ void configureInputHandler(){
 	/* customization of input handling */
 	testingInputHandler->attachListenerOnKeyPress(		new TerminateApplicationListener(testingApp), GLFW_KEY_ESCAPE);
 	testingInputHandler->attachListenerOnKeyPress( 		new RecompileAndSetShaderListener(SHADERS_PATH "/Underwater_Visuals_Test/phong.vert", SHADERS_PATH "/Underwater_Visuals_Test/phong.frag"), GLFW_KEY_F5);
+	testingInputHandler->attachListenerOnKeyPress( 		new PrintCameraStatusListener(UnderwaterScene::reflectedCamera), GLFW_KEY_R);
 
 }
 
@@ -54,14 +55,26 @@ void configureRendering(){
 	Listener* uniFogColor 	= new UploadUniformVec3Listener ("UNIFORMUPLOADLISTENER", &UnderwaterScene::fog_color, "uniformFogColor");
 	Listener* uniFogBegin 	= new UploadUniformFloatListener("UNIFORMUPLOADLISTENER", &UnderwaterScene::fog_begin, "uniformFogBegin");
 	Listener* uniFogEnd 	= new UploadUniformFloatListener("UNIFORMUPLOADLISTENER", &UnderwaterScene::fog_end, "uniformFogEnd");
-	
+
 	testingApp->attachListenerOnBeginningProgramCycle(uniLightPos);	// not clean, but easier to handle cuz of shader recompilation
 	testingApp->attachListenerOnBeginningProgramCycle(uniFogColor);	// not clean, but easier to handle cuz of shader recompilation
 	testingApp->attachListenerOnBeginningProgramCycle(uniFogBegin);	// not clean, but easier to handle cuz of shader recompilation
 	testingApp->attachListenerOnBeginningProgramCycle(uniFogEnd);	// not clean, but easier to handle cuz of shader recompilation
-
+	
+	// 1: render Reflection Map
 	testingApp->attachListenerOnProgramInitialization(	new SetDefaultShaderListener( shader ));
-	testingApp->attachListenerOnRenderManagerFrameLoop(	new RenderloopPlaceHolderListener());
+	
+	testingApp->attachListenerOnRenderManagerFrameLoop(	new ReflectionMapRenderPass(UnderwaterScene::framebuffer_water_reflection, UnderwaterScene::reflectedCamera, UnderwaterScene::scene_waterPlaneObject));
+	
+	// 2: render regular Scene
+	RenderloopPlaceHolderListener* renderloop = new RenderloopPlaceHolderListener(UnderwaterScene::scene_waterPlaneObject);
+	testingApp->attachListenerOnRenderManagerFrameLoop(	renderloop);
+
+	// 3: render Water Surface with Reflection Map
+	Shader* watershader = new Shader(SHADERS_PATH "/Underwater_Visuals_Test/water.vert", SHADERS_PATH "/Underwater_Visuals_Test/water.frag");
+
+	RenderWaterObjectWithShaderAndReflectionMapListener* renderwater = new RenderWaterObjectWithShaderAndReflectionMapListener(UnderwaterScene::scene_waterPlaneObject, watershader, UnderwaterScene::framebuffer_water_reflection->getPositionTextureHandle());
+	testingApp->attachListenerOnRenderManagerFrameLoop(	renderwater);
 
 	std::vector<std::string> uniforms = shader->getUniformNames();
 	for (int i = 0; i < uniforms.size(); i++){

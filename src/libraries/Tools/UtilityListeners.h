@@ -104,6 +104,27 @@ public:
 	void update();
 };
 
+/// Listener which prints the vector pointed and print that other stuff in front of it
+class PrintVec3Listener : public Listener{
+private:
+	glm::vec3* vector;			/**< !docu pls! */
+	std::string message;	/**< message as string */
+public:
+
+	/** \brief Constructor
+	 *
+	 * @param vector pointer to the vector variable of interest
+	 * @param message string to be printed in front of it
+	 */
+	PrintVec3Listener(glm::vec3* vector, std::string message = "");
+
+	/** \brief update
+	 *
+	 * prints the vector to console
+	 */
+	void update();
+};
+
 class Camera;
 
 /// Listener which prints the current configuration of the given Camera Object

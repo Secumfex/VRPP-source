@@ -65,6 +65,15 @@ void PrintValueListener::update(){
 	std::cout << message << *value << std::endl;
 }
 
+PrintVec3Listener::PrintVec3Listener(glm::vec3* vector, std::string message){
+	this->vector = vector;
+	this->message = message;
+}
+
+void PrintVec3Listener::update(){
+	std::cout << message << (*vector).x << ", " << (*vector).y << ", " << (*vector).z << std::endl;
+}
+
 #include "IO/Camera.h"
 
 PrintCameraStatusListener::PrintCameraStatusListener(Camera* cam){

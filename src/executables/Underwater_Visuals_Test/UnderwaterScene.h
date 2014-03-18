@@ -24,11 +24,8 @@ namespace UnderwaterScene{
 
 	glm::vec3 fog_color_above_water(135.0f / 255.0f, 206.0f / 255.0f, 250.0f / 255.0f);
 	glm::vec3 fog_color_under_water(95.0f / 255.0f * 0.7f, 158.0f / 255.0f * 0.7f, 160.0f/ 255.0f * 0.7f);
+	glm::vec3 reflectedCameraPosition(0.0f,0.0f,0.0f);
 
-	glm::mat4 water_reflection_matrix( 	1.0f,  0.0f, 0.0f, 0.0f, 
- 										0.0f, -1.0f, 0.0f, 0.0f, 
- 										0.0f,  0.0f, 1.0f, 0.0f, 
- 										0.0f,  2.0f * water_height, 0.0f, 1.0f ); 
 
 	VirtualObject* scene_groundObject;
 	VirtualObject* scene_stoneObject1;
@@ -39,6 +36,7 @@ namespace UnderwaterScene{
 	VirtualObject* scene_waterPlaneObject;
 
 	FrameBufferObject* framebuffer_water_reflection;
+	Camera* reflectedCamera;
 
 	static void createScene(ApplicationState* target){
 		/******************* above or underneath water surface handling *****************/
@@ -85,17 +83,18 @@ namespace UnderwaterScene{
 		/******************* framebuffer objects *****************************************/
 		framebuffer_water_reflection = new FrameBufferObject(512,512);
 		framebuffer_water_reflection->createPositionTexture();
-		framebuffer_water_reflection->createNormalTexture();
-		framebuffer_water_reflection->createColorTexture();
 		framebuffer_water_reflection->createDepthBuffer();
+		framebuffer_water_reflection->makeDrawBuffers();	// draw color to color attachment 0
 		framebuffer_water_reflection->unbindFBO();
 		/*********************************************************************************/
 
 		/******************* default cam position ****************************************/
 		Camera* cam =  target->getCamera();
 		cam->setPosition( cam->getPosition() + glm::vec3(0.0,1.5,0.0));
+		
+		reflectedCamera = new Camera();
+		target->attachListenerOnBeginningProgramCycle(new UpdateReflectedCameraPositionListener(cam, reflectedCamera, &water_height));
 		/*********************************************************************************/
-
 	}
 
 	static void getLightPosition(glm::vec3 &position){
@@ -104,6 +103,14 @@ namespace UnderwaterScene{
 
 	static void configureInputHandling(ApplicationState* target){
 		IOHandler* io =  target->getIOHandler();
+	}
+
+	static glm::vec3 reflectOnWaterSurface(glm::vec3& vec){
+		glm::vec3 result(vec);
+
+		float mirrored_height = 2.0f * water_height - result.y;
+		result.y = mirrored_height;   
+		return result;
 	}
 }
 

@@ -310,7 +310,7 @@ void UploadUniformFloatListener::update(){
 
 UploadUniformMat4Listener::UploadUniformMat4Listener(std::string name, glm::mat4 matrix, std::string uniform_name){
 	setName(name);
-	this->matrix 	= new glm::vec3( matrix );
+	this->matrix 	= new glm::mat4( matrix );
 	this->uniform_name 	= uniform_name;
 }
 

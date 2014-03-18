@@ -152,7 +152,7 @@ glm::mat4 Camera::getViewMatrix(){
 	return glm::lookAt(
 		position,           // Camera is here
 		position + direction, // and looks here : at the same position, plus "direction"
-		glm::vec3(0,1,0)                  // Head is up (set to 0,-1,0 to look upside-down)
+		getUp()                  // Head is up (set to 0,-1,0 to look upside-down)
 		);
 	}
 

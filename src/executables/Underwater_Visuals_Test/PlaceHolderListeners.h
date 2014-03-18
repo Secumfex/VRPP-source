@@ -19,8 +19,46 @@ private:
 	list<VirtualObject* > voList;
 	Shader* currentShader;
 	vector<GraphicsComponent* > currentGCs;
+
 public:
-	RenderloopPlaceHolderListener();
+	VirtualObject* water_object;
+	RenderloopPlaceHolderListener(VirtualObject* water_object = 0);
+	void update();
+};
+
+class ReflectionMapRenderPass : public Listener{
+public:
+	RenderManager* rm;
+	RenderQueue* currentRenderQueue;
+	list<VirtualObject* > voList;
+	Shader* currentShader;
+	vector<GraphicsComponent* > currentGCs;
+
+	/*außerdem*/
+	FrameBufferObject* fbo; // reflectionmap target
+	Camera* reflectedCamera;	// mirrored Camera
+	VirtualObject* water_object;
+
+	ReflectionMapRenderPass(FrameBufferObject* fbo, Camera* reflectedCam, VirtualObject* water_object);
+	void update();
+};
+
+class RenderVirtualObjectWithShaderListener : public Listener{
+private: 
+	VirtualObject* vo;
+	Shader* shader;
+public:
+	RenderVirtualObjectWithShaderListener(VirtualObject* vo, Shader* shader);
+	void update();
+};
+
+class RenderWaterObjectWithShaderAndReflectionMapListener : public Listener{
+private: 
+	VirtualObject* vo;
+	Shader* shader;
+	GLuint reflection_handle;
+public:
+	RenderWaterObjectWithShaderAndReflectionMapListener(VirtualObject* vo, Shader* shader, GLuint reflection_handle);
 	void update();
 };
 
@@ -43,8 +81,6 @@ public:
 	void update();
 };
 
-
-
 /// listener on above or under water
 class UnderOrAboveWaterListener : public Listener{
 private:
@@ -58,12 +94,22 @@ public:
 	void update();
 };
 
-
 class RecompileAndSetShaderListener : public Listener{
 private:
 	std::string vertex_shader;
 	std::string fragment_shader;
 public:
 	RecompileAndSetShaderListener(std::string vertex_shader, std::string fragment_shader);
+	void update();
+};
+
+class UpdateReflectedCameraPositionListener : public Listener{
+private:
+	Camera* cam_source;
+	Camera* cam_target;
+	float* water_height;
+public:
+	UpdateReflectedCameraPositionListener(Camera* cam, Camera* cam_target, float* water_height);
+	UpdateReflectedCameraPositionListener(Camera* cam, Camera* cam_target, float water_height);
 	void update();
 };

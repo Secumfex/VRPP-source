@@ -2,8 +2,9 @@
 
 #include <iostream>
 
-RenderloopPlaceHolderListener::RenderloopPlaceHolderListener(){ 
+RenderloopPlaceHolderListener::RenderloopPlaceHolderListener(VirtualObject* water_object){ 
 		rm = RenderManager::getInstance(); 
+		this->water_object = water_object;
 	}
 
 void RenderloopPlaceHolderListener::update(){
@@ -21,12 +22,14 @@ void RenderloopPlaceHolderListener::update(){
 		//get renderQueue	
 		currentRenderQueue = rm->getRenderQueue(); 
 
-
 		//render GCs with current Shader 
 		if ( currentRenderQueue != 0 ){
 			voList = currentRenderQueue->getVirtualObjectList();	//get List of all VOs in RenderQueue
 			//for every VO
 			for (std::list<VirtualObject* >::iterator i = voList.begin(); i != voList.end(); ++i) {	//get GCs of VO
+				if((*i) == water_object){
+					continue;	//Water surface is supposed to be rendered differently
+				}
 				currentGCs = (*i)->getGraphicsComponent();
 					//for every GC
 					for (unsigned int j = 0; j < currentGCs.size(); j++){
@@ -41,6 +44,66 @@ void RenderloopPlaceHolderListener::update(){
 
 			}
 		}	
+	}
+
+ReflectionMapRenderPass::ReflectionMapRenderPass(FrameBufferObject* fbo, Camera* reflectedCamera, VirtualObject* water_object){ 
+		rm = RenderManager::getInstance(); 
+		this->fbo = fbo;
+		this->reflectedCamera = reflectedCamera;
+		this->water_object = water_object;
+	}
+
+void ReflectionMapRenderPass::update(){
+		/***************** save old state ******************/
+        Camera* tempCamera = rm->getCamera();
+        FrameBufferObject* tempFBO = rm->getCurrentFBO();
+
+        /***************** set shader state and get ready to draw ***************/
+        fbo->bindFBO();	// bind because why the fuck not
+
+        rm->setCamera(reflectedCamera);
+        rm->setCurrentFBO(fbo);
+
+        glEnable(GL_DEPTH_TEST);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+    	glViewport(0, 0, fbo->getWidth(), fbo->getHeight());
+
+		currentShader = rm->getCurrentShader();
+		if (currentShader != 0){
+			currentShader->useProgram();
+		}
+		currentRenderQueue = rm->getRenderQueue(); 
+
+        /***************** render objects ***************/
+		//render GCs with current Shader 
+		if ( currentRenderQueue != 0 ){
+			voList = currentRenderQueue->getVirtualObjectList();	//get List of all VOs in RenderQueue
+			//for every VO
+			for (std::list<VirtualObject* >::iterator i = voList.begin(); i != voList.end(); ++i) {	//get GCs of VO
+				if((*i) == water_object){
+					continue;
+				}
+				currentGCs = (*i)->getGraphicsComponent();
+					//for every GC
+					for (unsigned int j = 0; j < currentGCs.size(); j++){
+						rm->setCurrentGC(currentGCs[j]);
+						rm->getCurrentVO();
+						
+						//tell Shader to upload all Uniforms
+						currentShader->uploadAllUniforms();
+						//render the GC
+						currentShader->render(currentGCs[j]);
+					}
+
+			}
+		}	
+		/****************** back to old state *****************/
+        fbo->unbindFBO();	
+        rm->setCamera(tempCamera);
+        rm->setCurrentFBO(tempFBO);
+
 	}
 
 SetDefaultShaderListener::SetDefaultShaderListener(Shader* shader){
@@ -101,3 +164,68 @@ void RecompileAndSetShaderListener::update(){
 	shader->useProgram();
 }
 
+UpdateReflectedCameraPositionListener::UpdateReflectedCameraPositionListener(Camera* cam, Camera* cam_target, float* water_height){
+	this->water_height = water_height;
+	this->cam_source = cam;
+	this->cam_target = cam_target;
+}
+
+UpdateReflectedCameraPositionListener::UpdateReflectedCameraPositionListener(Camera* cam, Camera* cam_target, float water_height){
+	this->water_height = new float(water_height);
+	this->cam_source = cam;
+	this->cam_target = cam_target;
+}
+
+void UpdateReflectedCameraPositionListener::update(){
+	glm::vec3 reflected_campos = cam_source->getPosition();
+	glm::vec3 reflected_camdir = cam_source->getViewDirection();
+	reflected_campos.y = 2.0f * *water_height - reflected_campos.y; 
+	reflected_camdir.y = -reflected_camdir.y;
+	( *cam_target).setPosition(  reflected_campos);
+	( *cam_target).setDirection( reflected_camdir); 
+}
+
+RenderVirtualObjectWithShaderListener::RenderVirtualObjectWithShaderListener(VirtualObject* vo, Shader* shader){
+	this->shader = shader;
+	this->vo = vo;
+}
+
+void RenderVirtualObjectWithShaderListener::update(){	
+	std::vector<GraphicsComponent* > gcs = vo->getGraphicsComponent();
+	
+	for (unsigned int j = 0; j < gcs.size(); j++){
+		RenderManager::getInstance()->setCurrentGC(gcs[j]);
+		shader->uploadAllUniforms();
+		shader->render(gcs[j]);
+	}
+}
+
+RenderWaterObjectWithShaderAndReflectionMapListener::RenderWaterObjectWithShaderAndReflectionMapListener(VirtualObject* vo, Shader* shader, GLuint reflection_handle){
+	this->shader = shader;
+	this->vo = vo;
+	this->reflection_handle = reflection_handle;
+}
+
+void RenderWaterObjectWithShaderAndReflectionMapListener::update(){	
+	/***************** save old state ******************/
+    Shader* temp_shader = RenderManager::getInstance()->getCurrentShader();
+    RenderManager::getInstance()->setCurrentShader(shader);
+    shader->useProgram();
+
+    /*****************render object************************/
+	glActiveTexture(GL_TEXTURE10);
+	glBindTexture(GL_TEXTURE_2D, reflection_handle);
+	shader->uploadUniform(10, "uniformReflectionMap");
+
+	std::vector<GraphicsComponent* > gcs = vo->getGraphicsComponent();
+
+	for (unsigned int j = 0; j < gcs.size(); j++){
+		RenderManager::getInstance()->setCurrentGC(gcs[j]);
+		shader->uploadAllUniforms();
+		shader->render(gcs[j]);
+	}
+
+	/****************** back to old state *****************/
+	RenderManager::getInstance()->setCurrentShader(temp_shader);
+    RenderManager::getInstance()->getCurrentShader()->useProgram();
+}
