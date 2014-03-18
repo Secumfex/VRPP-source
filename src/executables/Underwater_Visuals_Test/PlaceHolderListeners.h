@@ -56,19 +56,19 @@ class RenderWaterObjectWithShaderAndReflectionMapListener : public Listener{
 private: 
 	VirtualObject* vo;
 	Shader* shader;
-	GLuint reflection_handle;
+	FrameBufferObject* fbo; // reflectionmap target
 public:
-	RenderWaterObjectWithShaderAndReflectionMapListener(VirtualObject* vo, Shader* shader, GLuint reflection_handle);
+	RenderWaterObjectWithShaderAndReflectionMapListener(VirtualObject* vo, Shader* shader, FrameBufferObject* fbo);
 	void update();
 };
 
 /// Listener which sets the Phont_Test Shader as the RenderManagers current Shader
-class SetDefaultShaderListener : public Listener{
+class SetCurrentShaderListener : public Listener{
 private:
 	RenderManager* rm;
 	Shader* shader;
 public:
-	SetDefaultShaderListener(Shader* shader);
+	SetCurrentShaderListener(Shader* shader);
 	void update();
 };
 

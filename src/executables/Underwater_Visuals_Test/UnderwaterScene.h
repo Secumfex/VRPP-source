@@ -13,7 +13,7 @@ namespace UnderwaterScene{
 	float fog_end	= 200.0f;
 
 	float fog_begin_under_water = 2.0f;
-	float fog_end_under_water = 200.0f;
+	float fog_end_under_water = 300.0f;
 	float fog_end_above_water = 10000.0f;
 	float fog_begin_above_water = 100.0f;
 
@@ -34,6 +34,7 @@ namespace UnderwaterScene{
 	VirtualObject* scene_wallObject1;
 	VirtualObject* scene_wallObject2;
 	VirtualObject* scene_waterPlaneObject;
+	VirtualObject* scene_mountainObject1;
 
 	FrameBufferObject* framebuffer_water_reflection;
 	Camera* reflectedCamera;
@@ -68,6 +69,7 @@ namespace UnderwaterScene{
 		scene_wallObject2 		= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_wall2.dae", VirtualObjectFactory::OTHER);
 		scene_stoneObject1 		= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_stone_01.dae", VirtualObjectFactory::OTHER);
 		scene_stoneObject2 		= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_stone_01.dae", VirtualObjectFactory::OTHER);
+		scene_mountainObject1	= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_mountain_01.dae", VirtualObjectFactory::OTHER);
 		
 //		scene_stoneObject1->translate(glm::vec3(3.0f, 0.0f, 3.0f));
 //		scene_stoneObject2->translate(glm::vec3(5.0f, 0.0f, 3.0f));
@@ -81,9 +83,9 @@ namespace UnderwaterScene{
 		/*********************************************************************************/
 
 		/******************* framebuffer objects *****************************************/
-		framebuffer_water_reflection = new FrameBufferObject(512,512);
+		framebuffer_water_reflection = new FrameBufferObject(800,600);
+		framebuffer_water_reflection->bindFBO();
 		framebuffer_water_reflection->createPositionTexture();
-		framebuffer_water_reflection->createDepthBuffer();
 		framebuffer_water_reflection->makeDrawBuffers();	// draw color to color attachment 0
 		framebuffer_water_reflection->unbindFBO();
 		/*********************************************************************************/
