@@ -469,6 +469,8 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 	}
 
+
+
 	glm::vec3 boxValue = physics_max-physics_min;
 	float width = boxValue.x;
 	float height = boxValue.y;
@@ -479,29 +481,34 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 	float z = physics_min.z + depth / 2.0f;
 
 
-	//set normal for creating physicComponent of sphere
 	glm::vec3 normal;
 	normal.x= physics_min.y*physics_max.z - physics_min.z*physics_max.y;
 	normal.y= physics_min.z*physics_max.x - physics_min.x*physics_max.z;
 	normal.z= physics_min.x*physics_max.y - physics_min.y*physics_max.x;
 
+
 	std::cout << "max: " << physics_max.x << " , "<< physics_max.y << " , "<< physics_max.z << std::endl;
 	std::cout << "min: " << physics_min.x << " , "<< physics_min.y << " , "<< physics_min.z << std::endl;
 
-	glm::vec3 normal=physics_max;
+	switch(bodyType){
+	case CUBE:		virtualObject->setPhysicsComponent(width, height, depth, x, y, z, mass, collisionFlag);
+		break;
+	case PLANE:		virtualObject->setPhysicComponent(x, y, z, normal, mass, collisionFlag);
+		break;
+	case SPHERE:	virtualObject->setPhysicsComponent((physics_max.x-physics_min.x)/2.0, (physics_max.x-physics_min.x)/2.0+physics_min.x, (physics_max.y-physics_min.y)/2.0+physics_min.y, (physics_max.z-physics_min.z)/2.0+physics_min.z, mass, collisionFlag);
+		break;
+	case OTHER:		virtualObject->setPhysicsComponent(physics_min, physics_max, mass, collisionFlag);
+		break;
+	}
 
-		switch(bodyType){
 
-		case CUBE:		virtualObject->setPhysicsComponent(width, height, depth, x, y, z, mass, collisionFlag);
-			break;
-		case PLANE:		virtualObject->setPhysicComponent(x, y, z, normal, mass, collisionFlag);
-			break;
-		case SPHERE:	virtualObject->setPhysicsComponent((physics_max.x-physics_min.x)/2.0, (physics_max.x-physics_min.x)/2.0+physics_min.x, (physics_max.y-physics_min.y)/2.0+physics_min.y, (physics_max.z-physics_min.z)/2.0+physics_min.z, mass, collisionFlag);
-			break;
-		case OTHER:		virtualObject->setPhysicsComponent(physics_min, physics_max, mass, collisionFlag);
-			break;
-		}
-    
+
+	return virtualObject;
+}
+
+VirtualObject* VirtualObjectFactory::createVirtualObject(vector<GraphicsComponent*> graphcomps){
+	VirtualObject* virtualObject = new VirtualObject();
+	//TODO: alle GraphicsComponents werden an das VO übergeben
 
 	return virtualObject;
 }
