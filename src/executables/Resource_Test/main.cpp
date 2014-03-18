@@ -18,14 +18,22 @@
 #include "Visuals/VirtualObjectFactory.h"
 #include "Visuals/RenderManager.h"
 
+#include "Application/Application.h"
+#include "Application/ApplicationStates.h"
+#include "Application/ApplicationListeners.h"
+#include "Tools/UtilityListeners.h"
+//#include "PlaceHolderListeners.h"
 
 int main() {
 
 	// render window
 
+	VRState* myvrstate= new VRState("vrstate");
+
 	RenderManager* rm = RenderManager::getInstance();
     RenderQueue* rq = new RenderQueue();
     Camera* cam = new Camera();
+    Frustum* frust= new Frustum(cam);
     
     
     rm->libInit();
@@ -100,6 +108,7 @@ int main() {
 
 	rm->setRenderQueue(rq);
 	rm->setCurrentFBO(fbo);
+	rm->setCurrentFrustum(frust);
 	rm->setPerspectiveMatrix(45.0f, 1.0f, 0.1f, 100.f);
 	rm->setCamera(cam);
 
