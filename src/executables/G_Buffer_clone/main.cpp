@@ -73,7 +73,7 @@ int main() {
 
 	VirtualObjectFactory *voFactory = VirtualObjectFactory::getInstance();
 
-	VirtualObject *object03 = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj", VirtualObjectFactory::OTHER);
+	VirtualObject *object03 = voFactory->createVirtualObject(RESOURCES_PATH "/animation_test/Fish_bones.dae", VirtualObjectFactory::OTHER);
 	VirtualObject *object02 = voFactory->createVirtualObject(RESOURCES_PATH "/cow.obj", VirtualObjectFactory::OTHER);
 	VirtualObject *object01 = voFactory->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE);
 
@@ -122,7 +122,7 @@ int main() {
 
 	frustum->updateModelMatrix();
 
-	rq->sortByAttributes();
+//	rq->sortByAttributes();
 
 	while(!glfwWindowShouldClose(window)) {
 
@@ -152,7 +152,7 @@ int main() {
 		//nice rotation of a small cube
 		mat4 modelMatrix02 = scale(translate(rotate(mat4(1.0f), degrees(angle), vec3(1.0f, 1.0f, 0.0f)), vec3(0.0f, 0.5f, -0.5f)), vec3(0.9f, 0.9f, 0.9f));
 
-		mat4 modelMatrix03 = scale(translate(rotate(mat4(1.0f), degrees(angle), vec3(0.0f, 1.0f, 1.0f)), vec3(0.0f, 0.5f, -0.5f)), vec3(0.3f, 0.3f, 0.3f));
+		mat4 modelMatrix03 = scale(translate(rotate(rotate(mat4(1.0f), 90.0f, vec3(0.0f, 0.0f, 1.0f)), 90.0f, vec3(0.0f, 1.0f, 0.0f)), vec3(0.0, 0.0, 0.5)), vec3(0.5f, 0.5f, 0.5f));
 
 		object01->setModelMatrix(modelMatrix01);
 		object02->setModelMatrix(modelMatrix02);

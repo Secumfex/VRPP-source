@@ -123,7 +123,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 			aiProcess_GenSmoothNormals|
 			aiProcess_GenUVCoords |
 			aiProcess_FlipUVs|
-			aiProcess_PreTransformVertices |
+			aiProcess_ValidateDataStructure |
 			aiProcess_CalcTangentSpace
 
 	);
@@ -224,8 +224,9 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 			glEnableVertexAttribArray(3);
 			glVertexAttribPointer(3, 3, GL_FLOAT, 0, 0, 0);
 
-			std:: cout << "HAT TANGENT SPACE" << std:: endl;
-
+		}
+		if(mesh->HasBones()){
+			cout << "HAT ANIMATION"<< endl;
 		}
 
 		// buffer for vertex texture coordinates
