@@ -205,12 +205,11 @@ void ShootSphereListener::update(){
 	VirtualObject* 	sphere = 	VirtualObjectFactory::getInstance()->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 3.0, 8);
 
 	state->addVirtualObject(sphere);
-
-	sphere->setModelMatrix(glm::translate(glm::mat4(1.0f), glm::vec3(start.x, start.y, start.z)));
+	sphere->translate(glm::vec3(start.x, start.y, start.z));
+	//sphere->setModelMatrix(glm::translate(glm::mat4(1.0f), glm::vec3(start.x, start.y, start.z)));
 	//sphere->getPhysicsComponent()->setPosition(start.x, start.y, start.z);
-	sphere->setPhysicsComponent(1.0f,1.0f,1.0f,start.x, start.y, start.z, 3.0f, 8);
 
-
+	//sphere->setPhysicsComponent(1.0f,1.0f,1.0f,start.x, start.y, start.z, 3.0f, 8);
 	sphere->physicsComponent->getRigidBody()->setLinearVelocity(dir*speed);
 	state->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(sphere));
 

@@ -2,8 +2,8 @@
 #include "VirtualObject.h"
 
 #include <glm/glm.hpp>
+#include "Application/ApplicationStates.h"
 
-#include "Visuals/RenderQueue.h"
 
 using namespace std;
 
@@ -49,7 +49,9 @@ void VirtualObject::translate(glm::vec3 trans){
 
 void VirtualObject::scale(glm::vec3 scale){
 	physicsComponent->scale(scale);
-	updateModelMatrixViaPhysics();
+	//updateModelMatrixViaPhysics();
+
+	modelMatrix = glm::scale(glm::mat4(1.0f), scale);
 	for(unsigned int i=0; i< mGraphComponent.size();i++){
 		mGraphComponent[i]->setModelMatrixGc(modelMatrix);
 	}
@@ -101,6 +103,7 @@ void VirtualObject::setPhysicsComponent(float width, float height, float depth, 
 	if(physicsComponent != NULL)
 	physicsComponent->~PhysicsComponent();
 	physicsComponent = new PhysicsComponent(width, height, depth, x, y, z, mass,collisionFlag);
+
 }
 
 
