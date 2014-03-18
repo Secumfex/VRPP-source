@@ -30,9 +30,5 @@ namespace ShaderTools {
 	 */
 	GLuint makeShaderProgram(const char* vertexShaderName, const char* fragmentShaderName);
 
-	/** \brief !docu pls!
-	 * 
-	 */
-	GLuint makeShaderProgram();
 }
 

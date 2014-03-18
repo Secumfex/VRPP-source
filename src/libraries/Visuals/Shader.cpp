@@ -8,6 +8,79 @@
 #include <Visuals/Shader.h>
 
 
+Shader::Shader(std::vector<const char*> shaders){
+
+	const char* vert = 0;
+	const char* geom = 0;
+	const char* frag = 0;
+
+	if(shaders.size() == 2){
+		vert = shaders[0];
+		frag = shaders[1];
+	}
+	else if(shaders.size() == 3){
+		vert = shaders[0];
+		geom =shaders[1];
+		frag = shaders[2];
+	}
+
+	GLuint vertexShaderHandle;
+	GLuint geometryShaderHandle;
+	GLuint fragmentShaderHandle;
+
+	mProgramHandle = glCreateProgram();
+
+	if(vert != 0){
+		vertexShaderHandle = glCreateShader(GL_VERTEX_SHADER);
+		const GLint source_size = strlen(vert);
+		glShaderSource(vertexShaderHandle, 1, &vert, &source_size);
+		glCompileShader(vertexShaderHandle);
+		ShaderTools::checkShader(vertexShaderHandle);
+        glAttachShader(mProgramHandle, vertexShaderHandle);
+	}
+	if(geom != 0){
+		geometryShaderHandle = glCreateShader(GL_GEOMETRY_SHADER);
+		const GLint source_size = strlen(geom);
+		glShaderSource(geometryShaderHandle, 1, &geom, &source_size);
+		glCompileShader(geometryShaderHandle);
+		ShaderTools::checkShader(geometryShaderHandle);
+        glAttachShader(mProgramHandle, geometryShaderHandle);
+	}
+	if(frag != 0){
+		fragmentShaderHandle = glCreateShader(GL_FRAGMENT_SHADER);
+		const GLint source_size = strlen(frag);
+		glShaderSource(fragmentShaderHandle, 1, &frag, &source_size);
+		glCompileShader(fragmentShaderHandle);
+		ShaderTools::checkShader(fragmentShaderHandle);
+        glAttachShader(mProgramHandle, fragmentShaderHandle);
+	}
+
+    glLinkProgram(mProgramHandle);
+
+	blurStrength = 0.0f;
+
+	int total = -1;
+
+	glGetProgramiv( mProgramHandle, GL_ACTIVE_UNIFORMS, &total );
+
+	unsigned int i= 0;
+	for(i=0; i<total; ++i)  {
+		int name_len=-1, num=-1;
+		GLenum type = GL_ZERO;
+		char name[100];
+		glGetActiveUniform( mProgramHandle, GLuint(i), sizeof(name)-1,
+				&name_len, &num, &type, name );
+		name[name_len] = 0;
+		GLuint location = glGetUniformLocation( mProgramHandle, name );
+
+		mUniformHandles.insert(std::pair<std::string, GLuint>(name, location));
+
+		mUniformNames.push_back(name);
+		attachUniformListener(name);
+	}
+
+}
+
 Shader::Shader(std::string vertexShader, std::string fragmentShader) {
 
 	std::string vertexshader = vertexShader ;
@@ -22,19 +95,19 @@ Shader::Shader(std::string vertexShader, std::string fragmentShader) {
 
 	unsigned int i= 0;
 	for(i=0; i<total; ++i)  {
-	    int name_len=-1, num=-1;
-	    GLenum type = GL_ZERO;
-	    char name[100];
-	    glGetActiveUniform( mProgramHandle, GLuint(i), sizeof(name)-1,
-	        &name_len, &num, &type, name );
-	    name[name_len] = 0;
-	    GLuint location = glGetUniformLocation( mProgramHandle, name );
+		int name_len=-1, num=-1;
+		GLenum type = GL_ZERO;
+		char name[100];
+		glGetActiveUniform( mProgramHandle, GLuint(i), sizeof(name)-1,
+				&name_len, &num, &type, name );
+		name[name_len] = 0;
+		GLuint location = glGetUniformLocation( mProgramHandle, name );
 
 
-	    mUniformHandles.insert(std::pair<std::string, GLuint>(name, location));
+		mUniformHandles.insert(std::pair<std::string, GLuint>(name, location));
 
-	    mUniformNames.push_back(name);
-	    attachUniformListener(name);
+		mUniformNames.push_back(name);
+		attachUniformListener(name);
 	}
 
 }
@@ -59,7 +132,7 @@ GLuint Shader::getProgramHandle(){
 }
 
 void Shader :: uploadAllUniforms(){
-notify("UNIFORMUPLOADLISTENER");
+	notify("UNIFORMUPLOADLISTENER");
 }
 
 bool Shader :: uploadUniform(glm::mat4 uniformMatrix, std::string uniformName){
@@ -73,22 +146,22 @@ bool Shader :: uploadUniform(glm::mat4 uniformMatrix, std::string uniformName){
 
 bool Shader :: uploadUniform(glm::vec3 uniformVector, std::string uniformName){
 	if(mUniformHandles.find(uniformName)!=mUniformHandles.end()){
-	glUniform3f(mUniformHandles[uniformName], uniformVector.x, uniformVector.y, uniformVector.z);
-	return true;
+		glUniform3f(mUniformHandles[uniformName], uniformVector.x, uniformVector.y, uniformVector.z);
+		return true;
 	}else
 		return false;
 }
 bool Shader::uploadUniform(GLfloat uniformVariable, std::string uniformName){
 	if(mUniformHandles.find(uniformName)!=mUniformHandles.end()){
-	glUniform1f(mUniformHandles[uniformName], uniformVariable);
-	return true;
+		glUniform1f(mUniformHandles[uniformName], uniformVariable);
+		return true;
 	}else
 		return false;
 }
 bool Shader::uploadUniform(GLint uniformVariable, std::string uniformName){
 	if(mUniformHandles.find(uniformName)!=mUniformHandles.end()){
-	glUniform1i(mUniformHandles[uniformName], uniformVariable);
-	return true;
+		glUniform1i(mUniformHandles[uniformName], uniformVariable);
+		return true;
 	}else
 		return false;
 }
@@ -129,7 +202,7 @@ bool Shader::hasUniform(std::string uniformName){
 
 
 std::vector<std::string> Shader::getUniformNames(){
-return std::vector<std::string>(mUniformNames);
+	return std::vector<std::string>(mUniformNames);
 
 }
 
@@ -180,9 +253,9 @@ void Shader::attachUniformListener(std::string uniform){
 	else if(uniform == "emissiveColor"){
 		attach(new UploadUniformEmissiveColorListener("UNIFORMUPLOADLISTENER"));}
 	else if(uniform == "resX"){
-			attach(new UploadUniformResolutionXListener("UNIFORMUPLOADLISTENER"));}
+		attach(new UploadUniformResolutionXListener("UNIFORMUPLOADLISTENER"));}
 	else if(uniform == "resY"){
-			attach(new UploadUniformResolutionYListener("UNIFORMUPLOADLISTENER"));}
+		attach(new UploadUniformResolutionYListener("UNIFORMUPLOADLISTENER"));}
 	else {
 		std::cout << "ERROR: Uniform \"" << uniform << "\" is not a valid uniform name." << std:: endl;
 	}
