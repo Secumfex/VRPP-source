@@ -11,6 +11,24 @@ using namespace std;
  *
  *
  */
+class Shader;
+
+/*! @brief Proxyclass for forward including
+ *
+ *
+ */
+class Mesh;
+
+/*! @brief Proxyclass for forward including
+ *
+ *
+ */
+class GraphicsComponent;
+
+/*! @brief Proxyclass for forward including
+ *
+ *
+ */
 class RenderQueue;
 
 /*! @brief Proxyclass for forward including
@@ -18,6 +36,12 @@ class RenderQueue;
  *
  */
 class GrapicsComponent;
+
+/*! @brief Proxyclass for forward including
+ *
+ *
+ */
+class Shader;
 
 /*! @brief Parent flag-class
  *
@@ -30,7 +54,7 @@ public:
 	 *
 	 * Abstract method, sends Flag objects to overloaded metods ín the RenderQueue
 	 */
-	virtual list<GraphicsComponent* > extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* temp>);
+	virtual list<GraphicsComponent* > extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* > temp);
 };
 
 /*! @brief flag-child 
@@ -55,8 +79,9 @@ public:
  */
 class FlagUsesShader : public RenderQueueRequestFlag{
 private:
+	Shader* mShader;
 public:
-	FlagUsesShader();
+	FlagUsesShader(Shader* shader);
 
 	/*! @brief flag visits the render queue
 	 *
@@ -71,8 +96,9 @@ public:
  */
 class FlagUsesObjectModel : public RenderQueueRequestFlag{
 private:
+	Mesh* mMesh;
 public:
-	FlagUsesObjectModel();
+	FlagUsesObjectModel(Mesh* mesh);
 
 	/*! @brief flag visits the render queue
 	 *
