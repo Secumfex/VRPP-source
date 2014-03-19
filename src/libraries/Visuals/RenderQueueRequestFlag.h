@@ -33,4 +33,100 @@ public:
 	virtual list<GraphicsComponent* > extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* temp>);
 };
 
+/*! @brief flag-child 
+ *
+ * A flag for a shadow casting render pass
+ */
+class FlagShadowCaster : public RenderQueueRequestFlag{
+private:
+public:
+	FlagShadowCaster();
+
+	/*! @brief flag visits the render queue
+	 *
+	 * flag sends itself to the render queue, which will trigger the overloaded method
+	 */
+	list<GraphicsComponent* > extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* > temp);
+};
+
+/*! @brief flag-child
+ *
+ * A flag for using a certain shader
+ */
+class FlagUsesShader : public RenderQueueRequestFlag{
+private:
+public:
+	FlagUsesShader();
+
+	/*! @brief flag visits the render queue
+	 *
+	 * flag sends itself to the render queue, which will trigger the overloaded method
+	 */
+	list<GraphicsComponent* > extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* > temp);
+};
+
+/*! @brief flag-child
+ *
+ * A flag for using a certain object model
+ */
+class FlagUsesObjectModel : public RenderQueueRequestFlag{
+private:
+public:
+	FlagUsesObjectModel();
+
+	/*! @brief flag visits the render queue
+	 *
+	 * flag sends itself to the render queue, which will trigger the overloaded method
+	 */
+	list<GraphicsComponent* > extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* > temp);
+};
+
+/*! @brief flag-child
+ *
+ * A flag for objects within the view frustum
+ */
+class FlagInViewFrustum : public RenderQueueRequestFlag{
+private:
+public:
+	FlagInViewFrustum();
+
+	/*! @brief flag visits the render queue
+	 *
+	 * flag sends itself to the render queue, which will trigger the overloaded method
+	 */
+	list<GraphicsComponent* > extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* > temp);
+};
+
+/*! @brief flag-child
+ *
+ * A flag for transparent objects
+ */
+class FlagTransparency : public RenderQueueRequestFlag{
+private:
+public:
+	FlagTransparency();
+
+	/*! @brief flag visits the render queue
+	 *
+	 * flag sends itself to the render queue, which will trigger the overloaded method
+	 */
+	list<GraphicsComponent* > extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* > temp);
+};
+
+/*! @brief flag-child
+ *
+ * A flag for the screen filling triangle
+ */
+class FlagScreenFillingPolygon : public RenderQueueRequestFlag{
+private:
+public:
+	FlagScreenFillingPolygon();
+
+	/*! @brief flag visits the render queue
+	 *
+	 * flag sends itself to the render queue, which will trigger the overloaded method
+	 */
+	list<GraphicsComponent* > extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* > temp);
+};
+
 #endif
