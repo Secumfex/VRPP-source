@@ -228,3 +228,23 @@ void RenderVirtualObjectWithShaderListener::update(){
 	}
 }
 
+UploadUniformSinusWaveListener::UploadUniformSinusWaveListener(std::string name, float* t, float frequency, std::string uniform_name){
+	this->t = t;
+	this->frequency = frequency;
+	this->uniform_name = uniform_name;
+	setName(name);
+}
+
+UploadUniformSinusWaveListener::UploadUniformSinusWaveListener(std::string name, float t, float frequency, std::string uniform_name){
+	this->t = new float(t);
+	this->frequency = frequency;
+	this->uniform_name = uniform_name;
+	setName(name);
+}
+
+void UploadUniformSinusWaveListener::update(){
+	float sin = std::sin( (*t) * frequency);
+
+	Shader* shader = RenderManager::getInstance()->getCurrentShader();
+	shader->uploadUniform(sin, uniform_name);
+}

@@ -113,3 +113,14 @@ public:
 	UpdateReflectedCameraPositionListener(Camera* cam, Camera* cam_target, float water_height);
 	void update();
 };
+
+class UploadUniformSinusWaveListener : public Listener{
+private:
+	float* t;
+	float frequency;
+	std::string uniform_name;
+public:
+	UploadUniformSinusWaveListener(std::string name, float* t, float frequency, std::string uniform_name);
+	UploadUniformSinusWaveListener(std::string name, float t, float frequency, std::string uniform_name);
+	void update();
+};

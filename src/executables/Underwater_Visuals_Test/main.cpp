@@ -55,6 +55,7 @@ void configureRendering(){
 	Listener* uniFogColor 	= new UploadUniformVec3Listener ("UNIFORMUPLOADLISTENER", &UnderwaterScene::fog_color, "uniformFogColor");
 	Listener* uniFogBegin 	= new UploadUniformFloatListener("UNIFORMUPLOADLISTENER", &UnderwaterScene::fog_begin, "uniformFogBegin");
 	Listener* uniFogEnd 	= new UploadUniformFloatListener("UNIFORMUPLOADLISTENER", &UnderwaterScene::fog_end, "uniformFogEnd");
+	Listener* uniTime 		= new UploadUniformFloatListener("UNIFORMUPLOADLISTENER", IOManager::getInstance()->getWindowTimePointer(), "uniformTime");
 	
 	testingApp->attachListenerOnProgramInitialization(	new SetCurrentShaderListener( reflection_shader ));
 
@@ -83,6 +84,7 @@ void configureRendering(){
 	testingApp->attachListenerOnRenderManagerFrameLoop(uniFogColor);	// not clean, but easier to handle cuz of shader recompilation
 	testingApp->attachListenerOnRenderManagerFrameLoop(uniFogBegin);	// not clean, but easier to handle cuz of shader recompilation
 	testingApp->attachListenerOnRenderManagerFrameLoop(uniFogEnd);		// not clean, but easier to handle cuz of shader recompilation
+	testingApp->attachListenerOnRenderManagerFrameLoop(uniTime);	// not clean, but easier to handle cuz of shader recompilation
 
 	RenderWaterObjectWithShaderAndReflectionMapListener* renderwater = new RenderWaterObjectWithShaderAndReflectionMapListener(UnderwaterScene::scene_waterPlaneObject, watershader, UnderwaterScene::framebuffer_water_reflection);
 	testingApp->attachListenerOnRenderManagerFrameLoop(	renderwater);
