@@ -16,20 +16,20 @@ VirtualObject::VirtualObject() {
 	physicsComponent = new PhysicsComponent();
 }
 
-VirtualObject::VirtualObject(glm::vec3 min, glm::vec3 max){
-	physicsComponent = new PhysicsComponent(min,max);
+VirtualObject::VirtualObject(glm::vec3 min, glm::vec3 max, float mass, int collisionFlag){
+	physicsComponent = new PhysicsComponent(min,max, mass,collisionFlag);
 
 	physicsComponent->update(this);
 }
 
-VirtualObject::VirtualObject(float radius, float x, float y, float z, float mass){
-	physicsComponent = new PhysicsComponent(radius, x, y, z, mass);
+VirtualObject::VirtualObject(float radius, float x, float y, float z, float mass, int collisionFlag){
+	physicsComponent = new PhysicsComponent(radius, x, y, z, mass, collisionFlag);
 
 	physicsComponent->update(this);
 }
 
-VirtualObject::VirtualObject(float width, float height, float depth, float x, float y, float z, float mass){
-	physicsComponent = new PhysicsComponent(width, height, depth, x, y, z, mass);
+VirtualObject::VirtualObject(float width, float height, float depth, float x, float y, float z, float mass, int collisionFlag){
+	physicsComponent = new PhysicsComponent(width, height, depth, x, y, z, mass, collisionFlag);
 
 	physicsComponent->update(this);
 }

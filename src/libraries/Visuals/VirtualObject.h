@@ -38,8 +38,10 @@ public:
 	 * creates VirtualObject with min and max vector of the mesh
 	 * creates physicComponent with same vectors
 	 * @param min,max glm::vec3 vector for max an min x,y and z values
+	 * @param mass mass of the rigidBody (physicComponent)
+	 * @param collisionFlag sets collisiontype of the collisionshape
 	 */
-	VirtualObject(glm::vec3 min, glm::vec3 max);
+	VirtualObject(glm::vec3 min, glm::vec3 max, float mass = 0.0f, int collisionFlag = 1);
 
 	/** \brief constructor
 	 *
@@ -48,8 +50,9 @@ public:
 	 * @param radius radius of sphere
 	 * @param x,y,z position of sphere
 	 * @param mass mass of the rigidBody (physicComponent)
+	 * @param collisionFlag sets collisiontype of the collisionshape
 	 */
-	VirtualObject(float radius, float x, float y, float z, float mass);
+	VirtualObject(float radius, float x, float y, float z, float mass = 0.0f, int collisionFlag = 1);
 
 	/** \brief constructor
 	 *
@@ -58,8 +61,9 @@ public:
 	 * @param width,height,depth size of the box
 	 * @param x,y,z position of box
 	 * @param mass mass of the rigidBody (physicComponent)
+	 * @param collisionFlag sets collisiontype of the collisionshape
 	 */
-	VirtualObject(float width, float height, float depth, float x, float y, float z, float mass);
+	VirtualObject(float width, float height, float depth, float x, float y, float z, float mass = 0.0f, int collisionFlag = 1);
 
 	/** \brief destructor
 	 *
@@ -127,9 +131,10 @@ public:
 	 * creates PhysicComponent with box shaped rigid Body
 	 * @param min,max smallest and largest x, y, z values of a given model
 	 * @param mass
+	 * @param collisionFlag sets collisiontype of the collisionshape
 	 * @return void
 	 */
-	void setPhysicsComponent(glm::vec3 min, glm::vec3 max, float mass = 0.0, int collisionFlag = 1);
+	void setPhysicsComponent(glm::vec3 min, glm::vec3 max, float mass = 0.0f, int collisionFlag = 1);
 
 	/** \brief sets PhysicsComponent
 	 *
@@ -137,9 +142,10 @@ public:
 	 * @param radius dimension of the sphere
 	 * @param x,y,z origin position in physics world
 	 * @param mass defines the behavior of the rigid body in the physics world
+	 * @param collisionFlag sets collisiontype of the collisionshape
 	 * @return void
 	 */
-	void setPhysicsComponent(float radius, float x, float y, float z, float mass = 0.0, int collisionFlag = 1);
+	void setPhysicsComponent(float radius, float x, float y, float z, float mass = 0.0f, int collisionFlag = 1);
 
 	/** \brief sets PhysicsComponent
 	 *
@@ -147,9 +153,10 @@ public:
 	 * @param width,height,depth dimension of the box
 	 * @param x,y,z origin position in physics world
 	 * @param mass defines the behavior of the rigid body in the physics world
+	 * @param collisionFlag sets collisiontype of the collisionshape
 	 * @return void
 	 */
-	void setPhysicsComponent(float width, float height, float depth, float x, float y, float z, float mass = 0.0, int collisionFlag = 1);
+	void setPhysicsComponent(float width, float height, float depth, float x, float y, float z, float mass = 0.0f, int collisionFlag = 1);
 
 	/** \brief sets PhysicsComponent
 	 *
@@ -157,10 +164,11 @@ public:
  	 * @param x,y,z origin position in physics world
  	 * @param normal normal vector of the plane
  	 * @param mass defines the behavior of the rigid body in the physics world
+ 	 * @param collisionFlag sets collisiontype of the collisionshape
  	 * @return void
 	 */
 
-	void setPhysicComponent(float x, float y, float z, glm::vec3 normal, float mass = 0.0, int collisionFlag = 1);
+	void setPhysicComponent(float x, float y, float z, glm::vec3 normal, float mass = 0.0f, int collisionFlag = 1);
 
 	/** \brief getter
 	 *
