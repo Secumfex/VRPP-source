@@ -5,6 +5,7 @@
 #include <BulletCollision/CollisionDispatch/btGhostObject.h>
 #include <btBulletCollisionCommon.h>
 #include "Physics/PhysicWorld.h"
+#include "Animation/AnimationLoop.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -134,7 +135,12 @@ public:
 	 */
 	btGhostObject* getGhostObject();
 
+	/** \brief adds Bone*
+	 *
+	 *@param bone
+	 */
 
+	void addBone(Bone* bone);
 	/** \brief default constructor without parameters
 	 *
 	 */

@@ -75,8 +75,8 @@ GraphicsComponent* VirtualObjectFactory::getTriangle(){
 VirtualObject* VirtualObjectFactory::createNonAssimpVO(float mass){
 
 	if(mCube == NULL){
-	NoAssimpVirtualObjectFactory *voFactory = new NoAssimpVirtualObjectFactory();
-	mCube = voFactory->createCubeObject(mass);
+		NoAssimpVirtualObjectFactory *voFactory = new NoAssimpVirtualObjectFactory();
+		mCube = voFactory->createCubeObject(mass);
 	}
 
 	return mCube;
@@ -96,7 +96,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 	//TextureManager* texManager = TextureManager::getInstance();
 
 	std::string directory = filename.substr( filename.find_last_of( '/' ) + 1 );
-    std::string objName = directory;
+	std::string objName = directory;
 	directory = filename.substr(0, filename.length() - directory.length());
 
 	using namespace std;
@@ -140,6 +140,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 	glm::vec3 physics_min = glm::vec3(FLT_MAX,FLT_MAX,FLT_MAX);
 	glm::vec3 physics_max = glm::vec3(-FLT_MAX,-FLT_MAX,-FLT_MAX);
 
+	std::cout << "SO VIEL ANIMATIONEN " << pScene->mNumAnimations << std::endl;
 
 
 	// For each mesh of the loaded object
@@ -226,7 +227,18 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 		}
 		if(mesh->HasBones()){
-			cout << "HAT ANIMATION"<< endl;
+			unsigned int j;
+			for (j = 0; j < mesh->mNumBones; ++j) {
+				vector<float> boneweight(mesh->mNumVertices);
+				aiBone *bone = mesh->mBones[j];
+				unsigned int l;
+				for (l = 0; l < bone->mNumWeights; ++l) {
+					boneweight[bone->mWeights[l].mVertexId] = bone->mWeights[l].mWeight;
+				}
+				Bone *myBone = new Bone(bone->mName.C_Str());
+				float matrix[16];
+				glm::mat4 offsetmatrix = glm::make_mat4x4(matrix);
+			}
 		}
 
 		// buffer for vertex texture coordinates
@@ -266,7 +278,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 		glGenBuffers(1, &buffer);
 		glBindBuffer(GL_ARRAY_BUFFER, buffer);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float)*2*mesh->mNumVertices, &texCoords[0], GL_STATIC_DRAW);
-        
+
 		//und texCoordLoc wurde dann auch ersetzt
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(1, 2, GL_FLOAT, 0, 0, 0);
@@ -277,7 +289,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 		// create material uniform buffer
 		aiMaterial *mtl = pScene->mMaterials[mesh->mMaterialIndex];
-    
+
 
 		aiString texPath;   //contains filename of texture
 
@@ -288,7 +300,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 		if(AI_SUCCESS == mtl->GetTexture(aiTextureType_DIFFUSE, 0, &texPath)){
 			cout << "Try to find DiffuseMap: " << texPath.C_Str() << endl;
 			tex_temp = new Texture(directory + texPath.C_Str());
-            aMat->setDiffuseMap(tex_temp);
+			aMat->setDiffuseMap(tex_temp);
 		}
 
 		if(AI_SUCCESS == mtl->GetTexture(aiTextureType_AMBIENT, 0, &texPath)){
@@ -353,93 +365,93 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 			aMat->setLightMap(tex_temp);
 		}
 
-        aiString name;
+		aiString name;
 		if(AI_SUCCESS == aiGetMaterialString(mtl, AI_MATKEY_NAME, &name)){
 			std::string matName = name.C_Str();
 			matName = matName.substr( matName.find_last_of( '/' ) + 1 );
 
 
-            std::cout<<"\nName des Materials: "<<matName<<endl;
+			std::cout<<"\nName des Materials: "<<matName<<endl;
 
 			aMat->setName(matName);
 		}
-        else{
+		else{
 			aMat->setName("genericMaterial");
-        }
-        
-        
-        /* try to generate material by name */
-        
-		GraphicsComponent* gc=new GraphicsComponent(aMesh,aMat);
-        MaterialManager* mm= MaterialManager::getInstance();
-
-
-
-        if(aMat->getName().find("custom") != std::string::npos){
-        	cout<<"\nRead from mtl\n";
-
-
-
- // diffuse
-
-        	float c[4];
-
-		set_float4(c, 0.8f, 0.8f, 0.8f, 1.0f);
-		aiColor4D diffuse;
-		if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_DIFFUSE, &diffuse)){
-		color4_to_float4(&diffuse, c);
 		}
-		aMat->setDiffuse(glm::vec3(c[0], c[1], c[2]));
 
 
-        // ambient
-		set_float4(c, 0.2f, 0.2f, 0.2f, 1.0f);
-		aiColor4D ambient;
-		if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_AMBIENT, &ambient))
-			color4_to_float4(&ambient, c);
-		//memcpy(aMat.ambient, c, sizeof(c));
-		aMat->setAmbient(glm::vec3(ambient.r, ambient.g, ambient.b));
+		/* try to generate material by name */
 
-        // specular
-
-		set_float4(c, 0.0f, 0.0f, 0.0f, 1.0f);
-
-		aiColor4D specular;
-		if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_SPECULAR, &specular))
-			color4_to_float4(&specular, c);
-		//memcpy(aMat.specular, c, sizeof(c));
-		aMat->setSpecular(glm::vec3(specular.r, specular.g, specular.b));
-
-        // emission
-		set_float4(c, 0.0f, 0.0f, 0.0f, 1.0f);
-		aiColor4D emission;
-		if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_EMISSIVE, &emission))
-			color4_to_float4(&emission, c);
-        //memcpy(aMat.emissive, c, sizeof(c));
-		aMat->setEmission(glm::vec3(emission.r, emission.g, emission.b));
-
-        // shininess
-        float shininess = 0.0;
-		//unsigned int max;
-		if(AI_SUCCESS != mtl->Get(AI_MATKEY_SHININESS, shininess))
-			shininess = 50.0;
+		GraphicsComponent* gc=new GraphicsComponent(aMesh,aMat);
+		MaterialManager* mm= MaterialManager::getInstance();
 
 
-		aMat->setShininess(1.0f);
-//shininess/1000.0f
 
-        }
-        else{
+		if(aMat->getName().find("custom") != std::string::npos){
+			cout<<"\nRead from mtl\n";
 
-        try {
-            mm->makeMaterial(aMat->getName(),gc);
 
-            }
-        catch (string param){
-           cout<<"\nFAILED: generate material by name";
 
-            }
-        }
+			// diffuse
+
+			float c[4];
+
+			set_float4(c, 0.8f, 0.8f, 0.8f, 1.0f);
+			aiColor4D diffuse;
+			if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_DIFFUSE, &diffuse)){
+				color4_to_float4(&diffuse, c);
+			}
+			aMat->setDiffuse(glm::vec3(c[0], c[1], c[2]));
+
+
+			// ambient
+			set_float4(c, 0.2f, 0.2f, 0.2f, 1.0f);
+			aiColor4D ambient;
+			if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_AMBIENT, &ambient))
+				color4_to_float4(&ambient, c);
+			//memcpy(aMat.ambient, c, sizeof(c));
+			aMat->setAmbient(glm::vec3(ambient.r, ambient.g, ambient.b));
+
+			// specular
+
+			set_float4(c, 0.0f, 0.0f, 0.0f, 1.0f);
+
+			aiColor4D specular;
+			if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_SPECULAR, &specular))
+				color4_to_float4(&specular, c);
+			//memcpy(aMat.specular, c, sizeof(c));
+			aMat->setSpecular(glm::vec3(specular.r, specular.g, specular.b));
+
+			// emission
+			set_float4(c, 0.0f, 0.0f, 0.0f, 1.0f);
+			aiColor4D emission;
+			if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_EMISSIVE, &emission))
+				color4_to_float4(&emission, c);
+			//memcpy(aMat.emissive, c, sizeof(c));
+			aMat->setEmission(glm::vec3(emission.r, emission.g, emission.b));
+
+			// shininess
+			float shininess = 0.0;
+			//unsigned int max;
+			if(AI_SUCCESS != mtl->Get(AI_MATKEY_SHININESS, shininess))
+				shininess = 50.0;
+
+
+			aMat->setShininess(1.0f);
+			//shininess/1000.0f
+
+		}
+		else{
+
+			try {
+				mm->makeMaterial(aMat->getName(),gc);
+
+			}
+			catch (string param){
+				cout<<"\nFAILED: generate material by name";
+
+			}
+		}
 
 
 
@@ -469,19 +481,30 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 	}
 
+
+	if(pScene->HasAnimations()){
+	AnimationLoop *myAnimation;
+
+	unsigned int i;
+	for (i = 0; i < pScene->mNumAnimations; ++i) {
+		aiAnimation *anime = pScene->mAnimations[i];
+//		anime->mMeshChannels[0]->mKeys[0].
+	}
+	}
+
 	glm::vec3 normal=physics_max;
 
-		switch(bodyType){
-		case CUBE:		virtualObject->setPhysicsComponent(physics_max.x-physics_min.x, physics_max.y-physics_min.y, physics_max.z-physics_min.z, physics_max.x, physics_max.y, physics_max.z, mass);
-			break;
-		case PLANE:		virtualObject->setPhysicComponent(physics_min.x,physics_min.y,physics_min.z,normal,mass);
-			break;
-		case SPHERE:	virtualObject->setPhysicsComponent(physics_max.x-physics_min.x, (physics_max.x-physics_min.x)/2.0+physics_min.x, (physics_max.y-physics_min.y)/2.0+physics_min.y, (physics_max.z-physics_min.z)/2.0+physics_min.z, mass);
-			break;
-		case OTHER:		virtualObject->setPhysicsComponent(physics_min, physics_max, mass);
-			break;
-		}
-    
+	switch(bodyType){
+	case CUBE:		virtualObject->setPhysicsComponent(physics_max.x-physics_min.x, physics_max.y-physics_min.y, physics_max.z-physics_min.z, physics_max.x, physics_max.y, physics_max.z, mass);
+	break;
+	case PLANE:		virtualObject->setPhysicComponent(physics_min.x,physics_min.y,physics_min.z,normal,mass);
+	break;
+	case SPHERE:	virtualObject->setPhysicsComponent(physics_max.x-physics_min.x, (physics_max.x-physics_min.x)/2.0+physics_min.x, (physics_max.y-physics_min.y)/2.0+physics_min.y, (physics_max.z-physics_min.z)/2.0+physics_min.z, mass);
+	break;
+	case OTHER:		virtualObject->setPhysicsComponent(physics_min, physics_max, mass);
+	break;
+	}
+
 
 	return virtualObject;
 }

@@ -13,7 +13,7 @@
 
 class Bone {
 public:
-	Bone();
+	Bone(std::string name);
 	virtual ~Bone();
 
 	std::vector<Bone> children;

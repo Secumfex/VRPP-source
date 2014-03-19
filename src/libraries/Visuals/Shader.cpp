@@ -59,25 +59,7 @@ Shader::Shader(std::vector<const char*> shaders){
 
 	blurStrength = 0.0f;
 
-	int total = -1;
-
-	glGetProgramiv( mProgramHandle, GL_ACTIVE_UNIFORMS, &total );
-
-	unsigned int i= 0;
-	for(i=0; i<total; ++i)  {
-		int name_len=-1, num=-1;
-		GLenum type = GL_ZERO;
-		char name[100];
-		glGetActiveUniform( mProgramHandle, GLuint(i), sizeof(name)-1,
-				&name_len, &num, &type, name );
-		name[name_len] = 0;
-		GLuint location = glGetUniformLocation( mProgramHandle, name );
-
-		mUniformHandles.insert(std::pair<std::string, GLuint>(name, location));
-
-		mUniformNames.push_back(name);
-		attachUniformListener(name);
-	}
+	getShaderInfo();
 
 }
 
@@ -93,6 +75,15 @@ Shader::Shader(std::string vertexShader, std::string fragmentShader) {
 
 	glGetProgramiv( mProgramHandle, GL_ACTIVE_UNIFORMS, &total );
 
+	getShaderInfo();
+
+}
+
+void Shader::getShaderInfo(){
+	int total = -1;
+
+	glGetProgramiv( mProgramHandle, GL_ACTIVE_UNIFORMS, &total );
+
 	unsigned int i= 0;
 	for(i=0; i<total; ++i)  {
 		int name_len=-1, num=-1;
@@ -103,13 +94,36 @@ Shader::Shader(std::string vertexShader, std::string fragmentShader) {
 		name[name_len] = 0;
 		GLuint location = glGetUniformLocation( mProgramHandle, name );
 
-
 		mUniformHandles.insert(std::pair<std::string, GLuint>(name, location));
 
 		mUniformNames.push_back(name);
 		attachUniformListener(name);
 	}
 
+
+	total = glGetFragDataLocation(mProgramHandle, "colorOutput");
+	if(total != -1){
+		mOutputs.push_back("colorOutput");
+		glBindFragDataLocation(mProgramHandle, total, "colorOutput");
+	}
+	total = glGetFragDataLocation(mProgramHandle, "normalOutput");
+	if(total != -1){
+		mOutputs.push_back("normalOutput");
+		glBindFragDataLocation(mProgramHandle, total, "normalOutput");
+	}
+	total = glGetFragDataLocation(mProgramHandle, "positionOutput");
+	if(total != -1){
+		mOutputs.push_back("positionOutput");
+		glBindFragDataLocation(mProgramHandle, total, "positionOutput");
+	}
+	total = glGetFragDataLocation(mProgramHandle, "specularOutput");
+	if(total != -1){
+		mOutputs.push_back("specularOutput");
+		glBindFragDataLocation(mProgramHandle, total, "specularOutput");
+	}
+}
+
+void Shader::useMinimalColorOutput(){
 }
 
 void Shader::makeShader(std::string vert, std::string frag){

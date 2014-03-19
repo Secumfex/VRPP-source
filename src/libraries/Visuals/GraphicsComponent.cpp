@@ -86,4 +86,7 @@ void GraphicsComponent:: setGhostObject(glm::vec3 min, glm::vec3 max){
 btGhostObject* GraphicsComponent::getGhostObject(){
 return mGhostObject;
 }
+void GraphicsComponent::addBone(Bone* bone){
+
+}
 

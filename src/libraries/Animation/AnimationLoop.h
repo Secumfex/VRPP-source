@@ -8,6 +8,8 @@
 #ifndef ANIMATIONLOOP_H_
 #define ANIMATIONLOOP_H_
 
+#include <Animation/Bone.h>
+
 class AnimationLoop {
 public:
 	AnimationLoop();
