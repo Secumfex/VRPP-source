@@ -18,12 +18,16 @@ ShaderFactory::~ShaderFactory() {
 
 Shader* ShaderFactory::createGBuffer(GraphicsComponent* gc){
 
-	key = "";
+	std::string key = makeKey(gc);
+
+	if(mGBufferMap.find(key) != mGBufferMap.end())
+	return mGBufferMap[key];
+
 	std::string vert = createGBuffer_vertex(gc);
 	std::string frag = createGBuffer_fragment(gc);
 
 
-	vector<const char*> shaders;
+	std::vector<const char*> shaders;
 	shaders.push_back(vert.c_str());
 	shaders.push_back(frag.c_str());
 
@@ -31,6 +35,9 @@ Shader* ShaderFactory::createGBuffer(GraphicsComponent* gc){
 //	cout << shaders[1] << endl;
 
 	Shader* shader = new Shader(shaders);
+
+	mGBufferMap.insert(std::pair<std::string, Shader*>(key, shader));
+	mGBufferVector.push_back(shader);
 
 	return shader;
 }
@@ -191,10 +198,23 @@ colorOutput = vec4(diffuseColor,0);\n\
 ";
 }
 
-std::string ShaderFactory::makeKey(GraphicsComponent){
-	std::string key;
+std::string ShaderFactory::makeKey(GraphicsComponent* gc){
+	std::string key = "gbuffer";
+
+	if(gc->getMaterial()->hasDiffuseTexture())
+		key += "_difftex_";
+	if(gc->getMaterial()->hasNormalTexture())
+		key += "_nrmtex_";
+	if(gc->getMaterial()->hasShininessTexture())
+		key += "_shinitex_";
+	if(gc->getMaterial()->hasSpecularTexture())
+		key += "_spectex_";
 
 
 
-	return "";
+	return key;
+}
+
+std::vector<Shader*> ShaderFactory::getGBuffers(){
+	return mGBufferVector;
 }
