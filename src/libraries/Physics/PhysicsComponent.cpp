@@ -105,6 +105,17 @@ void PhysicsComponent::translate(glm::vec3 pos){
 	rigidBody->translate(trans);
 	glm::vec3 origin = this->getPosition();
 	this->setPosition(origin.x+pos.x,origin.y+pos.y,origin.z+pos.z);
+
+
+	/*
+	btTransform transform = rigidBody->getWorldTransform();
+	btVector3 origin2 = transform.getOrigin();
+	transform.setIdentity();
+	transform.setOrigin(origin2+trans);
+	rigidBody->setWorldTransform(transform);
+	*/
+	//rigidBody->translate(trans);
+
 }
 
 void PhysicsComponent::scale(glm::vec3 scale){
@@ -144,7 +155,7 @@ btRigidBody* PhysicsComponent::addBox(float width, float height, float depth, fl
 	t.setIdentity();
 	t.setOrigin(btVector3(x,y,z));
 
-	btBoxShape* box = new btBoxShape(btVector3(width/1.5f,height/1.5f,depth/1.5f));
+	btBoxShape* box = new btBoxShape(btVector3(width/2.0f,height/2.0f,depth/2.0f));
 	btVector3 inertia;
 	if(mass != 0.0) {
 		box->calculateLocalInertia(mass,inertia);

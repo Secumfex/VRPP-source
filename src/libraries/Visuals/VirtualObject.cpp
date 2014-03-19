@@ -20,6 +20,7 @@ VirtualObject::VirtualObject(glm::vec3 min, glm::vec3 max, float mass, int colli
 	physicsComponent = new PhysicsComponent(min,max, mass,collisionFlag);
 
 	physicsComponent->update(this);
+
 }
 
 VirtualObject::VirtualObject(float radius, float x, float y, float z, float mass, int collisionFlag){
@@ -40,14 +41,26 @@ VirtualObject::~VirtualObject() {
 }
 
 void VirtualObject::translate(glm::vec3 trans){
+
 	physicsComponent->translate(trans);
-	updateModelMatrixViaPhysics();
+		updateModelMatrixViaPhysics();
+		for(unsigned int i=0; i< mGraphComponent.size();i++){
+			mGraphComponent[i]->setModelMatrixGc(modelMatrix);
+		}
+
+
+		/*
+	physicsComponent->translate(trans);
+
+	modelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(trans.x, trans.y, trans.z));
 	for(unsigned int i=0; i< mGraphComponent.size();i++){
 		mGraphComponent[i]->setModelMatrixGc(modelMatrix);
 	}
+	*/
 }
 
 void VirtualObject::scale(glm::vec3 scale){
+	/*
 	physicsComponent->scale(scale);
 	//updateModelMatrixViaPhysics();
 
@@ -55,6 +68,7 @@ void VirtualObject::scale(glm::vec3 scale){
 	for(unsigned int i=0; i< mGraphComponent.size();i++){
 		mGraphComponent[i]->setModelMatrixGc(modelMatrix);
 	}
+	*/
 }
 
 void VirtualObject::updateModelMatrixViaPhysics() {

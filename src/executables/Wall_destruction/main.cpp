@@ -35,14 +35,18 @@ void configureMyApp(){
 	//VirtualObject* 	cube1 = 	myVRState->	createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 1.0, 1);
 	//myVRState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube1));
 
-	VirtualObject* 	cube3 = 	myVRState->	createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 1.0, 8);
+	VirtualObject* 	cube3 = 	myVRState->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 1.0, 8);
+	myVRState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube3));
 
 	VirtualObject* 	cube4 = 	myVRState-> createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 1.0, 8);
+
 	//VirtualObject* 	cube5 = 	myVRState->	createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 1.0, 8);
 	//VirtualObject* 	cube6 = 	myVRState->	createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 1.0, 8);
 	//VirtualObject* 	cube7 = 	myVRState->	createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 1.0, 8);
 	//VirtualObject* 	cube8 = 	myVRState->	createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 1.0, 8);
 	cube4->translate(glm::vec3(2.0f, 0.0f, 0.0f));
+	myVRState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube4));
+
 	//cube5->translate(glm::vec3(4.0f, 0.0f, 0.0f));
 	//cube6->translate(glm::vec3(0.0f, 2.0f, 0.0f));
 	//cube7->translate(glm::vec3(2.0f, 2.0f, 0.0f));
@@ -59,7 +63,7 @@ void configureMyApp(){
 	//glm::mat4		cube3M = 	glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, 0.0f, 0.0f));
 	//cube3-> setModelMatrix(		cube3M); 	// override default Model Matrix
 	//cube3->	setPhysicsComponent(1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,0.0f, 8);
-	myVRState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube3));
+	//myVRState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube3));
 	//glm::mat4		cube1M = 	glm::translate(glm::mat4(1.0f), glm::vec3(-2.5f, 3.0f, 0.0f));
 	//cube1->getPhysicsComponent()->~PhysicsComponent();
 	//cube1-> setModelMatrix(		cube1M); 	// override default Model Matrix
