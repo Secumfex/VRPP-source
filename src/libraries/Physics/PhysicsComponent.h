@@ -94,7 +94,7 @@ public:
 	 *
 	 * @param scale vec3 which contains x,y,z values for scaling
 	 */
-	void scale(glm::vec3 scale);
+	void scale(glm::vec3 scale, VirtualObject* vo);
 
 	/** \brief changes the collision flag of the rigid body
 	*
