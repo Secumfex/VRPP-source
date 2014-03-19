@@ -12,20 +12,38 @@
 #include <Visuals/Shader.h>
 #include <Visuals/GraphicsComponent.h>
 #include <map>
-
+/*! @brief ShaderFactory.
+ *
+ *	the shader factory supports functions for creating and managing Shader entities for certain GraphicsComponent
+ */
 class ShaderFactory : public Singleton<ShaderFactory> {
 friend class Singleton<ShaderFactory>;
 public:
+
+/** \brief constructor
+*
+* Default constructor with no values.
+*/
 	ShaderFactory();
+	/** \brief destructor
+		*
+		*/
 	virtual ~ShaderFactory();
-
+	/** \brief creates GBuffer by GraphicsComponent's flags
+	 *
+	 * @param GraphicsComponent*
+	 * @return Shader*
+	 */
 	Shader* createGBuffer(GraphicsComponent* gc);
-	std::string makeKey(GraphicsComponent* gc);
-
+	/** \brief getter
+	 *
+	 * @return list of shaders created by the factory
+	 */
 	std::vector<Shader*> getGBuffers();
 
 protected:
 
+	std::string makeKey(GraphicsComponent* gc);
 	std::map<std::string, Shader*> mGBufferMap;
 	std::vector<Shader*> mGBufferVector;
 

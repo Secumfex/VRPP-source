@@ -26,8 +26,7 @@ public:
 
 	/** \brief constructor
 	 *
-	 * @param vertexShader
-	 * @param fragmentShader
+	 * @param list of uncompiled shaderprograms
 	 */
 	Shader(std::vector<const char*> shaders);
 	/** \brief constructor
