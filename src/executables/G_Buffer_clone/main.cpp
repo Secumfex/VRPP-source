@@ -130,11 +130,6 @@ void main(){\n\
 
 	Shader *gbuffer_normalMap_Shader = ShaderFactory::getInstance()->createGBuffer(object01->getGraphicsComponent()[0]);
 
-	Shader *shit= ShaderFactory::getInstance()->createGBuffer(object01->getGraphicsComponent()[0]);
-	Shader *shit01= ShaderFactory::getInstance()->createGBuffer(object01->getGraphicsComponent()[0]);
-	Shader *shit02= ShaderFactory::getInstance()->createGBuffer(object01->getGraphicsComponent()[0]);
-
-	cout << "SO VIEL GBUFFER HABEN WIR " << ShaderFactory::getInstance()->getGBuffers().size() << endl;
 
 	rq->addShader(gbufferShader);
 	rq->addShader(gbuffer_normalMap_Shader);
