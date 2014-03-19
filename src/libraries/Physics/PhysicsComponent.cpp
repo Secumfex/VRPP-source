@@ -5,6 +5,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Application/ApplicationStates.h"
+
 #include "Visuals/VirtualObject.h"
 
 #include "BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h"
@@ -118,13 +120,14 @@ void PhysicsComponent::translate(glm::vec3 pos){
 
 }
 
-void PhysicsComponent::scale(glm::vec3 scale){
+void PhysicsComponent::scale(glm::vec3 scale, VirtualObject* vo){
 	btVector3 scalevec = btVector3(scale.x, scale.y, scale.z);
 
-		//vo->setModelMatrix(glm::make_mat4(mat)*scale);
+		//vo->setModelMatrix(glm::scale(glm::mat4(1.0f), scale));
 
 
 	this->rigidBody->getCollisionShape()->setLocalScaling(scalevec);
+	update(vo);
 }
 
 void PhysicsComponent::addCollisionFlag(int flag) {
@@ -186,10 +189,8 @@ btRigidBody* PhysicsComponent::addSphere(float radius, float x, float y, float z
 		sphere->calculateLocalInertia(mass, inertia);
 	}
 
-
-
 	btMotionState* motion = new btDefaultMotionState(t);
-	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,sphere,inertia);
+	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,sphere);
 	btRigidBody* body = new btRigidBody(info);
 	body->setLinearFactor(btVector3(1,1,1));
 	return body;

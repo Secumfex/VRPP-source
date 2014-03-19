@@ -60,15 +60,26 @@ void VirtualObject::translate(glm::vec3 trans){
 }
 
 void VirtualObject::scale(glm::vec3 scale){
-	/*
-	physicsComponent->scale(scale);
-	//updateModelMatrixViaPhysics();
+	//this->setModelMatrix(glm::scale(glm::mat4(1.0f), scale));
 
-	modelMatrix = glm::scale(glm::mat4(1.0f), scale);
+	physicsComponent->scale(scale, this);
+	//updateModelMatrixViaPhysics();
+	//this->setModelMatrix(modelMatrix);
+
+	//modelMatrix = modelMatrix*glm::scale(glm::mat4(1.0f), scale);
+	/*
 	for(unsigned int i=0; i< mGraphComponent.size();i++){
-		mGraphComponent[i]->setModelMatrixGc(modelMatrix);
+		mGraphComponent[i]->setModelMatrixGc(glm::scale(glm::mat4(1.0f), scale));
 	}
-	*/
+	 */
+
+	/*
+	  1) update the scaling on the btCollisionShape derived class
+2) calculate new localinertia on that collision shape
+3) call the setMassProps(mass,updatedLocalInertia) on btRigidBody
+4) call the updateInertiaTensor on the btRigidBody
+*/
+
 }
 
 void VirtualObject::updateModelMatrixViaPhysics() {
