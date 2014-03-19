@@ -1,0 +1,18 @@
+/*
+ * Bone.cpp
+ *
+ *  Created on: 19.03.2014
+ *      Author: Dr.M
+ */
+
+#include "Animation/Bone.h"
+
+Bone::Bone() {
+	// TODO Auto-generated constructor stub
+
+}
+
+Bone::~Bone() {
+	// TODO Auto-generated destructor stub
+}
+
