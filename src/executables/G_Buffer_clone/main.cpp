@@ -19,10 +19,66 @@
 #include "Visuals/RenderManager.h"
 #include "Application/Application.h"
 #include "Application/ApplicationStates.h"
+#include "Tools/ShaderFactory.h"
 
 Application *myApp;
 
 int main() {
+
+	std::string vertexShader ="\
+			#version 330 core\n\
+ \n\
+layout(location = 0) in vec4 positionAttribute;\n\
+layout(location = 1) in vec2 uvCoordAttribute;\n\
+layout(location = 2) in vec4 normalAttribute;\n\
+layout(location = 3) in vec4 tangentAttribute;\n\
+\n\
+uniform mat4 uniformModel;\n\
+uniform mat4 uniformView;\n\
+uniform mat4 uniformPerspective;\n\
+\n\
+out vec4 passPosition;\n\
+out vec2 passUVCoord;\n\
+out vec3 passNormal;\n\
+out vec3 passTangent;\n\
+\n\
+void main(){\n\
+    passUVCoord = uvCoordAttribute;\n\
+\n\
+    passPosition = uniformView * uniformModel * positionAttribute;\n\
+    gl_Position =  uniformPerspective * uniformView * uniformModel * positionAttribute;\n\
+    passNormal = vec3(transpose(inverse(uniformView * uniformModel)) * normalAttribute);\n\
+    passTangent = vec3(transpose(inverse(uniformView * uniformModel)) * tangentAttribute);\n\
+}";
+	        std::string fragmentShader ="\
+	    			#version 330 core\n\
+	    	\
+	    	//incoming data for the single textures\n\
+	    	in vec4 passPosition;\n\
+	    	in vec2 passUVCoord;\n\
+	    	in vec3 passNormal;\n\
+	    	\n\
+	    	uniform float shininess;\n\
+	    	\n\
+	    	uniform sampler2D diffuseTexture;\n\
+	    	\n\
+	    	//writable textures for deferred screen space calculations\n\
+	    	layout(location = 0) out vec4 positionOutput;\n\
+	    	layout(location = 1) out vec4 normalOutput;\n\
+	    	layout(location = 2) out vec4 colorOutput;\n\
+	    	layout(location = 3) out vec4 materialOutput;\n\
+	    	 \n\
+	    	void main(){  \n\
+	    	    positionOutput = passPosition;\n\
+	    	    normalOutput = vec4(normalize(passNormal), 0);\n\
+	    	    colorOutput = texture(diffuseTexture, passUVCoord);\n\
+	    	    materialOutput = vec4(shininess, 0.0, 0.0, 0.0);\n\
+	    	}";
+
+
+	        vector<const char*> shaders;
+	        shaders.push_back(vertexShader.c_str());
+	        shaders.push_back(fragmentShader.c_str());
 
 	// render window
 	myApp = Application::getInstance();
@@ -44,27 +100,6 @@ int main() {
 	Camera* cam = myVRState->getCamera();
 	Frustum* frustum = myVRState->getFrustum();
 
-	//load, compile and link simple texture rendering program for a screen filling plane
-
-	Shader *simpleTexShader = new Shader(SHADERS_PATH "/GBuffer_clone/screenFill.vert",
-			SHADERS_PATH "/GBuffer_clone/simpleTexture.frag");
-
-	Shader *finalCompShader = new Shader(	SHADERS_PATH "/GBuffer_clone/screenFill.vert",
-			SHADERS_PATH "/GBuffer_clone/finalCompositing.frag");
-
-	Shader *gbufferShader = new Shader(		SHADERS_PATH "/GBuffer_clone/GBuffer.vert",
-			SHADERS_PATH "/GBuffer_clone/GBuffer.frag");
-
-	Shader *gbuffer_normalMap_Shader = new Shader(		SHADERS_PATH "/GBuffer_clone/GBuffer.vert",
-			SHADERS_PATH "/GBuffer_clone/GBuffer_normalTexture.frag");
-
-	rq->addShader(gbufferShader);
-	rq->addShader(gbuffer_normalMap_Shader);
-	rq->addCompositingShader(simpleTexShader);
-	rq->addCompositingShader(finalCompShader);
-
-
-
 	//--------------------------------------------//
 	//        Create a Vertex Array Object        //
 	//         containing several buffers         //
@@ -73,13 +108,35 @@ int main() {
 
 	VirtualObjectFactory *voFactory = VirtualObjectFactory::getInstance();
 
-	VirtualObject *object03 = voFactory->createVirtualObject(RESOURCES_PATH "/animation_test/Fish_bones.dae", VirtualObjectFactory::OTHER);
+	VirtualObject *object03 = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj", VirtualObjectFactory::OTHER);
 	VirtualObject *object02 = voFactory->createVirtualObject(RESOURCES_PATH "/cow.obj", VirtualObjectFactory::OTHER);
 	VirtualObject *object01 = voFactory->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE);
 
 	GraphicsComponent* triangle = voFactory->getTriangle();
 
 	MaterialManager::getInstance()->makeMaterial("polished_chrome", object02->getGraphicsComponent());
+
+	//----------------------------//
+	//        SHADERS BABY        //
+	//----------------------------//
+
+	Shader *simpleTexShader = new Shader(SHADERS_PATH "/GBuffer_clone/screenFill.vert",
+			SHADERS_PATH "/GBuffer_clone/simpleTexture.frag");
+
+	Shader *finalCompShader = new Shader(	SHADERS_PATH "/GBuffer_clone/screenFill.vert",
+			SHADERS_PATH "/GBuffer_clone/finalCompositing.frag");
+
+	Shader *gbufferShader = ShaderFactory::getInstance()->createGBuffer(object02->getGraphicsComponent()[0]);
+
+	Shader *gbuffer_normalMap_Shader = ShaderFactory::getInstance()->createGBuffer(object01->getGraphicsComponent()[0]);
+
+
+	rq->addShader(gbufferShader);
+	rq->addShader(gbuffer_normalMap_Shader);
+	rq->addCompositingShader(simpleTexShader);
+	rq->addCompositingShader(finalCompShader);
+
+
 
 	//--------------------------------------------//
 	//         Create a Framebuffer Object        //
@@ -122,7 +179,6 @@ int main() {
 
 	frustum->updateModelMatrix();
 
-//	rq->sortByAttributes();
 
 	while(!glfwWindowShouldClose(window)) {
 

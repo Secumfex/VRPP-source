@@ -112,7 +112,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 		cout<<"Couldn't open file: " << filename.c_str()<<endl;
 		cout<<Importer.GetErrorString()<<endl;
-		cout<<"Have a cow instead!"<<endl;
+		cout<<"Have a cube instead!"<<endl;
 
 		return createNonAssimpVO();
 	}
