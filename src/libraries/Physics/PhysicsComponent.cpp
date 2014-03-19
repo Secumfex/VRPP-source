@@ -3,6 +3,7 @@
 
 #include "PhysicWorld.h"
 #include <glm/glm.hpp>
+#include <windows.h>
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Visuals/VirtualObject.h"
@@ -65,10 +66,10 @@ PhysicsComponent::PhysicsComponent(float x, float y, float z, glm::vec3 normal, 
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
 
-PhysicsComponent::PhysicsComponent(char* filename, float x, float y, float z){
+PhysicsComponent::PhysicsComponent(char* filename, int width, int height, float x, float y, float z){
 
 	hit = false;
-	rigidBody = addHeightfield(filename,x,y,z);
+	rigidBody = addHeightfield(filename,width,height,x,y,z);
 	addCollisionFlag(1);	//static object
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 
@@ -195,22 +196,26 @@ btRigidBody* PhysicsComponent::addPlane(float x, float y, float z, glm::vec3 nor
 	return body;
 }
 
-btRigidBody* PhysicsComponent::addHeightfield(char* filename, float x, float y, float z){
-
-	int width,length;
+btRigidBody* PhysicsComponent::addHeightfield(char* filename, int width, int height, float x, float y, float z){
 
 	FILE* heightfieldFile;
+	BYTE* heightfieldData;
+
 	//char* path = "test/";		//pfad zum entspr. ordner
 	//char* temp = path + filename;		//char+char
-	heightfieldFile = fopen(filename,"r");
 
-	char* heightfieldData;
-	btScalar heightScale;
-	btScalar minHeight,maxHeight;
-	int upAxis;
-	PHY_ScalarType heightDataType;
-	bool flipQuadEdges;
-	btHeightfieldTerrainShape* groundShape = new btHeightfieldTerrainShape(width, length, heightfieldData, heightScale, minHeight, maxHeight, upAxis, heightDataType, flipQuadEdges);
+	heightfieldFile = fopen(filename,"r");
+	fread(heightfieldData,1,width*height,heightfieldFile);
+	fclose(heightfieldFile);
+
+	float heightScale = 0.2;
+	btScalar minHeight;		//min hoehe
+	btScalar maxHeight;		//max hoehe
+	int upAxis = 1;			//y-axis as "up"
+	PHY_ScalarType heightDataType = PHY_FLOAT;
+	bool flipQuadEdges = false;
+
+	btHeightfieldTerrainShape* groundShape = new btHeightfieldTerrainShape(width, height, heightfieldData, heightScale, minHeight, maxHeight, upAxis, heightDataType, flipQuadEdges);
 
 	btTransform t;
 	t.setIdentity();
