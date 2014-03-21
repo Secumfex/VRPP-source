@@ -206,11 +206,11 @@ UpdateReflectedCameraPositionListener::UpdateReflectedCameraPositionListener(Cam
 
 void UpdateReflectedCameraPositionListener::update(){
 	glm::vec3 reflected_campos = cam_source->getPosition();
-	glm::vec3 reflected_camdir = cam_source->getViewDirection();
+	glm::vec3 reflected_center = cam_source->getPosition() + cam_source->getViewDirection();
 	reflected_campos.y = 2.0f * *water_height - reflected_campos.y; 
-	reflected_camdir.y = -reflected_camdir.y;
+	reflected_center.y = 2.0f * *water_height - reflected_center.y;
 	( *cam_target).setPosition(  reflected_campos);
-	( *cam_target).setDirection( reflected_camdir); 
+	( *cam_target).setCenter(    reflected_center); 
 }
 
 RenderVirtualObjectWithShaderListener::RenderVirtualObjectWithShaderListener(VirtualObject* vo, Shader* shader){

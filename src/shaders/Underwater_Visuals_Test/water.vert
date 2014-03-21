@@ -9,6 +9,8 @@ uniform mat4 uniformView;
 uniform mat4 uniformInverse;
 uniform mat4 uniformPerspective;
 
+uniform mat4 uniformReflectionView;
+
 uniform vec3 uniformLightPosition;
 
 out vec3 passNormal;
@@ -16,6 +18,7 @@ out vec3 passLightPosition;
 out vec3 passLightDirection;
 out vec3 passPosition;
 out vec2 passUVCoords;
+out vec4 passReflectionPosition;
 
 void main() {
     passLightPosition  = (uniformView * vec4(uniformLightPosition, 1)).xyz;
@@ -31,4 +34,8 @@ void main() {
     passNormal = normalize((uniformInverse * normalAttribute).xyz);
     
     passUVCoords = uvCoordAttribute;
+    
+    passReflectionPosition = uniformPerspective * uniformReflectionView * uniformModel * positionAttribute;
+
+
 }

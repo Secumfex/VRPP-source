@@ -4,6 +4,7 @@ in vec3 passNormal;
 in vec3 passPosition;
 in vec3 passLightPosition;
 in vec2 passUVCoords;
+in vec4 passReflectionPosition;
 
 out vec4 fragmentColor;
 
@@ -39,7 +40,11 @@ void main() {
     vec3 normal_raw	= normalize( normal0 + normal1 );	// r == x-axis, g == z-axis, b == y-axis 
     vec3 normal 	= ( uniformInverse * vec4 ( normalize( vec3 ( normal_raw.x, normal_raw.z, normal_raw.y) ), 1.0 ) ).xyz;
     
-    vec2 texCoordReflection = ( vec2(gl_FragCoord.x / 800.0, 1.0 - ( gl_FragCoord.y / 800.0) ) ) + noise_factor * normal.xy;
+    vec2 texCoordReflection;
+    texCoordReflection.x = ( ( ( passReflectionPosition.x / passReflectionPosition.w ) / 2.0f ) + 0.5f ) + noise_factor * normal.x;
+    texCoordReflection.y = ( ( ( passReflectionPosition.y / passReflectionPosition.w ) / 2.0f ) + 0.5f ) + noise_factor * normal.y;
+
+ //    = ( vec2( 1.0 - ( gl_FragCoord.x / 800.0 ), ( gl_FragCoord.y / 800.0) ) ) + noise_factor * normal.xy;
     
     vec3 lightVector 		= normalize( passLightPosition - passPosition );
     vec3 reflectionVector 	= normalize( reflect( -lightVector, normal ) );
@@ -47,7 +52,7 @@ void main() {
     vec3 eyeVector = normalize(-passPosition);
     
     float diffuse 	= ( max( dot( normal, lightVector ), 0 ) );
-    float specular 	= ( pow( max( dot( reflectionVector , eyeVector ), 0), 15) );
+    float specular 	= ( pow( max( dot( reflectionVector , eyeVector ), 0), 25) );
     float ambient 	= 0.2;
 
     vec3 diffuse_color_texture 		= texture( diffuseTexture, texCoordNormal0 ).xyz;

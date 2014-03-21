@@ -26,6 +26,9 @@ namespace UnderwaterScene{
 	glm::vec3 fog_color_under_water(95.0f / 255.0f * 0.7f, 158.0f / 255.0f * 0.7f, 160.0f/ 255.0f * 0.7f);
 	glm::vec3 reflectedCameraPosition(0.0f,0.0f,0.0f);
 
+	glm::vec3 water_plane_normal( 0.0f, 1.0f, 0.0f );
+	glm::vec3 water_plane_normal_under_water( 0.0f, -1.0f, 0.0f );
+	glm::vec3 water_plane_normal_above_water( 0.0f, 1.0f, 0.0f );
 
 	VirtualObject* scene_groundObject;
 	VirtualObject* scene_stoneObject1;
@@ -49,16 +52,20 @@ namespace UnderwaterScene{
 		SetFloatValueListener*  exitWater_3 = new SetFloatValueListener( &fog_end,   &fog_end_above_water);
 		SetVec3ValuesListener* enterWater_4 = new SetVec3ValuesListener( &fog_color, &fog_color_under_water);
 		SetVec3ValuesListener*  exitWater_4 = new SetVec3ValuesListener( &fog_color, &fog_color_above_water);
+		SetVec3ValuesListener* enterWater_5 = new SetVec3ValuesListener( &water_plane_normal, &water_plane_normal_under_water);
+		SetVec3ValuesListener*  exitWater_5 = new SetVec3ValuesListener( &water_plane_normal, &water_plane_normal_above_water);
 
 		UnderOrAboveWaterListener* waterlistener1 = new UnderOrAboveWaterListener(target->getCamera(), water_height, enterWater_1, exitWater_1);
 		UnderOrAboveWaterListener* waterlistener2 = new UnderOrAboveWaterListener(target->getCamera(), water_height, enterWater_2, exitWater_2);
 		UnderOrAboveWaterListener* waterlistener3 = new UnderOrAboveWaterListener(target->getCamera(), water_height, enterWater_3, exitWater_3);
 		UnderOrAboveWaterListener* waterlistener4 = new UnderOrAboveWaterListener(target->getCamera(), water_height, enterWater_4, exitWater_4);
+		UnderOrAboveWaterListener* waterlistener5 = new UnderOrAboveWaterListener(target->getCamera(), water_height, enterWater_5, exitWater_5);
 		
 		target->attachListenerOnBeginningProgramCycle(waterlistener1);
 		target->attachListenerOnBeginningProgramCycle(waterlistener2);
 		target->attachListenerOnBeginningProgramCycle(waterlistener3);
 		target->attachListenerOnBeginningProgramCycle(waterlistener4);
+		target->attachListenerOnBeginningProgramCycle(waterlistener5);
 		/*********************************************************************************/
 
 		/******************* scene creation **********************************************/
@@ -68,7 +75,7 @@ namespace UnderwaterScene{
 		scene_wallObject1 		= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_wall1.dae", 		VirtualObjectFactory::OTHER);
 		scene_wallObject2 		= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_wall2.dae", 		VirtualObjectFactory::OTHER);
 		scene_stoneObject1 		= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_stone_01.dae", 	VirtualObjectFactory::OTHER);
-		scene_stoneObject2 		= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_stone_01.dae", 	VirtualObjectFactory::OTHER);
+//		scene_stoneObject2 		= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_stone_01.dae", 	VirtualObjectFactory::OTHER);
 		scene_mountainObject1	= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_mountain_01.dae", 	VirtualObjectFactory::OTHER);
 		
 //		scene_stoneObject1->translate(glm::vec3(3.0f, 0.0f, 3.0f));
@@ -99,6 +106,8 @@ namespace UnderwaterScene{
 		cam->setPosition( cam->getPosition() + glm::vec3(0.0,1.5,0.0));
 		
 		reflectedCamera = new Camera();
+		reflectedCamera->setTopDown( true );
+		target->attachListenerOnBeginningProgramCycle(new UpdateReflectedCameraPositionListener(cam, reflectedCamera, &water_height));
 		target->attachListenerOnBeginningProgramCycle(new UpdateReflectedCameraPositionListener(cam, reflectedCamera, &water_height));
 		/*********************************************************************************/
 	}

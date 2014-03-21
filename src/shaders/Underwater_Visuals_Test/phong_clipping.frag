@@ -15,8 +15,14 @@ uniform float uniformFogBegin;
 uniform float uniformFogEnd;
 uniform vec3  uniformFogColor;
 
+uniform vec3  uniformClippingNormal;
+uniform vec3  uniformClippingPoint;
+
 void main() { 
-	if (passWorldPos.y < 10.0f){
+    vec3 clippingPointToFrag = passWorldPos - uniformClippingPoint;
+
+	if ( dot( uniformClippingNormal, clippingPointToFrag ) < 0.0 )
+    {
 		discard;
 	}
     
