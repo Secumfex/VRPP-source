@@ -74,7 +74,8 @@ public:
 	 *
 	 * constructor to create a heightfieldterrainshaped rigid body (btHeightfieldTerrainShape).
 	 * @param filename filename of the heightfield picture
-	 * @param x,y,z
+	 * @param width,height resolution of the heightmap image
+	 * @param x,y,z start position in the world
 	 */
 	PhysicsComponent(char* filename,int width, int height, float x, float y, float z);
 

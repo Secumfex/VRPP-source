@@ -72,15 +72,6 @@ PhysicsComponent::PhysicsComponent(char* filename, int width, int height, float 
 	rigidBody = addHeightfield(filename,width,height,x,y,z);
 	addCollisionFlag(1);	//static object
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
-
-	/*
-	FILE* heightfieldFile;
-	//char* path = "test/";		//pfad zum entspr. ordner
-	//char* temp = path + filename;		//char+char
-	heightfieldFile = fopen(filename,"r");
-	//btHeightfieldTerrainShape* heightmap = new btHeightfieldTerrainShape();
-	 */
-
 }
 
 PhysicsComponent::~PhysicsComponent() {
