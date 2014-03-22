@@ -14,6 +14,10 @@ private:
 	int mapWidth,mapHeight;					/**< resolution of the heightmap image */
 	glm::vec3 position;						/**< position of the HeightField */
 
+	bool loaded;
+	GLuint vboHeightMap;
+	GLuint iboHeightMap;
+
 public:
 	BYTE heightMap[mapWidth][mapHeight];	/**< !docu pls! */
 
@@ -32,10 +36,18 @@ public:
 	 */
 	~HeightField();
 
+	/** \brief load the heightfield
+	 *
+	 * !docu pls!
+	 */
+	bool load();
+
 	/** \brief creates the heightfield
 	 *
 	 */
+	/*
 	bool create();
+	*/
 
 	/** \brief draws the heightfield
 	 *
