@@ -43,12 +43,36 @@ public:
 	void update();
 };
 
+class RefractionMapRenderPass : public Listener{
+public:
+	RenderManager* rm;
+	RenderQueue* currentRenderQueue;
+	list<VirtualObject* > voList;
+	Shader* currentShader;
+	vector<GraphicsComponent* > currentGCs;
+
+	/*außerdem*/
+	FrameBufferObject* fbo; // reflectionmap target
+	VirtualObject* water_object;
+
+	RefractionMapRenderPass(FrameBufferObject* fbo, VirtualObject* water_object);
+	void update();
+};
+
 class RenderVirtualObjectWithShaderListener : public Listener{
 private: 
 	VirtualObject* vo;
 	Shader* shader;
 public:
 	RenderVirtualObjectWithShaderListener(VirtualObject* vo, Shader* shader);
+	void update();
+};
+
+class RenderVirtualObjectListener : public Listener{
+private: 
+	VirtualObject* vo;
+public:
+	RenderVirtualObjectListener(VirtualObject* vo);
 	void update();
 };
 

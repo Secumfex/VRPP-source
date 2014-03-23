@@ -29,6 +29,9 @@ namespace UnderwaterScene{
 	glm::vec3 water_plane_normal( 0.0f, 1.0f, 0.0f );
 	glm::vec3 water_plane_normal_under_water( 0.0f, -1.0f, 0.0f );
 	glm::vec3 water_plane_normal_above_water( 0.0f, 1.0f, 0.0f );
+	glm::vec3 water_plane_normal_inverse( 0.0f, -1.0f, 0.0f );
+	glm::vec3 water_plane_normal_under_water_inverse( 0.0f, 1.0f, 0.0f );
+	glm::vec3 water_plane_normal_above_water_inverse( 0.0f, -1.0f, 0.0f );
 
 	VirtualObject* scene_groundObject;
 	VirtualObject* scene_stoneObject1;
@@ -40,6 +43,8 @@ namespace UnderwaterScene{
 	VirtualObject* scene_mountainObject1;
 
 	FrameBufferObject* framebuffer_water_reflection;
+	FrameBufferObject* framebuffer_water_refraction;
+
 	Camera* reflectedCamera;
 
 	static void createScene(ApplicationState* target){
@@ -54,18 +59,22 @@ namespace UnderwaterScene{
 		SetVec3ValuesListener*  exitWater_4 = new SetVec3ValuesListener( &fog_color, &fog_color_above_water);
 		SetVec3ValuesListener* enterWater_5 = new SetVec3ValuesListener( &water_plane_normal, &water_plane_normal_under_water);
 		SetVec3ValuesListener*  exitWater_5 = new SetVec3ValuesListener( &water_plane_normal, &water_plane_normal_above_water);
+		SetVec3ValuesListener* enterWater_6 = new SetVec3ValuesListener( &water_plane_normal_inverse, &water_plane_normal_under_water_inverse);
+		SetVec3ValuesListener*  exitWater_6 = new SetVec3ValuesListener( &water_plane_normal_inverse, &water_plane_normal_above_water_inverse);
 
 		UnderOrAboveWaterListener* waterlistener1 = new UnderOrAboveWaterListener(target->getCamera(), water_height, enterWater_1, exitWater_1);
 		UnderOrAboveWaterListener* waterlistener2 = new UnderOrAboveWaterListener(target->getCamera(), water_height, enterWater_2, exitWater_2);
 		UnderOrAboveWaterListener* waterlistener3 = new UnderOrAboveWaterListener(target->getCamera(), water_height, enterWater_3, exitWater_3);
 		UnderOrAboveWaterListener* waterlistener4 = new UnderOrAboveWaterListener(target->getCamera(), water_height, enterWater_4, exitWater_4);
 		UnderOrAboveWaterListener* waterlistener5 = new UnderOrAboveWaterListener(target->getCamera(), water_height, enterWater_5, exitWater_5);
+		UnderOrAboveWaterListener* waterlistener6 = new UnderOrAboveWaterListener(target->getCamera(), water_height, enterWater_6, exitWater_6);
 		
 		target->attachListenerOnBeginningProgramCycle(waterlistener1);
 		target->attachListenerOnBeginningProgramCycle(waterlistener2);
 		target->attachListenerOnBeginningProgramCycle(waterlistener3);
 		target->attachListenerOnBeginningProgramCycle(waterlistener4);
 		target->attachListenerOnBeginningProgramCycle(waterlistener5);
+		target->attachListenerOnBeginningProgramCycle(waterlistener6);
 		/*********************************************************************************/
 
 		/******************* scene creation **********************************************/
@@ -86,11 +95,6 @@ namespace UnderwaterScene{
 		if (scene_sun_Object->getGraphicsComponent().size() > 0){
 				scene_sun_Object->getGraphicsComponent()[0]->setEmission(true);
 		}
-		if (scene_waterPlaneObject->getGraphicsComponent().size() > 0){
-					std::cout << "normal map : " << scene_waterPlaneObject->getGraphicsComponent()[0]->getMaterial()->hasNormalTexture() << std::endl;
-					std::cout << "height map : " << scene_waterPlaneObject->getGraphicsComponent()[0]->getMaterial()->hasHeightTexture() << std::endl;
-			}
-		
 		/*********************************************************************************/
 
 		/******************* framebuffer objects *****************************************/
@@ -99,6 +103,12 @@ namespace UnderwaterScene{
 		framebuffer_water_reflection->createPositionTexture();
 		framebuffer_water_reflection->makeDrawBuffers();	// draw color to color attachment 0
 		framebuffer_water_reflection->unbindFBO();
+
+		framebuffer_water_refraction = new FrameBufferObject(800,600);
+		framebuffer_water_refraction->bindFBO();
+		framebuffer_water_refraction->createPositionTexture();
+		framebuffer_water_refraction->makeDrawBuffers();	// draw color to color attachment 0
+		framebuffer_water_refraction->unbindFBO();
 		/*********************************************************************************/
 
 		/******************* default cam position ****************************************/

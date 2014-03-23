@@ -8,7 +8,9 @@ in vec4 passReflectionPosition;
 
 out vec4 fragmentColor;
 
-uniform sampler2D positionMap;
+uniform sampler2D uniformReflectionMap;
+uniform sampler2D uniformRefractionMap;
+
 uniform sampler2D diffuseTexture;
 uniform sampler2D normalTexture;
 
@@ -41,10 +43,11 @@ void main() {
     vec3 normal 	= ( uniformInverse * vec4 ( normalize( vec3 ( normal_raw.x, normal_raw.z, normal_raw.y) ), 1.0 ) ).xyz;
     
     vec2 texCoordReflection;
-    texCoordReflection.x = ( ( ( passReflectionPosition.x / passReflectionPosition.w ) / 2.0f ) + 0.5f ) + noise_factor * normal.x;
-    texCoordReflection.y = ( ( ( passReflectionPosition.y / passReflectionPosition.w ) / 2.0f ) + 0.5f ) + noise_factor * normal.y;
-
- //    = ( vec2( 1.0 - ( gl_FragCoord.x / 800.0 ), ( gl_FragCoord.y / 800.0) ) ) + noise_factor * normal.xy;
+    vec2 texCoordRefraction;
+    texCoordReflection.s = ( ( ( passReflectionPosition.x / passReflectionPosition.w ) / 2.0f ) + 0.5f ) + noise_factor * normal.x;
+    texCoordReflection.t = ( ( ( passReflectionPosition.y / passReflectionPosition.w ) / 2.0f ) + 0.5f ) + noise_factor * normal.z;
+    texCoordRefraction.s = ( gl_FragCoord.x / 800.0 )   + noise_factor * normal.x;
+    texCoordRefraction.t = ( gl_FragCoord.y / 600.0 )   + noise_factor * normal.z;
     
     vec3 lightVector 		= normalize( passLightPosition - passPosition );
     vec3 reflectionVector 	= normalize( reflect( -lightVector, normal ) );
@@ -56,8 +59,12 @@ void main() {
     float ambient 	= 0.2;
 
     vec3 diffuse_color_texture 		= texture( diffuseTexture, texCoordNormal0 ).xyz;
-    vec3 diffuse_color_reflection 	= texture( positionMap, texCoordReflection ).xyz;
-    vec3 diffuse_color 	= ( diffuse_color_reflection + diffuse_color_texture ) / 2.0f;
+    vec3 diffuse_color_reflection 	= texture( uniformReflectionMap, texCoordReflection ).xyz;
+    vec3 diffuse_color_refraction   = texture( uniformRefractionMap, texCoordRefraction ).xyz;
+    vec3 diffuse_color 	= ( diffuse_color_reflection 
+        + diffuse_color_texture 
+        + diffuse_color_refraction) 
+    / 2.0f;
     
     fragmentColor 	= vec4(
         ( diffuse  * diffuse_color   +

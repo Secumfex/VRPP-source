@@ -324,3 +324,36 @@ void UploadUniformMat4Listener::update(){
 	Shader* shader = RenderManager::getInstance()->getCurrentShader();
 	shader->uploadUniform( *matrix, uniform_name);
 }
+
+
+UploadUniformIntListener::UploadUniformIntListener(std::string name, GLint value, std::string uniform_name){
+	setName(name);
+	this->value 		= new GLint( value );
+	this->uniform_name 	= uniform_name;
+}
+
+UploadUniformIntListener::UploadUniformIntListener(std::string name, GLint* value, std::string uniform_name){
+	setName(name);
+	this->value 	= value;
+	this->uniform_name 	= uniform_name;
+}
+
+void UploadUniformIntListener::update(){
+	Shader* shader = RenderManager::getInstance()->getCurrentShader();
+	shader->uploadUniform( *value, uniform_name);
+}
+
+UploadUniformTextureListener::UploadUniformTextureListener(std::string name, GLint unit, std::string uniform_name, GLuint texture_handle){
+	setName(name);
+	this->unit 	= unit;
+	this->uniform_name 	= uniform_name;
+	this->texture_handle = texture_handle;
+}
+
+void UploadUniformTextureListener::update(){
+	glActiveTexture(GL_TEXTURE0 + unit);			// set active texture as target to load texture to
+	glBindTexture(GL_TEXTURE_2D, texture_handle);	// load texture to active texture unit
+
+	Shader* shader = RenderManager::getInstance()->getCurrentShader();
+	shader->uploadUniform( unit, uniform_name);		// upload texture unit to shader uniform sampler2d variable
+}
