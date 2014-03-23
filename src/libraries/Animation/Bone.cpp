@@ -5,7 +5,7 @@
  *      Author: Dr.M
  */
 
-#include "Animation/Bone.h"
+#include <Animation/Bone.h>
 
 Bone::Bone(std::string name) {
 	// TODO Auto-generated constructor stub

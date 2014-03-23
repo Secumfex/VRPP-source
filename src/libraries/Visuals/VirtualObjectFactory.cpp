@@ -9,7 +9,6 @@
 #include <Visuals/VirtualObjectFactory.h>
 #include <string>
 
-
 VirtualObjectFactory::VirtualObjectFactory(){
 	mCube = NULL;
 	mScreenFillTriangle = NULL;
@@ -235,7 +234,8 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 				for (l = 0; l < bone->mNumWeights; ++l) {
 					boneweight[bone->mWeights[l].mVertexId] = bone->mWeights[l].mWeight;
 				}
-				Bone *myBone = new Bone(bone->mName.C_Str());
+				std::string name = bone->mName.C_Str();
+				Bone *myBone = new Bone(name);
 				float matrix[16];
 				glm::mat4 offsetmatrix = glm::make_mat4x4(matrix);
 			}
