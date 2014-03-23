@@ -303,14 +303,14 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 			aMat->setOpacityMap(tex_temp);
 		}
 
-		if(AI_SUCCESS == mtl->GetTexture(aiTextureType_HEIGHT, 0, &texPath)){
+		if(AI_SUCCESS == mtl->GetTexture(aiTextureType_NORMALS, 0, &texPath)){
 			//For some Reason HeightMap and NormalMap are switched in Assimp
 			cout << "Try to find NormalMap: " << texPath.C_Str() << endl;
 			tex_temp = new Texture(directory + texPath.C_Str());
 			aMat->setNormalMap(tex_temp);
 		}
-
-		if(AI_SUCCESS == mtl->GetTexture(aiTextureType_NORMALS, 0, &texPath)){
+		// @todo : find out whether it really is switched or not
+		if(AI_SUCCESS == mtl->GetTexture(aiTextureType_HEIGHT, 0, &texPath)){
 			//For some Reason HeightMap and NormalMap are switched in Assimp
 			cout << "Try to find HeightMap: " << texPath.C_Str() << endl;
 			tex_temp = new Texture(directory + texPath.C_Str());

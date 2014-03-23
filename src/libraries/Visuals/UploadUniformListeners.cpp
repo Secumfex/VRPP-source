@@ -242,8 +242,11 @@ UploadUniformEmissiveColorListener::UploadUniformEmissiveColorListener(std::stri
 void UploadUniformEmissiveColorListener::update(){
 	Shader* shader = RenderManager::getInstance()->getCurrentShader();
 	GraphicsComponent* gc = RenderManager::getInstance()->getCurrentGC();
-
-	shader->uploadUniform(gc->getMaterial()->getEmission(), "specularEmissive");
+	if (gc->hasEmission()){
+		shader->uploadUniform(gc->getMaterial()->getEmission(), "emissiveColor");
+	}else{
+		shader->uploadUniform(glm::vec3(0.0, 0.0, 0.0) , "emissiveColor");
+	}
 }
 
 UploadUniformBlurStrengthListener::UploadUniformBlurStrengthListener(std::string name){
@@ -273,4 +276,88 @@ void UploadUniformResolutionYListener::update(){
 	Shader* shader = RenderManager::getInstance()->getCurrentShader();
 	FrameBufferObject* fbo = RenderManager::getInstance()->getCurrentFBO();
 	shader->uploadUniform(fbo->getHeight(), "resY");
+}
+
+UploadUniformVec3Listener::UploadUniformVec3Listener(std::string name, glm::vec3 vector, std::string uniform_name){
+	setName(name);
+	this->vector 	= new glm::vec3( vector );
+	this->uniform_name 	= uniform_name;
+}
+
+UploadUniformVec3Listener::UploadUniformVec3Listener(std::string name, glm::vec3* vector, std::string uniform_name){
+	setName(name);
+	this->vector 	= vector;
+	this->uniform_name 	= uniform_name;
+}
+
+void UploadUniformVec3Listener::update(){
+	Shader* shader = RenderManager::getInstance()->getCurrentShader();
+	shader->uploadUniform( *vector, uniform_name);
+}
+
+UploadUniformFloatListener::UploadUniformFloatListener(std::string name, float value, std::string uniform_name){
+	setName(name);
+	this->value 	= new float(value);
+	this->uniform_name 	= uniform_name;
+}
+
+UploadUniformFloatListener::UploadUniformFloatListener(std::string name, float* value, std::string uniform_name){
+	setName(name);
+	this->value 	= value;
+	this->uniform_name 	= uniform_name;
+}
+
+void UploadUniformFloatListener::update(){
+	Shader* shader = RenderManager::getInstance()->getCurrentShader();
+	shader->uploadUniform( *value, uniform_name);
+}
+
+UploadUniformMat4Listener::UploadUniformMat4Listener(std::string name, glm::mat4 matrix, std::string uniform_name){
+	setName(name);
+	this->matrix 	= new glm::mat4( matrix );
+	this->uniform_name 	= uniform_name;
+}
+
+UploadUniformMat4Listener::UploadUniformMat4Listener(std::string name, glm::mat4* matrix, std::string uniform_name){
+	setName(name);
+	this->matrix 	= matrix;
+	this->uniform_name 	= uniform_name;
+}
+
+void UploadUniformMat4Listener::update(){
+	Shader* shader = RenderManager::getInstance()->getCurrentShader();
+	shader->uploadUniform( *matrix, uniform_name);
+}
+
+
+UploadUniformIntListener::UploadUniformIntListener(std::string name, GLint value, std::string uniform_name){
+	setName(name);
+	this->value 		= new GLint( value );
+	this->uniform_name 	= uniform_name;
+}
+
+UploadUniformIntListener::UploadUniformIntListener(std::string name, GLint* value, std::string uniform_name){
+	setName(name);
+	this->value 	= value;
+	this->uniform_name 	= uniform_name;
+}
+
+void UploadUniformIntListener::update(){
+	Shader* shader = RenderManager::getInstance()->getCurrentShader();
+	shader->uploadUniform( *value, uniform_name);
+}
+
+UploadUniformTextureListener::UploadUniformTextureListener(std::string name, GLint unit, std::string uniform_name, GLuint texture_handle){
+	setName(name);
+	this->unit 	= unit;
+	this->uniform_name 	= uniform_name;
+	this->texture_handle = texture_handle;
+}
+
+void UploadUniformTextureListener::update(){
+	glActiveTexture(GL_TEXTURE0 + unit);			// set active texture as target to load texture to
+	glBindTexture(GL_TEXTURE_2D, texture_handle);	// load texture to active texture unit
+
+	Shader* shader = RenderManager::getInstance()->getCurrentShader();
+	shader->uploadUniform( unit, uniform_name);		// upload texture unit to shader uniform sampler2d variable
 }

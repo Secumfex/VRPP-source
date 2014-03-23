@@ -74,6 +74,7 @@ IOManager::IOManager(){
 	deltaTime 			= 0.1f; //default deltaTime value: 100ms
 	lastTime 			= 0.0;
 	currentTime = 0.0;
+	windowTime = 0.0f;
 
 	xPos = 0;
 	yPos = 0;
@@ -102,12 +103,26 @@ void IOManager::computeFrameTimeDifference(){
 	}
 }
 
+void IOManager::updateWindowTime(){
+	if (window != 0){
+		windowTime = glfwGetTime();
+	}
+}
+
 float IOManager::getDeltaTime(){
 	return deltaTime;
 }
 
 float* IOManager::getDeltaTimePointer(){
 	return &deltaTime;
+}
+
+float* IOManager::getWindowTimePointer(){
+	return &windowTime;
+}
+
+float IOManager::getWindowTime(){
+	return windowTime;
 }
 
 float IOManager::getLastTime(){

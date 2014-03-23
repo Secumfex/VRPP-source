@@ -21,3 +21,10 @@ ComputeFrameTimeListener::ComputeFrameTimeListener(){
 void ComputeFrameTimeListener::update(){
 	IOManager::getInstance()->computeFrameTimeDifference();	//compute Frame time in Manager
 }
+
+UpdateWindowTimeListener::UpdateWindowTimeListener(){
+}
+
+void UpdateWindowTimeListener::update(){
+	IOManager::getInstance()->updateWindowTime();	//compute Frame time in Manager
+}

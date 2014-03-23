@@ -6,6 +6,7 @@
 #include <Patterns/Listener.h>
 #include <string.h>
 #include <time.h>
+#include <glm/glm.hpp>
 
 
 /// Listener which prints a predefined message on the console when notified
@@ -103,6 +104,27 @@ public:
 	void update();
 };
 
+/// Listener which prints the vector pointed and print that other stuff in front of it
+class PrintVec3Listener : public Listener{
+private:
+	glm::vec3* vector;			/**< !docu pls! */
+	std::string message;	/**< message as string */
+public:
+
+	/** \brief Constructor
+	 *
+	 * @param vector pointer to the vector variable of interest
+	 * @param message string to be printed in front of it
+	 */
+	PrintVec3Listener(glm::vec3* vector, std::string message = "");
+
+	/** \brief update
+	 *
+	 * prints the vector to console
+	 */
+	void update();
+};
+
 class Camera;
 
 /// Listener which prints the current configuration of the given Camera Object
@@ -120,6 +142,28 @@ public:
 	 *
 	 * prints the camera status to console
 	 */
+	void update();
+};
+
+/// Listener which sets target to value pointed at
+class SetFloatValueListener : public Listener{
+private:
+	float* source;
+	float* target;
+public:
+	SetFloatValueListener(float* target, float* value);
+	SetFloatValueListener(float* target, float value);
+	void update();
+};
+
+/// Listener which sets target to value pointed at
+class SetVec3ValuesListener : public Listener{
+private:
+	glm::vec3* source;
+	glm::vec3* target;
+public:
+	SetVec3ValuesListener(glm::vec3* target, glm::vec3* value);
+	SetVec3ValuesListener(glm::vec3* target, glm::vec3 value);
 	void update();
 };
 

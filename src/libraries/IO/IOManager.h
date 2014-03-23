@@ -26,6 +26,8 @@ private:
 	double currentTime;		/**< Double for currentTime */
 	float deltaTime;		/**< Float for time bewteen lastTime and CurrentTime */
 
+	float windowTime;		/**< Float for time bewteen lastTime and CurrentTime */
+
 	IOHandler* currentIOHandler; 	/**< active IOHandler Object */
 
 	std	::	stringstream sstream; 	/**< mostly used to convert ints to strings */
@@ -75,6 +77,20 @@ public:
 
 	/** \brief getter
 	 *
+	 * get time difference with which IOManager is working
+	 * @return deltaTime
+	 */
+	float getWindowTime();
+
+	/** \brief getter
+	 *
+	 * get pointer to window time variable, use with caution!
+	 * @return windowTime pointer
+	 */
+	float* getWindowTimePointer();
+
+	/** \brief getter
+	 *
 	 * get last time on which computeFrameTimeDifference was called
 	 * @return lastTime
 	 */
@@ -85,6 +101,12 @@ public:
 	 * compute time difference since last call of this method, which is usually used for last frame time
 	 */
 	void computeFrameTimeDifference();
+
+	/** \brief update windowTime variable
+	 *
+	 * update windowTime variable by calling glfwGetTime()
+	 */
+	void updateWindowTime();
 
 	/** \brief key callback function - active IOHandler::key_callback
 	 * @param window where the callback is used
