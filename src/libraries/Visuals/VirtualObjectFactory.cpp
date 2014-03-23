@@ -112,7 +112,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 		cout<<"Couldn't open file: " << filename.c_str()<<endl;
 		cout<<Importer.GetErrorString()<<endl;
-		cout<<"Have a cow instead!"<<endl;
+		cout<<"Have a cube instead!"<<endl;
 
 		return createNonAssimpVO();
 	}
@@ -122,7 +122,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 			aiProcess_GenSmoothNormals|
 			aiProcess_GenUVCoords |
 			aiProcess_FlipUVs|
-			aiProcess_PreTransformVertices |
+			aiProcess_ValidateDataStructure |
 			aiProcess_CalcTangentSpace
 
 	);
@@ -134,7 +134,6 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 		return createNonAssimpVO();
 	}
 
-
 	cout<<"Import of scene " <<filename.c_str()<<" succeeded."<<endl;
 
 
@@ -142,7 +141,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 	glm::vec3 physics_max = glm::vec3(-FLT_MAX,-FLT_MAX,-FLT_MAX);
 
 
-    
+
 	// For each mesh of the loaded object
 	for (unsigned int n = 0; n < pScene->mNumMeshes; ++n)
 	{
@@ -225,8 +224,9 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 			glEnableVertexAttribArray(3);
 			glVertexAttribPointer(3, 3, GL_FLOAT, 0, 0, 0);
 
-			std:: cout << "HAT TANGENT SPACE" << std:: endl;
-
+		}
+		if(mesh->HasBones()){
+			cout << "HAT ANIMATION"<< endl;
 		}
 
 		// buffer for vertex texture coordinates
