@@ -193,18 +193,35 @@ void SetCurrentShaderListener::update(){
 	shader->useProgram();
 }	
 
+
 SetClearColorListener::SetClearColorListener(float r, float g, float b, float a){
-	this->r = r;
-	this->g = g;
-	this->b = b;
+	this->clearColorVec3 = new glm::vec3(r,g,b);
+	this->clearColorVec4 = 0;
+	this->a = a;
+}
+
+SetClearColorListener::SetClearColorListener(glm::vec3* clearColor, float a){
+	this->clearColorVec3 = clearColor;
+	this->clearColorVec4 = 0;
+	this->a = a;
+}
+
+SetClearColorListener::SetClearColorListener(glm::vec4* clearColor){
+	this->clearColorVec4 = clearColor;
+	this->clearColorVec3 = 0;
 	this->a = a;
 }
 
 void SetClearColorListener::update(){
-		glClearColor(r,g,b,a);
+	if (clearColorVec4 == 0){
+		glClearColor(clearColorVec3->x,clearColorVec3->y,clearColorVec3->z, a);
+	}else{
+		glClearColor(clearColorVec4->r, clearColorVec4->g, clearColorVec4->b, clearColorVec4->a);
+	}
 }
 
-UnderOrAboveWaterListener::UnderOrAboveWaterListener(Camera* cam, float sea_level_y, Listener* EnterWaterListener, Listener* ExitWaterListener){
+
+UnderOrAboveWaterListener::UnderOrAboveWaterListener(Camera* cam, float* sea_level_y, Listener* EnterWaterListener, Listener* ExitWaterListener){
 	this->cam = cam;
 	this->sea_level_y = sea_level_y;
 	this->EnterWaterListener = EnterWaterListener;
@@ -213,7 +230,7 @@ UnderOrAboveWaterListener::UnderOrAboveWaterListener(Camera* cam, float sea_leve
 }
 
 void UnderOrAboveWaterListener::update(){
-	if ( cam->getPosition().y < this->sea_level_y ){
+	if ( cam->getPosition().y < *(this->sea_level_y) ){
 		if (!underwater){
 			if (EnterWaterListener != 0){
 				EnterWaterListener->update(); 

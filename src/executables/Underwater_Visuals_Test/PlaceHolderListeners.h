@@ -99,9 +99,13 @@ public:
 /// Listener which sets the glClearColor
 class SetClearColorListener : public Listener {
 private:
-	float r, g, b, a;
+	glm::vec3* clearColorVec3;
+	glm::vec4* clearColorVec4;
+	float a;
 public:
-	SetClearColorListener(float r = 0.0, float g = 0.0, float b = 0.0, float a = 1.0);
+	SetClearColorListener( float r = 0.0, float g = 0.0, float b = 0.0, float a = 1.0 );
+	SetClearColorListener( glm::vec3* clearColor, float a = 1.0 );
+	SetClearColorListener( glm::vec4* clearColor );
 	void update();
 };
 
@@ -110,11 +114,11 @@ class UnderOrAboveWaterListener : public Listener{
 private:
 	Camera* cam;
 	bool underwater;
-	float sea_level_y;
+	float* sea_level_y;
 	Listener* EnterWaterListener;
 	Listener* ExitWaterListener;
 public:
-	UnderOrAboveWaterListener(Camera* cam, float sea_level_y = 0.0f, Listener* EnterWaterListener = 0, Listener* ExitWaterListener = 0);
+	UnderOrAboveWaterListener(Camera* cam, float* sea_level_y = new float( 0.0f ), Listener* EnterWaterListener = 0, Listener* ExitWaterListener = 0);
 	void update();
 };
 
