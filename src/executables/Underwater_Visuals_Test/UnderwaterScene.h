@@ -37,6 +37,8 @@ namespace UnderwaterScene{
 	glm::vec3 water_plane_normal_under_water_inverse( 0.0f, 1.0f, 0.0f );
 	glm::vec3 water_plane_normal_above_water_inverse( 0.0f, -1.0f, 0.0f );
 
+	glm::mat4 sunViewPerspective;
+
 	VirtualObject* scene_groundObject;
 	VirtualObject* scene_stoneObject1;
 	VirtualObject* scene_stoneObject2;
@@ -50,6 +52,8 @@ namespace UnderwaterScene{
 	FrameBufferObject* framebuffer_water_refraction;
 
 	Camera* reflectedCamera;
+
+	Texture* causticsTexture;
 
 	static void createScene(ApplicationState* target){
 		/******************* above or underneath water surface handling *****************/
@@ -105,6 +109,7 @@ namespace UnderwaterScene{
 		scene_mountainObject1	= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_mountain_01.dae", 	VirtualObjectFactory::OTHER);
 		
 		scene_sun_Object 		= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_sun_shape.dae", VirtualObjectFactory::OTHER);
+		sunViewPerspective = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 1000.0f) * glm::lookAt( glm::vec3(0.0f, 100.0f, 0.0f), glm::vec3 (0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)) * glm::mat4(1.0f); 
 
 		if (scene_sun_Object->getGraphicsComponent().size() > 0){
 				scene_sun_Object->getGraphicsComponent()[0]->setEmission(true);
@@ -123,6 +128,9 @@ namespace UnderwaterScene{
 		framebuffer_water_refraction->createPositionTexture();
 		framebuffer_water_refraction->makeDrawBuffers();	// draw color to color attachment 0
 		framebuffer_water_refraction->unbindFBO();
+		/*********************************************************************************/
+		/******************* textures creation	  ****************************************/
+		causticsTexture = new Texture( RESOURCES_PATH "/demo_scene/caustics.jpg" );
 		/*********************************************************************************/
 
 		/******************* default cam position ****************************************/
