@@ -14,6 +14,7 @@ class VirtualObject{
 	private:
 	glm::mat4 modelMatrix;							/**< 4x4Matrix */
 
+	AnimationLoop* mAnimation;
 	vector<GraphicsComponent*> mGraphComponent;		/**< vector of graphic-components */
 
 public:
@@ -184,7 +185,16 @@ public:
 	 * @return the virtual objects physic component
 	 */
 	PhysicsComponent* getPhysicsComponent();
+
+	/** \brief
+	*
+	* sets an AnimationLoop to the VOs member "mAnimationLoop"
+	* @param animation AnimationLoop pointer
+	* @return void
+	*/
+	void setAnimation(AnimationLoop* animation);
 };
+
 
 
 #endif /* VIRTUALOBJECT_H */

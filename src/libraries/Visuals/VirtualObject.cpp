@@ -126,3 +126,7 @@ void VirtualObject::setModelMatrix(glm::mat4 modelmatrix){
 PhysicsComponent* VirtualObject::getPhysicsComponent(){
 	return physicsComponent;
 }
+
+void VirtualObject::setAnimation(AnimationLoop* animation){
+	mAnimation = animation;
+}
