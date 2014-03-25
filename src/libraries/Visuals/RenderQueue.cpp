@@ -11,10 +11,15 @@ RenderQueue::~RenderQueue() {
 
 }
 
+
 /** \brief returns a pointer to this RenderQueue
  */
 RenderQueue* RenderQueue::getRenderQueue() {
 	return this;
+}
+
+void RenderQueue::accept(Visitor* v){
+	v->visitRenderQueue(this);
 }
 
 void RenderQueue::addShader(Shader* sh) {
@@ -29,7 +34,6 @@ void RenderQueue::addCompositingShader(Shader* sh){
 
 /** \brief adds a VO to the member list of VOs, also maps GC->VO and vice versa
  */
-
 void RenderQueue::addVirtualObject(VirtualObject* vo) {
 	cout << "Adding VO." << endl; // <-- REMOVE IN FINAL
 	voList.push_back(vo);
@@ -401,3 +405,65 @@ void RenderQueue::sortByFlags() {
 	}
 }
 
+/** \brief extrude method implementations
+ */
+list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagShadowCaster* flag, list<GraphicsComponent* > temp){
+	vector<GraphicsComponent* > vec = gcFlagStorage["SHADOW"];
+	list<GraphicsComponent* >::iterator l_it = temp.begin();
+	vector<GraphicsComponent* >::iterator v_it = vec.begin();
+
+	bool hasElement = false;
+
+	for(l_it = temp.begin(); l_it != temp.end(); l_it++){
+		hasElement = false;
+		for(v_it = vec.begin(); v_it != vec.end(); v_it++){
+			if(*v_it == *l_it){
+				hasElement = true;
+			}
+		}
+		if(hasElement == false){
+			temp.erase(l_it);
+		}
+	}
+
+	return temp;
+}
+
+list<GraphicsComponent* > extrudeGCsForRequestFlag(FlagUsesShader* flag, list<GraphicsComponent* > temp){
+	return temp;
+}
+
+list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagTransparency* flag, list<GraphicsComponent* > temp){
+		vector<GraphicsComponent* > vec = gcFlagStorage["TRANSPARENCY"];
+	list<GraphicsComponent* >::iterator l_it = temp.begin();
+	vector<GraphicsComponent* >::iterator v_it = vec.begin();
+
+	bool hasElement = false;
+
+	for(l_it = temp.begin(); l_it != temp.end(); l_it++){
+		hasElement = false;
+		for(v_it = vec.begin(); v_it != vec.end(); v_it++){
+			if(*v_it == *l_it){
+				hasElement = true;
+			}
+		}
+		if(hasElement == false){
+			temp.erase(l_it);
+		}
+	}
+
+	return temp;
+	return temp;
+}
+
+list<GraphicsComponent* > extrudeGCsForRequestFlag(FlagUsesObjectModel* flag, list<GraphicsComponent* > temp){
+	return temp;
+}
+
+list<GraphicsComponent* > extrudeGCsForRequestFlag(FlagScreenFillingPolygon* flag, list<GraphicsComponent* > temp){
+	return temp;
+}
+
+list<GraphicsComponent* > extrudeGCsForRequestFlag(FlagInViewFrustum* flag, list<GraphicsComponent* > temp){
+	return temp;
+}

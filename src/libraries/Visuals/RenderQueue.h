@@ -6,6 +6,14 @@
 
 #include "VirtualObject.h"
 #include "Shader.h"
+#include "Patterns/Visitor.h"
+#include "RenderQueueRequestFlag.h"
+//#include "FlagInViewFrustum.h"
+//#include "FlagShadowCaster.h"
+//#include "FlagScreenFillingPolygon.h"
+//#include "FlagTransparent.h"
+//#include "FlagUsesObjectModel.h"
+//#include "FlagUsesShader.h"
 
 using namespace std;
 
@@ -133,6 +141,48 @@ public:
 	 * extracts GCs from all VOs and sorts them into gcFlagStorage by checking for transparency, shadow, etc
 	 */
 	void sortByFlags();
+
+	/** \brief accept visitor method
+	 *
+	 * accepts a visitor to the RenderQueue object
+	 */
+	void accept(Visitor* v);
+
+	/** \brief overloaded. returns GC-list depending on flag
+	 *
+	 * overloaded method for any possible flag object. will extract a GC list depending on that object
+	 */
+	list<GraphicsComponent* > extrudeGCsForRequestFlag(FlagShadowCaster* flag, list<GraphicsComponent* > temp);
+
+	/** \brief overloaded. returns GC-list depending on flag
+	 *
+	 * overloaded method for any possible flag object. will extract a GC list depending on that object
+	 */
+	list<GraphicsComponent* > extrudeGCsForRequestFlag(FlagUsesShader* flag, list<GraphicsComponent* > temp);
+
+	/** \brief overloaded. returns GC-list depending on flag
+	 *
+	 * overloaded method for any possible flag object. will extract a GC list depending on that object
+	 */
+	list<GraphicsComponent* > extrudeGCsForRequestFlag(FlagTransparency* flag, list<GraphicsComponent* > temp);
+
+	/** \brief overloaded. returns GC-list depending on flag
+	 *
+	 * overloaded method for any possible flag object. will extract a GC list depending on that object
+	 */
+	list<GraphicsComponent* > extrudeGCsForRequestFlag(FlagUsesObjectModel* flag, list<GraphicsComponent* > temp);
+
+	/** \brief overloaded. returns GC-list depending on flag
+	 *
+	 * overloaded method for any possible flag object. will extract a GC list depending on that object
+	 */
+	list<GraphicsComponent* > extrudeGCsForRequestFlag(FlagScreenFillingPolygon* flag, list<GraphicsComponent* > temp);
+
+		/** \brief overloaded. returns GC-list depending on flag
+	 *
+	 * overloaded method for any possible flag object. will extract a GC list depending on that object
+	 */
+	list<GraphicsComponent* > extrudeGCsForRequestFlag(FlagInViewFrustum* flag, list<GraphicsComponent* > temp);	
 private:
 	list<VirtualObject* >::iterator currentFirstElement; 			/**< VO pointer used with voList */
 //	vector<GraphicsComponent>::iterator gcIterator; 				/**< iterator for gc-vectors */
@@ -147,11 +197,11 @@ private:
 	map<Shader*, vector<GraphicsComponent* > > shader2gcStorage; 	/**< Shader pointers to gc pointers */
 	map<GraphicsComponent*, vector<Shader*> > gc2shaderStorage;		/**< docu pls */
 
-	list<Shader*> shaderList;			/**< docu pls */
-	list<Shader*> compositingList;		/**< docu pls */
-	list<Shader*> shaderListCopy;		/**< docu pls */
-	list<Shader*> shaderListAlternate;	/**< docu pls */
-	list<GraphicsComponent*> gcList;	/**< docu pls */
+	list<Shader*> shaderList;			/**< all shaders of the RQ */
+	list<Shader*> compositingList;		/**< all compositing shaders */
+	list<Shader*> shaderListCopy;		/**< L2 of the sortByAttributes method */
+	list<Shader*> shaderListAlternate;	/**< L3 of the sortByAttributes method */
+	list<GraphicsComponent*> gcList;	/**< all GCs of the RQ */
 };
 
 #endif /* RENDERQUEUE_H */

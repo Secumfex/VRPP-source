@@ -9,6 +9,7 @@ include_directories(
     ${GLFW3_INCLUDE_PATH}
     ${GLM_INCLUDE_PATH}
     ${BULLET_INCLUDE_PATH}
+    ${LIBOVR_INCLUDE_PATH}
     ${ASSIMP_INCLUDE_PATH}
     ${EXTERNAL_LIBRARY_PATHS}
     ${CMAKE_SOURCE_DIR}/src/libraries/
@@ -31,5 +32,6 @@ target_link_libraries(
     ${OpenGL3_LIBRARIES}
     ${ASSIMP_LIBRARIES}
     ${BULLET_LIBRARIES}
+    ${LIBOVR_LIBRARIES}
 
 )
