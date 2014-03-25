@@ -8,6 +8,15 @@
 #ifndef SEETANG_H_
 #define SEETANG_H_
 
+class Seetang{
+
+public:
+	Seetang::Seetang();
+
+private:
+
+
+};
 
 
 
