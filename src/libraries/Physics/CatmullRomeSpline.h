@@ -1,14 +1,20 @@
 #include "../Feature_Fauna/Seetang.h"
+#include "../IO/Camera.h"
 
 #ifndef CATMULLROMESPLINE_H_
 #define CATMULLROMESPLINE_H_
 
 class CatmullRomeSpline{
 private:
+
 	Seetang*  Seetang;		//Koordinaten vom Seetang, bestehend aus 4 Kugeln
+	glm::mat4 mViewMatrix;
+
 public:
-	void MVMultiplikation();
-	void Position();
+
+	glm::mat4 getViewMatrix();
+	void MVMultiplikation(VirtualObject* Sphere1,VirtualObject* Sphere2,VirtualObject* Sphere3,VirtualObject* Sphere4);
+	void Spline(VirtualObject* Sphere1,VirtualObject* Sphere2,VirtualObject* Sphere3,VirtualObject* Sphere4);
 	void Value();
 
 };
