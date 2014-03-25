@@ -28,7 +28,7 @@ void configureVirtualObjects() {
 	/* creation and customization of Virtual Objects */
 	/* use testingState->createVirtualObject() to create a Virtual Object */
 
-	testingState->createVirtualObject( RESOURCES_PATH "/aqua02.3ds",
+	testingState->createVirtualObject( RESOURCES_PATH "/Fauna/aqua02.3ds",
 			VirtualObjectFactory::OTHER);
 }
 
@@ -54,8 +54,8 @@ void configureRendering() {
 //	testingApp->attachListenerOnRenderManagerFrameLoop(	new RenderloopPlaceHolderListener());
 	testingApp->attachListenerOnProgramInitialization(
 			new SetDefaultShaderListener(
-					new Shader(SHADERS_PATH "/Phong_Test/phong.vert",
-							SHADERS_PATH "/Phong_Test/phong.frag")));
+					new Shader(SHADERS_PATH "/GBuffer/GBuffer.vert",
+							SHADERS_PATH "/GBuffer/GBuffer.frag")));
 	testingApp->attachListenerOnRenderManagerFrameLoop(
 			new RenderloopPlaceHolderListener());
 }
