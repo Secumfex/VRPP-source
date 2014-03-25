@@ -8,8 +8,7 @@
 #include <Animation/Bone.h>
 
 Bone::Bone(std::string name) {
-	// TODO Auto-generated constructor stub
-
+	mName = name;
 }
 
 Bone::~Bone() {
@@ -18,4 +17,7 @@ Bone::~Bone() {
 
 void Bone::setOffsetMatrix(glm::mat4 offsetmatrix){
 	mOffsetMatrix = offsetmatrix;
+}
+std::string Bone::getName(){
+	return mName;
 }

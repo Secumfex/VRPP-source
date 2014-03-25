@@ -35,3 +35,7 @@ void Node::addTransformation(glm::vec3 pos, glm::vec3 scale, glm::quat rotation,
 void Node::setBone(Bone* bone){
 	mBone = bone;
 }
+
+Bone* Node::getBone(){
+	return mBone;
+}

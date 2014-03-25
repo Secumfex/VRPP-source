@@ -226,6 +226,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 		}
 		if(mesh->HasBones()){
+			//TODO: buffer anlegen
 			unsigned int j;
 			for (j = 0; j < mesh->mNumBones; ++j) {
 				vector<float> boneweight(mesh->mNumVertices);
@@ -511,7 +512,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 AnimationLoop* VirtualObjectFactory::makeAnimation(vector<Bone*> bones, const aiScene* pScene){
 	AnimationLoop* myAnimation = new AnimationLoop();
 
-	cout << pScene->mRootNode->mName.C_Str() << " Der VADDA" << endl;
+	cout << "Animation Tree is being build. This might take a while." << endl;
 
 	aiNode* node;
 
@@ -527,8 +528,9 @@ AnimationLoop* VirtualObjectFactory::makeAnimation(vector<Bone*> bones, const ai
 		setNodeTransform(myRootNode, pScene->mAnimations[0]->mChannels[i]);
 	}
 
-	return myAnimation;
+	setBones(myRootNode, bones);
 
+	return myAnimation;
 }
 
 vector<Node*> VirtualObjectFactory::getNodeChildren(aiNode* node){
@@ -560,5 +562,18 @@ void VirtualObjectFactory::setNodeTransform(Node* node, aiNodeAnim* nodeanim){
 	for (i = 0; i < node->getChildren().size(); ++i) {
 		setNodeTransform(node->getChildren()[i], nodeanim);
 	}
+}
+
+void VirtualObjectFactory::setBones(Node* node, vector<Bone*> bones){
+	unsigned int j;
+for (j = 0; j < bones.size(); ++j) {
+	if(node->getName() == bones[j]->getName())
+		node->setBone(bones[j]);
+
+	unsigned int i;
+	for (i = 0; i < node->getChildren().size(); ++i) {
+		setBones(node->getChildren()[i], bones);
+	}
+}
 
 }

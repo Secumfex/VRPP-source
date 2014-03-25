@@ -22,8 +22,10 @@ public:
 	virtual ~Bone();
 
 	void setOffsetMatrix(glm::mat4 offsetmatrix);
+	std::string getName();
 
 protected:
+	std::string mName;
 	std::vector<Bone> children;
 	glm::mat4 mOffsetMatrix;
 };

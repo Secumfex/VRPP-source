@@ -23,6 +23,7 @@ public:
 	std::vector<Node*> getChildren();
 	void addTransformation(glm::vec3 pos, glm::vec3 scale, glm::quat rotation, float time);
 	void setBone(Bone* bone);
+	Bone* getBone();
 
 private:
 	Bone* mBone;

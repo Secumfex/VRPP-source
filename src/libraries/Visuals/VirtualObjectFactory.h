@@ -105,7 +105,11 @@ private:
 
 	vector<Node*> getNodeChildren(aiNode* node);
 
+
+	void setBones(Node* node, vector<Bone*> bones);
+
 	void setNodeTransform(Node* node, aiNodeAnim* nodeanim);
+
 };
 
 #endif /* VIRTUALOBJECTFACTORY_H_ */
