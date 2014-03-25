@@ -65,6 +65,15 @@ void PrintValueListener::update(){
 	std::cout << message << *value << std::endl;
 }
 
+PrintVec3Listener::PrintVec3Listener(glm::vec3* vector, std::string message){
+	this->vector = vector;
+	this->message = message;
+}
+
+void PrintVec3Listener::update(){
+	std::cout << message << (*vector).x << ", " << (*vector).y << ", " << (*vector).z << std::endl;
+}
+
 #include "IO/Camera.h"
 
 PrintCameraStatusListener::PrintCameraStatusListener(Camera* cam){
@@ -80,4 +89,32 @@ void PrintCameraStatusListener::update(){
 	std::cout << "Cam pos : "      << pos.x << " , " << pos.y << " , "    << pos.z << std::endl;
 	std::cout << "Cam dir : "      << dir.x << " , " << dir.y << " , "    << dir.z << std::endl;
 	std::cout << "rotation phi : " << phi   << " , pitch theta : " 		  << theta << std::endl;
+}
+
+SetFloatValueListener::SetFloatValueListener(float* target, float* source){
+	this->source = source;
+	this->target = target;
+}
+
+SetFloatValueListener::SetFloatValueListener(float* target, float source){
+	this->target = target;
+	this->source = new float(source);
+}
+
+void SetFloatValueListener::update(){
+	*target = *source;
+}
+
+SetVec3ValuesListener::SetVec3ValuesListener(glm::vec3* target, glm::vec3* source){
+	this->source = source;
+	this->target = target;
+}
+
+SetVec3ValuesListener::SetVec3ValuesListener(glm::vec3* target, glm::vec3 source){
+	this->target = target;
+	this->source = new glm::vec3(source);
+}
+
+void SetVec3ValuesListener::update(){
+	*target = *source;
 }

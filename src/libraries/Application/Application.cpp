@@ -38,6 +38,7 @@ void Application::initialize(){
 
 	attachListenerOnStateChange(new ActivateStateListener(this));	// a new state will be activated upon being set
 	attachListenerOnBeginningProgramCycle(new ComputeFrameTimeListener());
+	attachListenerOnBeginningProgramCycle(new UpdateWindowTimeListener());
 
 	if (currentState != 0){
 		currentState->activate();	//activate the current state

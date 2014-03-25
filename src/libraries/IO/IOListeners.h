@@ -45,4 +45,23 @@ public:
 	void update();
 };
 
+/** \brief Listener which calls IOManager::updateWindowTime() on every update
+ *
+ */
+class UpdateWindowTimeListener : public Listener{
+public:
+
+	/** \brief listener constructor
+	 *
+	 */
+	UpdateWindowTimeListener();
+
+	/** \brief update
+	 *
+	 * updates the frame time
+	 */
+	void update();
+};
+
+
 #endif

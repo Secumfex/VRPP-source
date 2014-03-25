@@ -15,6 +15,7 @@ class Camera{
 protected:
 	glm::vec3 position;		/**< current world position */
 	glm::vec3 direction;	/**< current world normalized view direction */
+	glm::mat4 viewMatrix;   /**< current view matrix */
 
 	float xPosition;		/**< current world position x */
 	float yPosition;		/**< current world position y */
@@ -23,6 +24,8 @@ protected:
 	float theta;			/**< inclination, vertical */
 	float speedRight;		/**< horizontal velocity */
 	float speedForward;		/**< forward velocity */
+
+	bool topDown;			/**< bool to decide whether up vector should be inverted */
 
 	/** \brief returns an Up vector
 	 * @return Up vector
@@ -213,6 +216,25 @@ public:
 	 * @return viewMatrix
 	 */
 	glm::mat4 getViewMatrix();
+
+
+	/** \brief getter
+	 *
+	 * @return viewMatrixPointer
+	 */
+	glm::mat4* getViewMatrixPointer();
+
+	/** \brief setter
+	 * 
+	 * set top-down boolean
+	 */
+	void setTopDown(bool to);
+
+	/** \brief getter
+	 * 
+	 * get top-down boolean
+	 */
+	bool getTopDown();
 };
 
 #endif
