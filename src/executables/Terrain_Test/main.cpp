@@ -1,2 +1,10 @@
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
-//char* filename = "resources/demo_scene/Rocks_Seamless_1_SPEC.png";	//
+
+
+int main() {
+
+
+	return 0;
+};

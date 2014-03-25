@@ -34,6 +34,12 @@ VirtualObject::VirtualObject(float width, float height, float depth, float x, fl
 	physicsComponent->update(this);
 }
 
+VirtualObject::VirtualObject(char* filename,int width, int height, float x, float y, float z){
+	physicsComponent = new PhysicsComponent(filename,width,height,x,y,z);
+
+	physicsComponent->update(this);
+}
+
 VirtualObject::~VirtualObject() {
 	//delete graphicsComponent;
 	delete physicsComponent;

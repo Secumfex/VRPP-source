@@ -1,3 +1,4 @@
+/* auskommentiert fuer "one step back"-commit
 #include "HeightField.h"
 #include <iostream>
 #include <glm/glm.hpp>
@@ -14,7 +15,7 @@ HeightField::HeightField(char* filename, int width, int height, glm::vec3 pos){
 
 	load();
 	//create();
-	physicsComponent = new PhysicsComponent(filename,position.x,position.y,position.z);
+	physicsComponent = new PhysicsComponent(filename,mapWidth,mapHeight,position.x,position.y,position.z);
 }
 
 HeightField::HeightField(char* filename, int width, int height, float x, float y, float z){
@@ -28,7 +29,7 @@ HeightField::HeightField(char* filename, int width, int height, float x, float y
 
 	load();
 	//create();
-	physicsComponent = new PhysicsComponent(filename,position.x,position.y,position.z);
+	physicsComponent = new PhysicsComponent(filename,mapWidth,mapHeight,position.x,position.y,position.z);
 }
 
 HeightField::~HeightField(){
@@ -162,6 +163,7 @@ bool HeightField::load(){
 	}
 	*/
 	//add Data
+	/* auskommentiert fuer "one step back"-commit
 	glBufferData(GL_ARRAY_BUFFER,sizeof(vertexData),vertexData,GL_STATIC_DRAW);
 
 	//second VBO that stores indices
@@ -186,6 +188,7 @@ bool HeightField::load(){
 	}
 	*/
 	//add Data
+	/* auskommentiert fuer "one step back"-commit
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Indices), Indices, GL_STATIC_DRAW);	//TODO: Indices aendern
 
 	//TODO: anpassen auf "normales" glBind/glGen/etc., ohne verwendung der lib aus tutorial
@@ -211,7 +214,7 @@ bool HeightField::load(){
 	vboHeightmapIndices.BindVBO(GL_ELEMENT_ARRAY_BUFFER);
 	vboHeightmapIndices.UploadDataToGPU(GL_STATIC_DRAW);
 	*/
-
+	/* auskommentiert fuer "one step back"-commit
 	loaded = true;
 	return true;
 }
@@ -227,7 +230,7 @@ bool HeightField::create(){
 	return true;
 }
 */
-
+/* auskommentiert fuer "one step back"-commit
 void HeightField::render(){
 
 	glBegin(GL_POINTS);
@@ -238,4 +241,4 @@ void HeightField::render(){
 	}
 	glEnd();
 }
-
+*/

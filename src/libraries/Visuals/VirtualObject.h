@@ -61,6 +61,17 @@ public:
 	 */
 	VirtualObject(float width, float height, float depth, float x, float y, float z, float mass);
 
+	/** \brief
+	 *
+	 * creates a heightfield as virtual object
+	 * creates physicComponent as a heightfield as well
+	 * @param filename filename of the heightfield picture
+	 * @param width,height resolution of the heightmap image
+	 * @param x,y,z start position in the world
+	 * no mass param because floor has to be a static object
+	 */
+	VirtualObject(char* filename,int width, int height, float x, float y, float z);
+
 	/** \brief destructor
 	 *
 	 * deletes the physics and graphics components
