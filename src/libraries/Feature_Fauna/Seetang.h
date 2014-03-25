@@ -11,7 +11,7 @@
 class Seetang{
 
 public:
-	Seetang::Seetang();
+	Seetang();
 
 private:
 
