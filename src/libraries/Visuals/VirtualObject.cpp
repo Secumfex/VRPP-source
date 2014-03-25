@@ -117,6 +117,13 @@ void VirtualObject::setPhysicComponent(float x, float y, float z, glm::vec3 norm
 	physicsComponent = new PhysicsComponent(x,y,z,normal,mass);
 }
 
+void VirtualObject::setPhysicComponent(char* filename,int width, int height, float x, float y, float z){
+	if(physicsComponent != NULL){
+		physicsComponent->~PhysicsComponent();
+	}
+	physicsComponent = new PhysicsComponent(filename,width,height,x,y,z);
+}
+
 glm::mat4 VirtualObject::getModelMatrix(){
 	return modelMatrix;
 }

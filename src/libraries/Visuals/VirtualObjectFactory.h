@@ -39,7 +39,7 @@ GraphicsComponent* mScreenFillTriangle;	/**< !docu pls! */
 //---------------MEMBER FUNCTIONS--------------------
 public:
 
-enum BodyType {CUBE, SPHERE, PLANE, OTHER};	/**< possible body types of a virtual object */
+enum BodyType {CUBE, SPHERE, PLANE, TERRAIN, OTHER};	/**< possible body types of a virtual object */
 
 /** \brief
  *

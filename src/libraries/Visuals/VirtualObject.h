@@ -170,8 +170,18 @@ public:
  	 * @param mass defines the behavior of the rigid body in the physics world
  	 * @return void
 	 */
-
 	void setPhysicComponent(float x, float y, float z, glm::vec3 normal, float mass);
+
+	/** \brief
+	 *
+	 * creates PhysicComponent with heightfield rigid Body
+	 * @param filename filename of the heightfield picture
+	 * @param width,height resolution of the heightmap image
+	 * @param x,y,z start position in the world
+	 * no mass param because floor has to be a static object
+	 * @return void
+	 */
+	void setPhysicComponent(char* filename,int width, int height, float x, float y, float z);
 
 	/** \brief getter
 	 *
