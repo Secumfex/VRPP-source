@@ -10,11 +10,14 @@ CatmullRomeSpline::CatmullRomeSpline(){
 	int RV1 = 1;
 }
 
-void CatmullRomeSpline::MVMultiplikation(){
-
+void CatmullRomeSpline::MVMultiplikation(VirtualObject* Sphere1,VirtualObject* Sphere2,VirtualObject* Sphere3,VirtualObject* Sphere4){
+	Sphere1*glm::mat4;
+	Sphere2*glm::mat4;
+	Sphere3*glm::mat4;
+	Sphere4*glm::mat4;
 }
 
-void CatmullRomeSpline::Position(){
+void CatmullRomeSpline::Spline(VirtualObject* Sphere1,VirtualObject* Sphere2,VirtualObject* Sphere3,VirtualObject* Sphere4){
 
 
 }
