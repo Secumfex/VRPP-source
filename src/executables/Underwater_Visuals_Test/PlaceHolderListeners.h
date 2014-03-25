@@ -26,6 +26,7 @@ public:
 	void update();
 };
 
+
 class ReflectionMapRenderPass : public Listener{
 public:
 	RenderManager* rm;
@@ -43,6 +44,25 @@ public:
 	void update();
 };
 
+
+class GodRaysRenderPass : public Listener{
+public:
+	RenderManager* rm;
+	RenderQueue* currentRenderQueue;
+	list<VirtualObject* > voList;
+	Shader* currentShader;
+	vector<GraphicsComponent* > currentGCs;
+
+	/*außerdem*/
+	FrameBufferObject* fbo; // reflectionmap target
+	Camera* reflectedCamera;	// mirrored Camera
+	VirtualObject* water_object;
+
+	GodRaysRenderPass(FrameBufferObject* fbo);
+	void update();
+};
+
+
 class RefractionMapRenderPass : public Listener{
 public:
 	RenderManager* rm;
@@ -59,6 +79,7 @@ public:
 	void update();
 };
 
+
 class RenderVirtualObjectWithShaderListener : public Listener{
 private: 
 	VirtualObject* vo;
@@ -68,6 +89,7 @@ public:
 	void update();
 };
 
+
 class RenderVirtualObjectListener : public Listener{
 private: 
 	VirtualObject* vo;
@@ -75,6 +97,7 @@ public:
 	RenderVirtualObjectListener(VirtualObject* vo);
 	void update();
 };
+
 
 class RenderWaterObjectWithShaderAndReflectionMapListener : public Listener{
 private: 
@@ -86,6 +109,7 @@ public:
 	void update();
 };
 
+
 /// Listener which sets the Phont_Test Shader as the RenderManagers current Shader
 class SetCurrentShaderListener : public Listener{
 private:
@@ -95,6 +119,7 @@ public:
 	SetCurrentShaderListener(Shader* shader);
 	void update();
 };
+
 
 /// Listener which sets the glClearColor
 class SetClearColorListener : public Listener {
@@ -109,6 +134,7 @@ public:
 	void update();
 };
 
+
 /// listener on above or under water
 class UnderOrAboveWaterListener : public Listener{
 private:
@@ -122,6 +148,7 @@ public:
 	void update();
 };
 
+
 class RecompileAndSetShaderListener : public Listener{
 private:
 	std::string vertex_shader;
@@ -130,6 +157,7 @@ public:
 	RecompileAndSetShaderListener(std::string vertex_shader, std::string fragment_shader);
 	void update();
 };
+
 
 class UpdateReflectedCameraPositionListener : public Listener{
 private:
@@ -141,6 +169,7 @@ public:
 	UpdateReflectedCameraPositionListener(Camera* cam, Camera* cam_target, float water_height);
 	void update();
 };
+
 
 class UploadUniformSinusWaveListener : public Listener{
 private:

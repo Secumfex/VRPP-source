@@ -4,7 +4,12 @@ in vec3 passNormal;
 in vec3 passPosition;
 in vec3 passLightPosition;
 in vec2 passUVCoords;
+
 in vec4 passProjectedPos;
+in vec3 passWorldPos;
+
+uniform vec3 uniformCameraWorldPos;
+uniform mat4 uniformProjectorViewPerspective;
 
 out vec4 fragmentColor;
 
@@ -42,19 +47,25 @@ void main() {
 
     vec3 diffuse_color = texture(diffuseTexture, passUVCoords).xyz;
 
+    // CAUSTICS AND GOD RAY TEXTURE OFFSET //////////////////
+    float tile_factor   = 4.0f;
+    float noise_factor  = 0.03f;
+
+    vec2 sampling_offset0 = vec2(0.0, 0.0) + sin( uniformTime / 3.0) * 0.3;
+    vec2 sampling_offset1 = vec2(0.0, 0.0);
+    sampling_offset1.s   -= cos( uniformTime / 3.0) * 0.3;
+    sampling_offset1.t   += cos( uniformTime / 3.0) * 0.3;
+
+    /////////////////////////////////////////////////////////
     // CAUSTICS /////////////////////////////////////////////
     vec2 projectedUVCoords0 = (passProjectedPos.xy) / passProjectedPos.w ;
     vec2 projectedUVCoords1 = projectedUVCoords0;
 
-    float tile_factor   = 4.0f;
-    float noise_factor  = 0.03f;
-    
     projectedUVCoords0 *= tile_factor;
     projectedUVCoords1 *= tile_factor;  
 
-    projectedUVCoords0     += sin( uniformTime / 3.0) * 0.3;
-    projectedUVCoords1.s   -= cos( uniformTime / 3.0) * 0.3;
-    projectedUVCoords1.t   += cos( uniformTime / 3.0) * 0.3;
+    projectedUVCoords0 += sampling_offset0;
+    projectedUVCoords1 += sampling_offset1;
     
     vec3 caustics0   = texture2D( uniformCausticsTexture, projectedUVCoords0 ).rgb;
     vec3 caustics1   = texture2D( uniformCausticsTexture, projectedUVCoords1 ).rgb;
@@ -62,8 +73,6 @@ void main() {
 
     diffuse_color += diffuse_color * caustics;
     // ////// /////////////////////////////////////////////
-
-
     
     fragmentColor = vec4(
         vec3(

@@ -112,6 +112,47 @@ void RefractionMapRenderPass::update(){
 
 	}
 
+GodRaysRenderPass::GodRaysRenderPass(FrameBufferObject* fbo){ 
+		rm = RenderManager::getInstance(); 
+		this->fbo = fbo;
+	}
+
+void GodRaysRenderPass::update(){
+        glEnable(GL_DEPTH_TEST);
+        glClearColor(0.0,0.0,0.0,1.0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    	
+    	glViewport(0, 0, fbo->getWidth(), fbo->getHeight());
+
+		fbo->bindFBO();
+
+		currentShader = rm->getCurrentShader();
+		
+		//get renderQueue	
+		currentRenderQueue = rm->getRenderQueue(); 
+
+		//render GCs with current Shader 
+		if ( currentRenderQueue != 0 ){
+			voList = currentRenderQueue->getVirtualObjectList();	//get List of all VOs in RenderQueue
+			//for every VO
+			for (std::list<VirtualObject* >::iterator i = voList.begin(); i != voList.end(); ++i) {	
+				currentGCs = (*i)->getGraphicsComponent();
+					//for every GC
+					for (unsigned int j = 0; j < currentGCs.size(); j++){
+						rm->setCurrentGC(currentGCs[j]);
+						rm->getCurrentVO();
+						
+						//tell Shader to upload all Uniforms
+						currentShader->uploadAllUniforms();
+						//render the GC
+						currentShader->render(currentGCs[j]);
+					}
+
+			}
+		}
+		fbo->unbindFBO();	
+	}
+
 RenderloopPlaceHolderListener::RenderloopPlaceHolderListener(VirtualObject* water_object){ 
 		rm = RenderManager::getInstance(); 
 		this->water_object = water_object;

@@ -40,8 +40,8 @@ namespace UnderwaterScene{
 	glm::mat4 sunViewPerspective;
 
 	VirtualObject* scene_groundObject;
+	VirtualObject* scene_sky_dome;
 	VirtualObject* scene_stoneObject1;
-	VirtualObject* scene_stoneObject2;
 	VirtualObject* scene_sun_Object;
 	VirtualObject* scene_wallObject1;
 	VirtualObject* scene_wallObject2;
@@ -50,6 +50,7 @@ namespace UnderwaterScene{
 
 	FrameBufferObject* framebuffer_water_reflection;
 	FrameBufferObject* framebuffer_water_refraction;
+	FrameBufferObject* framebuffer_water_god_rays;
 
 	Camera* reflectedCamera;
 
@@ -108,8 +109,10 @@ namespace UnderwaterScene{
 		scene_stoneObject1 		= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_stone_01.dae", 	VirtualObjectFactory::OTHER);
 		scene_mountainObject1	= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_mountain_01.dae", 	VirtualObjectFactory::OTHER);
 		
-		scene_sun_Object 		= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_sun_shape.dae", VirtualObjectFactory::OTHER);
-		sunViewPerspective = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 1000.0f) * glm::lookAt( glm::vec3(0.0f, 100.0f, 0.0f), glm::vec3 (0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)) * glm::mat4(1.0f); 
+//		scene_sky_dome			= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_sky_dome.dae", 	VirtualObjectFactory::OTHER);
+		scene_sun_Object 		= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_sun_shape.dae", 	VirtualObjectFactory::OTHER);
+
+		sunViewPerspective 		= glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 1000.0f) * glm::lookAt( glm::vec3(100.0f, 100.0f, 0.0f), glm::vec3 (0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)) * glm::mat4(1.0f); 
 
 		if (scene_sun_Object->getGraphicsComponent().size() > 0){
 				scene_sun_Object->getGraphicsComponent()[0]->setEmission(true);
@@ -128,7 +131,14 @@ namespace UnderwaterScene{
 		framebuffer_water_refraction->createPositionTexture();
 		framebuffer_water_refraction->makeDrawBuffers();	// draw color to color attachment 0
 		framebuffer_water_refraction->unbindFBO();
+
+		framebuffer_water_god_rays = new FrameBufferObject(800,600);
+		framebuffer_water_god_rays->bindFBO();
+		framebuffer_water_god_rays->createPositionTexture();
+		framebuffer_water_god_rays->makeDrawBuffers();	// draw color to color attachment 0
+		framebuffer_water_god_rays->unbindFBO();
 		/*********************************************************************************/
+
 		/******************* textures creation	  ****************************************/
 		causticsTexture = new Texture( RESOURCES_PATH "/demo_scene/caustics.jpg" );
 		/*********************************************************************************/
