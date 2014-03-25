@@ -54,7 +54,7 @@ int main() {
 
 	VirtualObjectFactory *voFactory = VirtualObjectFactory::getInstance();
 
-	VirtualObject *object03 = voFactory->createVirtualObject(RESOURCES_PATH "/animation_test/Fish_bones.dae", VirtualObjectFactory::OTHER);
+	VirtualObject *object03 = voFactory->createVirtualObject(RESOURCES_PATH "/animation_test/tentacle.dae", VirtualObjectFactory::OTHER);
 	VirtualObject *object02 = voFactory->createVirtualObject(RESOURCES_PATH "/cow.obj", VirtualObjectFactory::OTHER);
 	VirtualObject *object01 = voFactory->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE);
 

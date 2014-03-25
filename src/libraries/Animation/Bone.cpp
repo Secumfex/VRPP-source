@@ -16,3 +16,6 @@ Bone::~Bone() {
 	// TODO Auto-generated destructor stub
 }
 
+void Bone::setOffsetMatrix(glm::mat4 offsetmatrix){
+	mOffsetMatrix = offsetmatrix;
+}

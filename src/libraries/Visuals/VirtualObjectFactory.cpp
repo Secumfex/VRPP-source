@@ -139,7 +139,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 	glm::vec3 physics_min = glm::vec3(FLT_MAX,FLT_MAX,FLT_MAX);
 	glm::vec3 physics_max = glm::vec3(-FLT_MAX,-FLT_MAX,-FLT_MAX);
 
-	std::cout << "SO VIEL ANIMATIONEN " << pScene->mNumAnimations << std::endl;
+	vector<Bone*> bones;
 
 
 	// For each mesh of the loaded object
@@ -151,7 +151,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 		//Our Material and Mash to be filled
 		Mesh* aMesh = new Mesh();
 		Material* aMat = new Material();
-
+		GraphicsComponent* gc=new GraphicsComponent(aMesh,aMat);
 
 		GLuint buffer = 0;
 		glm::vec3 aabbMax = glm::vec3(INT_MIN, INT_MIN, INT_MIN);
@@ -235,9 +235,12 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 					boneweight[bone->mWeights[l].mVertexId] = bone->mWeights[l].mWeight;
 				}
 				std::string name = bone->mName.C_Str();
-				Bone *myBone = new Bone(name);
-				float matrix[16];
-				glm::mat4 offsetmatrix = glm::make_mat4x4(matrix);
+				Bone *myBone = new Bone(bone->mName.C_Str());
+				glm::mat4 offsetmatrix = glm::make_mat4x4(&(bone->mOffsetMatrix.a1));
+				myBone->setOffsetMatrix(offsetmatrix);
+				gc->addBone(myBone);
+				bones.push_back(myBone);
+				cout << "Bone : " << name << endl;
 			}
 		}
 
@@ -382,7 +385,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 		/* try to generate material by name */
 
-		GraphicsComponent* gc=new GraphicsComponent(aMesh,aMat);
+
 		MaterialManager* mm= MaterialManager::getInstance();
 
 
@@ -483,13 +486,23 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 
 	if(pScene->HasAnimations()){
-	AnimationLoop *myAnimation;
+		AnimationLoop *myAnimation;
+		cout << pScene->mRootNode->mName.C_Str() << " Der VADDA" << endl;
 
-	unsigned int i;
-	for (i = 0; i < pScene->mNumAnimations; ++i) {
-		aiAnimation *anime = pScene->mAnimations[i];
-//		anime->mMeshChannels[0]->mKeys[0].
-	}
+		aiNode* node;
+
+		unsigned int i;
+		for (i = 0; i < pScene->mRootNode->mNumChildren; ++i) {
+			std::string node_name = pScene->mRootNode->mChildren[i]->mName.C_Str();
+			if(node_name == "Armature")
+				node = pScene->mRootNode->mChildren[i];
+		}
+
+		Node* myRootNode = new Node(getNodeChildren(node));
+		for (i = 0; i < pScene->mAnimations[0]->mNumChannels; ++i) {
+			setNodeTransform(myRootNode, pScene->mAnimations[0]->mChannels[i]);
+		}
+
 	}
 
 	glm::vec3 normal=physics_max;
@@ -507,4 +520,31 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 
 	return virtualObject;
+}
+
+vector<Node*> VirtualObjectFactory::getNodeChildren(aiNode* node){
+	vector<Node*> children;
+
+	unsigned int i;
+	for (i = 0; i < node->mNumChildren ; ++i) {
+		Node* temp = new Node(getNodeChildren(node->mChildren[i]));
+		temp->setName(node->mName.C_Str());
+		children.push_back(temp);
+	}
+		return children;
+}
+
+void VirtualObjectFactory::setNodeTransform(Node* node, aiNodeAnim* nodeanim){
+	std::string name = nodeanim->mNodeName.C_Str();
+
+	if(name == node->getName()){
+
+
+	}
+
+	unsigned int i;
+	for (i = 0; i < node->getChildren().size(); ++i) {
+		setNodeTransform(node->getChildren()[i], nodeanim);
+	}
+
 }

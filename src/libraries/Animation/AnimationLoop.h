@@ -9,11 +9,15 @@
 #define ANIMATIONLOOP_H_
 
 #include <Animation/Bone.h>
+#include <Animation/Node.h>
+#include <vector>
 
 class AnimationLoop {
 public:
 	AnimationLoop();
 	virtual ~AnimationLoop();
+
+	std::vector<Node*> mNodes;
 
 private:
 	float duration;
