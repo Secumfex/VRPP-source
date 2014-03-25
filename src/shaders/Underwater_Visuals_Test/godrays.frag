@@ -28,9 +28,10 @@ void main() {
     sampling_offset1.t   += cos( uniformTime / 3.0) * noise_factor;
     // ////// /////////////////////////////////////////////
     // GOD RAYS ///////////////////////////////////////////
-    int samples = 32;
-    float xz_step  = 0.0625;
+    int samples = 48;
+    float xz_step  = 0.03125;
     float max_depth = 10.0;
+    float water_height = 10.0;
     vec3 god_ray_strength = vec3(0.0, 0.0, 0.0);
     
     float mesh_distance_to_camera = dot ( passWorldPos - uniformCameraWorldPos, passWorldPos - uniformCameraWorldPos);
@@ -44,13 +45,13 @@ void main() {
         float ray_step = dot ( view_ray_xz, view_ray_xz ) * xz_step;
         sample += view_ray_direction * ray_step;
 
-        float depth_factor = min( max ( ( 1.0 - ( ( max_depth - sample.y ) / max_depth ) ), 0.0), 1.0);
+        float depth_factor = min( max ( ( 1.0 - ( ( water_height - sample.y ) / max_depth ) ), 0.0), 1.0);
         float sample_distance_to_camera = dot ( sample - uniformCameraWorldPos, sample - uniformCameraWorldPos );
 
         if (sample_distance_to_camera > mesh_distance_to_camera){
             break;
         }
-        if (depth_factor == 0.0){
+        if (depth_factor == 0.0 || depth_factor == 1.0){
             continue;
         }
 

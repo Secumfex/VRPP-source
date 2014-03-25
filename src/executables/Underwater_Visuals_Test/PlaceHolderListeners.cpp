@@ -118,13 +118,14 @@ GodRaysRenderPass::GodRaysRenderPass(FrameBufferObject* fbo){
 	}
 
 void GodRaysRenderPass::update(){
+		fbo->bindFBO();
+		
         glEnable(GL_DEPTH_TEST);
         glClearColor(0.0,0.0,0.0,1.0);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     	
     	glViewport(0, 0, fbo->getWidth(), fbo->getHeight());
 
-		fbo->bindFBO();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		currentShader = rm->getCurrentShader();
 		
@@ -160,7 +161,7 @@ RenderloopPlaceHolderListener::RenderloopPlaceHolderListener(VirtualObject* wate
 
 void RenderloopPlaceHolderListener::update(){
         glEnable(GL_DEPTH_TEST);
-        glClear(GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     	glViewport(0, 0, 800, 600);
 
 		currentShader = rm->getCurrentShader();
@@ -351,6 +352,29 @@ void RenderVirtualObjectListener::update(){
 	}
 }
 
+RenderGraphicsComponentListener::RenderGraphicsComponentListener(GraphicsComponent* gc){
+	this->gc = gc;
+}
+
+void RenderGraphicsComponentListener::update(){	
+	if( gc != 0){
+		RenderManager::getInstance()->setCurrentGC(gc);
+		RenderManager::getInstance()->getCurrentShader()->uploadAllUniforms();
+		RenderManager::getInstance()->getCurrentShader()->render(gc);
+	}
+}
+
+RenderScreenFillingTriangleListener::RenderScreenFillingTriangleListener(){
+	this->gc = VirtualObjectFactory::getInstance()->getTriangle();
+}
+
+void RenderScreenFillingTriangleListener::update(){
+	glDisable(GL_DEPTH_TEST);	
+	RenderGraphicsComponentListener::update();
+	glEnable(GL_DEPTH_TEST);	
+
+}
+
 UploadUniformSinusWaveListener::UploadUniformSinusWaveListener(std::string name, float* t, float frequency, std::string uniform_name){
 	this->t = t;
 	this->frequency = frequency;
@@ -366,8 +390,31 @@ UploadUniformSinusWaveListener::UploadUniformSinusWaveListener(std::string name,
 }
 
 void UploadUniformSinusWaveListener::update(){
-	float sin = std::sin( (*t) * frequency);
+	float sinus = std::sin( (*t) * frequency);
 
 	Shader* shader = RenderManager::getInstance()->getCurrentShader();
-	shader->uploadUniform(sin, uniform_name);
+	shader->uploadUniform(sinus, uniform_name);
 }
+
+SetFrameBufferObjectListener::SetFrameBufferObjectListener( FrameBufferObject* fbo){
+	this->fbo = fbo;
+}
+
+void SetFrameBufferObjectListener::update(){
+	if( fbo != 0){
+		RenderManager::getInstance()->setCurrentFBO( fbo );
+		fbo->bindFBO();
+	}
+}
+
+UnbindFrameBufferObjectListener::UnbindFrameBufferObjectListener(){
+}
+
+void UnbindFrameBufferObjectListener::update(){
+	FrameBufferObject* currentFBO = RenderManager::getInstance()->getCurrentFBO();
+	if (currentFBO != 0){
+		currentFBO->unbindFBO();
+	}
+	RenderManager::getInstance()->setCurrentFBO( 0 );
+}
+

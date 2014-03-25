@@ -9,6 +9,7 @@
 #include <cmath>
 
 #include "Visuals/RenderManager.h"
+#include "Visuals/VirtualObjectFactory.h"
 #include "Visuals/Shader.h"
 
 /// Listener which renders a frame by using current Instance pointers of RenderManager
@@ -99,6 +100,20 @@ public:
 };
 
 
+class RenderGraphicsComponentListener : public Listener{
+protected: 
+	GraphicsComponent* gc;
+public:
+	RenderGraphicsComponentListener(GraphicsComponent* gc = 0);
+	virtual void update();
+};
+
+class RenderScreenFillingTriangleListener : public RenderGraphicsComponentListener{
+public:
+	RenderScreenFillingTriangleListener();
+	void update();
+};
+
 class RenderWaterObjectWithShaderAndReflectionMapListener : public Listener{
 private: 
 	VirtualObject* vo;
@@ -179,5 +194,21 @@ private:
 public:
 	UploadUniformSinusWaveListener(std::string name, float* t, float frequency, std::string uniform_name);
 	UploadUniformSinusWaveListener(std::string name, float t, float frequency, std::string uniform_name);
+	void update();
+};
+
+
+class SetFrameBufferObjectListener : public Listener {
+private: 
+	FrameBufferObject* fbo;
+public:
+	SetFrameBufferObjectListener( FrameBufferObject* fbo);
+	void update();
+};
+
+
+class UnbindFrameBufferObjectListener : public Listener {
+public:
+	UnbindFrameBufferObjectListener();
 	void update();
 };
