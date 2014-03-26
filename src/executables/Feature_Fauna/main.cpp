@@ -67,7 +67,7 @@ void configureOtherStuff() {
 
 void configureApplication() {
 	/* create minimal Application with one state */
-	testingApp = Application::getInstance();
+	testingApp = Application::getInstance();		//sets up Application
 	testingApp->setLabel("PROJEKT PRAKTIKUM");
 	testingState = new VRState("TESTING FRAMEWORK");
 	testingApp->addState(testingState);
