@@ -11,8 +11,9 @@
 using namespace std;
 
 btRigidBody *rigidBody_tmp;
-Seetang::Seetang(vector<btRigidBody*> rbVec){
+Seetang::Seetang(){
 
+	vector<btRigidBody*> rbVec;
 	for(btRigidBody i = rbVec.front(); i < rbVec.end(); i++){
 		rbVec[i] = addSphere(10.0, 0.0, 0.0, 0.0, 0.0);
 	}

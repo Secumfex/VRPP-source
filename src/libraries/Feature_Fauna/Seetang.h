@@ -18,7 +18,7 @@
 class Seetang {
 
 public:
-	Seetang(vector<btRigidBody*> rbVec);
+	Seetang();
 	btRigidBody* addSphere(float radius, float x, float y, float z, float mass);
 	btRigidBody *rigidBody;
 	vector<btRigidBody*> spheres;

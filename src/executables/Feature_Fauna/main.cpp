@@ -35,9 +35,9 @@ void configureMyApp(){
 	/*	customize myLoadingScreen */
 	MenuState* myLoadingMenu = 	new MenuState("LOADING_SCREEN");	// create a MenuState labeled LOADING_SCREEN
 
-	VirtualObject* myLoadingBarrel = 	myLoadingMenu->		createVirtualObject(RESOURCES_PATH "/barrel.obj", VirtualObjectFactory::OTHER); 		// create and add virtual object to loading menu state
-	myLoadingBarrel->setModelMatrix(	glm::scale(			glm::mat4(1.0f), glm::vec3(1.0,0.125,1.0)));
-	myLoadingMenu->	attachListenerOnBeginningProgramCycle(	new AnimateSinusModelMatrixListener(myLoadingBarrel));	// animated loading barrel
+	VirtualObject* myLoadingObject = 	myLoadingMenu->		createVirtualObject(RESOURCES_PATH "/Fauna/aqua01.3ds", VirtualObjectFactory::OTHER); 		// create and add virtual object to loading menu state
+	myLoadingObject->setModelMatrix(	glm::scale(			glm::mat4(1.0f), glm::vec3(1.0,0.125,1.0)));
+	myLoadingMenu->	attachListenerOnBeginningProgramCycle(	new AnimateSinusModelMatrixListener(myLoadingObject));	// animated loading object
 	myLoadingMenu->	attachListenerOnBeginningProgramCycle(	new AnimateClearColorListener());						// animated pseudo Loading_screen
 
 	/*	customize myVRState*/
@@ -52,18 +52,12 @@ void configureMyApp(){
 
 	/*	load some virtual objects into vr state scene*/
 
-	VirtualObject* 	myCowObject1 = 		myVRState->			createVirtualObject(RESOURCES_PATH "/cow.obj", VirtualObjectFactory::OTHER);	 		// create a Virtual Object by reading an .obj file and add it to VRState automatically
-	myCowObject1->	setPhysicsComponent(0.5,0.5,7.5,0.5,0.5);
-	PhysicsComponent* myCowObject1PhysicsComponent = 		myCowObject1->getPhysicsComponent();					// get PhysicsComponent pointer
-	myVRState->		attachListenerOnBeginningProgramCycle(  new UpdatePhysicsComponentListener(			myCowObject1));	// update PhysicsComponent on every program cycle iteration
-	myVRState->		attachListenerOnBeginningProgramCycle(  new UpdateVirtualObjectModelMatrixListener(	myCowObject1));	// update VirtualObject Model Matrix on every program cycle iteration
+	VirtualObject* 	myLoadingObject2 = 		myVRState->			createVirtualObject(RESOURCES_PATH "/Fauna/aqua02.3ds", VirtualObjectFactory::OTHER);	 		// create a Virtual Object by reading an .obj file and add it to VRState automatically
+	myLoadingObject2->	setPhysicsComponent(0.5,0.5,7.5,0.5,0.5);
+	PhysicsComponent* myCowObject1PhysicsComponent = 		myLoadingObject2->getPhysicsComponent();					// get PhysicsComponent pointer
+	myVRState->		attachListenerOnBeginningProgramCycle(  new UpdatePhysicsComponentListener(			myLoadingObject2));	// update PhysicsComponent on every program cycle iteration
+	myVRState->		attachListenerOnBeginningProgramCycle(  new UpdateVirtualObjectModelMatrixListener(	myLoadingObject2));	// update VirtualObject Model Matrix on every program cycle iteration
 
-
-	VirtualObject* 	myCowObject2 = 		myVRState->			createVirtualObject(RESOURCES_PATH "/cow.obj", VirtualObjectFactory::OTHER);	 		// create a Virtual Object by reading an .obj file and add it to VRState automatically
-	myCowObject2->	setPhysicsComponent(0.5,0.75,15.0,0.75,0.5);
-	PhysicsComponent* myCowObject2PhysicsComponent = 		myCowObject2->getPhysicsComponent();					// get PhysicsComponent pointer
-	myVRState->		attachListenerOnBeginningProgramCycle(  new UpdatePhysicsComponentListener(			myCowObject2));	// update PhysicsComponent on every program cycle iteration
-	myVRState->		attachListenerOnBeginningProgramCycle(  new UpdateVirtualObjectModelMatrixListener(	myCowObject2));	// update VirtualObject Model Matrix on every program cycle iteration
 
 
 		btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,1,0),0);
