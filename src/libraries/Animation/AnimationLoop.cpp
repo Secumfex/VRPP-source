@@ -16,3 +16,10 @@ AnimationLoop::~AnimationLoop() {
 	// TODO Auto-generated destructor stub
 }
 
+void AnimationLoop::updateNodes(float t){
+	unsigned int i;
+
+	for (i = 0; i < mNodes.size(); ++i) {
+		updateNodes(t);
+	}
+}

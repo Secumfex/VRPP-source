@@ -24,6 +24,8 @@ public:
 	void addTransformation(glm::vec3 pos, glm::vec3 scale, glm::quat rotation, float time);
 	void setBone(Bone* bone);
 	Bone* getBone();
+	void updateBone(float t);
+	int getTimeIndex(float t);
 
 private:
 	Bone* mBone;

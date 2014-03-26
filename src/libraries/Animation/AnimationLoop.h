@@ -19,6 +19,8 @@ public:
 
 	std::vector<Node*> mNodes;
 
+	void updateNodes(float t);
+
 private:
 	float duration;
 	float pasttime;

@@ -22,12 +22,17 @@ public:
 	virtual ~Bone();
 
 	void setOffsetMatrix(glm::mat4 offsetmatrix);
+	void setAnimationMatrix(glm::mat4 animationmatrix);
+	glm::mat4 getOffsetMatrix();
+	glm::mat4 getAnimationMatrix();
+	glm::mat4 getBoneMatrix();
 	std::string getName();
 
 protected:
 	std::string mName;
 	std::vector<Bone> children;
 	glm::mat4 mOffsetMatrix;
+	glm::mat4 mAnimationMatrix;
 };
 
 #endif /* BONE_H_ */

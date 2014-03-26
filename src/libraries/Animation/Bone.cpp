@@ -9,6 +9,8 @@
 
 Bone::Bone(std::string name) {
 	mName = name;
+	mOffsetMatrix = glm::mat4();
+	mAnimationMatrix= glm::mat4();
 }
 
 Bone::~Bone() {
@@ -20,4 +22,19 @@ void Bone::setOffsetMatrix(glm::mat4 offsetmatrix){
 }
 std::string Bone::getName(){
 	return mName;
+}
+void Bone::setAnimationMatrix(glm::mat4 animationmatrix){
+	mAnimationMatrix = animationmatrix;
+}
+
+glm::mat4 Bone::getOffsetMatrix(){
+	return mOffsetMatrix;
+}
+
+glm::mat4 Bone::getAnimationMatrix(){
+	return mAnimationMatrix;
+}
+
+glm::mat4 Bone::getBoneMatrix(){
+	return mAnimationMatrix * mOffsetMatrix;
 }

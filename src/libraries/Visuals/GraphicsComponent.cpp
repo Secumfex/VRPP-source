@@ -9,14 +9,18 @@ GraphicsComponent::GraphicsComponent(){
 	mTranparency = false;
 	mEmission = false;
 	mShadow = false;
+	mDynamic = false;
+	mAnimated = false;
 	mGhostObject = new btGhostObject();
 }
 
 GraphicsComponent::GraphicsComponent(Mesh* mesh, Material* material){
 	mMesh = mesh;
 	mMaterial = material;
-	mTranparency = false;
 	mEmission = false;
+	mAnimated = false;
+	mDynamic = false;
+	mTranparency = false;
 	mShadow = false;
 	mGhostObject = new btGhostObject();
 }
@@ -84,9 +88,20 @@ void GraphicsComponent:: setGhostObject(glm::vec3 min, glm::vec3 max){
 	PhysicWorld::getInstance()->dynamicsWorld->addCollisionObject(mGhostObject);
 }
 btGhostObject* GraphicsComponent::getGhostObject(){
-return mGhostObject;
+	return mGhostObject;
 }
 void GraphicsComponent::addBone(Bone* bone){
-
+	mBones.push_back(bone);
 }
 
+vector<Bone*> GraphicsComponent::getBones(){
+	return mBones;
+}
+
+void GraphicsComponent::setAnimated(bool animated){
+	mAnimated = animated;
+}
+
+bool GraphicsComponent::hasAnimation(){
+	return mAnimated;
+}

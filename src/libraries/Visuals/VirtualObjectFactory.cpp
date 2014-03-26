@@ -12,6 +12,8 @@
 VirtualObjectFactory::VirtualObjectFactory(){
 	mCube = NULL;
 	mScreenFillTriangle = NULL;
+	mDefaultBone = new Bone();
+	mDefaultAnimation = new AnimationLoop();
 }
 
 //eingefügt
@@ -139,8 +141,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 	glm::vec3 physics_min = glm::vec3(FLT_MAX,FLT_MAX,FLT_MAX);
 	glm::vec3 physics_max = glm::vec3(-FLT_MAX,-FLT_MAX,-FLT_MAX);
 
-	vector<Bone*> bones;
-
+	std::map<std::string, Bone*> bone_map;
 
 	// For each mesh of the loaded object
 	for (unsigned int n = 0; n < pScene->mNumMeshes; ++n)
@@ -152,6 +153,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 		Mesh* aMesh = new Mesh();
 		Material* aMat = new Material();
 		GraphicsComponent* gc=new GraphicsComponent(aMesh,aMat);
+		vector<Bone*> bones;
 
 		GLuint buffer = 0;
 		glm::vec3 aabbMax = glm::vec3(INT_MIN, INT_MIN, INT_MIN);
@@ -226,7 +228,8 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 		}
 		if(mesh->HasBones()){
-			//TODO: buffer anlegen
+			//TODO: boners
+			gc->setAnimated(true);
 			unsigned int j;
 			for (j = 0; j < mesh->mNumBones; ++j) {
 				vector<float> boneweight(mesh->mNumVertices);
@@ -236,13 +239,28 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 					boneweight[bone->mWeights[l].mVertexId] = bone->mWeights[l].mWeight;
 				}
 				std::string name = bone->mName.C_Str();
-				Bone *myBone = new Bone(bone->mName.C_Str());
-				glm::mat4 offsetmatrix = glm::make_mat4x4(&(bone->mOffsetMatrix.a1));
-				myBone->setOffsetMatrix(offsetmatrix);
-				gc->addBone(myBone);
+				Bone *myBone;
+				if(bone_map.find(name) != bone_map.end()){
+					myBone = bone_map[name];
+				}else{
+					myBone = new Bone(name);
+					glm::mat4 offsetmatrix = glm::make_mat4x4(&(bone->mOffsetMatrix.a1));
+					myBone->setOffsetMatrix(offsetmatrix);
+					bone_map.insert(std::pair<std::string, Bone*>(name, myBone));
+				}
 				bones.push_back(myBone);
-				cout << "Bone : " << name << endl;
+				gc->addBone(myBone);
+
+				glGenBuffers(1, &buffer);
+				glBindBuffer(GL_ARRAY_BUFFER, buffer);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * boneweight.size(), &boneweight[0], GL_STATIC_DRAW);
+
+				// normalLoc wurde hier ersetzt
+				glEnableVertexAttribArray(10 + j);
+				glVertexAttribPointer(10 + j, 1, GL_FLOAT, 0, 0, 0);
+
 			}
+
 		}
 
 		// buffer for vertex texture coordinates
@@ -487,8 +505,10 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 
 	if(pScene->HasAnimations()){
-		AnimationLoop *myAnimation = makeAnimation(bones, pScene);
+		AnimationLoop *myAnimation = makeAnimation(bone_map, pScene);
 		virtualObject->setAnimation(myAnimation);
+	}else{
+		virtualObject->setAnimation(mDefaultAnimation);
 	}
 
 	glm::vec3 normal=physics_max;
@@ -509,7 +529,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 }
 
 
-AnimationLoop* VirtualObjectFactory::makeAnimation(vector<Bone*> bones, const aiScene* pScene){
+AnimationLoop* VirtualObjectFactory::makeAnimation(map<std::string, Bone*> bones, const aiScene* pScene){
 	AnimationLoop* myAnimation = new AnimationLoop();
 
 	cout << "Animation Tree is being build. This might take a while." << endl;
@@ -529,6 +549,9 @@ AnimationLoop* VirtualObjectFactory::makeAnimation(vector<Bone*> bones, const ai
 	}
 
 	setBones(myRootNode, bones);
+	for (i = 0; i < bones.size(); ++i) {
+		//		bones[1].
+	}
 
 	return myAnimation;
 }
@@ -564,11 +587,14 @@ void VirtualObjectFactory::setNodeTransform(Node* node, aiNodeAnim* nodeanim){
 	}
 }
 
-void VirtualObjectFactory::setBones(Node* node, vector<Bone*> bones){
-	unsigned int j;
-for (j = 0; j < bones.size(); ++j) {
-	if(node->getName() == bones[j]->getName())
-		node->setBone(bones[j]);
+void VirtualObjectFactory::setBones(Node* node, map<std::string, Bone*> bones){
+	//TODO: fix problem here
+
+	if(bones.find(node->getName()) != bones.end()){
+		node->setBone(bones[node->getName()]);
+	}else{
+		node->setBone(mDefaultBone);
+	}
 
 	unsigned int i;
 	for (i = 0; i < node->getChildren().size(); ++i) {
@@ -576,4 +602,3 @@ for (j = 0; j < bones.size(); ++j) {
 	}
 }
 
-}

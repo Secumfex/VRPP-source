@@ -34,6 +34,8 @@ class VirtualObjectFactory : public Singleton<VirtualObjectFactory> {
 
 	VirtualObject* mCube;					/**< !docu pls! */
 	GraphicsComponent* mScreenFillTriangle;	/**< !docu pls! */
+	Bone* mDefaultBone;
+	AnimationLoop* mDefaultAnimation;
 
 
 	//---------------MEMBER FUNCTIONS--------------------
@@ -101,12 +103,12 @@ private:
 	 */
 	void color4_to_float4(const aiColor4D *c, float f[4]);
 
-	AnimationLoop* makeAnimation(vector<Bone*> bones, const aiScene* pScene);
+	AnimationLoop* makeAnimation(map<std::string, Bone*> bones, const aiScene* pScene);
 
 	vector<Node*> getNodeChildren(aiNode* node);
 
 
-	void setBones(Node* node, vector<Bone*> bones);
+	void setBones(Node* node, map<std::string, Bone*> bones);
 
 	void setNodeTransform(Node* node, aiNodeAnim* nodeanim);
 
