@@ -9,7 +9,6 @@
 
 Node::Node(std::vector<Node*> node) {
 	mChildren = node;
-	addTransformation(glm::vec3(0.0f), glm::vec3(1.0f), glm::quat(glm::mat4()), 0.0f);
 }
 
 Node::~Node() {
@@ -27,6 +26,8 @@ std::vector<Node*> Node::getChildren(){
 }
 
 void Node::addTransformation(glm::vec3 pos, glm::vec3 scale, glm::quat rotation, float time){
+if(mTimes.size() == 0)
+	time = 0.0;
 	mPositions.push_back(pos);
 	mScales.push_back(scale);
 	mRotations.push_back(rotation);
@@ -40,35 +41,37 @@ Bone* Node::getBone(){
 	return mBone;
 }
 
-void Node::updateBone(float t){
+void Node::updateBone(float t, glm::mat4 parent_mat){
 
 	float next_time = t;
 
-	unsigned int i;
-	for (i = 0; i < mChildren.size(); ++i) {
-		mChildren[i]->updateBone(next_time);
-	}
 
 	if(mTimes.size()<2)
 		return;
 
 	int index = getTimeIndex(t);
-	int index02 = index % mTimes.size();
+	int index02 = (index + 1) % mTimes.size();
 	float start = mTimes[index];
 	float end = mTimes[index02];
 
-	std::cout << start << " < " << t << " < "<< end << std::endl;
 	t = t - start;
 	end = end - start;
 	t = t / end;
-
 
 	glm::vec3 pos = (mPositions[index] * (1 - t)) + (mPositions[index02] * t);
 	glm::vec3 scale = (mScales[index] * (1 - t)) + (mScales[index02] * t);
 	glm::quat rotate = (mRotations[index] * (1 - t)) + (mRotations[index02] * t);
 
+//	glm::mat4 transform = parent_mat * glm::translate(glm::mat4(1.0f), pos) * glm::mat4_cast(rotate) * glm::scale(glm::mat4(1.0f), scale);
+	glm::mat4 transform = parent_mat * glm::mat4_cast(rotate);
+
 //	mBone->setAnimationMatrix(glm::translate(glm::mat4(1.0f), pos) * glm::mat4_cast(rotate) * glm::scale(glm::mat4(1.0f), scale));
-	mBone->setAnimationMatrix(glm::translate(glm::mat4(1.0f), pos));
+	mBone->setAnimationMatrix(transform);
+
+	unsigned int i;
+	for (i = 0; i < mChildren.size(); ++i) {
+		mChildren[i]->updateBone(next_time, transform);
+	}
 
 }
 int Node::getTimeIndex(float t){
@@ -77,9 +80,8 @@ int Node::getTimeIndex(float t){
 		return index;
 	unsigned int i;
 	for (i = 1; i < mTimes.size(); ++i) {
-		if(mTimes[i-1] <= t || mTimes[i] >= t ){
+		if(mTimes[i-1] <= t && mTimes[i] >= t ){
 			index = i-1;
-
 		}
 	}
 	return index;

@@ -575,6 +575,7 @@ void VirtualObjectFactory::setNodeTransform(Node* node, aiNodeAnim* nodeanim){
 	if(name == node->getName()){
 		for (i = 0; i < nodeanim->mNumPositionKeys; ++i) {
 			float time = nodeanim->mPositionKeys[i].mTime;
+			cout << "( " << nodeanim->mPositionKeys[i].mValue.x <<"/ " << nodeanim->mPositionKeys[i].mValue.y <<"/ " << nodeanim->mPositionKeys[i].mValue.z << ")" <<  endl;
 			glm::vec3 position = glm::vec3(nodeanim->mPositionKeys[i].mValue.x, nodeanim->mPositionKeys[i].mValue.y, nodeanim->mPositionKeys[i].mValue.z);
 			glm::vec3 scale = glm::vec3(nodeanim->mScalingKeys[i].mValue.x, nodeanim->mScalingKeys[i].mValue.y, nodeanim->mScalingKeys[i].mValue.z);
 			glm::quat rotation = glm::quat(nodeanim->mRotationKeys[i].mValue.w, nodeanim->mRotationKeys[i].mValue.x, nodeanim->mRotationKeys[i].mValue.y, nodeanim->mRotationKeys[i].mValue.z);

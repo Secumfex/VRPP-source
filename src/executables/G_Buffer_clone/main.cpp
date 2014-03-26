@@ -160,7 +160,7 @@ int main() {
 		//nice rotation of a small cube
 		mat4 modelMatrix02 = scale(translate(rotate(mat4(1.0f), degrees(angle), vec3(1.0f, 1.0f, 0.0f)), vec3(0.0f, 0.5f, -0.5f)), vec3(0.9f, 0.9f, 0.9f));
 
-		mat4 modelMatrix03 = scale(translate(rotate(rotate(mat4(1.0f), 90.0f, vec3(0.0f, 0.0f, 1.0f)), 90.0f, vec3(0.0f, 1.0f, 0.0f)), vec3(0.0, 0.0, -1.0)), vec3(0.5f, 0.5f, 0.5f));
+		mat4 modelMatrix03 = scale(translate(rotate(rotate(mat4(1.0f), degrees(angle / 2.0f), vec3(0.0f, 0.0f, 1.0f)), 45.0f, vec3(0.0f, 1.0f, 0.0f)), vec3(0.0, 0.0, -1.0)), vec3(0.5f, 0.5f, 0.5f));
 
 		object01->setModelMatrix(modelMatrix01);
 		object02->setModelMatrix(modelMatrix02);
