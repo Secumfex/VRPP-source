@@ -9,6 +9,7 @@ btRigidBody *rigidBody;
 Seetang::Seetang(){
 
 	vector<btRigidBody*> rbVec;
+	rbVec.size()=4;
 	for(btRigidBody i = rbVec.front(); i < rbVec.end(); i++){
 		rbVec[i] = addSphere(10.0, 0.0, 0.0, 0.0, 0.0);
 	}
@@ -37,6 +38,10 @@ btRigidBody* addSphere(float radius, float x, float y, float z, float mass) {
 
 glm::mat4 Seetang::getViewMatrix(){
 	return mViewMatrix;
+}
+
+btRigidBody* Seetang::getRigidBody(){
+	return btRigidBody;
 }
 
 void Seetang::MVMultiplikation(){

@@ -20,6 +20,7 @@ public:
 	vector<btRigidBody*> spheres;
 	glm::mat4 getViewMatrix();
 	void MVMultiplikation();
+    btRigidBody* getRigidBody();
 
 };
 
