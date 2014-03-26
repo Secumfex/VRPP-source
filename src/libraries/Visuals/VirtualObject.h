@@ -189,7 +189,7 @@ public:
 	 * no mass param because floor has to be a static object
 	 * @return void
 	 */
-	void setPhysicComponent(char* filename,int width, int height, float x, float y, float z);
+	void setPhysicsComponent(char* filename,int width, int height, float x, float y, float z);
 
 	/** \brief getter
 	 *

@@ -40,6 +40,7 @@ public:
 	* constructor to create a box shaped rigid body.
 	* @param min,max contain smallest and largest x, y, z values of a given model (in VirtualObjectFactory class)
 	* @param mass defines the behavior of the rigid body in the physics world
+	* @param collisionFlag
 	*/
 	PhysicsComponent(glm::vec3 min, glm::vec3 max, float mass, int collisionFlag);
 
@@ -49,6 +50,7 @@ public:
 	* @param radius dimension of the sphere
 	* @param x,y,z start position in the world
 	* @param mass defines the behavior of the rigid body in the physics world
+	* @param collisionFlag
 	*/
 	PhysicsComponent(float radius, float x, float y, float z, float mass, int collisionFlag);
 
@@ -58,6 +60,7 @@ public:
 	* @param width,height,depth  dimensions of the box
 	* @param x,y,z start position in the world
 	* @param mass defines the behavior of the rigid body in the physics world
+	* @param collisionFlag
 	*/
 	PhysicsComponent(float width, float height, float depth, float x, float y, float z, float mass, int collisionFlag);
 
@@ -67,6 +70,7 @@ public:
 	 * @param x,y,z start position in the world
 	 * @param normal normal vector of the plane
 	 * @param mass defines the behavior of the rigid body in the physics world
+	 * @param collisionFlag
 	 */
 	PhysicsComponent(float x, float y, float z, glm::vec3 normal, float mass, int collisionFlag);
 
@@ -94,6 +98,7 @@ public:
 	/** \brief translates a rigidBody to another position
 	 *
 	 * @param scale vec3 which contains x,y,z values for scaling
+	 * @param vo virtual object reference
 	 */
 	void scale(glm::vec3 scale, VirtualObject* vo);
 

@@ -146,7 +146,7 @@ void VirtualObject::setPhysicComponent(float x, float y, float z, glm::vec3 norm
 
 }
 
-void VirtualObject::setPhysicComponent(char* filename,int width, int height, float x, float y, float z){
+void VirtualObject::setPhysicsComponent(char* filename,int width, int height, float x, float y, float z){
 	if(physicsComponent != NULL){
 		physicsComponent->~PhysicsComponent();
 	}
