@@ -1,9 +1,3 @@
-/*
- * Seetang.cpp
- *
- *  Created on: 25.03.2014
- *      Author: Flower
- */
 #include <iostream>
 #include "Seetang.h"
 
@@ -11,6 +5,7 @@
 using namespace std;
 
 btRigidBody *rigidBody_tmp;
+btRigidBody *rigidBody;
 Seetang::Seetang(){
 
 	vector<btRigidBody*> rbVec;
@@ -38,4 +33,13 @@ btRigidBody* addSphere(float radius, float x, float y, float z, float mass) {
 	btRigidBody* body = new btRigidBody(info);
 	body->setLinearFactor(btVector3(1,1,1));
 	return body;
+}
+
+glm::mat4 Seetang::getViewMatrix(){
+	return mViewMatrix;
+}
+
+void Seetang::MVMultiplikation(){
+	rigidBody *= getViewMatrix();
+
 }
