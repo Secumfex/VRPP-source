@@ -405,7 +405,7 @@ void RenderQueue::sortByFlags() {
 	}
 }
 
-/** \brief extrude method implementations
+/** \brief leaves only shadow casting elements in the list
  */
 list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagShadowCaster* flag, list<GraphicsComponent* > temp){
 	vector<GraphicsComponent* > vec = gcFlagStorage["SHADOW"];
@@ -429,10 +429,13 @@ list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagShadowCaster
 	return temp;
 }
 
-list<GraphicsComponent* > extrudeGCsForRequestFlag(FlagUsesShader* flag, list<GraphicsComponent* > temp){
+list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagUsesShader* flag, list<GraphicsComponent* > temp){
+	//TODO
 	return temp;
 }
 
+/** \brief leaves only transparent elements in the list
+ */
 list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagTransparency* flag, list<GraphicsComponent* > temp){
 		vector<GraphicsComponent* > vec = gcFlagStorage["TRANSPARENCY"];
 	list<GraphicsComponent* >::iterator l_it = temp.begin();
@@ -453,17 +456,16 @@ list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagTransparency
 	}
 
 	return temp;
+}
+
+list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagUsesObjectModel* flag, list<GraphicsComponent* > temp){
 	return temp;
 }
 
-list<GraphicsComponent* > extrudeGCsForRequestFlag(FlagUsesObjectModel* flag, list<GraphicsComponent* > temp){
+list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagScreenFillingPolygon* flag, list<GraphicsComponent* > temp){
 	return temp;
 }
 
-list<GraphicsComponent* > extrudeGCsForRequestFlag(FlagScreenFillingPolygon* flag, list<GraphicsComponent* > temp){
-	return temp;
-}
-
-list<GraphicsComponent* > extrudeGCsForRequestFlag(FlagInViewFrustum* flag, list<GraphicsComponent* > temp){
+list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagInViewFrustum* flag, list<GraphicsComponent* > temp){
 	return temp;
 }
