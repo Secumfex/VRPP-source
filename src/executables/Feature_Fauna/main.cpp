@@ -1,93 +1,119 @@
 #include "Application/Application.h"
 #include "Application/ApplicationStates.h"
+#include "Visuals/VirtualObjectFactory.h"
+
 #include "Application/ApplicationListeners.h"
 #include "Tools/UtilityListeners.h"
-#include "PlaceHolderListeners.h"
+#include "Physics/UpdatePhysicsComponentListener.h"
+#include "Physics/PhysicWorldSimulationListener.h"
+
+#include "IO/IOManager.h"
+
+#include "SomeListeners.h" // until missing functionality is added
+
+#include "IO/PlayerCamera.h"
+#include "Physics/PhysicWorld.h"
+
+Application* myApp;
+	/*How to build your own custom Application*/
+void configureMyApp(){
+	/*	customize application a little bit*/
+	myApp = 		Application::getInstance();	//create an Application labeled PROJEKT PRAKTIKUM
+	myApp->			setLabel("PROJEKT PRAKTIKUM");
 
 
-/*
- *	A basic executable to use as starting point with our libraries
- *	see Demo-Application to see exemplary usage of listener interfaces, virtual object, input configuration and more
- *	tip: write short Listener classes to wrap code and attach to suitable listener interfaces; i.e. use attachListenerOnBeginningProgramCycle to use code during a program cycle
- */
 
-Application* testingApp;
-VRState* testingState;
-IOHandler* testingInputHandler;
+	/*   create some states to work with */
+	MenuState* myMenu = 		new MenuState("MAINMENU");	//create a MenuState labeled MAINMENU
+	/*
+		Button* myButton = new Button("START_BUTTON");	//create a Button labeled START_BUTTON
+		myButton->addListenerOnButtonPress(new SetStateListener(myApp, "LOADING_SCREEN")); //add a state changing listener to be notified upon a button press
+		myMenu->addButton(myButton);	//add Button to Main Menu
+	*/
 
-void configureTestingApplication() {
-	/* customization of application or state*/
-	/* use listener interfaces for: what should happen on initialization, every program cycle, termination etc. */
-	testingApp->attachListenerOnProgramInitialization(
-			new PrintMessageListener(string("Application is booting")));
-	testingApp->attachListenerOnProgramTermination(
-			new PrintMessageListener(string("Application is terminating")));
 
-}
+	/*	customize myLoadingScreen */
+	MenuState* myLoadingMenu = 	new MenuState("LOADING_SCREEN");	// create a MenuState labeled LOADING_SCREEN
 
-void configureVirtualObjects() {
-	/* creation and customization of Virtual Objects */
-	/* use testingState->createVirtualObject() to create a Virtual Object */
+	VirtualObject* myLoadingObject = 	myLoadingMenu->		createVirtualObject(RESOURCES_PATH "/Fauna/aqua01.3ds", VirtualObjectFactory::OTHER); 		// create and add virtual object to loading menu state
+	myLoadingObject->setModelMatrix(	glm::scale(			glm::mat4(1.0f), glm::vec3(1.0,0.125,1.0)));
+	myLoadingMenu->	attachListenerOnBeginningProgramCycle(	new AnimateSinusModelMatrixListener(myLoadingObject));	// animated loading object
+	myLoadingMenu->	attachListenerOnBeginningProgramCycle(	new AnimateClearColorListener());						// animated pseudo Loading_screen
 
-	testingState->createVirtualObject( RESOURCES_PATH "/Fauna/aqua02.3ds",
-			VirtualObjectFactory::OTHER);
-}
+	/*	customize myVRState*/
+	VRState* myVRState = 	new VRState("VRSTATE"); // create a VRState labeled VRSTATE
+	myVRState->		attachListenerOnAddingVirtualObject(new PrintMessageListener(string("Added a VirtualObject to RenderQueue")));	// console output when virtual object is added
+	myVRState->		attachListenerOnActivation(			new SetClearColorListener(0.44,0.5,0.56));					// custom background color
+	myVRState-> 	attachListenerOnActivation(			new PrintCameraStatusListener( myVRState->getCamera()));
+	myVRState->		attachListenerOnBeginningProgramCycle( 	new PhysicWorldSimulationListener(				IOManager::getInstance()->getDeltaTimePointer()));
 
-void configurePhysics() {
-	/* customization of Bullet / Physicsworld */
+	PlayerCamera* playercam = new PlayerCamera();
+	myVRState->setCamera(playercam);
 
-}
+	/*	load some virtual objects into vr state scene*/
 
-void configureInputHandler() {
-	/* customization of input handling */
-	/* use listener interfaces for: what should happen when a specific key is pressed, etc. */
-	testingInputHandler->attachListenerOnKeyPress(
-			new TerminateApplicationListener(testingApp), GLFW_KEY_ESCAPE);
+	VirtualObject* 	myLoadingObject2 = 		myVRState->			createVirtualObject(RESOURCES_PATH "/Fauna/aqua02.3ds", VirtualObjectFactory::OTHER);	 		// create a Virtual Object by reading an .obj file and add it to VRState automatically
+	myLoadingObject2->	setPhysicsComponent(0.5,0.5,7.5,0.5,0.5);
+	PhysicsComponent* myCowObject1PhysicsComponent = 		myLoadingObject2->getPhysicsComponent();					// get PhysicsComponent pointer
+	myVRState->		attachListenerOnBeginningProgramCycle(  new UpdatePhysicsComponentListener(			myLoadingObject2));	// update PhysicsComponent on every program cycle iteration
+	myVRState->		attachListenerOnBeginningProgramCycle(  new UpdateVirtualObjectModelMatrixListener(	myLoadingObject2));	// update VirtualObject Model Matrix on every program cycle iteration
 
-}
 
-void configureRendering() {
-	/*customize Rendermanager, Renderloop, etc. via framelisteners and such*/
-	/* use listener interfaces for: what should happen everytime a frame is drawn */
 
-	/*comment in to use placeholders for Renderloop, rendering every VO of the testingState; change Shader paths to use a different shader*/
-//	testingApp->attachListenerOnProgramInitialization(	new SetDefaultShaderListener( new Shader (SHADERS_PATH "/Phong_Test/phong.vert", SHADERS_PATH "/Phong_Test/phong.frag")));
-//	testingApp->attachListenerOnRenderManagerFrameLoop(	new RenderloopPlaceHolderListener());
-	testingApp->attachListenerOnProgramInitialization(
-			new SetDefaultShaderListener(
-					new Shader(SHADERS_PATH "/GBuffer/GBuffer.vert",
-							SHADERS_PATH "/GBuffer/GBuffer.frag")));
-	testingApp->attachListenerOnRenderManagerFrameLoop(
-			new RenderloopPlaceHolderListener());
-}
+		btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,1,0),0);
+		//create an invisible ground plane
+		btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,-4,5)));
+    	btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0,groundMotionState,groundShape,btVector3(0,0,0));
+   	 	btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
+    	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(groundRigidBody);
 
-void configureOtherStuff() {
-	/* customization for other stuff */
+	btRigidBody* camBody = playercam->getRigidBody();
+	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(camBody);
 
-}
 
-void configureApplication() {
-	/* create  minimal Application with one state */
-	testingApp = Application::getInstance();
-	testingApp->setLabel("PROJEKT PRAKTIKUM");
-	testingState = new VRState("TESTING FRAMEWORK");
-	testingApp->addState(testingState);
-	testingInputHandler = testingState->getIOHandler();
 
-	/* configure to satisfaction*/
-	configureTestingApplication();
-	configureVirtualObjects();
-	configurePhysics();
-	configureInputHandler();
-	configureRendering();
-	configureOtherStuff();
+	IOHandler* myVRStateIOHandler = myVRState-> getIOHandler();
+	// attach some listeners to keyboard key presses
+	myVRStateIOHandler->attachListenerOnKeyPress(new TerminateApplicationListener(myApp), 	GLFW_KEY_ESCAPE);	// Terminate Application by pressing Escape
+	myVRStateIOHandler->attachListenerOnKeyPress(new SetClearColorListener(0.0,0.0,0.0),	GLFW_KEY_1);		// pressing '1' : black background
+	myVRStateIOHandler->attachListenerOnKeyPress(new SetClearColorListener(1.0,1.0,1.0), 	GLFW_KEY_2);		// pressing '2' : white background
+	myVRStateIOHandler->attachListenerOnKeyPress(new SetClearColorListener(0.44,0.5,0.56), 	GLFW_KEY_3);		// pressing '3' : default greyish-blue background
+	myVRStateIOHandler->attachListenerOnKeyPress(new SetCameraDirectionListener(myVRState->getCamera(), glm::vec3(-1.0f,0.0f,-1.0f)), 	GLFW_KEY_LEFT);		// pressing '<-' : view direction at an angle to the left
+	myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myVRState->getCamera()), 								GLFW_KEY_LEFT);
+	myVRStateIOHandler->attachListenerOnKeyPress(new SetCameraDirectionListener(myVRState->getCamera(), glm::vec3(1.0f,0.0f,-1.0f)), 	GLFW_KEY_RIGHT);	// pressing '->' : view direction at an angle to the right
+	myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myVRState->getCamera()), 								GLFW_KEY_RIGHT);
+	myVRStateIOHandler->attachListenerOnKeyPress(new SetCameraDirectionListener(myVRState->getCamera(), glm::vec3(0.0f,0.0f,-1.0f)), 	GLFW_KEY_UP);		// pressing '<-' : view direction straight ahead
+	myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myVRState->getCamera()), 								GLFW_KEY_UP);
+
+	myVRStateIOHandler->attachListenerOnKeyPress(new CreateVirtualObjectListener(RESOURCES_PATH "/Fauna/aqua04.3ds", glm::vec3(5.0,20.0,5.0), 	myVRState, 	2.0f), GLFW_KEY_M); // create a cow in da sky
+	myVRStateIOHandler->attachListenerOnKeyPress(new CreateVirtualObjectListener(RESOURCES_PATH "/Fauna/aqua05.3ds", glm::vec3(2.5,10.0,10.0), 	myVRState, 	2.0f), GLFW_KEY_SPACE); // create a cube in da sky
+
+	/*	further customize application functionality by adding various listeners */
+	myApp->attachListenerOnProgramInitialization(	new PrintMessageListener(		string("Application is booting")));
+	myApp->attachListenerOnProgramTermination(		new PrintMessageListener(		string("Application is terminating")));
+	myApp->attachListenerOnStateChange( 			new PrintCurrentStateListener(	myApp) );
+
+	myApp->attachListenerOnBeginningProgramCycle(	new TimedTriggerListener(		new SetStateListener(myApp, "LOADING_SCREEN"), 	2500.0)); //	Use Listeners to change states
+	myApp->attachListenerOnBeginningProgramCycle(	new TimedTriggerListener(		new SetStateListener(myApp, "VRSTATE"), 		5000.0));
+
+	// attach a listener which overrides the rendermanager's current Shader
+	myApp->attachListenerOnProgramInitialization(	new SetAlternativeDefaultRenderManagerPointersListener());
+	// attach a listener which serves as renderloop by using the rendermanagers current RenderQueue and Shader
+	myApp->attachListenerOnRenderManagerFrameLoop(	new AlternativeRenderloopListener());
+
+
+	/*	add customized states to application state pool*/
+	myApp->addState(	myMenu);		//add the Main Menu to Application
+	myApp->addState(	myLoadingMenu);	//add the Loading Screen to Application
+	myApp->addState(	myVRState);		//add the VR State to Application
+
+	myApp->setState(	"MAINMENU"); 	//set initial state to the state labeled MAINMENU
 }
 
 int main() {
+	configureMyApp();		// 1 do some customization
 
-	configureApplication();		// 1 do some customization
-
-	testingApp->run();			// 2 run application
+	myApp->run();			// 2 run application
 
 	return 0;				// 3 end :)
 }
