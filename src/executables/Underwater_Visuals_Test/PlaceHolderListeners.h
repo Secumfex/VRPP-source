@@ -9,6 +9,7 @@
 #include <cmath>
 
 #include "Visuals/RenderManager.h"
+#include "Visuals/VirtualObjectFactory.h"
 #include "Visuals/Shader.h"
 
 /// Listener which renders a frame by using current Instance pointers of RenderManager
@@ -25,6 +26,7 @@ public:
 	RenderloopPlaceHolderListener(VirtualObject* water_object = 0);
 	void update();
 };
+
 
 class ReflectionMapRenderPass : public Listener{
 public:
@@ -43,6 +45,25 @@ public:
 	void update();
 };
 
+
+class GodRaysRenderPass : public Listener{
+public:
+	RenderManager* rm;
+	RenderQueue* currentRenderQueue;
+	list<VirtualObject* > voList;
+	Shader* currentShader;
+	vector<GraphicsComponent* > currentGCs;
+
+	/*außerdem*/
+	FrameBufferObject* fbo; // reflectionmap target
+	Camera* reflectedCamera;	// mirrored Camera
+	VirtualObject* water_object;
+
+	GodRaysRenderPass(FrameBufferObject* fbo);
+	void update();
+};
+
+
 class RefractionMapRenderPass : public Listener{
 public:
 	RenderManager* rm;
@@ -59,6 +80,7 @@ public:
 	void update();
 };
 
+
 class RenderVirtualObjectWithShaderListener : public Listener{
 private: 
 	VirtualObject* vo;
@@ -68,11 +90,27 @@ public:
 	void update();
 };
 
+
 class RenderVirtualObjectListener : public Listener{
 private: 
 	VirtualObject* vo;
 public:
 	RenderVirtualObjectListener(VirtualObject* vo);
+	void update();
+};
+
+
+class RenderGraphicsComponentListener : public Listener{
+protected: 
+	GraphicsComponent* gc;
+public:
+	RenderGraphicsComponentListener(GraphicsComponent* gc = 0);
+	virtual void update();
+};
+
+class RenderScreenFillingTriangleListener : public RenderGraphicsComponentListener{
+public:
+	RenderScreenFillingTriangleListener();
 	void update();
 };
 
@@ -86,6 +124,7 @@ public:
 	void update();
 };
 
+
 /// Listener which sets the Phont_Test Shader as the RenderManagers current Shader
 class SetCurrentShaderListener : public Listener{
 private:
@@ -96,27 +135,34 @@ public:
 	void update();
 };
 
+
 /// Listener which sets the glClearColor
 class SetClearColorListener : public Listener {
 private:
-	float r, g, b, a;
+	glm::vec3* clearColorVec3;
+	glm::vec4* clearColorVec4;
+	float a;
 public:
-	SetClearColorListener(float r = 0.0, float g = 0.0, float b = 0.0, float a = 1.0);
+	SetClearColorListener( float r = 0.0, float g = 0.0, float b = 0.0, float a = 1.0 );
+	SetClearColorListener( glm::vec3* clearColor, float a = 1.0 );
+	SetClearColorListener( glm::vec4* clearColor );
 	void update();
 };
+
 
 /// listener on above or under water
 class UnderOrAboveWaterListener : public Listener{
 private:
 	Camera* cam;
 	bool underwater;
-	float sea_level_y;
+	float* sea_level_y;
 	Listener* EnterWaterListener;
 	Listener* ExitWaterListener;
 public:
-	UnderOrAboveWaterListener(Camera* cam, float sea_level_y = 0.0f, Listener* EnterWaterListener = 0, Listener* ExitWaterListener = 0);
+	UnderOrAboveWaterListener(Camera* cam, float* sea_level_y = new float( 0.0f ), Listener* EnterWaterListener = 0, Listener* ExitWaterListener = 0);
 	void update();
 };
+
 
 class RecompileAndSetShaderListener : public Listener{
 private:
@@ -126,6 +172,7 @@ public:
 	RecompileAndSetShaderListener(std::string vertex_shader, std::string fragment_shader);
 	void update();
 };
+
 
 class UpdateReflectedCameraPositionListener : public Listener{
 private:
@@ -138,6 +185,7 @@ public:
 	void update();
 };
 
+
 class UploadUniformSinusWaveListener : public Listener{
 private:
 	float* t;
@@ -146,5 +194,21 @@ private:
 public:
 	UploadUniformSinusWaveListener(std::string name, float* t, float frequency, std::string uniform_name);
 	UploadUniformSinusWaveListener(std::string name, float t, float frequency, std::string uniform_name);
+	void update();
+};
+
+
+class SetFrameBufferObjectListener : public Listener {
+private: 
+	FrameBufferObject* fbo;
+public:
+	SetFrameBufferObjectListener( FrameBufferObject* fbo);
+	void update();
+};
+
+
+class UnbindFrameBufferObjectListener : public Listener {
+public:
+	UnbindFrameBufferObjectListener();
 	void update();
 };
