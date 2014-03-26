@@ -91,8 +91,8 @@ class btRigidBody; class btVector3;
 class ApplyLinearImpulseOnRigidBody : public Listener{
 private:
 	btRigidBody* rigidBody;
-	btVector3 force;
+	glm::vec3 force;
 public:
-	ApplyLinearImpulseOnRigidBody(btRigidBody* rigidBody, btVector3 force);
+	ApplyLinearImpulseOnRigidBody(btRigidBody* rigidBody, glm::vec3 force);
 	void update();
 };
