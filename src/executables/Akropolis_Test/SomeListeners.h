@@ -2,21 +2,18 @@
 
 #include <GL/glew.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/constants.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_inverse.hpp>
 #include <cmath>
 
-/// Listener which changes the ClearColor by a tiny bit on every update
-class AnimateClearColorListener : public Listener{
-private:
-	float t;
-public:
-	AnimateClearColorListener();
-	void update();
-};
-
 #include "Visuals/RenderManager.h"
+#include "Visuals/Shader.h"
+#include "IO/SelectionHandler.h"
 
 /// Listener which renders a frame by using current Instance pointers of RenderManager
-class AlternativeRenderloopListener : public Listener{
+class RenderloopPlaceHolderListener : public Listener{
 private:
 	RenderManager* rm;
 	RenderQueue* currentRenderQueue;
@@ -24,17 +21,17 @@ private:
 	Shader* currentShader;
 	vector<GraphicsComponent* > currentGCs;
 public:
-	AlternativeRenderloopListener();
-	
+	RenderloopPlaceHolderListener();
 	void update();
 };
 
-/// Listener which sets the Phong_Test Shader as the RenderManagers current Shader
-class SetAlternativeDefaultRenderManagerPointersListener : public Listener{
+/// Listener which sets the Phont_Test Shader as the RenderManagers current Shader
+class SetDefaultShaderListener : public Listener{
 private:
 	RenderManager* rm;
+	Shader* shader;
 public:
-	SetAlternativeDefaultRenderManagerPointersListener();
+	SetDefaultShaderListener(Shader* shader);
 	void update();
 };
 
@@ -47,24 +44,36 @@ public:
 	void update();
 };
 
-/// Listener which rotates the Model Matrix by a tiny bit on every update
-class AnimateRotatingModelMatrixListener : public Listener{
+
+
+/// Listener which sets the direction of the given Camera Object
+class TurnCameraListener : public Listener {
 private:
-	VirtualObject* vo;
-	float angle;
+	Camera* 	cam;
+	float delta_theta; // inlcination step
+	float delta_phi;   // rotation step
 public:
-	AnimateRotatingModelMatrixListener(VirtualObject* vo);
+	TurnCameraListener(Camera* cam, float delta_phi, float delta_theta);
 	void update();
 };
 
-/// Listener which moves the Model Matrix on a sinus curve by a tiny bit on every update
-class AnimateSinusModelMatrixListener : public Listener{
+/// Listener which sets the Position of the given Camera Object
+class SetCameraPositionListener : public Listener {
 private:
-	VirtualObject* vo;
-	float old_sinus;
-	float t;
+	Camera* 	cam;
+	glm::vec3 position;
 public:
-	AnimateSinusModelMatrixListener(VirtualObject* vo);
+	SetCameraPositionListener(Camera* cam, glm::vec3 position);
+	void update();
+};
+
+class ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener : public Listener {
+private:
+	SelectionHandler* selectionHandler;
+	Camera* cam;
+	float strength;
+public:
+	ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener(SelectionHandler* selectionHandler, Camera* cam, float strength = 100.0f);
 	void update();
 };
 
@@ -77,66 +86,13 @@ public:
 	void update();
 };
 
-// Listener which updates the PhysicsWorld on every update
-class UpdatePhysicsWorldListener : public Listener {
+class btRigidBody; class btVector3;
+
+class ApplyLinearImpulseOnRigidBody : public Listener{
 private:
+	btRigidBody* rigidBody;
+	btVector3 force;
 public:
-	UpdatePhysicsWorldListener();
-	void update();
-};
-
-// Listener which sets the direction of the given Camera Object
-class SetCameraDirectionListener : public Listener {
-private:
-	Camera* 	cam;
-	glm::vec3 	direction;
-public:
-	SetCameraDirectionListener(Camera* cam, glm::vec3 direction);
-	void update();
-};
-
-//Listener which turns the LookAt-Position of the given Camera Object
-class TurnCameraListener : public Listener {
-private:
-	Camera* 	cam;
-	float theta; // inlcination step
-	float phi;   // rotation step
-public:
-	TurnCameraListener(Camera* cam, float phi, float theta);
-	void update();
-};
-
-#include "Physics/PhysicWorld.h"
-//Listener which starts the ray-picking test
-class PickRayListener : public Listener {
-private:
-	Camera* cam;
-	PhysicWorld* phWorld;
-
-public:
-	PickRayListener(Camera* cam);
-	void update();
-};
-
-
-#include "Application/ApplicationStates.h"
-/// Listener which shoots a sphere out of the camera
-class ShootSphereListener : public Listener {
-private:
-	Camera* cam;
-	VRState* state;
-public:
-	ShootSphereListener(Camera* cam, VRState* state);
-	void update();
-};
-
-/// Listener which applies an impulse to a rigid body in direction of the provided cam
-class ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener : public Listener {
-private:
-	SelectionHandler* selectionHandler;
-	Camera* cam;
-	float strength;
-public:
-	ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener(SelectionHandler* selectionHandler, Camera* cam, float strength = 100.0f);
+	ApplyLinearImpulseOnRigidBody(btRigidBody* rigidBody, btVector3 force);
 	void update();
 };
