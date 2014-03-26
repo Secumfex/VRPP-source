@@ -8,7 +8,7 @@
 #include "Physics/PhysicWorld.h"
 #include "Physics/PhysicWorldSimulationListener.h"
 /*
-*	This executable tests various Input/Output related functionalities
+*	This executable tests simple GUIElements
 */	
 
 Application* 	testingApp;
