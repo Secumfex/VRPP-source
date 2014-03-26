@@ -18,8 +18,11 @@ Camera::Camera(){
 	speedRight = 0.0f;
 	speedForward = 0.0f;
 
+	topDown = false;	// 
+
 	//compute initial View Direction vector
 	updateViewDirection();
+	viewMatrix = getViewMatrix();
 }
 
 Camera::~Camera(){}
@@ -144,17 +147,25 @@ glm::vec3 Camera::getRight(){
 glm::vec3 Camera::getUp(){
 	glm::vec3 up = glm::cross(getRight() , direction);
 	up = glm::normalize(up);
+	if (topDown){
+		up *= -1.0f;
+	}
 	return up;
 }
 
 glm::mat4 Camera::getViewMatrix(){
 	// Camera matrix
-	return glm::lookAt(
+	viewMatrix =glm::lookAt(
 		position,           // Camera is here
 		position + direction, // and looks here : at the same position, plus "direction"
-		glm::vec3(0,1,0)                  // Head is up (set to 0,-1,0 to look upside-down)
-		);
+		getUp()                  // Head is up (set to 0,-1,0 to look upside-down)
+		); 
+	return viewMatrix;
 	}
+
+glm::mat4* Camera::getViewMatrixPointer(){
+	return &viewMatrix;
+}
 
 void Camera::setDirection(glm::vec3 dir){
 	direction = glm::normalize(dir);
@@ -176,4 +187,12 @@ void Camera::clampPhiTheta(){
 	if (theta <= -PI / 2.0){
 		theta = -PI / 2.0 + 0.001;
 	}
+}
+
+void Camera::setTopDown(bool to){
+	topDown = to;
+}
+
+bool Camera::getTopDown(){
+	return topDown;
 }

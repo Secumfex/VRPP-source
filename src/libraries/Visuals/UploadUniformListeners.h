@@ -1,6 +1,9 @@
 #ifndef UPLOADUNIFORMLISTENERS_H_
 #define UPLOADUNIFORMLISTENERS_H_
 
+#include <GL/glew.h>
+#include <glm/glm.hpp>
+
 #include "Patterns/Listener.h"
 
 
@@ -212,5 +215,67 @@ public:
   	 ///
 	 void update();
   };
+	
+
+
+/******************** CUSTOM UNIFORM UPLOAD LISTENERS ***********************/	
+
+	/// listener to upload a custom Uniform Vec3
+	class UploadUniformVec3Listener : public Listener {
+	private:
+		glm::vec3* vector;
+		std::string uniform_name;
+	public:		
+		UploadUniformVec3Listener(std::string name = std::string("UNIFORMUPLOADLISTENER"), glm::vec3 vector = glm::vec3(0.0f,0.0f,0.0f), std::string uniform_name = "custom_uniform");
+		UploadUniformVec3Listener(std::string name, glm::vec3* vector, std::string uniform_name);
+		void update();	
+	};
+
+	/// listener to upload a custom Uniform Float
+	class UploadUniformFloatListener : public Listener {
+	private:
+		float* value;
+		std::string uniform_name;
+	public:
+		UploadUniformFloatListener(std::string name = std::string("UNIFORMUPLOADLISTENER"), float value = 0.0f, std::string uniform_name = "custom_uniform");
+		UploadUniformFloatListener(std::string name, float* value, std::string uniform_name);
+		void update();
+	};
+
+		/// listener to upload a custom Uniform mat4
+	class UploadUniformMat4Listener : public Listener {
+	private:
+		glm::mat4* matrix;
+		std::string uniform_name;
+	public:		
+		UploadUniformMat4Listener(std::string name = std::string("UNIFORMUPLOADLISTENER"), glm::mat4 matrix = glm::mat4(1.0f), std::string uniform_name = "custom_uniform");
+		UploadUniformMat4Listener(std::string name, glm::mat4* matrix, std::string uniform_name);
+		void update();	
+	};
+
+	/// listener to upload a custom Uniform GLint
+	class UploadUniformIntListener : public Listener {
+	private:
+		GLint* value;
+		std::string uniform_name;
+	public:		
+		UploadUniformIntListener(std::string name = std::string("UNIFORMUPLOADLISTENER"), GLint value = 0, std::string uniform_name = "custom_uniform");
+		UploadUniformIntListener(std::string name, GLint* value, std::string uniform_name);
+		void update();	
+	};
+
+	/// listener to bind texture to a GL_TEXTURE unit and upload this unit to a uniform sampler 2D variable
+	class UploadUniformTextureListener : public Listener {
+	private:
+		GLint unit;
+		GLuint texture_handle;
+		std::string uniform_name;
+	public:		
+
+		UploadUniformTextureListener(std::string name = std::string("UNIFORMUPLOADLISTENER"), GLint unit = 0, std::string uniform_name = "custom_uniform", GLuint texture_handle = 0);
+		void update();	
+	};
+
+
 
 #endif /* UPLOADUNIFORMLISTENERS_H_ */
