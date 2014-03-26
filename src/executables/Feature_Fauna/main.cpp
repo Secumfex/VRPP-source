@@ -35,14 +35,14 @@ void configureVirtualObjects() {
 
 	/* creation and customization of Virtual Objects */
 	/* use testingState->createVirtualObject() to create a Virtual Object */
-	VirtualObject* 	cube2 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/Seetang01.jpg", VirtualObjectFactory::SPHERE, 1.0, 8);
+	VirtualObject* 	cube2 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE, 1.0, 8);
 	cube2->translate(glm::vec3(0.0f, 0.0f, 0.0f));
-	VirtualObject* 	cube3 = testingState->createVirtualObject(RESOURCES_PATH "/sphere.obj", VirtualObjectFactory::SPHERE, 0.8, 8);
-	cube3->translate(glm::vec3(0.5f, 2.0f, 0.0f));
-	VirtualObject* 	cube4 = testingState->createVirtualObject(RESOURCES_PATH "/sphere.obj", VirtualObjectFactory::SPHERE, 0.6, 8);
+	VirtualObject* 	cube3 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE, 0.8, 8);
+	cube3->translate(glm::vec3(0.0f, 2.0f, 0.0f));
+	VirtualObject* 	cube4 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE, 0.6, 8);
 	cube4->translate(glm::vec3(0.0f, 4.0f, 0.0f));
-	VirtualObject* 	cube5 = testingState->createVirtualObject(RESOURCES_PATH "/sphere.obj", VirtualObjectFactory::SPHERE, 0.4, 8);
-	cube5->translate(glm::vec3(-0.3f, 6.0f, 0.0f));
+	VirtualObject* 	cube5 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE, 0.4, 8);
+	cube5->translate(glm::vec3(0.0f, 6.0f, 0.0f));
 
 	btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,1,0),0);
 	//create an invisible ground plane
@@ -63,6 +63,13 @@ void configureInputHandler() {
 	/* use listener interfaces for: what should happen when a specific key is pressed, etc. */
 	testingInputHandler->attachListenerOnKeyPress(
 			new TerminateApplicationListener(testingApp), GLFW_KEY_ESCAPE);
+	testingInputHandler->attachListenerOnKeyPress(
+			new SetCameraPositionListener(testingState->getCamera(), glm::vec3(0.0f,0.1f,0.0)), 	GLFW_KEY_SPACE);
+
+//	myVRStateIOHandler->attachListenerOnKeyPress(
+//			new SetCameraDirectionListener(myVRState->getCamera(), glm::vec3(0.0f,0.0f,-1.0f)), 	GLFW_KEY_UP);		// pressing '<-' : view direction straight ahead
+//	myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myVRState->getCamera()), 								GLFW_KEY_UP);
+
 
 }
 

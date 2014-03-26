@@ -141,6 +141,16 @@ void SetCameraDirectionListener::update(){
 	cam->setDirection(direction);
 }
 
+SetCameraPositionListener::SetCameraPositionListener(Camera* cam, glm::vec3 position){
+	this->cam 			= cam;
+	this->position = position + glm::vec3(0.0, 1.0, 0.0);
+}
+
+void SetCameraPositionListener::update(){
+	cam->setPosition(cam->getPosition()+position);
+}
+
+
 #include <stdlib.h>
 #include <time.h>
 

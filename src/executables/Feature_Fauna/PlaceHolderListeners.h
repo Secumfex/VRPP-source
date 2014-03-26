@@ -94,6 +94,16 @@ public:
 	void update();
 };
 
+/// Listener which sets the Position of the given Camera Object
+class SetCameraPositionListener : public Listener {
+private:
+	Camera* 	cam;
+	glm::vec3 position;
+public:
+	SetCameraPositionListener(Camera* cam, glm::vec3 position);
+	void update();
+};
+
 #include "Application/ApplicationStates.h"
 /// Listener which creates a Virtual Object at the provided position in the provided state
 class CreateVirtualObjectListener : public Listener {
