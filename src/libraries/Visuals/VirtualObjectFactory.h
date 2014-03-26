@@ -61,19 +61,18 @@ GraphicsComponent* getTriangle();
  */
 VirtualObject* createVirtualObject();
 
+
 /** \brief create VO
  *
  * @param filename
  * @param bodyType
  * @param mass defines the behavior of the rigid body in the physics world
+ * @param graphcomps vector of graphic component
  * @return virtual object
  */
-VirtualObject* createVirtualObject(std::string filename, BodyType bodyType = OTHER, float mass = 0.0f);
+VirtualObject* createVirtualObject(std::string filename, BodyType bodyType = OTHER, float mass = 0.0f, int collisionFlag = 1);
 
-/** \brief create VO
- *  @param graphcomps vector of graphic component
- * @return virtual object
- */
+
 VirtualObject* createVirtualObject(vector<GraphicsComponent*> graphcomps);
 
 /** \brief !docu pls!
