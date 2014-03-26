@@ -2,6 +2,7 @@
 #define UPLOADUNIFORMLISTENERS_H_
 
 #include "Patterns/Listener.h"
+#include <sstream>
 
 
 
@@ -211,6 +212,16 @@ public:
 	 UploadUniformResolutionYListener(std::string name);
   	 ///
 	 void update();
+  };
+ class UploadUniformBoneTransformationListener : public Listener{
+
+  	public:
+	 ///constructor @param name
+	 UploadUniformBoneTransformationListener(std::string name, std::string boneName);
+  	 ///
+	 void update();
+
+	 int index;
   };
 
 #endif /* UPLOADUNIFORMLISTENERS_H_ */

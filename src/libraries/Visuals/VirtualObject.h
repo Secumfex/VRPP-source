@@ -193,6 +193,12 @@ public:
 	* @return void
 	*/
 	void setAnimation(AnimationLoop* animation);
+
+	/** \brief getter
+	 *
+	 * @return the virtual objects animation
+	 */
+	AnimationLoop* getAnimation();
 };
 
 

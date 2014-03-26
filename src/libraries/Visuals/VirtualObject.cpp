@@ -130,3 +130,6 @@ PhysicsComponent* VirtualObject::getPhysicsComponent(){
 void VirtualObject::setAnimation(AnimationLoop* animation){
 	mAnimation = animation;
 }
+AnimationLoop* VirtualObject::getAnimation(){
+	return mAnimation;
+}

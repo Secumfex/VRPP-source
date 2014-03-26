@@ -549,9 +549,9 @@ AnimationLoop* VirtualObjectFactory::makeAnimation(map<std::string, Bone*> bones
 	}
 
 	setBones(myRootNode, bones);
-	for (i = 0; i < bones.size(); ++i) {
-		//		bones[1].
-	}
+
+	myAnimation->addNode(myRootNode);
+	myAnimation->setDuration(pScene->mAnimations[0]->mDuration);
 
 	return myAnimation;
 }

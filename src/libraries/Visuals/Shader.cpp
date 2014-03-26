@@ -261,6 +261,8 @@ void Shader::attachUniformListener(std::string uniform){
 		attach(new UploadUniformResolutionXListener("UNIFORMUPLOADLISTENER"));}
 	else if(uniform == "resY"){
 		attach(new UploadUniformResolutionYListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform.find("uniformBoneTransform") != std::string::npos){
+		attach(new UploadUniformBoneTransformationListener("UNIFORMUPLOADLISTENER", uniform));}
 	else {
 		std::cout << "ERROR: Uniform \"" << uniform << "\" is not a valid uniform name." << std:: endl;
 	}

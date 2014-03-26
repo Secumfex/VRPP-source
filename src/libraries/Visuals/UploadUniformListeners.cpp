@@ -274,3 +274,27 @@ void UploadUniformResolutionYListener::update(){
 	FrameBufferObject* fbo = RenderManager::getInstance()->getCurrentFBO();
 	shader->uploadUniform(fbo->getHeight(), "resY");
 }
+
+UploadUniformBoneTransformationListener ::UploadUniformBoneTransformationListener (std::string name, std::string boneName){
+	setName(name);
+
+	std::string index_string = boneName.substr(boneName.find_last_not_of("uniformBoneTransform" + 1));
+
+	istringstream convert(index_string);
+
+	index = 0;
+
+	convert >> index;
+
+}
+
+void UploadUniformBoneTransformationListener ::update(){
+	Shader* shader = RenderManager::getInstance()->getCurrentShader();
+	GraphicsComponent* gc = RenderManager::getInstance()->getCurrentGC();
+	ostringstream convert;
+	std::string uniformName = "uniformBoneTransform";
+	convert << index;
+	uniformName += convert.str();
+	shader->uploadUniform(gc->getBones()[index]->getBoneMatrix(), uniformName);
+
+}

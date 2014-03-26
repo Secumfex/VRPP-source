@@ -60,6 +60,8 @@ int main() {
 
 	GraphicsComponent* triangle = voFactory->getTriangle();
 
+	AnimationLoop* animation = object03->getAnimation();
+
 	MaterialManager::getInstance()->makeMaterial("rough_wood_darker", object03->getGraphicsComponent());
 
 
@@ -73,7 +75,7 @@ int main() {
 	Shader *finalCompShader = new Shader(	SHADERS_PATH "/GBuffer_clone/screenFill.vert",
 			SHADERS_PATH "/GBuffer_clone/finalCompositing.frag");
 
-	Shader *gbufferShader = ShaderFactory::getInstance()->createGBuffer(object02->getGraphicsComponent()[0]);
+	Shader *gbufferShader = ShaderFactory::getInstance()->createGBuffer(object03->getGraphicsComponent()[0]);
 
 	Shader *gbuffer_normalMap_Shader = ShaderFactory::getInstance()->createGBuffer(object01->getGraphicsComponent()[0]);
 
@@ -147,6 +149,9 @@ int main() {
 
 		//rotation angle
 		angle = fmod((float)(angle+rotationSpeed*glfwGetTime()), (float)(pi<float>()*2.0f));
+
+		animation->updateNodes(angle);
+
 		glfwSetTime(0.0);
 
 		//scale a cube into a flat plane
@@ -155,7 +160,7 @@ int main() {
 		//nice rotation of a small cube
 		mat4 modelMatrix02 = scale(translate(rotate(mat4(1.0f), degrees(angle), vec3(1.0f, 1.0f, 0.0f)), vec3(0.0f, 0.5f, -0.5f)), vec3(0.9f, 0.9f, 0.9f));
 
-		mat4 modelMatrix03 = scale(translate(rotate(rotate(mat4(1.0f), 90.0f, vec3(0.0f, 0.0f, 1.0f)), 90.0f, vec3(0.0f, 1.0f, 0.0f)), vec3(0.0, 0.0, 0.5)), vec3(0.5f, 0.5f, 0.5f));
+		mat4 modelMatrix03 = scale(translate(rotate(rotate(mat4(1.0f), 90.0f, vec3(0.0f, 0.0f, 1.0f)), 90.0f, vec3(0.0f, 1.0f, 0.0f)), vec3(0.0, 0.0, -1.0)), vec3(0.5f, 0.5f, 0.5f));
 
 		object01->setModelMatrix(modelMatrix01);
 		object02->setModelMatrix(modelMatrix02);
@@ -168,10 +173,8 @@ int main() {
 		fbo->bindFBO();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		        glViewport(0, 0, width, (height/4)*3);
+		glViewport(0, 0, width, (height/4)*3);
 
-		gbufferShader->useProgram();
-		rm->setCurrentShader(gbufferShader);
 		//----------------------------------------------------------------------------------------//
 		//        This is da Main-Renderloop. Hier werden alle GC fï¿½r den GBuffer gerendert       //
 		//----------------------------------------------------------------------------------------//
@@ -190,23 +193,15 @@ int main() {
 				GraphicsComponent *gc_temp = vo_temp->getGraphicsComponent()[j];
 				rm->setCurrentGC(gc_temp);
 
-				if(gc_temp->getMaterial()->hasNormalTexture()){
-					gbuffer_normalMap_Shader->useProgram();
-					rm->setCurrentShader(gbuffer_normalMap_Shader);
-					gbuffer_normalMap_Shader->uploadAllUniforms();
-				}else{
-					gbufferShader->useProgram();
-					rm->setCurrentShader(gbufferShader);
-					gbufferShader->uploadAllUniforms();
-				}
+				Shader* renderShader = ShaderFactory::getInstance()->createGBuffer(gc_temp);
 
-				if(gc_temp->getGhostObject()->getNumOverlappingObjects() > 0)
-				std::cout << gc_temp->getGhostObject()->getNumOverlappingObjects() << " SO VIELE ÜBERSCHNEIDUNGEN BEI" << gc_temp->getMaterial()->getName() << endl;
+				renderShader->useProgram();
+				rm->setCurrentShader(renderShader);
+				renderShader->uploadAllUniforms();
 
-				gbufferShader->render(gc_temp);
+				renderShader->render(gc_temp);
 			}
 		}
-
 
 		fbo->unbindFBO();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -223,7 +218,7 @@ int main() {
 		finalCompShader->useProgram();
 		rm->setCurrentShader(finalCompShader);
 
-				glViewport(0, 0, width, height);
+		glViewport(0, 0, width, height);
 
 		finalCompShader->uploadAllUniforms();
 		finalCompShader->render(triangle);
@@ -235,25 +230,25 @@ int main() {
 		//      show all the components of the FBO    //
 		//--------------------------------------------//
 
-		        glBindVertexArray(triangle->getMesh()->getVAO());
-		        simpleTexShader->useProgram();
-		        rm->setCurrentShader(simpleTexShader);
+		glBindVertexArray(triangle->getMesh()->getVAO());
+		simpleTexShader->useProgram();
+		rm->setCurrentShader(simpleTexShader);
 
-		        glViewport(0, (height/4)*3, width/4, height/4);
-		        glBindTexture(GL_TEXTURE_2D, fbo->getPositionTextureHandle());
-		        glDrawArrays(GL_TRIANGLES, 0, 3);
+		glViewport(0, (height/4)*3, width/4, height/4);
+		glBindTexture(GL_TEXTURE_2D, fbo->getPositionTextureHandle());
+		glDrawArrays(GL_TRIANGLES, 0, 3);
 
-		        glViewport(width/4, (height/4)*3, width/4, height/4);
-		        glBindTexture(GL_TEXTURE_2D, fbo->getNormalTextureHandle());
-		        glDrawArrays(GL_TRIANGLES, 0, 3);
+		glViewport(width/4, (height/4)*3, width/4, height/4);
+		glBindTexture(GL_TEXTURE_2D, fbo->getNormalTextureHandle());
+		glDrawArrays(GL_TRIANGLES, 0, 3);
 
-		        glViewport((width/4)*2, (height/4)*3, width/4, height/4);
-		        glBindTexture(GL_TEXTURE_2D, fbo->getColorTextureHandle());
-		        glDrawArrays(GL_TRIANGLES, 0, 3);
+		glViewport((width/4)*2, (height/4)*3, width/4, height/4);
+		glBindTexture(GL_TEXTURE_2D, fbo->getColorTextureHandle());
+		glDrawArrays(GL_TRIANGLES, 0, 3);
 
-		        glViewport((width/4)*3, (height/4)*3, width/4, height/4);
-		        glBindTexture(GL_TEXTURE_2D, fbo->getSpecularTextureHandle());
-		        glDrawArrays(GL_TRIANGLES, 0, 3);
+		glViewport((width/4)*3, (height/4)*3, width/4, height/4);
+		glBindTexture(GL_TEXTURE_2D, fbo->getSpecularTextureHandle());
+		glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		//show what's been drawn
 		glfwSwapBuffers(window);

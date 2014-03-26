@@ -20,6 +20,8 @@ public:
 	std::vector<Node*> mNodes;
 
 	void updateNodes(float t);
+	void addNode(Node* node);
+	void setDuration(float t);
 
 private:
 	float duration;

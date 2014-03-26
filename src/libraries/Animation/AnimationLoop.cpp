@@ -18,8 +18,15 @@ AnimationLoop::~AnimationLoop() {
 
 void AnimationLoop::updateNodes(float t){
 	unsigned int i;
+	float next_time = fmod(t, duration);
 
 	for (i = 0; i < mNodes.size(); ++i) {
-		updateNodes(t);
+		mNodes[i]->updateBone(next_time);
 	}
+}
+void AnimationLoop::addNode(Node* node){
+	mNodes.push_back(node);
+}
+void AnimationLoop::setDuration(float t){
+	duration = t;
 }
