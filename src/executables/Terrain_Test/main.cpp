@@ -27,8 +27,7 @@ void configureMyApp(){
 
 	/*	customize virtual objects*/
 
-	//cube.obj durch terrain.obj ersetzten, CUBE durch TERRAIN
-	VirtualObject* 	terrain = 	myVRState->	createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE);
+	VirtualObject* 	terrain = 	myVRState->	createVirtualObject(RESOURCES_PATH "/terrainTest.obj", VirtualObjectFactory::TERRAIN);
 	myVRState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(terrain));
 
 	/*
