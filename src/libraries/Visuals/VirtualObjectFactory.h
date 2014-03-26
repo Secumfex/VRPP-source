@@ -101,9 +101,15 @@ private:
 	 */
 	void color4_to_float4(const aiColor4D *c, float f[4]);
 
+	AnimationLoop* makeAnimation(vector<Bone*> bones, const aiScene* pScene);
+
 	vector<Node*> getNodeChildren(aiNode* node);
 
+
+	void setBones(Node* node, vector<Bone*> bones);
+
 	void setNodeTransform(Node* node, aiNodeAnim* nodeanim);
+
 };
 
 #endif /* VIRTUALOBJECTFACTORY_H_ */

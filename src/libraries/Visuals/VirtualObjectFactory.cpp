@@ -226,6 +226,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 		}
 		if(mesh->HasBones()){
+			//TODO: buffer anlegen
 			unsigned int j;
 			for (j = 0; j < mesh->mNumBones; ++j) {
 				vector<float> boneweight(mesh->mNumVertices);
@@ -486,23 +487,8 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 
 	if(pScene->HasAnimations()){
-		AnimationLoop *myAnimation;
-		cout << pScene->mRootNode->mName.C_Str() << " Der VADDA" << endl;
-
-		aiNode* node;
-
-		unsigned int i;
-		for (i = 0; i < pScene->mRootNode->mNumChildren; ++i) {
-			std::string node_name = pScene->mRootNode->mChildren[i]->mName.C_Str();
-			if(node_name == "Armature")
-				node = pScene->mRootNode->mChildren[i];
-		}
-
-		Node* myRootNode = new Node(getNodeChildren(node));
-		for (i = 0; i < pScene->mAnimations[0]->mNumChannels; ++i) {
-			setNodeTransform(myRootNode, pScene->mAnimations[0]->mChannels[i]);
-		}
-
+		AnimationLoop *myAnimation = makeAnimation(bones, pScene);
+		virtualObject->setAnimation(myAnimation);
 	}
 
 	glm::vec3 normal=physics_max;
@@ -522,6 +508,31 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 	return virtualObject;
 }
 
+
+AnimationLoop* VirtualObjectFactory::makeAnimation(vector<Bone*> bones, const aiScene* pScene){
+	AnimationLoop* myAnimation = new AnimationLoop();
+
+	cout << "Animation Tree is being build. This might take a while." << endl;
+
+	aiNode* node;
+
+	unsigned int i;
+	for (i = 0; i < pScene->mRootNode->mNumChildren; ++i) {
+		std::string node_name = pScene->mRootNode->mChildren[i]->mName.C_Str();
+		if(node_name == "Armature")
+			node = pScene->mRootNode->mChildren[i];
+	}
+
+	Node* myRootNode = new Node(getNodeChildren(node));
+	for (i = 0; i < pScene->mAnimations[0]->mNumChannels; ++i) {
+		setNodeTransform(myRootNode, pScene->mAnimations[0]->mChannels[i]);
+	}
+
+	setBones(myRootNode, bones);
+
+	return myAnimation;
+}
+
 vector<Node*> VirtualObjectFactory::getNodeChildren(aiNode* node){
 	vector<Node*> children;
 
@@ -531,20 +542,38 @@ vector<Node*> VirtualObjectFactory::getNodeChildren(aiNode* node){
 		temp->setName(node->mName.C_Str());
 		children.push_back(temp);
 	}
-		return children;
+	return children;
 }
 
 void VirtualObjectFactory::setNodeTransform(Node* node, aiNodeAnim* nodeanim){
 	std::string name = nodeanim->mNodeName.C_Str();
 
+	unsigned int i;
 	if(name == node->getName()){
-
-
+		for (i = 0; i < nodeanim->mNumPositionKeys; ++i) {
+			float time = nodeanim->mPositionKeys[i].mTime;
+			glm::vec3 position = glm::vec3(nodeanim->mPositionKeys[i].mValue.x, nodeanim->mPositionKeys[i].mValue.y, nodeanim->mPositionKeys[i].mValue.z);
+			glm::vec3 scale = glm::vec3(nodeanim->mScalingKeys[i].mValue.x, nodeanim->mScalingKeys[i].mValue.y, nodeanim->mScalingKeys[i].mValue.z);
+			glm::quat rotation = glm::quat(nodeanim->mRotationKeys[i].mValue.w, nodeanim->mRotationKeys[i].mValue.x, nodeanim->mRotationKeys[i].mValue.y, nodeanim->mRotationKeys[i].mValue.z);
+			node->addTransformation(position, scale, rotation, time);
+		}
 	}
 
-	unsigned int i;
 	for (i = 0; i < node->getChildren().size(); ++i) {
 		setNodeTransform(node->getChildren()[i], nodeanim);
 	}
+}
+
+void VirtualObjectFactory::setBones(Node* node, vector<Bone*> bones){
+	unsigned int j;
+for (j = 0; j < bones.size(); ++j) {
+	if(node->getName() == bones[j]->getName())
+		node->setBone(bones[j]);
+
+	unsigned int i;
+	for (i = 0; i < node->getChildren().size(); ++i) {
+		setBones(node->getChildren()[i], bones);
+	}
+}
 
 }

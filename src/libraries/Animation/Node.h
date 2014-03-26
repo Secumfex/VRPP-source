@@ -10,6 +10,8 @@
 
 #include <vector>
 #include <string>
+#include <Animation/Bone.h>
+#include <glm/gtc/quaternion.hpp>
 
 class Node {
 public:
@@ -19,8 +21,17 @@ public:
 	void setName(std::string name);
 	std::string getName();
 	std::vector<Node*> getChildren();
+	void addTransformation(glm::vec3 pos, glm::vec3 scale, glm::quat rotation, float time);
+	void setBone(Bone* bone);
+	Bone* getBone();
 
 private:
+	Bone* mBone;
+
+	std::vector<float> mTimes;
+	std::vector<glm::vec3> mPositions;
+	std::vector<glm::vec3> mScales;
+	std::vector<glm::quat> mRotations;
 	std::vector<Node*> mChildren;
 	std::string mName;
 };
