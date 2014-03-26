@@ -1,10 +1,3 @@
-/*
- * Seetang.h
- *
- *  Created on: 25.03.2014
- *      Author: Flower
- */
-
 #ifndef SEETANG_H_
 #define SEETANG_H_
 #include <iostream>
@@ -14,16 +7,19 @@
 #include "BulletDynamics\Dynamics\btRigidBody.h"
 #include "Physics\PhysicsComponent.h"
 #include "btBulletDynamicsCommon.h"
+#include "../Physics/CatmullRomeSpline.h"
+#include "../IO/Camera.h"
 
 class Seetang {
-
+private:
+	glm::mat4 mViewMatrix;
 public:
 	Seetang();
 	btRigidBody* addSphere(float radius, float x, float y, float z, float mass);
 	btRigidBody *rigidBody;
 	vector<btRigidBody*> spheres;
-
-private:
+	glm::mat4 getViewMatrix();
+	void MVMultiplikation();
 
 };
 
