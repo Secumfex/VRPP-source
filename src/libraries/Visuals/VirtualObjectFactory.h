@@ -68,9 +68,11 @@ VirtualObject* createVirtualObject();
  * @param bodyType
  * @param mass defines the behavior of the rigid body in the physics world
  * @param graphcomps vector of graphic component
+ * @param collisionFlag 
+ * @param blenderAxes defines whether the file uses world_axes of Blender ( Z is up, Y is depth ), which is common in Blender exported Collada files
  * @return virtual object
  */
-VirtualObject* createVirtualObject(std::string filename, BodyType bodyType = OTHER, float mass = 0.0f, int collisionFlag = 1);
+VirtualObject* createVirtualObject(std::string filename, BodyType bodyType = OTHER, float mass = 0.0f, int collisionFlag = 1, bool blenderAxes = false);
 
 
 VirtualObject* createVirtualObject(vector<GraphicsComponent*> graphcomps);

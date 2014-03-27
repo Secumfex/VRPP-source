@@ -88,7 +88,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(){
 	return new VirtualObject();
 }
 
-VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, BodyType bodyType, float mass, int collisionFlag){
+VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, BodyType bodyType, float mass, int collisionFlag, bool blenderAxes){
 
 	VirtualObject* virtualObject = new VirtualObject();
 
@@ -139,6 +139,14 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 	glm::vec3 physics_min = glm::vec3(FLT_MAX,FLT_MAX,FLT_MAX);
 	glm::vec3 physics_max = glm::vec3(-FLT_MAX,-FLT_MAX,-FLT_MAX);
 
+	/******************************************************/
+	if (blenderAxes)
+	{
+		//rotate Scene Node
+		aiNode* root = pScene->mRootNode;
+		aiMatrix4x4::RotationX(0.5, root->mTransformation); 
+	}
+	/******************************************************/
 
 	// For each mesh
 
