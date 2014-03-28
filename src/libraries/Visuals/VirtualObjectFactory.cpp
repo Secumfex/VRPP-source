@@ -498,9 +498,8 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 		btMotionState* motion = rigidBody->getMotionState();
 
 		btTransform worldTrans;
-		motion->getWorldTransform(worldTrans);
-	
-		worldTrans.setRotation( btQuaternion( btVector3(1.0f, 0.0f, 0.0f), 3.0f * PI / 2.0f));
+		worldTrans.setIdentity();
+		worldTrans.setRotation( btQuaternion( btVector3(1.0f, 0.0f, 0.0f), ( (-1.0f) * PI ) / 2.0f));
 		std::cout << "BLENDER FILE... updating ModelMatrix" << std::endl;
 
 		motion->setWorldTransform(worldTrans);
