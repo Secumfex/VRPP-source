@@ -113,11 +113,11 @@ void FrameBufferObject::createDepthBuffer(){
 }
 
 void FrameBufferObject::createGUITexture(){
+	glGenTextures(1, &mGuiTextureHandle);
+	glBindTexture(GL_RENDERBUFFER, mGuiTextureHandle);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWidth, mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, mFramebufferHandle);
-	glGenRenderbuffers(1, &mDepthbufferHandle);
-	glBindRenderbuffer(GL_RENDERBUFFER, mDepthbufferHandle);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, mWidth, mHeight);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mDepthbufferHandle);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT5, GL_TEXTURE_2D, mGuiTextureHandle, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
