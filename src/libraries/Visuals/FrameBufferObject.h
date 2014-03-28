@@ -57,6 +57,11 @@ public:
 	 */
 	void createDepthBuffer();
 
+	/** \brief creates a depthbuffer for this fbo
+	 *
+	 */
+	void createGUITexture();
+
 	/** \brief getter
 	 *
 	 * @return FBO handle
@@ -187,6 +192,7 @@ protected:
     GLuint mSpecularTextureHandle;		/**< !docu pls! */
     GLuint mShadowMapHandle;			/**< !docu pls! */
     GLuint mDepthbufferHandle;			/**< !docu pls! */
+    GLuint mGuiTextureHandle;
 
 
 

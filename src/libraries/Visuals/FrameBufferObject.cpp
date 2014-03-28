@@ -21,6 +21,7 @@ FrameBufferObject::FrameBufferObject(int width, int height) {
 	mDepthbufferHandle = -1;
 	mNormalTextureHandle = -1;
 	mPositionTextureHandle = -1;
+	mGuiTextureHandle = -1;
 
 	createDepthBuffer();
 
@@ -103,6 +104,15 @@ void FrameBufferObject::createShadowMap(){
 	mDrawBuffers.push_back(GL_COLOR_ATTACHMENT4);
 }
 void FrameBufferObject::createDepthBuffer(){
+	glBindFramebuffer(GL_FRAMEBUFFER, mFramebufferHandle);
+	glGenRenderbuffers(1, &mDepthbufferHandle);
+	glBindRenderbuffer(GL_RENDERBUFFER, mDepthbufferHandle);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, mWidth, mHeight);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mDepthbufferHandle);
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void FrameBufferObject::createGUITexture(){
 	glBindFramebuffer(GL_FRAMEBUFFER, mFramebufferHandle);
 	glGenRenderbuffers(1, &mDepthbufferHandle);
 	glBindRenderbuffer(GL_RENDERBUFFER, mDepthbufferHandle);
