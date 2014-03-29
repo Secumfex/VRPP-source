@@ -48,13 +48,13 @@ void main() {
     vec3 diffuse_color = texture(diffuseTexture, passUVCoords).xyz;
 
     // CAUSTICS AND GOD RAY TEXTURE OFFSET //////////////////
-    float tile_factor   = 4.0f;
-    float noise_factor  = 0.03f;
+    float tile_factor   = 3.0f;
+    float noise_factor  = 0.3f;
 
-    vec2 sampling_offset0 = vec2(0.0, 0.0) + sin( uniformTime / 3.0) * 0.3;
+    vec2 sampling_offset0 = vec2(0.0, 0.0) + sin( uniformTime / 3.0) * noise_factor;
     vec2 sampling_offset1 = vec2(0.0, 0.0);
-    sampling_offset1.s   -= cos( uniformTime / 3.0) * 0.3;
-    sampling_offset1.t   += cos( uniformTime / 3.0) * 0.3;
+    sampling_offset1.s   -= cos( uniformTime / 3.0) * noise_factor;
+    sampling_offset1.t   += cos( uniformTime / 3.0) * noise_factor;
 
     /////////////////////////////////////////////////////////
     // CAUSTICS /////////////////////////////////////////////

@@ -132,7 +132,7 @@ namespace UnderwaterScene{
 		framebuffer_water_refraction->makeDrawBuffers();	// draw color to color attachment 0
 		framebuffer_water_refraction->unbindFBO();
 
-		framebuffer_water_god_rays = new FrameBufferObject(800,600);
+		framebuffer_water_god_rays = new FrameBufferObject(200,150);
 		framebuffer_water_god_rays->bindFBO();
 		framebuffer_water_god_rays->createPositionTexture();
 		framebuffer_water_god_rays->makeDrawBuffers();	// draw color to color attachment 0
