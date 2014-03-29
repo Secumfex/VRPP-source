@@ -8,5 +8,8 @@ uniform sampler2D uniformGodRayMap;
 out vec4 fragmentColor;
 
 void main() {
-    fragmentColor = texture( uniformPreCompositionMap, passUV) + texture( uniformGodRayMap, passUV);
+	vec4 preComposition = texture( uniformPreCompositionMap, passUV);
+	vec4 godRay =  texture( uniformGodRayMap, passUV);
+	godRay *= 1.0;
+    fragmentColor = preComposition + godRay;
 }
