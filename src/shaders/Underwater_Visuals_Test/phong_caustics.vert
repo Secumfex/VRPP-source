@@ -37,5 +37,5 @@ void main() {
     
     passUVCoords = uvCoordAttribute;
 
-    passProjectedPos = uniformProjectorViewPerspective * positionAttribute;
+    passProjectedPos = uniformProjectorViewPerspective * uniformModel * positionAttribute;
 }

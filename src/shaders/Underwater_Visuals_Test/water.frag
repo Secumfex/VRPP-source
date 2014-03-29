@@ -40,7 +40,7 @@ void main() {
     vec3 normal0 	= texture2D( normalTexture, texCoordNormal0 ).rgb * 2.0 - 1.0;
     vec3 normal1 	= texture2D( normalTexture, texCoordNormal1 ).rgb * 2.0 - 1.0;
     vec3 normal_raw	= normalize( normal0 + normal1 );	// r == x-axis, g == z-axis, b == y-axis 
-    vec3 normal 	= ( uniformInverse * vec4 ( normalize( vec3 ( normal_raw.x, normal_raw.z, normal_raw.y) ), 1.0 ) ).xyz;
+    vec3 normal 	= ( uniformInverse * vec4 ( normalize( vec3 ( normal_raw.x, normal_raw.y, normal_raw.z) ), 1.0 ) ).xyz;
     
     vec2 texCoordReflection;
     vec2 texCoordRefraction;

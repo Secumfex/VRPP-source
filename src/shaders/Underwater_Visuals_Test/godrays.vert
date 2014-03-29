@@ -14,7 +14,7 @@ out vec4 passProjectedPos;
 
 void main() {
 	passWorldPos     = (uniformModel * positionAttribute).xyz;
-    passProjectedPos = uniformProjectorViewPerspective * positionAttribute;
+    passProjectedPos = uniformProjectorViewPerspective * uniformModel * positionAttribute;
     
     gl_Position = uniformPerspective * uniformView * uniformModel * positionAttribute;
 
