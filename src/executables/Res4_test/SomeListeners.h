@@ -4,16 +4,8 @@
 #include <glm/glm.hpp>
 #include <cmath>
 
-/// Listener which changes the ClearColor by a tiny bit on every update
-class AnimateClearColorListener : public Listener{
-private:
-	float t;
-public:
-	AnimateClearColorListener();
-	void update();
-};
-
 #include "Visuals/RenderManager.h"
+#include "IO/PlayerCamera.h"
 
 /// Listener which renders a frame by using current Instance pointers of RenderManager
 class AlternativeRenderloopListener : public Listener{
@@ -25,7 +17,6 @@ private:
 	vector<GraphicsComponent* > currentGCs;
 public:
 	AlternativeRenderloopListener();
-	
 	void update();
 };
 
@@ -46,6 +37,7 @@ public:
 	SetClearColorListener(float r = 0.0, float g = 0.0, float b = 0.0, float a = 1.0);
 	void update();
 };
+
 
 /// Listener which rotates the Model Matrix by a tiny bit on every update
 class AnimateRotatingModelMatrixListener : public Listener{
@@ -106,30 +98,19 @@ public:
 	void update();
 };
 
-#include "Physics/PhysicWorld.h"
-//Listener which starts the ray-picking test
-class PickRayListener : public Listener {
+//Listener which moves the PlayerCamera
+class MovePlayerCameraListener : public Listener {
 private:
-	Camera* cam;
-	PhysicWorld* phWorld;
-
+    Camera* pcam;
+    float x_pos;
+    float y_pos;
+    float z_pos;
 public:
-	PickRayListener(Camera* cam);
-	void update();
+    MovePlayerCameraListener(Camera* pcam, float x_pos, float y_pos, float z_pos);
+    void update();
 };
-
 
 #include "Application/ApplicationStates.h"
-/// Listener which shoots a sphere out of the camera
-class ShootSphereListener : public Listener {
-private:
-	Camera* cam;
-	VRState* state;
-public:
-	ShootSphereListener(Camera* cam, VRState* state);
-	void update();
-};
-
 /// Listener which applies an impulse to a rigid body in direction of the provided cam
 class ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener : public Listener {
 private:
@@ -140,3 +121,18 @@ public:
 	ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener(SelectionHandler* selectionHandler, Camera* cam, float strength = 100.0f);
 	void update();
 };
+
+/// Listener which creates a Virtual Object at the provided position in the provided state
+class CreateVirtualObjectListener : public Listener {
+private:
+	ApplicationState* state;
+	glm::vec3 	position;
+	std::string path;
+	float random_offset;
+	VirtualObjectFactory::BodyType bodyType;
+	float mass;
+public:
+	CreateVirtualObjectListener(string path, glm::vec3 position, ApplicationState* state, float random_offset = 0.0f, VirtualObjectFactory::BodyType bodyType= VirtualObjectFactory::OTHER, float mass = 2.0f);
+	void update();
+};
+

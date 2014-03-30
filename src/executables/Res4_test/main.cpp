@@ -7,88 +7,124 @@
 #include "Physics/UpdatePhysicsComponentListener.h"
 #include "Physics/PhysicWorldSimulationListener.h"
 
+#include "IO/PlayerCamera.h"
 #include "Physics/PhysicWorld.h"
 #include "IO/IOManager.h"
 
 #include "SomeListeners.h" // until missing functionality is added
 
-Application* myApp;
-	/*How to build your own custom Application*/
-void configureMyApp(){
-	/*	customize application a little bit*/
-	myApp = 		Application::getInstance();	//create an Application labeled PROJEKT PRAKTIKUM
-	myApp->			setLabel("PROJEKT PRAKTIKUM");
+#include <glm/glm.hpp>
+#include <glm/gtc/constants.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_inverse.hpp>
 
-	/*	customize myVRState*/
-	VRState* myVRState = 	new VRState("VRSTATE"); // create a VRState labeled VRSTATE
-	myVRState->		attachListenerOnAddingVirtualObject(new PrintMessageListener(string("Added a VirtualObject to RenderQueue")));	// console output when virtual object is added
-	myVRState->		attachListenerOnActivation(new SetClearColorListener(1,1,1)); // custom background color
-	myVRState-> 	attachListenerOnActivation(new PrintCameraStatusListener( myVRState->getCamera()));
+Application*    myApp;
+VRState*        myState;
+IOHandler*      myInputHandler;
 
-	/*	customize virtual objects*/
-	/*
-	VirtualObject* 	myCubeObject1 = 	VirtualObjectFactory::getInstance()->createVirtualObject(RESOURCES_PATH "/cube.obj");	// create a Virtual Object by using the VirtualObject-Factory and add it to VRState manually
-	myVRState->		addVirtualObject(	myCubeObject1);		// add to VRState manually
-	*/
-	//VirtualObject* 	myCubeObject2 = 	myVRState->	createVirtualObject(RESOURCES_PATH "/cube.obj");	// create another Virtual Object from the same geometry
-
-	VirtualObject* 	cube1 = 	myVRState->	createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE);
-	//glm::mat4		cube1M = 	glm::translate(glm::mat4(1.0f), glm::vec3(-2.5f, 3.0f, 0.0f));
-	//cube1->getPhysicsComponent()->~PhysicsComponent();
-	//cube1-> setModelMatrix(		cube1M); 	// override default Model Matrix
-	//cube1->	setPhysicsComponent(1.0f, 1.0f, 1.0f, -2.5f, 3.0f, 0.0f, 1.0f);
-	myVRState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube1));
-
-	/*	load some virtual objects into vr state scene*/	 		// create a Virtual Object by reading an .obj file and add it to VRState automatically
-	//PhysicsComponent* myCowObject1PhysicsComponent = 		myCowObject1->getPhysicsComponent();					// get PhysicsComponent pointer
-	//myVRState->		attachListenerOnBeginningProgramCycle( 	new UpdatePhysicsWorldListener());
-	//myVRState->		attachListenerOnBeginningProgramCycle(  new UpdateVirtualObjectModelMatrixListener(	cube1));	// update VirtualObject Model Matrix on every program cycle iteration
-	myVRState->			attachListenerOnBeginningProgramCycle( 	new PhysicWorldSimulationListener(IOManager::getInstance()->getDeltaTimePointer()));				// updates physics simulation
-					
-
-	IOHandler* myVRStateIOHandler = myVRState-> getIOHandler();
-	// attach some listeners to keyboard key presses
-	myVRStateIOHandler->attachListenerOnKeyPress(new TerminateApplicationListener(myApp), 	GLFW_KEY_ESCAPE);	// Terminate Application by pressing Escape
-	myVRStateIOHandler->attachListenerOnKeyPress(new SetClearColorListener(0.0,0.0,0.0),	GLFW_KEY_1);		// pressing '1' : black background
-	myVRStateIOHandler->attachListenerOnKeyPress(new SetClearColorListener(1.0,1.0,1.0), 	GLFW_KEY_2);		// pressing '2' : white background
-	myVRStateIOHandler->attachListenerOnKeyPress(new SetClearColorListener(0.44,0.5,0.56), 	GLFW_KEY_3);		// pressing '3' : default greyish-blue background
-	myVRStateIOHandler->attachListenerOnKeyPress(new TurnCameraListener(myVRState->getCamera(), 0.1f, 0.0f), 	GLFW_KEY_LEFT);		// pressing '<-' : view direction at an angle to the left
-	myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myVRState->getCamera()), 								GLFW_KEY_LEFT);
-	myVRStateIOHandler->attachListenerOnKeyPress(new TurnCameraListener(myVRState->getCamera(), -0.1f, 0.0f), 	GLFW_KEY_RIGHT);	// pressing '->' : view direction at an angle to the right
-	myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myVRState->getCamera()), 								GLFW_KEY_RIGHT);
-	myVRStateIOHandler->attachListenerOnKeyPress(new TurnCameraListener(myVRState->getCamera(), 0.0f, 0.1f), 	GLFW_KEY_UP);		// pressing '<-' : view direction straight ahead
-	myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myVRState->getCamera()), 								GLFW_KEY_UP);
-	myVRStateIOHandler->attachListenerOnKeyPress(new TurnCameraListener(myVRState->getCamera(), 0.0f, -0.1f), 	GLFW_KEY_DOWN);		// pressing '->' : view direction straight ahead
-	myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myVRState->getCamera()), 								GLFW_KEY_DOWN);
-	myVRStateIOHandler->attachListenerOnMouseButtonPress(new PickRayListener(myVRState->getCamera()), GLFW_MOUSE_BUTTON_2);		//
-	myVRStateIOHandler->attachListenerOnMouseButtonPress(new ShootSphereListener(myVRState->getCamera(), myVRState), GLFW_MOUSE_BUTTON_LEFT);
-
-	SelectionHandler* sh = myVRStateIOHandler->getSelectionHandler();
-	myVRStateIOHandler->attachListenerOnMouseButtonPress(new ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener(sh, myVRState->getCamera(),50.0f), GLFW_MOUSE_BUTTON_RIGHT);
-
-
-	/*	further customize application functionality by adding various listeners */
+void configureTestingApplication(){
+    /*	further customize application functionality by adding various listeners */
 	myApp->attachListenerOnProgramInitialization(	new PrintMessageListener(		string("Application is booting")));
 	myApp->attachListenerOnProgramTermination(		new PrintMessageListener(		string("Application is terminating")));
-	myApp->attachListenerOnStateChange( 			new PrintCurrentStateListener(	myApp) );
+    myApp->attachListenerOnStateChange( 			new PrintCurrentStateListener(	myApp) );
 
+    
+}
+
+void configureScene(ApplicationState* target){
+    glm::vec3 lightPosition(0.0f,1000.0f,0.0f);
+    VirtualObject* scene_groundObject;
+	VirtualObject* scene_sun_Object;
+	VirtualObject* scene_chest_Object;
+    
+	FrameBufferObject* framebuffer_render;
+    
+    scene_groundObject 	= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_ground.dae", 		VirtualObjectFactory::OTHER);
+    scene_sun_Object 	= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_sun_shape.dae", 	VirtualObjectFactory::OTHER);
+    scene_chest_Object	= target->createVirtualObject(RESOURCES_PATH "/chest_textured.obj",VirtualObjectFactory::OTHER);
+    GraphicsComponent* newgc = scene_chest_Object->getGraphicsComponent()[0];
+    newgc->setModelMatrixGc(glm::translate(glm::mat4(1.0f), glm::vec3(2.0f,0.0f,0.0f)));
+    //if (scene_sun_Object->getGraphicsComponent().size() > 0){
+      //  scene_sun_Object->getGraphicsComponent()[0]->setEmission(true);
+    //}
+    
+    /******************* framebuffer objects *****************************************/
+    framebuffer_render = new FrameBufferObject(800,600);
+    framebuffer_render->bindFBO();
+    framebuffer_render->createPositionTexture();
+    framebuffer_render->makeDrawBuffers();	// draw color to color attachment 0
+    framebuffer_render->unbindFBO();
+
+}
+
+
+void configureMyApp(){
+	/*	customize application a little bit */
+	myApp = 		Application::getInstance();	//create an Application labeled CHEST
+	myApp->			setLabel("CHEST");
+
+    
+	/*	customize myVRState */
+	myState = 	new VRState("FEATURE"); // create a VRState labeled FEATURE
+	myState->		attachListenerOnAddingVirtualObject(new PrintMessageListener(string("Added a VirtualObject to RenderQueue")));                // console output when virtual object is added
+	myState->		attachListenerOnActivation(new SetClearColorListener(0.0,0.0,0.5)); // custom background color
+	myState->       attachListenerOnActivation(new PrintCameraStatusListener( myState->getCamera()));
+    myState->		attachListenerOnBeginningProgramCycle( 	new PhysicWorldSimulationListener( IOManager::getInstance()->getDeltaTimePointer()));        // updates physics simulation
+   // Camera* necam = new Camera();
+    PlayerCamera* playercam = new PlayerCamera();
+	myState->setCamera(playercam);
+    
+    
+	configureScene(myState);
+    
+    /* create an invisible ground plane */
+ /*   btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,1,0),0);
+    //create an invisible ground plane
+    btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,-4,5)));
+    btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0,groundMotionState,groundShape,btVector3(0,0,0));
+    btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
+    PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(groundRigidBody);
+  
+	btRigidBody* camBody = playercam->getRigidBody();
+	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(camBody);
+*/
+					
+
+    /* customize IOHandler */
+	myInputHandler = myState-> getIOHandler();
+	// attach some listeners to keyboard key presses
+	myInputHandler->attachListenerOnKeyPress(new TerminateApplicationListener(myApp), 	GLFW_KEY_ESCAPE);	// Terminate Application by pressing Escape
+	myInputHandler->attachListenerOnKeyPress(new TurnCameraListener(myState->getCamera(), 0.1f, 0.0f), 	GLFW_KEY_LEFT);		// pressing '<-' : view direction at an angle to the left
+	myInputHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myState->getCamera()), 								GLFW_KEY_LEFT);
+	myInputHandler->attachListenerOnKeyPress(new TurnCameraListener(myState->getCamera(), -0.1f, 0.0f), 	GLFW_KEY_RIGHT);	// pressing '->' : view direction at an angle to the right
+	myInputHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myState->getCamera()), 								GLFW_KEY_RIGHT);
+	myInputHandler->attachListenerOnKeyPress(new TurnCameraListener(myState->getCamera(), 0.0f, 0.1f), 	GLFW_KEY_UP);		// pressing '<-' : view direction straight ahead
+	myInputHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myState->getCamera()), 								GLFW_KEY_UP);
+	myInputHandler->attachListenerOnKeyPress(new TurnCameraListener(myState->getCamera(), 0.0f, -0.1f), 	GLFW_KEY_DOWN);		// pressing '->' : view direction straight ahead
+	myInputHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myState->getCamera()), 								GLFW_KEY_DOWN);
+    myInputHandler->attachListenerOnKeyPress(new MovePlayerCameraListener(myState->getCamera(), 0.0f, -0.25f, 0.1f), 	GLFW_KEY_L);		// pressing '->' : view direction straight ahead
+    myInputHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myState->getCamera()), 								GLFW_KEY_L);
+    
+
+    configureTestingApplication();
+	
 	// attach a listener which overrides the rendermanager's current Shader
 	myApp->attachListenerOnProgramInitialization(	new SetAlternativeDefaultRenderManagerPointersListener());
 	// attach a listener which serves as renderloop by using the rendermanagers current RenderQueue and Shader
 	myApp->attachListenerOnRenderManagerFrameLoop(	new AlternativeRenderloopListener());
-
-	std::cout << PhysicWorld::getInstance()->dynamicsWorld->getNumCollisionObjects() << endl;
+    
 
 	/*	add customized states to application state pool*/
-	myApp->addState(	myVRState);		//add the VR State to Application
+	myApp->addState(	myState);		//add the VR State to Application
 
-	myApp->setState(	"VRSTATE"); 	//set initial state to the state labeled MAINMENU
+	myApp->setState(	"FEATURE"); 	//set initial state to the state labeled FEATURE
 }
 
 int main() {
 	configureMyApp();		// 1 do some customization
 
-	myApp->run();			// 2 run application
+	myApp->run();			// 2 run applications
 
 	return 0;				// 3 end :)
 }
