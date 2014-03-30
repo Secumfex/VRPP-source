@@ -112,6 +112,51 @@ void RefractionMapRenderPass::update(){
 
 	}
 
+<<<<<<< HEAD
+=======
+GodRaysRenderPass::GodRaysRenderPass(FrameBufferObject* fbo){ 
+		rm = RenderManager::getInstance(); 
+		this->fbo = fbo;
+	}
+
+void GodRaysRenderPass::update(){
+		fbo->bindFBO();
+		
+        glEnable(GL_DEPTH_TEST);
+        glClearColor(0.0,0.0,0.0,1.0);
+    	
+    	glViewport(0, 0, fbo->getWidth(), fbo->getHeight());
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		currentShader = rm->getCurrentShader();
+		
+		//get renderQueue	
+		currentRenderQueue = rm->getRenderQueue(); 
+
+		//render GCs with current Shader 
+		if ( currentRenderQueue != 0 ){
+			voList = currentRenderQueue->getVirtualObjectList();	//get List of all VOs in RenderQueue
+			//for every VO
+			for (std::list<VirtualObject* >::iterator i = voList.begin(); i != voList.end(); ++i) {	
+				currentGCs = (*i)->getGraphicsComponent();
+					//for every GC
+					for (unsigned int j = 0; j < currentGCs.size(); j++){
+						rm->setCurrentGC(currentGCs[j]);
+						rm->getCurrentVO();
+						
+						//tell Shader to upload all Uniforms
+						currentShader->uploadAllUniforms();
+						//render the GC
+						currentShader->render(currentGCs[j]);
+					}
+
+			}
+		}
+		fbo->unbindFBO();	
+	}
+
+>>>>>>> master
 RenderloopPlaceHolderListener::RenderloopPlaceHolderListener(VirtualObject* water_object){ 
 		rm = RenderManager::getInstance(); 
 		this->water_object = water_object;
@@ -119,7 +164,11 @@ RenderloopPlaceHolderListener::RenderloopPlaceHolderListener(VirtualObject* wate
 
 void RenderloopPlaceHolderListener::update(){
         glEnable(GL_DEPTH_TEST);
+<<<<<<< HEAD
         glClear(GL_DEPTH_BUFFER_BIT);
+=======
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+>>>>>>> master
     	glViewport(0, 0, 800, 600);
 
 		currentShader = rm->getCurrentShader();
@@ -193,18 +242,49 @@ void SetCurrentShaderListener::update(){
 	shader->useProgram();
 }	
 
+<<<<<<< HEAD
 SetClearColorListener::SetClearColorListener(float r, float g, float b, float a){
 	this->r = r;
 	this->g = g;
 	this->b = b;
+=======
+
+SetClearColorListener::SetClearColorListener(float r, float g, float b, float a){
+	this->clearColorVec3 = new glm::vec3(r,g,b);
+	this->clearColorVec4 = 0;
+	this->a = a;
+}
+
+SetClearColorListener::SetClearColorListener(glm::vec3* clearColor, float a){
+	this->clearColorVec3 = clearColor;
+	this->clearColorVec4 = 0;
+	this->a = a;
+}
+
+SetClearColorListener::SetClearColorListener(glm::vec4* clearColor){
+	this->clearColorVec4 = clearColor;
+	this->clearColorVec3 = 0;
+>>>>>>> master
 	this->a = a;
 }
 
 void SetClearColorListener::update(){
+<<<<<<< HEAD
 		glClearColor(r,g,b,a);
 }
 
 UnderOrAboveWaterListener::UnderOrAboveWaterListener(Camera* cam, float sea_level_y, Listener* EnterWaterListener, Listener* ExitWaterListener){
+=======
+	if (clearColorVec4 == 0){
+		glClearColor(clearColorVec3->x,clearColorVec3->y,clearColorVec3->z, a);
+	}else{
+		glClearColor(clearColorVec4->r, clearColorVec4->g, clearColorVec4->b, clearColorVec4->a);
+	}
+}
+
+
+UnderOrAboveWaterListener::UnderOrAboveWaterListener(Camera* cam, float* sea_level_y, Listener* EnterWaterListener, Listener* ExitWaterListener){
+>>>>>>> master
 	this->cam = cam;
 	this->sea_level_y = sea_level_y;
 	this->EnterWaterListener = EnterWaterListener;
@@ -213,7 +293,11 @@ UnderOrAboveWaterListener::UnderOrAboveWaterListener(Camera* cam, float sea_leve
 }
 
 void UnderOrAboveWaterListener::update(){
+<<<<<<< HEAD
 	if ( cam->getPosition().y < this->sea_level_y ){
+=======
+	if ( cam->getPosition().y < *(this->sea_level_y) ){
+>>>>>>> master
 		if (!underwater){
 			if (EnterWaterListener != 0){
 				EnterWaterListener->update(); 
@@ -293,6 +377,32 @@ void RenderVirtualObjectListener::update(){
 	}
 }
 
+<<<<<<< HEAD
+=======
+RenderGraphicsComponentListener::RenderGraphicsComponentListener(GraphicsComponent* gc){
+	this->gc = gc;
+}
+
+void RenderGraphicsComponentListener::update(){	
+	if( gc != 0){
+		RenderManager::getInstance()->setCurrentGC(gc);
+		RenderManager::getInstance()->getCurrentShader()->uploadAllUniforms();
+		RenderManager::getInstance()->getCurrentShader()->render(gc);
+	}
+}
+
+RenderScreenFillingTriangleListener::RenderScreenFillingTriangleListener(){
+	this->gc = VirtualObjectFactory::getInstance()->getTriangle();
+}
+
+void RenderScreenFillingTriangleListener::update(){
+	glDisable(GL_DEPTH_TEST);	
+	RenderGraphicsComponentListener::update();
+	glEnable(GL_DEPTH_TEST);	
+
+}
+
+>>>>>>> master
 UploadUniformSinusWaveListener::UploadUniformSinusWaveListener(std::string name, float* t, float frequency, std::string uniform_name){
 	this->t = t;
 	this->frequency = frequency;
@@ -308,8 +418,39 @@ UploadUniformSinusWaveListener::UploadUniformSinusWaveListener(std::string name,
 }
 
 void UploadUniformSinusWaveListener::update(){
+<<<<<<< HEAD
 	float sin = std::sin( (*t) * frequency);
 
 	Shader* shader = RenderManager::getInstance()->getCurrentShader();
 	shader->uploadUniform(sin, uniform_name);
 }
+=======
+	float sinus = std::sin( (*t) * frequency);
+
+	Shader* shader = RenderManager::getInstance()->getCurrentShader();
+	shader->uploadUniform(sinus, uniform_name);
+}
+
+SetFrameBufferObjectListener::SetFrameBufferObjectListener( FrameBufferObject* fbo){
+	this->fbo = fbo;
+}
+
+void SetFrameBufferObjectListener::update(){
+	if( fbo != 0){
+		RenderManager::getInstance()->setCurrentFBO( fbo );
+		fbo->bindFBO();
+	}
+}
+
+UnbindFrameBufferObjectListener::UnbindFrameBufferObjectListener(){
+}
+
+void UnbindFrameBufferObjectListener::update(){
+	FrameBufferObject* currentFBO = RenderManager::getInstance()->getCurrentFBO();
+	if (currentFBO != 0){
+		currentFBO->unbindFBO();
+	}
+	RenderManager::getInstance()->setCurrentFBO( 0 );
+}
+
+>>>>>>> master

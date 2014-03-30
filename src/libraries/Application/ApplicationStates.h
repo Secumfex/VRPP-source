@@ -82,6 +82,7 @@ public:
 	 */
 	void setIOHandler(			IOHandler* iOHandler);
 
+
 	/** \brief setter
 	 *
 	 * @param projectionMatrix
@@ -98,15 +99,19 @@ public:
 	 * @param path
 	 * @param bodyType
 	 * @param mass
+	 * @param collisionFlag
 	 * @return VirtualObject reference
 	 */
-	VirtualObject* createVirtualObject(std::string path, VirtualObjectFactory::BodyType bodyType, float mass = 0.0);
+	VirtualObject* createVirtualObject(std::string path, VirtualObjectFactory::BodyType bodyType = VirtualObjectFactory::OTHER, float mass = 0.0, int collisionFlag = 1, bool blenderAxes = false); //!< create Object from path and add it to renderQueue
 
 	/** \brief add existing VO to renderQueue
 	 *
 	 * @param vo
 	 */
 	void addVirtualObject(VirtualObject* vo);
+
+
+
 
 	/*Application State Listeners*/
 	/** \brief attach listener

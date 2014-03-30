@@ -169,6 +169,12 @@ public:
 	 */
 	glm::vec3 getPosition();
 
+	/** \brief getter
+	 *
+	 * @return position pointer
+	 */
+	glm::vec3* getPositionPointer();
+
 	/** \brief setter
 	 *
 	 * sets/changes the x,y,and z value of position
