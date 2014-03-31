@@ -5,6 +5,8 @@
 
 #include "PlaceHolderListeners.h"
 
+#include "ParticleSystem.h"
+
 namespace UnderwaterScene{
 
 	float water_height = 10.0f;
@@ -55,6 +57,8 @@ namespace UnderwaterScene{
 	Camera* reflectedCamera;
 
 	Texture* causticsTexture;
+
+	ParticleSystem* particleSystem;
 
 	static void createScene(ApplicationState* target){
 		/******************* above or underneath water surface handling *****************/

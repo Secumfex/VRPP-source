@@ -28,6 +28,7 @@ public:
 };
 
 
+/// Listener which uses an FBO as Render Target, activates certain camera, and ignores the water_object
 class ReflectionMapRenderPass : public Listener{
 public:
 	RenderManager* rm;
@@ -46,6 +47,7 @@ public:
 };
 
 
+/// Listener which uses an FBO as Render Target and renders volumetric godrays
 class GodRaysRenderPass : public Listener{
 public:
 	RenderManager* rm;
@@ -56,14 +58,13 @@ public:
 
 	/*außerdem*/
 	FrameBufferObject* fbo; // reflectionmap target
-	Camera* reflectedCamera;	// mirrored Camera
-	VirtualObject* water_object;
 
 	GodRaysRenderPass(FrameBufferObject* fbo);
 	void update();
 };
 
 
+/// Listener which uses an FBO as Render Target and ignores the water_object
 class RefractionMapRenderPass : public Listener{
 public:
 	RenderManager* rm;
@@ -81,6 +82,7 @@ public:
 };
 
 
+/// Renders a single VirtualObject with a certain shader
 class RenderVirtualObjectWithShaderListener : public Listener{
 private: 
 	VirtualObject* vo;
@@ -91,6 +93,7 @@ public:
 };
 
 
+/// Renders a single Virtual Object
 class RenderVirtualObjectListener : public Listener{
 private: 
 	VirtualObject* vo;
@@ -100,6 +103,7 @@ public:
 };
 
 
+/// Renders a single GraphicsComponent
 class RenderGraphicsComponentListener : public Listener{
 protected: 
 	GraphicsComponent* gc;
@@ -108,12 +112,16 @@ public:
 	virtual void update();
 };
 
+
+/// Renders a Screen Filling Triangle
 class RenderScreenFillingTriangleListener : public RenderGraphicsComponentListener{
 public:
 	RenderScreenFillingTriangleListener();
 	void update();
 };
 
+
+/// Renders the water object
 class RenderWaterObjectWithShaderAndReflectionMapListener : public Listener{
 private: 
 	VirtualObject* vo;
@@ -150,7 +158,7 @@ public:
 };
 
 
-/// listener on above or under water
+/// Listener which calls a certain Listener when camera enters or exits the water
 class UnderOrAboveWaterListener : public Listener{
 private:
 	Camera* cam;
@@ -164,6 +172,7 @@ public:
 };
 
 
+/// Compiles a shader and sets it as the current Shader
 class RecompileAndSetShaderListener : public Listener{
 private:
 	std::string vertex_shader;
@@ -174,6 +183,7 @@ public:
 };
 
 
+/// Updates a target camera to the reflected position and view direction of a source camera, given a certain waterheight
 class UpdateReflectedCameraPositionListener : public Listener{
 private:
 	Camera* cam_source;
@@ -186,8 +196,10 @@ public:
 };
 
 
+/// Uploads a sinus value
 class UploadUniformSinusWaveListener : public Listener{
 private:
+	float phase;
 	float* t;
 	float frequency;
 	std::string uniform_name;
@@ -198,6 +210,7 @@ public:
 };
 
 
+/// Sets the current FrameBufferObject
 class SetFrameBufferObjectListener : public Listener {
 private: 
 	FrameBufferObject* fbo;
@@ -207,6 +220,7 @@ public:
 };
 
 
+/// Unbinds the current FrameBufferObject
 class UnbindFrameBufferObjectListener : public Listener {
 public:
 	UnbindFrameBufferObjectListener();
