@@ -3,6 +3,8 @@
 ParticleSystem::ParticleSystem(glm::vec3* center, float radius){
 	this->center = center;
 	this->radius = radius;
+
+	std::srand (time(NULL));	// rand dat
 }
 
 
@@ -15,7 +17,7 @@ void ParticleSystem::update(float d_t){
 
 
 void ParticleSystem::testConstraint(Particle* particle){
-	float distance = ( particle->getPosition() - *center ).length(); 
+	float distance = glm::length( glm::vec3( particle->getPosition() - *center ) );
 	if ( distance > radius ){
 		moveToOppositeSide ( particle );
 	}
@@ -25,19 +27,18 @@ void ParticleSystem::testConstraint(Particle* particle){
 
 void ParticleSystem::moveToOppositeSide( Particle* particle ){
 	glm::vec3 centerToParticle = particle->getPosition() - *center;
-	particle->setPosition( *center - ( centerToParticle * 0.9f ) ); 
+	particle->setPosition( *center - ( centerToParticle * 0.9f) );
 }
 
 
 void ParticleSystem::addRandomParticle(){
 	glm::vec3 offset(0.0f, 0.0f, 0.0f);
 
-	offset.x += ( (((float) std::rand() / (float) RAND_MAX) * radius) * 2.0 ) - radius; // randomize a little bit by adding [-radius, radius] to the mix 
-	offset.y += ( (((float) std::rand() / (float) RAND_MAX) * radius) * 2.0 ) - radius; // randomize a little bit by adding [-radius, radius] to the mix 
-	offset.z += ( (((float) std::rand() / (float) RAND_MAX) * radius) * 2.0 ) - radius; // randomize a little bit by adding [-radius, radius] to the mix 
+	offset.x += ( (((float) std::rand() / (float) RAND_MAX) * radius) * 2.0f ) - radius; // randomize a little bit by adding [-radius, radius] to the mix
+	offset.y += ( (((float) std::rand() / (float) RAND_MAX) * radius) * 2.0f ) - radius; // randomize a little bit by adding [-radius, radius] to the mix
+	offset.z += ( (((float) std::rand() / (float) RAND_MAX) * radius) * 2.0f ) - radius; // randomize a little bit by adding [-radius, radius] to the mix
 		
-	Particle* randParticle = new Particle();
-	randParticle->setPosition( *center + offset );
+	Particle* randParticle = new Particle( *center + offset );
 
 	addParticle( randParticle );
 }
@@ -45,6 +46,15 @@ void ParticleSystem::addRandomParticle(){
 
 void ParticleSystem::addParticle( Particle* particle ){
 	particles.push_back( particle );
+}
+
+void ParticleSystem::setParticleAmount(int amount){
+	while ( getParticleAmount() > amount){
+		removeRandomParticle();
+	}
+	while ( getParticleAmount()	< amount ){
+		   addRandomParticle();
+	}
 }
 
 

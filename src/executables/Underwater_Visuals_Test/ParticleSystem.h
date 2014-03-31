@@ -3,6 +3,7 @@
 
 #include <glm/glm.hpp>
 #include <stdlib.h>
+#include <time.h>
 
 #include <Patterns/Subject.h>
 #include <vector>
@@ -24,6 +25,7 @@ public:
 
 	void addRandomParticle();
 	void addParticle(		 Particle* particle);
+	void setParticleAmount (int amount);
 	
 	void removeRandomParticle();
 	void removeParticle(	 Particle* particle);

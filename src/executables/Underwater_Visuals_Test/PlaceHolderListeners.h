@@ -11,6 +11,7 @@
 #include "Visuals/RenderManager.h"
 #include "Visuals/VirtualObjectFactory.h"
 #include "Visuals/Shader.h"
+#include "ParticleSystem.h"
 
 /// Listener which renders a frame by using current Instance pointers of RenderManager
 class RenderloopPlaceHolderListener : public Listener{
@@ -60,6 +61,20 @@ public:
 	FrameBufferObject* fbo; // reflectionmap target
 
 	GodRaysRenderPass(FrameBufferObject* fbo);
+	void update();
+};
+
+
+/// Listener which uses an FBO as Render Target and renders volumetric godrays
+class ParticlesRenderPass : public Listener{
+public:
+	RenderManager* rm;
+
+	FrameBufferObject* fbo; // particles target
+	ParticleSystem* particleSystem;
+	GraphicsComponent* particleGC;
+
+	ParticlesRenderPass(FrameBufferObject* fbo, ParticleSystem* particleSystem, GraphicsComponent* particleGC);
 	void update();
 };
 
@@ -224,5 +239,15 @@ public:
 class UnbindFrameBufferObjectListener : public Listener {
 public:
 	UnbindFrameBufferObjectListener();
+	void update();
+};
+
+
+class UpdateParticleSystemListener : public Listener {
+private:
+	ParticleSystem* particleSystem;
+	float* t;
+public:
+	UpdateParticleSystemListener(ParticleSystem* particleSystem, float* t);
 	void update();
 };

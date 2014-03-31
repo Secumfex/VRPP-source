@@ -17,6 +17,7 @@
 VirtualObjectFactory::VirtualObjectFactory(){
 	mCube = NULL;
 	mScreenFillTriangle = NULL;
+	mQuad = NULL;
 }
 
 //eingefügt
@@ -76,11 +77,79 @@ GraphicsComponent* VirtualObjectFactory::getTriangle(){
 	} return mScreenFillTriangle;
 }
 
+GraphicsComponent* VirtualObjectFactory::getQuad(){
+	if (mQuad == NULL){
+		Mesh* quadMesh = new Mesh();
+		Material* quadMat = new Material();
+
+		quadMat->setName("default_quad_material");
+		GLuint quadVertexArrayHandle;
+
+		glGenVertexArrays(1, &quadVertexArrayHandle);
+		glBindVertexArray(quadVertexArrayHandle);
+
+		//we generate multiple buffers at a time
+		GLuint vertexBufferHandles[5];
+		glGenBuffers(4, vertexBufferHandles);
+
+		int indices[] = {0, 1, 2, 2, 3, 0};
+
+	    float size = 0.5;
+
+	    GLfloat positions[] = {
+	        -size,-size, 0.0f,   size,-size, 0.0f,   size, size, 0.0f,   -size, size, 0.0f
+	    };
+
+	    GLfloat normals[] = {
+	        0.0,  0.0,  1.0,    0.0,  0.0,  1.0,    0.0,  0.0,  1.0,   0.0,  0.0,  1.0
+	    };
+
+	    GLfloat tangents[] = {
+	        0.0, -1.0,  0.0,    0.0, -1.0,  0.0,    0.0, -1.0,  0.0,    0.0, -1.0,  0.0
+	    };
+
+	    GLfloat uvCoordinates[] = {
+	        0,0, 1,0, 1,1,  0,1
+	    };
+
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandles[0]);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandles[1]);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(uvCoordinates), uvCoordinates, GL_STATIC_DRAW);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandles[2]);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(normals), normals, GL_STATIC_DRAW);
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandles[4]);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(tangents), tangents, GL_STATIC_DRAW);
+		glEnableVertexAttribArray(3);
+		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertexBufferHandles[3]);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+		quadMesh->setVAO(quadVertexArrayHandle);
+		quadMesh->setNumIndices(6);
+		quadMesh->setNumVertices(4);
+		quadMesh->setNumFaces(2);
+
+		mQuad = new GraphicsComponent(quadMesh, quadMat);
+	}
+	return mQuad;
+}
+
 VirtualObject* VirtualObjectFactory::createNonAssimpVO(float mass){
 
 	if(mCube == NULL){
-	NoAssimpVirtualObjectFactory *voFactory = new NoAssimpVirtualObjectFactory();
-	mCube = voFactory->createCubeObject(mass);
+		NoAssimpVirtualObjectFactory *voFactory = new NoAssimpVirtualObjectFactory();
+		mCube = voFactory->createCubeObject(mass);
 	}
 
 	return mCube;

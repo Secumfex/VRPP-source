@@ -53,12 +53,14 @@ namespace UnderwaterScene{
 	FrameBufferObject* framebuffer_water_reflection;
 	FrameBufferObject* framebuffer_water_refraction;
 	FrameBufferObject* framebuffer_water_god_rays;
+	FrameBufferObject* framebuffer_water_particles;
 
 	Camera* reflectedCamera;
 
 	Texture* causticsTexture;
+	Texture* particlesTexture;
 
-	ParticleSystem* particleSystem;
+	ParticleSystem* water_particles;
 
 	static void createScene(ApplicationState* target){
 		/******************* above or underneath water surface handling *****************/
@@ -123,6 +125,12 @@ namespace UnderwaterScene{
 		}
 		/*********************************************************************************/
 
+		/******************* particle System objects *****************************************/
+		water_particles = new ParticleSystem(target->getCamera()->getPositionPointer(), 1.0f);
+		water_particles->setParticleAmount(10);
+		target->attachListenerOnBeginningProgramCycle(new UpdateParticleSystemListener(water_particles, IOManager::getInstance()->getDeltaTimePointer()));
+		/*********************************************************************************/
+
 		/******************* framebuffer objects *****************************************/
 		framebuffer_water_reflection = new FrameBufferObject(800,600);
 		framebuffer_water_reflection->bindFBO();
@@ -141,10 +149,17 @@ namespace UnderwaterScene{
 		framebuffer_water_god_rays->createPositionTexture();
 		framebuffer_water_god_rays->makeDrawBuffers();	// draw color to color attachment 0
 		framebuffer_water_god_rays->unbindFBO();
+
+		framebuffer_water_particles = new FrameBufferObject(800,600);
+		framebuffer_water_particles->bindFBO();
+		framebuffer_water_particles->createPositionTexture();
+		framebuffer_water_particles->makeDrawBuffers();	// draw color to color attachment 0
+		framebuffer_water_particles->unbindFBO();
 		/*********************************************************************************/
 
 		/******************* textures creation	  ****************************************/
 		causticsTexture = new Texture( RESOURCES_PATH "/demo_scene/caustics.jpg" );
+		particlesTexture= new Texture( RESOURCES_PATH "/demo_scene/particle.png");
 		/*********************************************************************************/
 
 		/******************* default cam position ****************************************/
