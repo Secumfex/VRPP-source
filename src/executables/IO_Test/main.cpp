@@ -11,11 +11,85 @@
 *	This executable tests various Input/Output related functionalities
 */	
 
+
+
 Application* 	testingApp;
 VRState* 		testingState;
 IOHandler*   	testingInputHandler;
 VirtualObject*  cowObject;
 PlayerCamera*   playercam;
+
+// OpenGL Variables
+GLuint textureId;              // ID of the texture to contain Kinect RGB Data
+GLubyte data[640*480*4];  // BGRA array containing the texture data
+
+
+// Kinect variables
+HANDLE rgbStream;              // The identifier of the Kinect's RGB Camera
+INuiSensor* sensor;            // The kinect sensor
+        
+
+bool initKinect() {
+    // Get a working kinect sensor
+    int numSensors;
+   // if (NuiGetSensorCount(&numSensors) < 0 || numSensors < 1) return false;
+   // if (NuiCreateSensorByIndex(0, &sensor) < 0) return false;
+
+    // Initialize sensor
+    sensor->NuiInitialize(NUI_INITIALIZE_FLAG_USES_DEPTH | NUI_INITIALIZE_FLAG_USES_COLOR);
+    sensor->NuiImageStreamOpen(
+        NUI_IMAGE_TYPE_COLOR,            // Depth camera or rgb camera?
+        NUI_IMAGE_RESOLUTION_640x480,    // Image resolution
+        0,      // Image stream flags, e.g. near mode
+        2,      // Number of frames to buffer
+        NULL,   // Event handle
+        &rgbStream);
+    return sensor;
+}
+
+
+ 
+void getKinectData(GLubyte* dest) {
+    NUI_IMAGE_FRAME imageFrame;
+    NUI_LOCKED_RECT LockedRect;
+    if (sensor->NuiImageStreamGetNextFrame(rgbStream, 0, &imageFrame) < 0) return;
+    INuiFrameTexture* texture = imageFrame.pFrameTexture;
+    texture->LockRect(0, &LockedRect, NULL, 0);
+
+	if (LockedRect.Pitch != 0)
+    {
+        const BYTE* curr = (const BYTE*) LockedRect.pBits;
+        const BYTE* dataEnd = curr + (640*480)*4;
+
+        while (curr < dataEnd) {
+            *dest++ = *curr++;
+        }
+    }
+    texture->UnlockRect(0);
+    sensor->NuiImageStreamReleaseFrame(rgbStream, &imageFrame);
+}
+
+
+
+void drawKinectData() {
+    glBindTexture(GL_TEXTURE_2D, textureId);
+    getKinectData(data);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 640, 480, GL_BGRA, GL_UNSIGNED_BYTE, (GLvoid*)data);
+         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glBegin(GL_QUADS);
+        glTexCoord2f(0.0f, 0.0f);
+        glVertex3f(0, 0, 0);
+        glTexCoord2f(1.0f, 0.0f);
+        glVertex3f(640, 0, 0);
+        glTexCoord2f(1.0f, 1.0f);
+        glVertex3f(640, 480, 0.0f);
+        glTexCoord2f(0.0f, 1.0f);
+        glVertex3f(0, 480, 0.0f);
+    glEnd();
+}
+
+
+
 
 void configureTestingApplication(){
 	testingApp->attachListenerOnProgramInitialization(	new PrintMessageListener(		string("Application is booting")));
@@ -109,6 +183,9 @@ void configureApplication(){
 }
 
 int main() {
+	
+	//initKinect();
+
 
 	configureApplication();	// 1 do some customization
 

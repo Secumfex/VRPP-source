@@ -1,14 +1,36 @@
 #ifndef IOHANDLER_H_
 #define IOHANDLER_H_
 
+
+#ifdef USE_KINECT
+
+#include <Windows.h>
+#include <Ole2.h>
+
+#include <SDKDDKVer.h>
+#include <stdio.h>
+#include <tchar.h>
+
+#include <NuiApi.h>
+#include <NuiImageCamera.h>
+#include <NuiSensor.h>
+
+
+#endif
+
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <sstream>
 
+
 #include "Patterns/Subject.h"
 #include "SelectionHandler.h"
 #include "Camera.h"
+
+
+
 
 /// a class which implements specific input interpretation, i.e. camera movement
 class IOHandler : public Subject{
