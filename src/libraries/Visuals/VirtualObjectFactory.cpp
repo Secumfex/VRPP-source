@@ -9,10 +9,15 @@
 #include <Visuals/VirtualObjectFactory.h>
 #include <string>
 
+#ifndef PI
+	#define PI  3.14159265359
+#endif
+
 
 VirtualObjectFactory::VirtualObjectFactory(){
 	mCube = NULL;
 	mScreenFillTriangle = NULL;
+	mQuad = NULL;
 }
 
 //eingefügt
@@ -72,11 +77,79 @@ GraphicsComponent* VirtualObjectFactory::getTriangle(){
 	} return mScreenFillTriangle;
 }
 
+GraphicsComponent* VirtualObjectFactory::getQuad(){
+	if (mQuad == NULL){
+		Mesh* quadMesh = new Mesh();
+		Material* quadMat = new Material();
+
+		quadMat->setName("default_quad_material");
+		GLuint quadVertexArrayHandle;
+
+		glGenVertexArrays(1, &quadVertexArrayHandle);
+		glBindVertexArray(quadVertexArrayHandle);
+
+		//we generate multiple buffers at a time
+		GLuint vertexBufferHandles[5];
+		glGenBuffers(4, vertexBufferHandles);
+
+		int indices[] = {0, 1, 2, 2, 3, 0};
+
+	    float size = 0.5;
+
+	    GLfloat positions[] = {
+	        -size,-size, 0.0f,   size,-size, 0.0f,   size, size, 0.0f,   -size, size, 0.0f
+	    };
+
+	    GLfloat normals[] = {
+	        0.0,  0.0,  1.0,    0.0,  0.0,  1.0,    0.0,  0.0,  1.0,   0.0,  0.0,  1.0
+	    };
+
+	    GLfloat tangents[] = {
+	        0.0, -1.0,  0.0,    0.0, -1.0,  0.0,    0.0, -1.0,  0.0,    0.0, -1.0,  0.0
+	    };
+
+	    GLfloat uvCoordinates[] = {
+	        0,0, 1,0, 1,1,  0,1
+	    };
+
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandles[0]);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandles[1]);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(uvCoordinates), uvCoordinates, GL_STATIC_DRAW);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandles[2]);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(normals), normals, GL_STATIC_DRAW);
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandles[4]);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(tangents), tangents, GL_STATIC_DRAW);
+		glEnableVertexAttribArray(3);
+		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertexBufferHandles[3]);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+		quadMesh->setVAO(quadVertexArrayHandle);
+		quadMesh->setNumIndices(6);
+		quadMesh->setNumVertices(4);
+		quadMesh->setNumFaces(2);
+
+		mQuad = new GraphicsComponent(quadMesh, quadMat);
+	}
+	return mQuad;
+}
+
 VirtualObject* VirtualObjectFactory::createNonAssimpVO(float mass){
 
 	if(mCube == NULL){
-	NoAssimpVirtualObjectFactory *voFactory = new NoAssimpVirtualObjectFactory();
-	mCube = voFactory->createCubeObject(mass);
+		NoAssimpVirtualObjectFactory *voFactory = new NoAssimpVirtualObjectFactory();
+		mCube = voFactory->createCubeObject(mass);
 	}
 
 	return mCube;
@@ -88,8 +161,8 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(){
 	return new VirtualObject();
 }
 
-VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, BodyType bodyType, float mass, int collisionFlag){
-
+VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, BodyType bodyType, float mass, int collisionFlag, bool blenderAxes)
+{
 	VirtualObject* virtualObject = new VirtualObject();
 
 	Assimp::Importer Importer;
@@ -138,7 +211,6 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 	glm::vec3 physics_min = glm::vec3(FLT_MAX,FLT_MAX,FLT_MAX);
 	glm::vec3 physics_max = glm::vec3(-FLT_MAX,-FLT_MAX,-FLT_MAX);
-
 
 	// For each mesh
 
@@ -232,16 +304,20 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 		vector <float>texCoords;
 		float uv_steps = 1.0 / mesh->mNumVertices;
 
-		if (mesh->HasTextureCoords(0))
+		if (mesh->HasTextureCoords(0)){
 			for (unsigned int k = 0; k < mesh->mNumVertices; ++k) {
 				texCoords.push_back(mesh->mTextureCoords[0][k].x);
 				texCoords.push_back(mesh->mTextureCoords[0][k].y);
-			}else
-				for(unsigned int k = 0; k < mesh->mNumVertices; ++k){
-					texCoords.push_back(k * uv_steps);
-					texCoords.push_back(k * uv_steps);
+			}
+		}
+		else
+		{
+			for(unsigned int k = 0; k < mesh->mNumVertices; ++k){
+				texCoords.push_back(k * uv_steps);
+				texCoords.push_back(k * uv_steps);
 
-				}
+			}
+		}
 		std::vector<glm::vec3> vertexPositions;
 		for(unsigned int k = 0; k < mesh->mNumVertices; ++k){
 			if(aabbMax.x < mesh->mVertices[k].x)
@@ -374,102 +450,86 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 
 
-        if(aMat->getName().find("custom") != std::string::npos){
+        if(aMat->getName().find("custom") != std::string::npos)
+        {
         	cout<<"\nRead from mtl\n";
 
+	        float c[4];
+	        
+	 		// diffuse
+			set_float4(c, 0.8f, 0.8f, 0.8f, 1.0f);
+			aiColor4D diffuse;
+			if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_DIFFUSE, &diffuse)){
+			color4_to_float4(&diffuse, c);
+			}
+			aMat->setDiffuse(glm::vec3(c[0], c[1], c[2]));
 
 
- // diffuse
+	        // ambient
+			set_float4(c, 0.2f, 0.2f, 0.2f, 1.0f);
+			aiColor4D ambient;
+			if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_AMBIENT, &ambient))
+				color4_to_float4(&ambient, c);
+			//memcpy(aMat.ambient, c, sizeof(c));
+			aMat->setAmbient(glm::vec3(ambient.r, ambient.g, ambient.b));
 
-        	float c[4];
+	        // specular
 
-		set_float4(c, 0.8f, 0.8f, 0.8f, 1.0f);
-		aiColor4D diffuse;
-		if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_DIFFUSE, &diffuse)){
-		color4_to_float4(&diffuse, c);
-		}
-		aMat->setDiffuse(glm::vec3(c[0], c[1], c[2]));
+			set_float4(c, 0.0f, 0.0f, 0.0f, 1.0f);
 
+			aiColor4D specular;
+			if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_SPECULAR, &specular))
+				color4_to_float4(&specular, c);
+			//memcpy(aMat.specular, c, sizeof(c));
+			aMat->setSpecular(glm::vec3(specular.r, specular.g, specular.b));
 
-        // ambient
-		set_float4(c, 0.2f, 0.2f, 0.2f, 1.0f);
-		aiColor4D ambient;
-		if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_AMBIENT, &ambient))
-			color4_to_float4(&ambient, c);
-		//memcpy(aMat.ambient, c, sizeof(c));
-		aMat->setAmbient(glm::vec3(ambient.r, ambient.g, ambient.b));
+	        // emission
+			set_float4(c, 0.0f, 0.0f, 0.0f, 1.0f);
+			aiColor4D emission;
+			if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_EMISSIVE, &emission))
+				color4_to_float4(&emission, c);
+	        //memcpy(aMat.emissive, c, sizeof(c));
+			aMat->setEmission(glm::vec3(emission.r, emission.g, emission.b));
 
-        // specular
-
-		set_float4(c, 0.0f, 0.0f, 0.0f, 1.0f);
-
-		aiColor4D specular;
-		if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_SPECULAR, &specular))
-			color4_to_float4(&specular, c);
-		//memcpy(aMat.specular, c, sizeof(c));
-		aMat->setSpecular(glm::vec3(specular.r, specular.g, specular.b));
-
-        // emission
-		set_float4(c, 0.0f, 0.0f, 0.0f, 1.0f);
-		aiColor4D emission;
-		if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_EMISSIVE, &emission))
-			color4_to_float4(&emission, c);
-        //memcpy(aMat.emissive, c, sizeof(c));
-		aMat->setEmission(glm::vec3(emission.r, emission.g, emission.b));
-
-        // shininess
-        float shininess = 0.0;
-		//unsigned int max;
-		if(AI_SUCCESS != mtl->Get(AI_MATKEY_SHININESS, shininess))
-			shininess = 50.0;
+	        // shininess
+	        float shininess = 0.0;
+			//unsigned int max;
+			if(AI_SUCCESS != mtl->Get(AI_MATKEY_SHININESS, shininess))
+				shininess = 50.0;
 
 
-		aMat->setShininess(1.0f);
-//shininess/1000.0f
-
+			aMat->setShininess(1.0f);
+			//shininess/1000.0f
         }
         else{
-
-        try {
-            mm->makeMaterial(aMat->getName(),gc);
-
-            }
-        catch (string param){
-           cout<<"\nFAILED: generate material by name";
-
-            }
+	        try {
+	            mm->makeMaterial(aMat->getName(),gc);
+	            }
+	        catch (string param){
+	           cout<<"\nFAILED: generate material by name";
+	            }
         }
-
-
 
 		//Mesh und Material wird gelesen und in neuer GraphicsComponent gespeichert
 		gc->setGhostObject(aabbMin, aabbMax);
 
-
-
-
-
 		virtualObject->addGraphicsComponent(gc);
 
-
-
-
 		if(aabbMin.x < physics_min.x)
-		 			physics_min.x = aabbMin.x;
-		 		if(aabbMin.y < physics_min.y)
-		 			physics_min.y = aabbMin.y;
-		 		if(aabbMin.z < physics_min.z)
-		 			physics_min.z = aabbMin.z;
-		 		if(aabbMax.x > physics_max.x)
-		 			physics_max.x = aabbMax.x;
-		 		if(aabbMax.y > physics_max.y)
-		 			physics_max.y = aabbMax.y;
-		 		if(aabbMax.z > physics_max.z)
-		 			physics_max.z = aabbMax.z;
-
+		 	physics_min.x = aabbMin.x;
+		 if(aabbMin.y < physics_min.y)
+		 	physics_min.y = aabbMin.y;
+		 if(aabbMin.z < physics_min.z)
+		 	physics_min.z = aabbMin.z;
+		 if(aabbMax.x > physics_max.x)
+		 	physics_max.x = aabbMax.x;
+		 if(aabbMax.y > physics_max.y)
+		 	physics_max.y = aabbMax.y;
+		 if(aabbMax.z > physics_max.z)
+		 	physics_max.z = aabbMax.z;
 	}
 
-	glm::vec3 boxValue = physics_max-physics_min;
+	glm::vec3 boxValue = physics_max - physics_min;
 	float width = boxValue.x;
 	float height = boxValue.y;
 	float depth = boxValue.z;
@@ -478,15 +538,13 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 	float y = physics_min.y + height / 2.0f;
 	float z = physics_min.z + depth / 2.0f;
 
-
 	glm::vec3 normal;
 	normal.x= physics_min.y*physics_max.z - physics_min.z*physics_max.y;
 	normal.y= physics_min.z*physics_max.x - physics_min.x*physics_max.z;
 	normal.z= physics_min.x*physics_max.y - physics_min.y*physics_max.x;
 
-
-	std::cout << "max: " << physics_max.x << " , "<< physics_max.y << " , "<< physics_max.z << std::endl;
-	std::cout << "min: " << physics_min.x << " , "<< physics_min.y << " , "<< physics_min.z << std::endl;
+//	std::cout << "max: " << physics_max.x << " , "<< physics_max.y << " , "<< physics_max.z << std::endl;
+//	std::cout << "min: " << physics_min.x << " , "<< physics_min.y << " , "<< physics_min.z << std::endl;
 
 	//feste heightmap werte zum testen
 	char MapFilename[] = RESOURCES_PATH"/terrainTest.png";
@@ -495,20 +553,37 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 	int mapHeight = 2048;
 	//
 
-	switch(bodyType){
-	case CUBE:		virtualObject->setPhysicsComponent(width, height, depth, x, y, z, mass, collisionFlag);
-		break;
-	case PLANE:		virtualObject->setPhysicComponent(x, y, z, normal, mass, collisionFlag);
-		break;
-	case SPHERE:	virtualObject->setPhysicsComponent((physics_max.x-physics_min.x)/2.0, (physics_max.x-physics_min.x)/2.0+physics_min.x, (physics_max.y-physics_min.y)/2.0+physics_min.y, (physics_max.z-physics_min.z)/2.0+physics_min.z, mass, collisionFlag);
-		break;
-	case TERRAIN:	virtualObject->setPhysicsComponent(heightMapFilename,mapWidth,mapHeight,x,y,z);
-		break;
-	case OTHER:		virtualObject->setPhysicsComponent(physics_min, physics_max, mass, collisionFlag);
-		break;
+	switch(bodyType)
+	{
+		case CUBE:		virtualObject->setPhysicsComponent(width, height, depth, x, y, z, mass, collisionFlag);
+			break;
+		case PLANE:		virtualObject->setPhysicComponent(x, y, z, normal, mass, collisionFlag);
+			break;
+		case SPHERE:	virtualObject->setPhysicsComponent((physics_max.x-physics_min.x)/2.0, (physics_max.x-physics_min.x)/2.0+physics_min.x, (physics_max.y-physics_min.y)/2.0+physics_min.y, (physics_max.z-physics_min.z)/2.0+physics_min.z, mass, collisionFlag);
+			break;
+		case TERRAIN:	virtualObject->setPhysicsComponent(heightMapFilename,mapWidth,mapHeight,x,y,z);
+			break;
+		case OTHER:		virtualObject->setPhysicsComponent(physics_min, physics_max, mass, collisionFlag);
+			break;
 	}
 
+	/******************************************************/
+	std::cout << "BLENDER FILE ... :" << blenderAxes << std::endl;
+	if (blenderAxes)
+	{
+		std::cout << "BLENDER FILE... rotating Object..." << std::endl;
+		btRigidBody* rigidBody = virtualObject->getPhysicsComponent()->getRigidBody();
+		btMotionState* motion = rigidBody->getMotionState();
 
+		btTransform worldTrans;
+		worldTrans.setIdentity();
+		worldTrans.setRotation( btQuaternion( btVector3(1.0f, 0.0f, 0.0f), ( (-1.0f) * PI ) / 2.0f));
+		std::cout << "BLENDER FILE... updating ModelMatrix" << std::endl;
 
+		motion->setWorldTransform(worldTrans);
+
+		virtualObject->updateModelMatrixViaPhysics();
+	}
+	/******************************************************/
 	return virtualObject;
 }
