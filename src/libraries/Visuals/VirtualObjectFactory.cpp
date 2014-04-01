@@ -15,8 +15,9 @@
 
 
 VirtualObjectFactory::VirtualObjectFactory(){
-	mCube = NULL;
-	mScreenFillTriangle = NULL;
+	mCube = 0;
+	mScreenFillTriangle = 0;
+	mQuad = 0;
 }
 
 //eingefügt
@@ -38,7 +39,7 @@ void VirtualObjectFactory::color4_to_float4(const aiColor4D *c, float f[4])
 }
 
 GraphicsComponent* VirtualObjectFactory::getTriangle(){
-	if(mScreenFillTriangle == NULL){
+	if(mScreenFillTriangle == 0){
 
 		Mesh *triangle = new Mesh;
 		Material *mat = new Material();
@@ -76,11 +77,99 @@ GraphicsComponent* VirtualObjectFactory::getTriangle(){
 	} return mScreenFillTriangle;
 }
 
+GraphicsComponent* VirtualObjectFactory::getQuad(){
+	if (mQuad == 0){
+
+		std::cout << " VirutalObjectFactory : creating QuadObject..." << std::endl;
+
+		Mesh* quadMesh = new Mesh();
+		Material* quadMat = new Material();
+
+		quadMat->setName("default_quad_material");
+		GLuint quadVertexArrayHandle;
+
+		glGenVertexArrays(1, &quadVertexArrayHandle);
+		glBindVertexArray(quadVertexArrayHandle);
+
+		//we generate multiple buffers at a time
+		GLuint vertexBufferHandles[5];
+		glGenBuffers(4, vertexBufferHandles);
+
+		int indices[] = {0, 1, 2, 3, 4, 5};
+
+	    float size = 0.5;
+
+	    GLfloat positions[] = {
+	    	-size,-size,0.0f, size,-size,0.0f, size,size,0.0f,
+        	size,size,0.0f, -size,size,0.0f, -size,-size,0.0f
+	    };
+
+	    GLfloat normals[] = {
+	        0.0,  0.0,  1.0,    0.0,  0.0,  1.0,    0.0,  0.0,  1.0,
+        	0.0,  0.0,  1.0,    0.0,  0.0,  1.0,    0.0,  0.0,  1.0
+	    };
+
+	    GLfloat tangents[] = {
+	        0.0, -1.0,  0.0,    0.0, -1.0,  0.0,    0.0, -1.0,  0.0,
+        	0.0, -1.0,  0.0,    0.0, -1.0,  0.0,    0.0, -1.0,  0.0
+	    };
+
+	    GLfloat uvCoordinates[] = {
+	        0,0, 1,0, 1,1,
+        	1,1, 0,1, 0,0
+	    };
+
+		std::cout << " VirutalObjectFactory : creating QuadObject... VertexArrayObject..." << std::endl;
+
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandles[0]);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandles[1]);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(uvCoordinates), uvCoordinates, GL_STATIC_DRAW);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandles[2]);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(normals), normals, GL_STATIC_DRAW);
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandles[4]);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(tangents), tangents, GL_STATIC_DRAW);
+		glEnableVertexAttribArray(3);
+		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertexBufferHandles[3]);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+		
+		std::cout << " VirutalObjectFactory : creating QuadObject... releasing buffers..." << std::endl;
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+
+
+		std::cout << " VirutalObjectFactory : creating QuadObject... GraphicsComponent..." << std::endl;
+
+		quadMesh->setVAO(quadVertexArrayHandle);
+		quadMesh->setNumIndices(6);
+		quadMesh->setNumVertices(6);
+		quadMesh->setNumFaces(2);
+
+		mQuad = new GraphicsComponent(quadMesh, quadMat);
+		std::cout << " VirutalObjectFactory : creating QuadObject... # " << mQuad << std::endl;
+
+	}
+		std::cout << " VirutalObjectFactory : returning QuadObject... # " << mQuad << std::endl;
+	return mQuad;
+}
+
 VirtualObject* VirtualObjectFactory::createNonAssimpVO(float mass){
 
-	if(mCube == NULL){
-	NoAssimpVirtualObjectFactory *voFactory = new NoAssimpVirtualObjectFactory();
-	mCube = voFactory->createCubeObject(mass);
+	if(mCube == 0){
+		NoAssimpVirtualObjectFactory *voFactory = new NoAssimpVirtualObjectFactory();
+		mCube = voFactory->createCubeObject(mass);
 	}
 
 	return mCube;
