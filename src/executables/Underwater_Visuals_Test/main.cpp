@@ -162,7 +162,7 @@ void configureRendering(){
 	// 6: render Particles in the water
 	testingApp->attachListenerOnRenderManagerFrameLoop( new SetCurrentShaderListener( particles_shader ));
 	testingApp->attachListenerOnRenderManagerFrameLoop( uniPartText);
-	ParticlesRenderPass* renderParticles = new ParticlesRenderPass(UnderwaterScene::framebuffer_water_particles, UnderwaterScene::water_particles, VirtualObjectFactory::getInstance()->getTriangle());
+	ParticlesRenderPass* renderParticles = new ParticlesRenderPass(UnderwaterScene::framebuffer_water_particles, UnderwaterScene::water_particles, VirtualObjectFactory::getInstance()->getQuad());
 	testingApp->attachListenerOnRenderManagerFrameLoop(( renderParticles));
 
 	// 7: Compositing

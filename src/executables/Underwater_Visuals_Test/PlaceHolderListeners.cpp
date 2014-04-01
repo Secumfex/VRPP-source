@@ -163,7 +163,11 @@ ParticlesRenderPass::ParticlesRenderPass(FrameBufferObject* fbo, ParticleSystem*
 	}
 
 void ParticlesRenderPass::update(){
+		FrameBufferObject* tempFBO = rm->getCurrentFBO();
+
 		fbo->bindFBO();
+		rm->setCurrentFBO(fbo);
+
 		Shader* currentShader;
         glDisable(GL_DEPTH_TEST);
         glClearColor(0.0,0.0,0.0,1.0);
@@ -176,14 +180,16 @@ void ParticlesRenderPass::update(){
 		for (unsigned int i = 0; i < particles.size(); i++) {
 //			std::cout << "particle " << i << " position : " << particles[i]->getPosition().x << ", " << particles[i]->getPosition().y << ", " << particles[i]->getPosition().z << std::endl;
 //			currentShader->uploadAllUniforms();
-			currentShader->uploadUniform(glm::translate( glm::mat4(1.0f), particles[i]->getPosition()), 		"uniformModel");
+			currentShader->uploadUniform(glm::translate( glm::scale ( glm::mat4(1.0f), glm::vec3(0.1f) ), particles[i]->getPosition()),	"uniformModel");
 			currentShader->uploadUniform(rm->getCamera()->getViewMatrix(), 	"uniformView");;
 			currentShader->uploadUniform(rm->getPerspectiveMatrix(), 		"uniformPerspective");
 
 			currentShader->uploadUniform(particles[i]->getPosition(), "uniformParticlePosition");
 			currentShader->render(particleGC);
 		}
+
 		fbo->unbindFBO();
+		rm->setCurrentFBO(tempFBO);
 	}
 
 
