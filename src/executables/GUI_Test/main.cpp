@@ -8,7 +8,7 @@
 #include "Physics/PhysicWorld.h"
 #include "Physics/PhysicWorldSimulationListener.h"
 /*
-*	This executable tests simple GUIElements
+*	This executable tests various Input/Output related functionalities
 */	
 
 Application* 	testingApp;
@@ -35,7 +35,7 @@ void configureVirtualObjects(){
 
 	VirtualObject* wallObject1 = testingState->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_wall1.dae", VirtualObjectFactory::OTHER);	// to have something in the scene
 	VirtualObject* wallObject2 = testingState->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_wall2.dae", VirtualObjectFactory::OTHER);	// to have something in the scene
-	VirtualObject* cubeObject2 = testingState->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::OTHER, 10.0f);	// to have something in the scene
+	VirtualObject* cubeObject2 = testingState->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 10.0f);	// to have something in the scene
 	cubeObject2->translate(glm::vec3(0.0f,2.0f,0.0f));
 	testingState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cubeObject2));
 	

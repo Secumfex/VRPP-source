@@ -109,6 +109,8 @@ public:
 	/** \brief binds this fbo
 	 *
 	 */
+
+	GLuint getGuiTextureHandle();
 	void bindFBO();
 
 	/** \brief unbinds this fbo

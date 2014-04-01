@@ -47,8 +47,6 @@ void RenderloopPlaceHolderListener::update(){
 
 SetDefaultShaderListener::SetDefaultShaderListener(Shader* shader){
 	rm = RenderManager::getInstance();
-	rm = RenderManager::getInstance();
-	rm->getCurrentFBO()->getFboHandle();
 	this->shader = shader;}
 
 void SetDefaultShaderListener::update(){
