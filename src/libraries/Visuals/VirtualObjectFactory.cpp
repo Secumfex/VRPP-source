@@ -145,11 +145,8 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 	// For each mesh
 
-<<<<<<< HEAD
 
 	// For each mesh of the loaded object
-=======
->>>>>>> master
 	for (unsigned int n = 0; n < pScene->mNumMeshes; ++n)
 	{
 		const aiMesh* mesh = pScene->mMeshes[n];

@@ -9,10 +9,6 @@
 #include <cmath>
 
 #include "Visuals/RenderManager.h"
-<<<<<<< HEAD
-=======
-#include "Visuals/VirtualObjectFactory.h"
->>>>>>> master
 #include "Visuals/Shader.h"
 
 /// Listener which renders a frame by using current Instance pointers of RenderManager
@@ -30,10 +26,6 @@ public:
 	void update();
 };
 
-<<<<<<< HEAD
-=======
-
->>>>>>> master
 class ReflectionMapRenderPass : public Listener{
 public:
 	RenderManager* rm;
@@ -50,9 +42,6 @@ public:
 	ReflectionMapRenderPass(FrameBufferObject* fbo, Camera* reflectedCam, VirtualObject* water_object);
 	void update();
 };
-
-<<<<<<< HEAD
-=======
 
 class GodRaysRenderPass : public Listener{
 public:
@@ -72,7 +61,6 @@ public:
 };
 
 
->>>>>>> master
 class RefractionMapRenderPass : public Listener{
 public:
 	RenderManager* rm;
@@ -89,10 +77,7 @@ public:
 	void update();
 };
 
-<<<<<<< HEAD
-=======
 
->>>>>>> master
 class RenderVirtualObjectWithShaderListener : public Listener{
 private: 
 	VirtualObject* vo;
@@ -102,10 +87,7 @@ public:
 	void update();
 };
 
-<<<<<<< HEAD
-=======
 
->>>>>>> master
 class RenderVirtualObjectListener : public Listener{
 private: 
 	VirtualObject* vo;
@@ -114,8 +96,6 @@ public:
 	void update();
 };
 
-<<<<<<< HEAD
-=======
 
 class RenderGraphicsComponentListener : public Listener{
 protected: 
@@ -131,7 +111,6 @@ public:
 	void update();
 };
 
->>>>>>> master
 class RenderWaterObjectWithShaderAndReflectionMapListener : public Listener{
 private: 
 	VirtualObject* vo;
@@ -142,10 +121,7 @@ public:
 	void update();
 };
 
-<<<<<<< HEAD
-=======
 
->>>>>>> master
 /// Listener which sets the Phont_Test Shader as the RenderManagers current Shader
 class SetCurrentShaderListener : public Listener{
 private:
@@ -156,17 +132,6 @@ public:
 	void update();
 };
 
-<<<<<<< HEAD
-/// Listener which sets the glClearColor
-class SetClearColorListener : public Listener {
-private:
-	float r, g, b, a;
-public:
-	SetClearColorListener(float r = 0.0, float g = 0.0, float b = 0.0, float a = 1.0);
-	void update();
-};
-
-=======
 
 /// Listener which sets the glClearColor
 class SetClearColorListener : public Listener {
@@ -182,22 +147,11 @@ public:
 };
 
 
->>>>>>> master
 /// listener on above or under water
 class UnderOrAboveWaterListener : public Listener{
 private:
 	Camera* cam;
 	bool underwater;
-<<<<<<< HEAD
-	float sea_level_y;
-	Listener* EnterWaterListener;
-	Listener* ExitWaterListener;
-public:
-	UnderOrAboveWaterListener(Camera* cam, float sea_level_y = 0.0f, Listener* EnterWaterListener = 0, Listener* ExitWaterListener = 0);
-	void update();
-};
-
-=======
 	float* sea_level_y;
 	Listener* EnterWaterListener;
 	Listener* ExitWaterListener;
@@ -207,7 +161,7 @@ public:
 };
 
 
->>>>>>> master
+
 class RecompileAndSetShaderListener : public Listener{
 private:
 	std::string vertex_shader;
@@ -217,10 +171,7 @@ public:
 	void update();
 };
 
-<<<<<<< HEAD
-=======
 
->>>>>>> master
 class UpdateReflectedCameraPositionListener : public Listener{
 private:
 	Camera* cam_source;
@@ -232,10 +183,7 @@ public:
 	void update();
 };
 
-<<<<<<< HEAD
-=======
 
->>>>>>> master
 class UploadUniformSinusWaveListener : public Listener{
 private:
 	float* t;
@@ -246,8 +194,6 @@ public:
 	UploadUniformSinusWaveListener(std::string name, float t, float frequency, std::string uniform_name);
 	void update();
 };
-<<<<<<< HEAD
-=======
 
 
 class SetFrameBufferObjectListener : public Listener {
@@ -264,4 +210,4 @@ public:
 	UnbindFrameBufferObjectListener();
 	void update();
 };
->>>>>>> master
+
