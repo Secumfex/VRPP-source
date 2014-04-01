@@ -10,7 +10,11 @@
 #include "Visuals/VirtualObject.h"
 
 #include "BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h"
-
+#include "BulletCollision/CollisionShapes/btBvhTriangleMeshShape.h"
+#include "BulletCollision/CollisionShapes/btTriangleMeshShape.h"
+#include "BulletCollision/CollisionShapes/btOptimizedBvh.h"
+#include "LinearMath/btAlignedAllocator.h"
+#include "BulletCollision/CollisionShapes/btTriangleInfoMap.h"
 
 using namespace std;
 
@@ -36,8 +40,20 @@ PhysicsComponent::PhysicsComponent(glm::vec3 min, glm::vec3 max, float mass, int
 
 	rigidBody = addBox(width , height , depth, x, y, z, mass);
 	rigidBody->setUserPointer(this);	// use bullet's user pointer to refer to this Object
-	setCollisionFlag(collisionFlag);	//momentan noch fest, muesste eig auch zusaetzlicher input wert sein
+	setCollisionFlag(collisionFlag);
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
+}
+
+PhysicsComponent::PhysicsComponent(vector<GraphicsComponent*> mGraphComponent, float mass, int collisionFlag) {
+
+	hit = false;
+
+	rigidBody = addTriangleMesh(mGraphComponent);
+	rigidBody->setUserPointer(this);	// use bullet's user pointer to refer to this Object
+
+	setCollisionFlag(collisionFlag);
+	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
+
 }
 
 PhysicsComponent::PhysicsComponent(float radius, float x, float y, float z, float mass, int collisionFlag) {
@@ -238,6 +254,40 @@ btRigidBody* PhysicsComponent::addHeightfield(char* filename, float x, float y, 
 	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,groundShape);
 	btRigidBody* body = new btRigidBody(info);
 	return body;
+}
+
+btRigidBody* PhysicsComponent::addTriangleMesh(vector<GraphicsComponent*> mGraphComponent){
+	btTriangleMesh tetraMesh;
+	btBvhTriangleMeshShape* tetraShape;
+
+	for (unsigned int n = 0; n < mGraphComponent.size(); ++n)
+	{
+		Mesh* mesh =mGraphComponent[n]->getMesh();
+
+		for (unsigned int i = 0; i < mesh->getNumVertices(); ++i)
+		{
+			std::vector<glm::vec3> vertizes = mesh->getVertices();
+			for (unsigned int j = 0; j < vertizes.size()-2; j+=3)
+			{
+				btVector3 vec0 = btVector3(vertizes[j].x,vertizes[j].y,vertizes[j].z);
+				btVector3 vec1 = btVector3(vertizes[j+1].x,vertizes[j+1].y,vertizes[j+1].z);
+				btVector3 vec2 = btVector3(vertizes[j+2].x,vertizes[j+2].y,vertizes[j+2].z);
+				tetraMesh.addTriangle(vec0,vec1,vec2,false);
+			}
+		}
+
+	}
+	tetraShape = new btBvhTriangleMeshShape(&tetraMesh, false);
+
+	btVector3 inertia;
+	tetraShape->calculateLocalInertia(1.0, inertia);
+	btTransform trans;
+	trans.setIdentity();
+	trans.setOrigin(btVector3(0, 0, 0));
+	btDefaultMotionState* motionState = new btDefaultMotionState(trans);
+	btRigidBody* body = new btRigidBody(1, motionState, tetraShape);
+	return body;
+
 }
 
 btRigidBody* PhysicsComponent::getRigidBody(){

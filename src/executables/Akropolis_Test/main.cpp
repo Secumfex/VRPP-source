@@ -42,7 +42,7 @@ void configureVirtualObjects(){
 
 	/*	customize virtual objects*/
 	VirtualObject* groundObject = myState->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_ground.dae", VirtualObjectFactory::OTHER);
-	VirtualObject* 	akropolis = 	myState->createVirtualObject(RESOURCES_PATH "/AkropolisKlein.obj", VirtualObjectFactory::CUBE, 0.0, 8);
+	VirtualObject* 	akropolis = 	myState->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::MESH);
 	VirtualObject* cube = myState->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 1.0, 8);
 	cube->translate(glm::vec3(-0.5,2.0,0.0));
 	akropolis->translate(glm::vec3(0.0, -56.0, 0.0));

@@ -1,9 +1,11 @@
 #ifndef PHYSICSCOMPONENT_H
 #define PHYSICSCOMPONENT_H
 
-#include <glm/glm.hpp>
-#include "btBulletDynamicsCommon.h"
 
+#include "btBulletDynamicsCommon.h"
+#include "Visuals/GraphicsComponent.h"
+#include <glm/glm.hpp>
+#include <vector>
 
 using namespace std;
 
@@ -34,6 +36,13 @@ public:
 	* @param modelMatrix 4x4Matrix
 	*/
 	PhysicsComponent(glm::mat4 modelMatrix);
+
+	/** \brief constructor
+	*
+	* creates a physics component with a given model matrix. does not define any rigid body.
+	* @param modelMatrix 4x4Matrix
+	*/
+	PhysicsComponent(vector<GraphicsComponent*> mGraphComponent, float mass=0.0f, int collisionFlag=1);
 
 	/** \brief constructor
 	*
@@ -77,6 +86,8 @@ public:
 	 * @param x,y,z
 	 */
 	PhysicsComponent(char* filename, float x, float y, float z);
+
+
 
 	/** \brief destructor
 	*
@@ -168,6 +179,13 @@ public:
 	 */
 	btRigidBody* addHeightfield(char* filename, float x, float y, float z);
 
+	/** \brief defines the rigid body as mesh
+	 *
+	 * creates a collisionshape by meshes
+	 * @param mGraphComponent graphic components of vo
+	 * @return a bullet rigid body
+	 */
+	btRigidBody* addTriangleMesh(vector<GraphicsComponent*> mGraphComponent);
 
 	/** \brief getter
 	 *

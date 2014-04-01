@@ -335,7 +335,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 			vertexPositions.push_back(glm::vec3(mesh->mVertices[k].x, mesh->mVertices[k].y, mesh->mVertices[k].z));
 		}
-		aMesh->setVertexPosition(vertexPositions);
+//		aMesh->setVertexPosition(vertexPositions);
 
 
 		glGenBuffers(1, &buffer);
@@ -543,16 +543,16 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 	normal.y= physics_min.z*physics_max.x - physics_min.x*physics_max.z;
 	normal.z= physics_min.x*physics_max.y - physics_min.y*physics_max.x;
 
-//	std::cout << "max: " << physics_max.x << " , "<< physics_max.y << " , "<< physics_max.z << std::endl;
-//	std::cout << "min: " << physics_min.x << " , "<< physics_min.y << " , "<< physics_min.z << std::endl;
 
 	switch(bodyType)
 	{
 		case CUBE:		virtualObject->setPhysicsComponent(width, height, depth, x, y, z, mass, collisionFlag);
 			break;
-		case PLANE:		virtualObject->setPhysicComponent(x, y, z, normal, mass, collisionFlag);
+		case PLANE:		virtualObject->setPhysicsComponent(x, y, z, normal, mass, collisionFlag);
 			break;
 		case SPHERE:	virtualObject->setPhysicsComponent((physics_max.x-physics_min.x)/2.0, (physics_max.x-physics_min.x)/2.0+physics_min.x, (physics_max.y-physics_min.y)/2.0+physics_min.y, (physics_max.z-physics_min.z)/2.0+physics_min.z, mass, collisionFlag);
+			break;
+		case MESH:		virtualObject->setPhysicsComponent(mass, collisionFlag);
 			break;
 		case OTHER:		virtualObject->setPhysicsComponent(physics_min, physics_max, mass, collisionFlag);
 			break;

@@ -128,6 +128,15 @@ public:
 
 	/** \brief sets PhysicsComponent
 	 *
+	 * creates PhysicComponent of a mesh model
+	 * @param mass
+	 * @param collisionFlag sets collisiontype of the collisionshape
+	 * @return void
+	 */
+	void setPhysicsComponent(float mass=0.0f, int collisionFlag=1);
+
+	/** \brief sets PhysicsComponent
+	 *
 	 * creates PhysicComponent with box shaped rigid Body
 	 * @param min,max smallest and largest x, y, z values of a given model
 	 * @param mass
@@ -168,7 +177,7 @@ public:
  	 * @return void
 	 */
 
-	void setPhysicComponent(float x, float y, float z, glm::vec3 normal, float mass = 0.0f, int collisionFlag = 1);
+	void setPhysicsComponent(float x, float y, float z, glm::vec3 normal, float mass = 0.0f, int collisionFlag = 1);
 
 	/** \brief getter
 	 *
