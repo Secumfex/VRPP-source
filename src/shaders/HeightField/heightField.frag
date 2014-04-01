@@ -9,7 +9,6 @@ uniform sampler2D texture2
 uniform sampler2D textureMask
 
 
-
 void main() { 
 
 vec4 color1 = texture2D(texture1,uvCoordPass);

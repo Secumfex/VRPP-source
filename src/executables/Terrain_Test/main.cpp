@@ -35,7 +35,7 @@ void configureMyApp(){
 
 	VirtualObject* groundObject = myVRState->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_ground.dae", VirtualObjectFactory::PLANE);
 
-	VirtualObject* 	terrain = 	myVRState->	createVirtualObject(RESOURCES_PATH "/terrainTest.obj", VirtualObjectFactory::TERRAIN);
+	VirtualObject* 	terrain = 	myVRState->	createVirtualObject(RESOURCES_PATH "/Heightfield/terrainTest.obj", VirtualObjectFactory::TERRAIN);
 	//glm::mat4 myModelMatrix1 = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.0f, 0.0f)), glm::vec3(5.0f, 0.2f, 5.0f));	//floor
 	//terrain->setModelMatrix(myModelMatrix1); 	// override default Model Matrix
 	//terrain->setPhysicsComponent(RESOURCES_PATH"/terrainTest.png", 2048, 2048, 0.0f, 0.0f, 1);

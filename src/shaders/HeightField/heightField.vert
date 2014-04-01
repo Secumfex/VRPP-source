@@ -16,4 +16,11 @@ out vec3 worldPass
 
 void main() {
 
+gl_Position = uniPerspMat*uniViewMat*uniModelMat*positionAttr;
+
+uvCoordPass = uvCoordAttr;
+
+positionPass = (uniViewMat*uniModelMat*positionAttr).xyz;
+
+normalPass = normalize((uniInverse*normalAttr).xyz);
 }
