@@ -30,8 +30,6 @@ void configureTestingApplication(){
 void configureVirtualObjects(){
 	/* creation and customization of Virtual Objects */
 	UnderwaterScene::createScene(testingState);
-
-	
 }
 
 void configurePhysics(){
@@ -48,76 +46,132 @@ void configureInputHandler(){
 }
 
 void configureRendering(){
-	Shader* shader =  new Shader (SHADERS_PATH "/Underwater_Visuals_Test/phong.vert", SHADERS_PATH "/Underwater_Visuals_Test/phong.frag");
-	Shader* reflection_shader =  new Shader (SHADERS_PATH "/Underwater_Visuals_Test/phong.vert", SHADERS_PATH "/Underwater_Visuals_Test/phong_clipping.frag");
-	Shader* refraction_shader =  new Shader (SHADERS_PATH "/Underwater_Visuals_Test/phong.vert", SHADERS_PATH "/Underwater_Visuals_Test/phong_clipping.frag");
+	Shader* phong_shader 		= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/phong.vert"	, SHADERS_PATH 	"/Underwater_Visuals_Test/phong.frag");
+	Shader* underwater_shader 	= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/phong_caustics.vert", SHADERS_PATH "/Underwater_Visuals_Test/phong_caustics.frag");
+	Shader* reflection_shader 	= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/phong.vert"	, SHADERS_PATH 	"/Underwater_Visuals_Test/phong_clipping.frag");
+	Shader* refraction_shader 	= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/phong.vert"	, SHADERS_PATH 	"/Underwater_Visuals_Test/phong_clipping.frag");
+	Shader* godRay_shader 		= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/godrays.vert"	, SHADERS_PATH 	"/Underwater_Visuals_Test/godrays.frag");
+	Shader* water_shader 		= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/water.vert"	, SHADERS_PATH 	"/Underwater_Visuals_Test/water.frag");
+	Shader* particles_shader	= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/particles.vert", SHADERS_PATH  "/Underwater_Visuals_Test/particles.frag");
+	Shader *composition_shader  = new Shader( SHADERS_PATH "/Underwater_Visuals_Test/screenFill.vert", SHADERS_PATH "/Underwater_Visuals_Test/finalCompositing.frag");
 
+	FrameBufferObject* preCompositingScene = new FrameBufferObject(800, 600);
+	preCompositingScene->bindFBO();
+	preCompositingScene->createPositionTexture();
+	preCompositingScene->makeDrawBuffers();	// draw color to color attachment 0
+	preCompositingScene->unbindFBO();
 
-	Listener* uniLightPos 	= new UploadUniformVec3Listener 	("UNIFORMUPLOADLISTENER", &UnderwaterScene::lightPosition, "uniformLightPosition");
-	Listener* uniReflMatr	= new UploadUniformMat4Listener 	("UNIFORMUPLOADLISTENER", UnderwaterScene::reflectedCamera->getViewMatrixPointer(), "uniformReflectionView");
-	Listener* uniFogColor 	= new UploadUniformVec3Listener 	("UNIFORMUPLOADLISTENER", &UnderwaterScene::fog_color, "uniformFogColor");
-	Listener* uniFogBegin 	= new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", &UnderwaterScene::fog_begin, "uniformFogBegin");
-	Listener* uniFogEnd 	= new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", &UnderwaterScene::fog_end, "uniformFogEnd");
-	Listener* uniTime 		= new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", IOManager::getInstance()->getWindowTimePointer(), "uniformTime");
+	Listener* uniCamPos		= new UploadUniformVec3Listener		("UNIFORMUPLOADLISTENER", testingState->getCamera()->getPositionPointer(), "uniformCameraWorldPos");
+	Listener* uniCausticsTex= new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 12, "uniformCausticsTexture", UnderwaterScene::causticsTexture->getTextureHandle());
+	Listener* uniCausticsTex2= new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 12, "uniformCausticsTexture", UnderwaterScene::causticsTexture->getTextureHandle());
 	Listener* uniClipPoint 	= new UploadUniformVec3Listener 	("UNIFORMUPLOADLISTENER", glm::vec3(0.0, UnderwaterScene::water_height, 0.0), "uniformClippingPoint");
 	Listener* uniClipNorm	= new UploadUniformVec3Listener 	("UNIFORMUPLOADLISTENER", &UnderwaterScene::water_plane_normal , "uniformClippingNormal");
 	Listener* uniClipNormInv= new UploadUniformVec3Listener 	("UNIFORMUPLOADLISTENER", &UnderwaterScene::water_plane_normal_inverse , "uniformClippingNormal");
+	Listener* uniFogColor 	= new UploadUniformVec3Listener 	("UNIFORMUPLOADLISTENER", &UnderwaterScene::fog_color, "uniformFogColor");
+	Listener* uniFogBegin 	= new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", &UnderwaterScene::fog_begin, "uniformFogBegin");
+	Listener* uniFogEnd 	= new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", &UnderwaterScene::fog_end, "uniformFogEnd");
+	Listener* uniFogColorInv= new UploadUniformVec3Listener 	("UNIFORMUPLOADLISTENER", &UnderwaterScene::fog_color_inverse, "uniformFogColor");
+	Listener* uniFogBeginInv= new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", &UnderwaterScene::fog_begin_inverse, "uniformFogBegin");
+	Listener* uniFogEndInv 	= new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", &UnderwaterScene::fog_end_inverse, "uniformFogEnd");
+	Listener* uniGodRayMap	= new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 8, "uniformGodRayMap", UnderwaterScene::framebuffer_water_god_rays->getPositionTextureHandle());
+	Listener* uniLightPos 	= new UploadUniformVec3Listener 	("UNIFORMUPLOADLISTENER", &UnderwaterScene::lightPosition, "uniformLightPosition");
+	Listener* uniPartText	= new UploadUniformTextureListener 	("UNIFORMUPLOADLISTENER", 15,"uniformParticlesTexture", UnderwaterScene::particlesTexture->getTextureHandle());
+	Listener* uniPartMap	= new UploadUniformTextureListener 	("UNIFORMUPLOADLISTENER", 14,"uniformParticlesMap", UnderwaterScene::framebuffer_water_particles->getPositionTextureHandle());
+	Listener* uniPreCompMap	= new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 9, "uniformPreCompositionMap", preCompositingScene->getPositionTextureHandle());
+	Listener* uniReflMatr	= new UploadUniformMat4Listener 	("UNIFORMUPLOADLISTENER", UnderwaterScene::reflectedCamera->getViewMatrixPointer(), "uniformReflectionView");
 	Listener* uniRefrText   = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 10, "uniformRefractionMap", UnderwaterScene::framebuffer_water_refraction->getPositionTextureHandle());
 	Listener* uniReflText   = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 11, "uniformReflectionMap", UnderwaterScene::framebuffer_water_reflection->getPositionTextureHandle());
+	Listener* uniSunVPersp	= new UploadUniformMat4Listener 	("UNIFORMUPLOADLISTENER", &UnderwaterScene::sunViewPerspective, "uniformProjectorViewPerspective");
+	Listener* uniTime 		= new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", IOManager::getInstance()->getWindowTimePointer(), "uniformTime");
+	Listener* uniTime2 		= new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", IOManager::getInstance()->getWindowTimePointer(), "uniformTime");
+	Listener* uniTime3 		= new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", IOManager::getInstance()->getWindowTimePointer(), "uniformTime");
 
+	Listener* setClearColor 	= new SetClearColorListener 		( &UnderwaterScene::fog_color, 1.0);
+	Listener* setClearColor2 	= new SetClearColorListener 		( &UnderwaterScene::fog_color, 1.0);
+	Listener* setClearColorInv 	= new SetClearColorListener 		( &UnderwaterScene::fog_color_inverse, 1.0);
 
+	Listener* bindWaterRefrFBO	= new SetFrameBufferObjectListener ( UnderwaterScene::framebuffer_water_refraction );
+	Listener* bindWaterReflFBO	= new SetFrameBufferObjectListener ( UnderwaterScene::framebuffer_water_reflection );
+	Listener* bindWaterGodRayFBO= new SetFrameBufferObjectListener ( UnderwaterScene::framebuffer_water_god_rays );
+	Listener* bindPreCompFBO	= new SetFrameBufferObjectListener ( preCompositingScene );
+
+	Listener* unbindCurrentFBO	= new UnbindFrameBufferObjectListener ();
 
 	testingApp->attachListenerOnProgramInitialization(	new SetCurrentShaderListener( reflection_shader ));
 
 	// 1: render Reflection Map
 	testingApp->attachListenerOnRenderManagerFrameLoop(	new SetCurrentShaderListener( reflection_shader ));
-
-	testingApp->attachListenerOnRenderManagerFrameLoop(uniLightPos);	// not clean, but easier to handle cuz of shader recompilation
-	testingApp->attachListenerOnRenderManagerFrameLoop(uniFogColor);	// not clean, but easier to handle cuz of shader recompilation
-	testingApp->attachListenerOnRenderManagerFrameLoop(uniFogBegin);	// not clean, but easier to handle cuz of shader recompilation
-	testingApp->attachListenerOnRenderManagerFrameLoop(uniFogEnd);		// not clean, but easier to handle cuz of shader recompilation
-	testingApp->attachListenerOnRenderManagerFrameLoop(uniClipPoint);		// not clean, but easier to handle cuz of shader recompilation
-	testingApp->attachListenerOnRenderManagerFrameLoop(uniClipNorm);		// not clean, but easier to handle cuz of shader recompilation
+	testingApp->attachListenerOnRenderManagerFrameLoop(	setClearColor );
+	testingApp->attachListenerOnRenderManagerFrameLoop( uniLightPos );	
+	testingApp->attachListenerOnRenderManagerFrameLoop( uniFogColor );	
+	testingApp->attachListenerOnRenderManagerFrameLoop( uniFogBegin );	
+	testingApp->attachListenerOnRenderManagerFrameLoop( uniFogEnd );		
+	testingApp->attachListenerOnRenderManagerFrameLoop( uniClipPoint );		
+	testingApp->attachListenerOnRenderManagerFrameLoop( uniClipNorm );		
 	testingApp->attachListenerOnRenderManagerFrameLoop(	new ReflectionMapRenderPass(UnderwaterScene::framebuffer_water_reflection, UnderwaterScene::reflectedCamera, UnderwaterScene::scene_waterPlaneObject));
 	
 	// 2: render Refraction Map
 	testingApp->attachListenerOnRenderManagerFrameLoop( new SetCurrentShaderListener( refraction_shader ));
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniLightPos  );	// not clean, but easier to handle cuz of shader recompilation
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniFogColor  );	// not clean, but easier to handle cuz of shader recompilation
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniFogBegin  );	// not clean, but easier to handle cuz of shader recompilation
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniFogEnd    );		// not clean, but easier to handle cuz of shader recompilation
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniClipPoint );		// not clean, but easier to handle cuz of shader recompilation
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniClipNormInv  );		// not clean, but easier to handle cuz of shader recompilation
+	testingApp->attachListenerOnRenderManagerFrameLoop(	setClearColorInv );
+	testingApp->attachListenerOnRenderManagerFrameLoop( uniLightPos  );		
+	testingApp->attachListenerOnRenderManagerFrameLoop( uniFogColorInv  );	
+	testingApp->attachListenerOnRenderManagerFrameLoop( uniFogBeginInv  );	
+	testingApp->attachListenerOnRenderManagerFrameLoop( uniFogEndInv    );	
+	testingApp->attachListenerOnRenderManagerFrameLoop( uniClipPoint );		
+	testingApp->attachListenerOnRenderManagerFrameLoop( uniClipNormInv  );	
 	RefractionMapRenderPass* renderRefraction = new RefractionMapRenderPass(UnderwaterScene::framebuffer_water_refraction, UnderwaterScene::scene_waterPlaneObject);
 	testingApp->attachListenerOnRenderManagerFrameLoop(	renderRefraction );
 	
-	// 3: render regular Scene
-	testingApp->attachListenerOnRenderManagerFrameLoop(	new SetCurrentShaderListener( shader ));
-	testingApp->attachListenerOnRenderManagerFrameLoop(uniLightPos);	// not clean, but easier to handle cuz of shader recompilation
-	testingApp->attachListenerOnRenderManagerFrameLoop(uniFogColor);	// not clean, but easier to handle cuz of shader recompilation
-	testingApp->attachListenerOnRenderManagerFrameLoop(uniFogBegin);	// not clean, but easier to handle cuz of shader recompilation
-	testingApp->attachListenerOnRenderManagerFrameLoop(uniFogEnd);		// not clean, but easier to handle cuz of shader recompilation
-	RenderloopPlaceHolderListener* renderloop = new RenderloopPlaceHolderListener(UnderwaterScene::scene_waterPlaneObject);
-	testingApp->attachListenerOnRenderManagerFrameLoop(	renderloop);
+	// 3: render Godrays into FBO
+	testingApp->attachListenerOnRenderManagerFrameLoop(	new SetCurrentShaderListener( godRay_shader ));
+	testingApp->attachListenerOnRenderManagerFrameLoop(uniCausticsTex2);
+	testingApp->attachListenerOnRenderManagerFrameLoop(uniSunVPersp);
+	testingApp->attachListenerOnRenderManagerFrameLoop(uniTime3);
+	testingApp->attachListenerOnRenderManagerFrameLoop(uniCamPos);
+	GodRaysRenderPass* renderGodRays = new GodRaysRenderPass(UnderwaterScene::framebuffer_water_god_rays);
+	testingApp->attachListenerOnRenderManagerFrameLoop(	renderGodRays );
 
-	// 4: render Water Surface with Reflection Map and RefractionMap
-	Shader* watershader = new Shader(SHADERS_PATH "/Underwater_Visuals_Test/water.vert", SHADERS_PATH "/Underwater_Visuals_Test/water.frag");
-	testingApp->attachListenerOnRenderManagerFrameLoop(	new SetCurrentShaderListener( watershader ));
-	testingApp->attachListenerOnRenderManagerFrameLoop(uniLightPos);	// not clean, but easier to handle cuz of shader recompilation
-	testingApp->attachListenerOnRenderManagerFrameLoop(uniReflMatr);		// not clean, but easier to handle cuz of shader recompilation
-	testingApp->attachListenerOnRenderManagerFrameLoop(uniFogColor);	// not clean, but easier to handle cuz of shader recompilation
-	testingApp->attachListenerOnRenderManagerFrameLoop(uniFogBegin);	// not clean, but easier to handle cuz of shader recompilation
-	testingApp->attachListenerOnRenderManagerFrameLoop(uniFogEnd);		// not clean, but easier to handle cuz of shader recompilation
-	testingApp->attachListenerOnRenderManagerFrameLoop(uniTime);		// not clean, but easier to handle cuz of shader recompilation
+	// 4: render regular Scene
+	testingApp->attachListenerOnRenderManagerFrameLoop(bindPreCompFBO);
+	testingApp->attachListenerOnRenderManagerFrameLoop(	new SetCurrentShaderListener( underwater_shader ));
+	testingApp->attachListenerOnRenderManagerFrameLoop(	setClearColor2 );
+	testingApp->attachListenerOnRenderManagerFrameLoop( uniLightPos );	
+	testingApp->attachListenerOnRenderManagerFrameLoop( uniFogColor );	
+	testingApp->attachListenerOnRenderManagerFrameLoop( uniFogBegin );	
+	testingApp->attachListenerOnRenderManagerFrameLoop( uniFogEnd );		
+	testingApp->attachListenerOnRenderManagerFrameLoop( uniCausticsTex );
+	testingApp->attachListenerOnRenderManagerFrameLoop( uniSunVPersp );
+	testingApp->attachListenerOnRenderManagerFrameLoop( uniTime2 );
+	RenderloopPlaceHolderListener* renderloop = new RenderloopPlaceHolderListener(UnderwaterScene::scene_waterPlaneObject);	// Render Everything except waterPlaneObject
+	testingApp->attachListenerOnRenderManagerFrameLoop(	renderloop );
+
+	// 5: render Water Surface with Reflection Map and RefractionMap
+	testingApp->attachListenerOnRenderManagerFrameLoop(	new SetCurrentShaderListener( water_shader ));
+	testingApp->attachListenerOnRenderManagerFrameLoop(uniLightPos);	
+	testingApp->attachListenerOnRenderManagerFrameLoop(uniReflMatr);	
+	testingApp->attachListenerOnRenderManagerFrameLoop(uniFogColor);	
+	testingApp->attachListenerOnRenderManagerFrameLoop(uniFogBegin);	
+	testingApp->attachListenerOnRenderManagerFrameLoop(uniFogEnd);		
+	testingApp->attachListenerOnRenderManagerFrameLoop(uniTime);		
 	testingApp->attachListenerOnRenderManagerFrameLoop(uniReflText);
 	testingApp->attachListenerOnRenderManagerFrameLoop(uniRefrText);
 	RenderVirtualObjectListener* renderwater = new RenderVirtualObjectListener(UnderwaterScene::scene_waterPlaneObject);
 	testingApp->attachListenerOnRenderManagerFrameLoop(	renderwater);
+	testingApp->attachListenerOnRenderManagerFrameLoop( unbindCurrentFBO );
 
-	std::vector<std::string> uniforms = watershader->getUniformNames();
-	for (int i = 0; i < uniforms.size(); i++){
-		std::cout <<" uniform " << i << ": " << uniforms[i] << std::endl;
-	}
+	// 6: render Particles in the water
+	testingApp->attachListenerOnRenderManagerFrameLoop( new SetCurrentShaderListener( particles_shader ));
+	testingApp->attachListenerOnRenderManagerFrameLoop( uniPartText);
+	ParticlesRenderPass* renderParticles = new ParticlesRenderPass(UnderwaterScene::framebuffer_water_particles, UnderwaterScene::water_particles, VirtualObjectFactory::getInstance()->getTriangle());
+	testingApp->attachListenerOnRenderManagerFrameLoop(( renderParticles));
+
+	// 7: Compositing
+	testingApp->attachListenerOnRenderManagerFrameLoop( new SetCurrentShaderListener( composition_shader ));
+	testingApp->attachListenerOnRenderManagerFrameLoop( uniPreCompMap );
+	testingApp->attachListenerOnRenderManagerFrameLoop( uniGodRayMap );
+	testingApp->attachListenerOnRenderManagerFrameLoop( uniPartMap );
+	RenderGraphicsComponentListener* renderCompositing = new RenderScreenFillingTriangleListener();
+	testingApp->attachListenerOnRenderManagerFrameLoop( renderCompositing );
 }
 
 void configureOtherStuff(){
