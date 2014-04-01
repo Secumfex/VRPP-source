@@ -112,7 +112,7 @@ void FrameBufferObject::createDepthBuffer(){
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void FrameBufferObject::createGUITexture(){
+void FrameBufferObject::createGuiTexture(){
 	glGenTextures(1, &mGuiTextureHandle);
 	glBindTexture(GL_RENDERBUFFER, mGuiTextureHandle);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWidth, mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
@@ -147,7 +147,7 @@ GLuint FrameBufferObject::getDepthBufferHandle(){
 	return mDepthbufferHandle;
 }
 GLuint FrameBufferObject::getGuiTextureHandle(){
-	return mNormalTextureHandle;
+	return mGuiTextureHandle;
 }
 
 void FrameBufferObject::bindFBO(){
@@ -174,6 +174,9 @@ void FrameBufferObject::bindShadowMap(){
 }
 void FrameBufferObject::bindDepthBuffer(){
 	glBindTexture(GL_TEXTURE_2D, mDepthbufferHandle);
+}
+void FrameBufferObject::bindGuiTexture(){
+	glBindTexture(GL_TEXTURE_2D, mGuiTextureHandle);
 }
 void FrameBufferObject::unbindTexture(){
 	glBindTexture(GL_TEXTURE_2D, 0);

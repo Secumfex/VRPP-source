@@ -60,7 +60,7 @@ public:
 	/** \brief creates a depthbuffer for this fbo
 	 *
 	 */
-	void createGUITexture();
+	void createGuiTexture();
 
 	/** \brief getter
 	 *
@@ -149,6 +149,11 @@ public:
 	 *
 	 */
 	void bindDepthBuffer();
+
+	/** \brief binds normal map of this fbo
+	 *
+	 */
+	void bindGuiTexture();
 
 	/** \brief unbinds texture from current active texture
 	 *

@@ -11,10 +11,13 @@
 #include "Visuals/RenderManager.h"
 #include "Visuals/Shader.h"
 #include "IO/SelectionHandler.h"
+#include "Visuals/FrameBufferObject.h"
+#include "GUI/GuiElement.h"
 
 /// Listener which renders a frame by using current Instance pointers of RenderManager
 class RenderloopPlaceHolderListener : public Listener{
 private:
+	FrameBufferObject* fbo;
 	RenderManager* rm;
 	RenderQueue* currentRenderQueue;
 	list<VirtualObject* > voList;
@@ -22,6 +25,21 @@ private:
 	vector<GraphicsComponent* > currentGCs;
 public:
 	RenderloopPlaceHolderListener();
+	void update();
+};
+
+/// Description
+class GuiLoopListener : public Listener{
+private:
+	FrameBufferObject* gbo;
+	RenderManager* rm;
+	RenderQueue* currentRenderQueue;
+	list<GuiElement*> guiList;
+	// list<VirtualObject* > voList;  //need GUI-ELEMENT LIST or so
+	Shader* currentShader;
+	vector<GraphicsComponent* > currentGCs;
+public:
+	GuiLoopListener();
 	void update();
 };
 
