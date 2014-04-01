@@ -102,7 +102,7 @@ public:
 	 * @param collisionFlag
 	 * @return VirtualObject reference
 	 */
-	VirtualObject* createVirtualObject(std::string path, VirtualObjectFactory::BodyType bodyType = VirtualObjectFactory::OTHER, float mass = 0.0, int collisionFlag = 1); //!< create Object from path and add it to renderQueue
+	VirtualObject* createVirtualObject(std::string path, VirtualObjectFactory::BodyType bodyType = VirtualObjectFactory::OTHER, float mass = 0.0, int collisionFlag = 1, bool blenderAxes = false); //!< create Object from path and add it to renderQueue
 
 	/** \brief add existing VO to renderQueue
 	 *

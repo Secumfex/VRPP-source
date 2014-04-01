@@ -105,6 +105,10 @@ glm::vec3 Camera::getPosition(){
 	return position;
 }
 
+glm::vec3* Camera::getPositionPointer(){
+	return &position;
+}
+
 void Camera::setPosition(float x, float y, float z){
 	xPosition = x;
 	yPosition = y;
