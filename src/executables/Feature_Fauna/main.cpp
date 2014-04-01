@@ -4,6 +4,8 @@
 #include "Tools/UtilityListeners.h"
 #include "PlaceHolderListeners.h"
 #include "../libraries/Feature_Fauna/Seetang.h"
+#include "BulletDynamics/Dynamics/btRigidBody.h"
+#include "Physics/UpdatePhysicsComponentListener.h"
 
 /*
  * A basic executable to use as starting point with our libraries
@@ -16,33 +18,61 @@ VRState* testingState;
 IOHandler* testingInputHandler;
 Seetang* Sea;
 btRigidBody* Test;
+PhysicsComponent* phyComp;
 
 void configureTestingApplication() {
 	/* customization of application or state*/
 	/* use listener interfaces for: what should happen on initialization, every program cycle, termination etc. */
-	testingApp->attachListenerOnProgramInitialization(
-			new PrintMessageListener(string("Application is booting")));
-	testingApp->attachListenerOnProgramTermination(
-			new PrintMessageListener(string("Application is terminating")));
-
+	testingApp->attachListenerOnProgramInitialization(	new PrintMessageListener(string("Application is booting")));
+	testingApp->attachListenerOnProgramTermination(	new PrintMessageListener(string("Application is terminating")));
 }
 
 void configureVirtualObjects() {
 	VRState* myVRState = 	new VRState("VRSTATE");
 	myVRState->		attachListenerOnAddingVirtualObject(new PrintMessageListener(string("Added a VirtualObject to RenderQueue")));	// console output when virtual object is added
-		myVRState->		attachListenerOnActivation(			new SetClearColorListener(0.44,0.5,0.56));					// custom background color
-		myVRState-> 	attachListenerOnActivation(			new PrintCameraStatusListener( myVRState->getCamera()));
+	myVRState->		attachListenerOnActivation(	new SetClearColorListener(0.44,0.5,0.56));					// custom background color
+	myVRState-> 	attachListenerOnActivation(	new PrintCameraStatusListener( myVRState->getCamera()));
+
 
 	/* creation and customization of Virtual Objects */
 	/* use testingState->createVirtualObject() to create a Virtual Object */
-	VirtualObject* 	cube2 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE, 1.0, 8);
-	cube2->translate(glm::vec3(0.0f, 0.0f, 0.0f));
-	VirtualObject* 	cube3 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE, 0.8, 8);
-	cube3->translate(glm::vec3(0.0f, 2.0f, 0.0f));
-	VirtualObject* 	cube4 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE, 0.6, 8);
-	cube4->translate(glm::vec3(0.0f, 4.0f, 0.0f));
-	VirtualObject* 	cube5 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE, 0.4, 8);
-	cube5->translate(glm::vec3(0.0f, 6.0f, 0.0f));
+	VirtualObject* 	cube2 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE, 0.0, 8);
+	cube2->translate(glm::vec3(0, 0, -10));
+	cube2->setPhysicsComponent(0.5,0.0,0.0,-10.0,0.0,1);
+	testingState->attachListenerOnBeginningProgramCycle(new UpdatePhysicsComponentListener(cube2));
+	phyComp = cube2->getPhysicsComponent();
+	phyComp->getRigidBody()->setDamping(5,100);
+	phyComp->getRigidBody()->setSleepingThresholds(1,1);
+	phyComp->getRigidBody()->applyForce(btVector3(0,0,0),btVector3(0,0,0));
+
+
+	VirtualObject* 	cube3 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE, 1.0, 8);
+	cube3->translate(glm::vec3(0, 2, -10));
+	cube3->setPhysicsComponent(0.5,0.0,2.0,-10.0,1.0,1);
+	testingState->attachListenerOnBeginningProgramCycle(new UpdatePhysicsComponentListener(cube3));
+	phyComp = cube3->getPhysicsComponent();
+	phyComp->getRigidBody()->setDamping(5,100);
+	phyComp->getRigidBody()->setSleepingThresholds(1,1);
+	phyComp->getRigidBody()->applyForce(btVector3(0,1,0),btVector3(0,0,0));
+
+
+	VirtualObject* 	cube4 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE, 1.0, 8);
+	cube4->setPhysicsComponent(0.5,0.0,4.0,-10.0,1.0,1);
+	cube4->translate(glm::vec3(0, 4, -10));
+	testingState->attachListenerOnBeginningProgramCycle(new UpdatePhysicsComponentListener(cube4));
+	phyComp = cube4->getPhysicsComponent();
+	phyComp->getRigidBody()->setDamping(5,100);
+	phyComp->getRigidBody()->setSleepingThresholds(1,1);
+	phyComp->getRigidBody()->applyForce(btVector3(0,1,0),btVector3(0,0,0));
+
+	VirtualObject* 	cube5 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE, 1.0, 8);
+	cube5->setPhysicsComponent(0.5,0.0,6.0,-10.0,1.0,1);
+	cube5->translate(glm::vec3(0, 6, -10));
+	testingState->attachListenerOnBeginningProgramCycle(new UpdatePhysicsComponentListener(cube5));
+	phyComp = cube5->getPhysicsComponent();
+	phyComp->getRigidBody()->setDamping(5,100);
+	phyComp->getRigidBody()->setSleepingThresholds(1,1);
+	phyComp->getRigidBody()->applyForce(btVector3(0,1,0),btVector3(0,0,0));
 
 	btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,1,0),0);
 	//create an invisible ground plane
@@ -61,15 +91,8 @@ void configurePhysics() {
 void configureInputHandler() {
 	/* customization of input handling */
 	/* use listener interfaces for: what should happen when a specific key is pressed, etc. */
-	testingInputHandler->attachListenerOnKeyPress(
-			new TerminateApplicationListener(testingApp), GLFW_KEY_ESCAPE);
-	testingInputHandler->attachListenerOnKeyPress(
-			new SetCameraPositionListener(testingState->getCamera(), glm::vec3(0.0f,0.1f,0.0)), 	GLFW_KEY_SPACE);
-
-//	myVRStateIOHandler->attachListenerOnKeyPress(
-//			new SetCameraDirectionListener(myVRState->getCamera(), glm::vec3(0.0f,0.0f,-1.0f)), 	GLFW_KEY_UP);		// pressing '<-' : view direction straight ahead
-//	myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myVRState->getCamera()), 								GLFW_KEY_UP);
-
+	testingInputHandler->attachListenerOnKeyPress(	new TerminateApplicationListener(testingApp), GLFW_KEY_ESCAPE);
+	testingInputHandler->attachListenerOnKeyPress(	new SetCameraPositionListener(testingState->getCamera(), glm::vec3(0.0f,0.1f,0.0)),	GLFW_KEY_SPACE);
 
 }
 
@@ -80,12 +103,8 @@ void configureRendering() {
 	/*comment in to use placeholders for Renderloop, rendering every VO of the testingState; change Shader paths to use a different shader*/
 // testingApp->attachListenerOnProgramInitialization( new SetDefaultShaderListener( new Shader (SHADERS_PATH "/Phong_Test/phong.vert", SHADERS_PATH "/Phong_Test/phong.frag")));
 // testingApp->attachListenerOnRenderManagerFrameLoop( new RenderloopPlaceHolderListener());
-	testingApp->attachListenerOnProgramInitialization(
-			new SetDefaultShaderListener(
-					new Shader(SHADERS_PATH "/Phong/phong.vert",
-					SHADERS_PATH "/Phong/phong.frag")));
-	testingApp->attachListenerOnRenderManagerFrameLoop(
-			new RenderloopPlaceHolderListener());
+	testingApp->attachListenerOnProgramInitialization(	new SetDefaultShaderListener(	new Shader(SHADERS_PATH "/Phong/phong.vert", SHADERS_PATH "/Phong/phong.frag")));
+	testingApp->attachListenerOnRenderManagerFrameLoop(	new RenderloopPlaceHolderListener());
 }
 
 void configureOtherStuff() {
