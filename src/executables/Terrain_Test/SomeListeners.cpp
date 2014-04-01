@@ -252,3 +252,21 @@ void ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener::update()
 		rigidBody->applyCentralImpulse(btVector3(force.x,force.y,force.z));
 	}
 }
+
+SetCameraPositionListener::SetCameraPositionListener(Camera* cam, glm::vec3 position){
+	this->cam 			= cam;
+	this->position = position;
+}
+
+void SetCameraPositionListener::update(){
+	cam->setPosition(position);
+}
+
+ApplyLinearImpulseOnRigidBody::ApplyLinearImpulseOnRigidBody(btRigidBody* rigidBody, btVector3 force){
+	this->rigidBody = rigidBody;
+	this->force = force;
+}
+
+void ApplyLinearImpulseOnRigidBody::update(){
+	rigidBody->applyCentralImpulse(btVector3(force));
+}

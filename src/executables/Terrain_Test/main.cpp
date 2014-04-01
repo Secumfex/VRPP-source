@@ -9,10 +9,13 @@
 
 #include "Physics/PhysicWorld.h"
 #include "IO/IOManager.h"
+#include "IO/PlayerCamera.h"
 
 #include "SomeListeners.h" // until missing functionality is added
 
 Application* myApp;
+PlayerCamera*   playercam;
+
 
 void configureMyApp(){
 	/*	customize application a little bit*/
@@ -25,10 +28,22 @@ void configureMyApp(){
 	myVRState->		attachListenerOnActivation(			new SetClearColorListener(0.44,0.5,0.56));					// custom background color
 	myVRState-> 	attachListenerOnActivation(			new PrintCameraStatusListener( myVRState->getCamera()));
 
+	playercam = new PlayerCamera();
+	myVRState->setCamera(playercam);
+
 	/*	customize virtual objects*/
 
+	VirtualObject* groundObject = myVRState->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_ground.dae", VirtualObjectFactory::PLANE);
+
 	VirtualObject* 	terrain = 	myVRState->	createVirtualObject(RESOURCES_PATH "/terrainTest.obj", VirtualObjectFactory::TERRAIN);
-	myVRState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(terrain));
+	//glm::mat4 myModelMatrix1 = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.0f, 0.0f)), glm::vec3(5.0f, 0.2f, 5.0f));	//floor
+	//terrain->setModelMatrix(myModelMatrix1); 	// override default Model Matrix
+	//terrain->setPhysicsComponent(RESOURCES_PATH"/terrainTest.png", 2048, 2048, 0.0f, 0.0f, 1);
+	//myVRState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(terrain));
+
+	btRigidBody* camBody = playercam->getRigidBody();
+	playercam->setPosition(0.0f,2.0f,5.0f);
+	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(camBody);
 
 	/*
 	VirtualObject* 	cube20 = 	myVRState->	createVirtualObject(RESOURCES_PATH "/cube.obj");
@@ -59,9 +74,13 @@ void configureMyApp(){
 	myVRStateIOHandler->attachListenerOnKeyPress(new TurnCameraListener(myVRState->getCamera(), 0.0f, -0.1f), 	GLFW_KEY_DOWN);		// pressing '->' : view direction straight ahead
 	myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myVRState->getCamera()), 								GLFW_KEY_DOWN);
 	myVRStateIOHandler->attachListenerOnMouseButtonPress(new PickRayListener(myVRState->getCamera()), GLFW_MOUSE_BUTTON_2);		//
+	myVRStateIOHandler->attachListenerOnMouseButtonPress(new ShootSphereListener(myVRState->getCamera(), myVRState), GLFW_MOUSE_BUTTON_LEFT);
 
 	SelectionHandler* sh = myVRStateIOHandler->getSelectionHandler();
 	myVRStateIOHandler->attachListenerOnMouseButtonPress(new ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener(sh, myVRState->getCamera(),50.0f), GLFW_MOUSE_BUTTON_RIGHT);
+
+	myVRStateIOHandler->attachListenerOnKeyPress(new ApplyLinearImpulseOnRigidBody(playercam->getRigidBody(), btVector3(0.0f,5.0f,0.0f)), GLFW_KEY_SPACE );
+	myVRStateIOHandler->attachListenerOnKeyPress(new SetCameraPositionListener(playercam, glm::vec3(0.0f,5.0f,0.0f)), GLFW_KEY_R );
 
 	/*	further customize application functionality by adding various listeners */
 	myApp->attachListenerOnProgramInitialization(	new PrintMessageListener(		string("Application is booting")));
@@ -73,7 +92,7 @@ void configureMyApp(){
 	// attach a listener which serves as renderloop by using the rendermanagers current RenderQueue and Shader
 	myApp->attachListenerOnRenderManagerFrameLoop(	new AlternativeRenderloopListener());
 
-	std::cout << PhysicWorld::getInstance()->dynamicsWorld->getNumCollisionObjects() << endl;
+	std::cout << "#collObjs: " << PhysicWorld::getInstance()->dynamicsWorld->getNumCollisionObjects() << endl;
 
 	/*	add customized states to application state pool*/
 	myApp->addState(	myVRState);		//add the VR State to Application

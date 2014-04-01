@@ -205,6 +205,7 @@ btRigidBody* PhysicsComponent::addPlane(float x, float y, float z, glm::vec3 nor
 
 btRigidBody* PhysicsComponent::addHeightfield(char* filename, int width, int height, float x, float y, float z){
 
+	cout << "addHeightfield called" << endl;	//zum test
 	FILE* heightfieldFile;
 	BYTE* heightfieldData;
 
@@ -233,6 +234,7 @@ btRigidBody* PhysicsComponent::addHeightfield(char* filename, int width, int hei
 	btDefaultMotionState* motion = new btDefaultMotionState(t);
 	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,groundShape);
 	btRigidBody* body = new btRigidBody(info);
+	cout << "heightMap phComp erstellt" << endl;	//zum test
 	return body;
 }
 

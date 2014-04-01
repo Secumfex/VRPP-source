@@ -140,3 +140,24 @@ public:
 	ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener(SelectionHandler* selectionHandler, Camera* cam, float strength = 100.0f);
 	void update();
 };
+
+class btRigidBody; class btVector3;
+
+class ApplyLinearImpulseOnRigidBody : public Listener{
+private:
+	btRigidBody* rigidBody;
+	btVector3 force;
+public:
+	ApplyLinearImpulseOnRigidBody(btRigidBody* rigidBody, btVector3 force);
+	void update();
+};
+
+/// Listener which sets the Position of the given Camera Object
+class SetCameraPositionListener : public Listener {
+private:
+	Camera* 	cam;
+	glm::vec3 position;
+public:
+	SetCameraPositionListener(Camera* cam, glm::vec3 position);
+	void update();
+};

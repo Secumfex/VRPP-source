@@ -489,7 +489,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 	std::cout << "min: " << physics_min.x << " , "<< physics_min.y << " , "<< physics_min.z << std::endl;
 
 	//feste heightmap werte zum testen
-	char MapFilename[] = "C:/Users/Daniel/Documents/Uni/9Semester/PPVR/EuerPPOrdner/VRPP-source/../resources/terrainTest.png";
+	char MapFilename[] = RESOURCES_PATH"/terrainTest.png";
 	char* heightMapFilename = MapFilename;
 	int mapWidth = 2048;
 	int mapHeight = 2048;
