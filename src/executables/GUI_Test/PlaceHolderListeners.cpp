@@ -69,9 +69,9 @@ void GuiLoopListener::update() {
 	//render GCs with current Shader
 	if (currentRenderQueue != 0) {
 		//for every VO
-		for (std::list<guiList*>::iterator i = guiList.begin();
-				i != voList.end(); ++i) {	//get GCs of VO
-			currentGCs = (*i)->getGraphicsComponent();
+		for (std::list<GuiElement*>::iterator i = guiList.begin();
+				i != guiList.end(); ++i) {	//get GCs of VO
+			currentGCs = (*i);
 			//for every GC
 			for (unsigned int j = 0; j < currentGCs.size(); j++) {
 				rm->setCurrentGC(currentGCs[j]);

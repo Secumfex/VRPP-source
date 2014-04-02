@@ -80,6 +80,27 @@ void configureInputHandler(){
 
 }
 
+void configureGui(){
+
+	float points[] = {-1.0f, -1.0f,
+			1.0f, -1.0f,
+			-1.0f, -1.0f,
+			-1.0f, -1.0f,
+			1.0f, -1.0f,
+			1.0f, 1.0f};
+
+	//Gui-Handle//
+	GLuint vp_vbo, vao;
+	glGenBuffers (1, &vp_vbo);
+	glBindBuffer (GL_ARRAY_BUFFER, vp_vbo);
+	glBufferData (GL_ARRAY_BUFFER, sizeof(points), points, GL_STATIC_DRAW);
+	glGenVertexArrays (1, &vao);
+	glVertexAttribPointer (0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+	glEnableVertexAttribArray (0);
+
+
+}
+
 void configureRendering(){
 	/*customize Rendermanager, Renderloop, etc. via framelisteners and such*/
 	testingApp->attachListenerOnProgramInitialization(	new SetDefaultShaderListener( new Shader (SHADERS_PATH "/Phong_Test_Textures/phong.vert", SHADERS_PATH "/Phong_Test_Textures/phong.frag")));
@@ -104,6 +125,7 @@ void configureApplication(){
 	configureVirtualObjects();
 	configurePhysics();
 	configureInputHandler();
+	configureGui();
 	configureRendering();
 	configureOtherStuff();
 }

@@ -31,6 +31,14 @@ public:
 /// Description
 class GuiLoopListener : public Listener{
 private:
+
+	float points[] = {-1.0f, -1.0f,
+			1.0f, -1.0f,
+			-1.0f, -1.0f,
+			-1.0f, -1.0f,
+			1.0f, -1.0f,
+			1.0f, 1.0f};
+
 	FrameBufferObject* gbo;
 	RenderManager* rm;
 	RenderQueue* currentRenderQueue;
