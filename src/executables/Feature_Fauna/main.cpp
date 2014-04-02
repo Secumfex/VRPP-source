@@ -10,6 +10,7 @@
 #include "Physics/UpdatePhysicsComponentListener.h"
 #include "Physics/PhysicWorld.h"
 #include "Physics/PhysicWorldSimulationListener.h"
+#include "BulletDynamics/ConstraintSolver/btPoint2PointConstraint.h"
 
 /*
  * A basic executable to use as starting point with our libraries
@@ -21,6 +22,8 @@ Application* testingApp;
 VRState* testingState;
 IOHandler* testingInputHandler;
 Camera* cam;
+PhysicsComponent* phyComp;
+
 //Seetang* Sea;
 //btRigidBody* Test;
 //PhysicsComponent* phyComp;
@@ -52,10 +55,8 @@ void configureApplication() {
 	testingState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube2));
 	testingState->attachListenerOnBeginningProgramCycle(new UpdatePhysicsComponentListener(cube2));
 	cube2->translate(glm::vec3(0, 0, 0));
-	cube2->setPhysicsComponent(0.5,0,0,0,0,0);
-	cube2->getPhysicsComponent()->getRigidBody()->applyForce(btVector3(0,0,0),btVector3(0,0,0));
-	//phyComp->getRigidBody()->setDamping(5,100);
-	//phyComp->getRigidBody()->setSleepingThresholds(1,1);
+	cube2->setPhysicsComponent(0.1,0,0,0,0,0);
+	btRigidBody* rigidBody2 = cube2->getPhysicsComponent()->getRigidBody();
 
 	VirtualObject* cube3 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE,1.0, 8);
 	testingState->attachListenerOnBeginningProgramCycle( new UpdateVirtualObjectModelMatrixListener(cube3));
@@ -67,29 +68,14 @@ void configureApplication() {
 	cube3->getPhysicsComponent()->getRigidBody()->setGravity((cube3->getPhysicsComponent()->getRigidBody()->getGravity())+btVector3(0,150,0));
 	cube3->getPhysicsComponent()->getRigidBody()->setSleepingThresholds(1,1);
 
-	//phyComp->getRigidBody()->setDamping(5,100);
-	//phyComp->getRigidBody()->setSleepingThresholds(1,1);
+	btRigidBody* rigidBody3 = cube3->getPhysicsComponent()->getRigidBody();
 
-	//	VirtualObject* 	cube4 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE, 1.0, 8);
-	//	cube4->translate(glm::vec3(0, 2, 0));
-	//	cube4->getPhysicsComponent()->getRigidBody()->activate(true);
-	//	cube4->getPhysicsComponent()->getRigidBody()->applyForce(btVector3(0,-11,0),btVector3(0,0,0));
-	//	testingState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube4));
-	//
-	//
-	//	VirtualObject* 	cube5 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE, 1.0, 8);
-	//	cube5->translate(glm::vec3(0, 4, 0));
-	//	cube5->getPhysicsComponent()->getRigidBody()->applyForce(btVector3(0,15,0),btVector3(0,0,0));
-	//	cube5->getPhysicsComponent()->getRigidBody()->applyCentralImpulse( btVector3( 0.f, 0.f, 15 ) );
-	//	testingState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube5));
+	btGeneric6DofConstraint* constraint23 = new btGeneric6DofConstraint(*rigidBody2, *rigidBody3,btTransform::getIdentity(), btTransform::getIdentity(), false);
 
-	//	btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,1,0),0);
-	//	//create an invisible ground plane
-	//	btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,-4,5)));
-	//
-	//	btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0,groundMotionState,groundShape,btVector3(0,0,0));
-	//	btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
-	//	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(groundRigidBody);
+
+	//btPoint2PointConstraint* p2p = new btPoint2PointConstraint(rigidBody2, btVector3(0,0,0));	//btVec 000 "center of mass vom root Obj"
+	//p2p = btPoint2PointConstraint(rigidBody2,rigidBody3,btVector3(0,0,0),btVector3(0,3,0));
+
 
 	testingState->attachListenerOnBeginningProgramCycle(new PhysicWorldSimulationListener(IOManager::getInstance()->getDeltaTimePointer()));// updates physics simulation
 
