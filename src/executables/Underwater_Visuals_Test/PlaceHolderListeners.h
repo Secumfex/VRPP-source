@@ -9,6 +9,7 @@
 #include <cmath>
 
 #include "Visuals/RenderManager.h"
+#include "Visuals/VirtualObjectFactory.h"
 #include "Visuals/Shader.h"
 #include "ParticleSystem.h"
 

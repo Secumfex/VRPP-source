@@ -67,8 +67,8 @@ void main() {
     projectedUVCoords0 += sampling_offset0;
     projectedUVCoords1 += sampling_offset1;
     
-    vec3 caustics0   = texture2D( uniformCausticsTexture, projectedUVCoords0 ).rgb;
-    vec3 caustics1   = texture2D( uniformCausticsTexture, projectedUVCoords1 ).rgb;
+    vec3 caustics0   = texture( uniformCausticsTexture, projectedUVCoords0 ).rgb;
+    vec3 caustics1   = texture( uniformCausticsTexture, projectedUVCoords1 ).rgb;
     vec3 caustics    = ( caustics0 + caustics1 ) / 1.5; 
 
     diffuse_color += diffuse_color * caustics;

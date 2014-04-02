@@ -106,7 +106,7 @@ void MaterialManager::makeMaterial(std:: string matName, GraphicsComponent* gc){
 		}
 
 	else if(matName.find("none") != std::string::npos){
-				makeMaterial_none(gc);
+            makeMaterial_none(gc);
 			}
 
 	else{ makeMaterial_genericColor(gc);}
@@ -116,40 +116,22 @@ void MaterialManager::makeMaterial(std:: string matName, GraphicsComponent* gc){
 	//third round -  specific definition of material
 
 	if(matName.find("polished") != std::string::npos){
-				 makeMaterial_polished(gc);}
+            makeMaterial_polished(gc);
+    }
 
 	else if(matName.find("rough") != std::string::npos){
-		 makeMaterial_rough(gc);
+            makeMaterial_rough(gc);
 	}
 
 	else if(matName.find("matted") != std::string::npos){
-
-			 makeMaterial_mat(gc);
-		}
+            makeMaterial_mat(gc);
+    }
 
 	else if(matName.find("none") != std::string::npos){
-					makeMaterial_none(gc);}
+            makeMaterial_none(gc);}
 
 
 	else {makeMaterial_genericSpecific(gc);}
-
-    //=================================================
-   /* if(matName.find("shiny") != std::string::npos)
-		makeMaterial_shiny(gc,matName);
-    if(matName.find("transparency") != std::string::npos)
-	    makeMaterial_transparency(gc,matName);
-    
-    */
-    
-    //    emerald - Smaragd(grün)
-    
-    //    jade - Jade (grün)
-    //    obsidian - Obsidian (schwarz)
-    //    pearl - Perl
-    //    ruby - Rubin (rot)
-    //    turquoise - Türkis
-
-
 }
 
 
@@ -178,13 +160,6 @@ void MaterialManager::makeMaterial(std:: string matName, GraphicsComponent* gc){
 	    gc->getMaterial()->setShininess(27.89743616f/1000.0f);
 	    gc->getMaterial()->setName("Wood");
 	    std::cout<<"\n'wood' set"<<endl;
-
-            /*
-            Texture *tex_temp = new Texture();
-            tex_temp = new Texture(RESOURCES_PATH "/Wood.jpg");
-            gc->getMaterial()->setDiffuseMap(tex_temp);
-            */
-
 		}
 
 	void MaterialManager::makeMaterial_stone(GraphicsComponent* gc){
@@ -404,7 +379,7 @@ void MaterialManager::makeMaterial(std:: string matName, GraphicsComponent* gc){
 	void MaterialManager::makeMaterial_genericColor(GraphicsComponent* gc){
 
 	    gc->getMaterial()->setAmbient(glm::vec3(0.5f));
-	    gc->getMaterial()->setDiffuse(glm::vec3(0.01f,0.9f,0.9f));
+	    gc->getMaterial()->setDiffuse(glm::vec3(0.02f,0.02f,0.02f));
 	    gc->getMaterial()->setSpecular(glm::vec3(0.3f));
 	    gc->getMaterial()->setShininess(20.0f);
 

@@ -40,9 +40,7 @@ void configureScene(ApplicationState* target){
     
 	FrameBufferObject* framebuffer_render;
     
-    scene_groundObject 	= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_ground.dae", 		VirtualObjectFactory::OTHER);
-    scene_sun_Object 	= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_sun_shape.dae", 	VirtualObjectFactory::OTHER);
-    scene_chest_Object	= target->createVirtualObject(RESOURCES_PATH "/chest_textured.obj",VirtualObjectFactory::OTHER);
+    scene_chest_Object	= target->createVirtualObject(RESOURCES_PATH "/chest_nice.dae",VirtualObjectFactory::OTHER);
     GraphicsComponent* newgc = scene_chest_Object->getGraphicsComponent()[0];
     newgc->setModelMatrixGc(glm::translate(glm::mat4(1.0f), glm::vec3(2.0f,0.0f,0.0f)));
     //if (scene_sun_Object->getGraphicsComponent().size() > 0){
