@@ -154,7 +154,7 @@ void GodRaysRenderPass::update(){
 		fbo->unbindFBO();	
 	}
 
-
+/*
 ParticlesRenderPass::ParticlesRenderPass(FrameBufferObject* fbo, ParticleSystem* particleSystem, GraphicsComponent* particleGC){
 		rm = RenderManager::getInstance();
 		this->fbo = fbo;
@@ -185,7 +185,7 @@ void ParticlesRenderPass::update(){
 		}
 		fbo->unbindFBO();
 	}
-
+*/
 
 RenderloopPlaceHolderListener::RenderloopPlaceHolderListener(VirtualObject* water_object){ 
 		rm = RenderManager::getInstance(); 
@@ -451,7 +451,7 @@ void UnbindFrameBufferObjectListener::update(){
 	RenderManager::getInstance()->setCurrentFBO( 0 );
 }
 
-
+/*
 UpdateParticleSystemListener::UpdateParticleSystemListener(ParticleSystem* particleSystem, float* t){
 	this->particleSystem = particleSystem;
 	this->t = t;
@@ -460,7 +460,7 @@ UpdateParticleSystemListener::UpdateParticleSystemListener(ParticleSystem* parti
 void UpdateParticleSystemListener::update(){
 	particleSystem->update(*t);
 }
-
+*/
 
 //eigener renderpass listener
 TerrainRenderPass::TerrainRenderPass(FrameBufferObject* fbo){
