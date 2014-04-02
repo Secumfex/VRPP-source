@@ -5,7 +5,11 @@
 #include "PlaceHolderListeners.h"
 #include "../libraries/Feature_Fauna/Seetang.h"
 #include "BulletDynamics/Dynamics/btRigidBody.h"
+#include "IO/IOManager.h"
+#include "IO/PlayerCamera.h"
 #include "Physics/UpdatePhysicsComponentListener.h"
+#include "Physics/PhysicWorld.h"
+#include "Physics/PhysicWorldSimulationListener.h"
 
 /*
  * A basic executable to use as starting point with our libraries
@@ -25,54 +29,68 @@ void configureTestingApplication() {
 	/* use listener interfaces for: what should happen on initialization, every program cycle, termination etc. */
 	testingApp->attachListenerOnProgramInitialization(	new PrintMessageListener(string("Application is booting")));
 	testingApp->attachListenerOnProgramTermination(	new PrintMessageListener(string("Application is terminating")));
+	testingApp->attachListenerOnBeginningProgramCycle( 	new PhysicWorldSimulationListener(IOManager::getInstance()->getDeltaTimePointer()));
+
 }
 
 void configureVirtualObjects() {
-	VRState* myVRState = 	new VRState("VRSTATE");
-	myVRState->		attachListenerOnAddingVirtualObject(new PrintMessageListener(string("Added a VirtualObject to RenderQueue")));	// console output when virtual object is added
-	myVRState->		attachListenerOnActivation(	new SetClearColorListener(0.44,0.5,0.56));					// custom background color
-	myVRState-> 	attachListenerOnActivation(	new PrintCameraStatusListener( myVRState->getCamera()));
+	//testingState = 	new VRState("VRSTATE");
+	testingState->		attachListenerOnAddingVirtualObject(new PrintMessageListener(string("Added a VirtualObject to RenderQueue")));	// console output when virtual object is added
+	testingState->		attachListenerOnActivation(	new SetClearColorListener(0.44,0.5,0.56));					// custom background color
+	testingState-> 	attachListenerOnActivation(	new PrintCameraStatusListener( testingState->getCamera()));
 
 
 	/* creation and customization of Virtual Objects */
 	/* use testingState->createVirtualObject() to create a Virtual Object */
 	VirtualObject* 	cube2 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE, 0.0, 8);
 	cube2->translate(glm::vec3(0, 0, 0));
-	cube2->setPhysicsComponent(0.5,0.0,0.0,0.0,0.0,1);
-	testingState->attachListenerOnBeginningProgramCycle(new UpdatePhysicsComponentListener(cube2));
-	phyComp = cube2->getPhysicsComponent();
-	phyComp->getRigidBody()->setDamping(5,100);
-	phyComp->getRigidBody()->setSleepingThresholds(1,1);
-	phyComp->getRigidBody()->applyForce(btVector3(0,-5,0),btVector3(0,0,0));
+	//cube2->setPhysicsComponent(0.5,0.0,0.0,0.0,0.0,1);
+	cube2->getPhysicsComponent()->getRigidBody()->applyForce(btVector3(0,0,0),btVector3(0,0,0));
+	//phyComp->getRigidBody()->setDamping(5,100);
+	//phyComp->getRigidBody()->setSleepingThresholds(1,1);
+	//phyComp->getRigidBody()->applyForce(btVector3(0,0,0),btVector3(0,0,0));
+	testingState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube2));
 
 
 	VirtualObject* 	cube3 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE, 1.0, 8);
 	cube3->translate(glm::vec3(0, 1, 0));
-	cube3->setPhysicsComponent(0.5,0.0,0.0,0.0,1.0,1);
-	testingState->attachListenerOnBeginningProgramCycle(new UpdatePhysicsComponentListener(cube3));
-	phyComp = cube3->getPhysicsComponent();
-	phyComp->getRigidBody()->setDamping(5,100);
-	phyComp->getRigidBody()->setSleepingThresholds(1,1);
-	phyComp->getRigidBody()->applyForce(btVector3(0,1,0),btVector3(0,0,0));
+	//cube3->setPhysicsComponent(0.5,0.0,0.0,0.0,1.0,1);
+	cube3->getPhysicsComponent()->getRigidBody()->applyForce(btVector3(0,11,0),btVector3(0,0,0));
+	//phyComp->getRigidBody()->setDamping(5,100);
+	//phyComp->getRigidBody()->setSleepingThresholds(1,1);
+	//phyComp->getRigidBody()->applyForce(btVector3(0,-5,0),btVector3(0,0,0));
+	testingState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube3));
 
 
 	VirtualObject* 	cube4 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE, 1.0, 8);
-	cube4->setPhysicsComponent(0.5,0.0,0.0,0.0,1.0,1);
+	//cube4->setPhysicsComponent(0.5,0.0,0.0,0.0,1.0,8);
 	cube4->translate(glm::vec3(0, 2, 0));
-	testingState->attachListenerOnBeginningProgramCycle(new UpdatePhysicsComponentListener(cube4));
+	/*
 	phyComp = cube4->getPhysicsComponent();
 	phyComp->getRigidBody()->setDamping(5,100);
 	phyComp->getRigidBody()->setSleepingThresholds(1,1);
-	phyComp->getRigidBody()->applyForce(btVector3(0,1,0),btVector3(0,0,0));
+	phyComp->getRigidBody()->activate(true);
+
+	phyComp->getRigidBody()->applyForce(btVector3(0,-5,0),btVector3(0,0,0));
+	*/
+	//cube4->getPhysicsComponent()->getRigidBody()->setDamping(5,100);
+	//cube4->getPhysicsComponent()->getRigidBody()->setSleepingThresholds(1,1);
+	cube4->getPhysicsComponent()->getRigidBody()->activate(true);
+
+	cube4->getPhysicsComponent()->getRigidBody()->applyForce(btVector3(0,-11,0),btVector3(0,0,0));
+	//cube4->getPhysicsComponent()->getRigidBody()->applyCentralImpulse( btVector3( 0.f, 0.f, -15 ) );
+	testingState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube4));
+
 
 	VirtualObject* 	cube5 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE, 1.0, 8);
-	cube5->setPhysicsComponent(0.5,0.0,0.0,0.0,1.0,1);
+	//cube5->setPhysicsComponent(0.5,0.0,0.0,0.0,1.0,8);
 	cube5->translate(glm::vec3(0, 4, 0));
-	testingState->attachListenerOnBeginningProgramCycle(new UpdatePhysicsComponentListener(cube5));
-	phyComp = cube5->getPhysicsComponent();
-	phyComp->getRigidBody()->setDamping(5,100);
-	phyComp->getRigidBody()->setSleepingThresholds(1,1);
-	phyComp->getRigidBody()->applyForce(btVector3(0,1,0),btVector3(0,0,0));
+
+	//cube5->getPhysicsComponent()->getRigidBody()->setDamping(5,100);
+	//cube5->getPhysicsComponent()->getRigidBody()->setSleepingThresholds(1,1);
+	cube5->getPhysicsComponent()->getRigidBody()->applyForce(btVector3(0,15,0),btVector3(0,0,0));
+	cube5->getPhysicsComponent()->getRigidBody()->applyCentralImpulse( btVector3( 0.f, 0.f, 15 ) );
+	testingState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube5));
 
 	btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,1,0),0);
 	//create an invisible ground plane
@@ -81,6 +99,8 @@ void configureVirtualObjects() {
 	btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0,groundMotionState,groundShape,btVector3(0,0,0));
 	btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(groundRigidBody);
+
+
 }
 
 void configurePhysics() {
