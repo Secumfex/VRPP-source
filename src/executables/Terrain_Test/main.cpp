@@ -44,13 +44,17 @@ void configPhysics(){
 void configIOHandler(){
 
 	myIOHandler->attachListenerOnKeyPress(new TerminateApplicationListener(myApp), 	GLFW_KEY_ESCAPE);	// Terminate Application by pressing Escape
-	myIOHandler->attachListenerOnKeyPress(new RecompileAndSetShaderListener(SHADERS_PATH"/HeightField/heightField.vert",SHADERS_PATH"/HeightField/heightField.frag"), GLFW_KEY_S);
+	myIOHandler->attachListenerOnKeyPress(new RecompileAndSetShaderListener(SHADERS_PATH"/HeightField/heightField.vert",SHADERS_PATH"/HeightField/heightField.frag"), GLFW_KEY_F5);
 	myIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener(HeightfieldScene::camera), GLFW_KEY_R);
 }
 
 void configRendering(){
 
+	Shader* hfSader = new Shader(SHADERS_PATH"/HeightField/heightField.vert",SHADERS_PATH"/HeightField/heightField.frag");
 
+	Listener* uniTex1 = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",0,"texture1",HeightfieldScene::ground1->getTextureHandle());
+	Listener* uniTex2 = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",1,"texture2",HeightfieldScene::ground2->getTextureHandle());
+	Listener* uniMask = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",2,"textureMask",HeightfieldScene::mask->getTextureHandle());
 }
 void configureMyApp(){
 	/*	customize application a little bit*/

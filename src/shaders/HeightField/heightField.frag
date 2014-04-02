@@ -1,12 +1,12 @@
 #version 330 
 
-in vec3 normalPass
-in vec3 positionPass
-in vec2 uvCoordPass
+in vec3 normalPass;
+in vec3 positionPass;
+in vec2 uvCoordPass;
 
-uniform sampler2D texture1
-uniform sampler2D texture2
-uniform sampler2D textureMask
+uniform sampler2D texture1;
+uniform sampler2D texture2;
+uniform sampler2D textureMask;
 
 
 void main() { 
