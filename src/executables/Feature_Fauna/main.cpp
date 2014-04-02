@@ -37,18 +37,18 @@ void configureVirtualObjects() {
 	/* creation and customization of Virtual Objects */
 	/* use testingState->createVirtualObject() to create a Virtual Object */
 	VirtualObject* 	cube2 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE, 0.0, 8);
-	cube2->translate(glm::vec3(0, 0, -10));
-	cube2->setPhysicsComponent(0.5,0.0,0.0,-10.0,0.0,1);
+	cube2->translate(glm::vec3(0, 0, 0));
+	cube2->setPhysicsComponent(0.5,0.0,0.0,0.0,0.0,1);
 	testingState->attachListenerOnBeginningProgramCycle(new UpdatePhysicsComponentListener(cube2));
 	phyComp = cube2->getPhysicsComponent();
 	phyComp->getRigidBody()->setDamping(5,100);
 	phyComp->getRigidBody()->setSleepingThresholds(1,1);
-	phyComp->getRigidBody()->applyForce(btVector3(0,0,0),btVector3(0,0,0));
+	phyComp->getRigidBody()->applyForce(btVector3(0,-5,0),btVector3(0,0,0));
 
 
 	VirtualObject* 	cube3 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE, 1.0, 8);
-	cube3->translate(glm::vec3(0, 2, -10));
-	cube3->setPhysicsComponent(0.5,0.0,2.0,-10.0,1.0,1);
+	cube3->translate(glm::vec3(0, 1, 0));
+	cube3->setPhysicsComponent(0.5,0.0,0.0,0.0,1.0,1);
 	testingState->attachListenerOnBeginningProgramCycle(new UpdatePhysicsComponentListener(cube3));
 	phyComp = cube3->getPhysicsComponent();
 	phyComp->getRigidBody()->setDamping(5,100);
@@ -57,8 +57,8 @@ void configureVirtualObjects() {
 
 
 	VirtualObject* 	cube4 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE, 1.0, 8);
-	cube4->setPhysicsComponent(0.5,0.0,4.0,-10.0,1.0,1);
-	cube4->translate(glm::vec3(0, 4, -10));
+	cube4->setPhysicsComponent(0.5,0.0,0.0,0.0,1.0,1);
+	cube4->translate(glm::vec3(0, 2, 0));
 	testingState->attachListenerOnBeginningProgramCycle(new UpdatePhysicsComponentListener(cube4));
 	phyComp = cube4->getPhysicsComponent();
 	phyComp->getRigidBody()->setDamping(5,100);
@@ -66,8 +66,8 @@ void configureVirtualObjects() {
 	phyComp->getRigidBody()->applyForce(btVector3(0,1,0),btVector3(0,0,0));
 
 	VirtualObject* 	cube5 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE, 1.0, 8);
-	cube5->setPhysicsComponent(0.5,0.0,6.0,-10.0,1.0,1);
-	cube5->translate(glm::vec3(0, 6, -10));
+	cube5->setPhysicsComponent(0.5,0.0,0.0,0.0,1.0,1);
+	cube5->translate(glm::vec3(0, 4, 0));
 	testingState->attachListenerOnBeginningProgramCycle(new UpdatePhysicsComponentListener(cube5));
 	phyComp = cube5->getPhysicsComponent();
 	phyComp->getRigidBody()->setDamping(5,100);
