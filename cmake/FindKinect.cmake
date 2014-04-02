@@ -8,10 +8,11 @@
 
 # 
 IF (MSVC)
-    FIND_PATH( KINECT_INCLUDE_PATH inc/NuiApi.h
-        ${DEPENDENCIES_PATH}/Kinect/v1.8/
+    FIND_PATH( KINECT_INCLUDE_PATH NuiApi.h
+        ${DEPENDENCIES_PATH}/Kinect/v1.8/inc/
+		
     )
-
+message("nuiapiblaa " ${KINECT_INCLUDE_PATH})
     FIND_LIBRARY( KINECT_LIBRARY
         NAMES Kinect10
         PATHS
