@@ -11,6 +11,7 @@
 #include "Physics/PhysicWorld.h"
 #include "Physics/PhysicWorldSimulationListener.h"
 #include "BulletDynamics/ConstraintSolver/btPoint2PointConstraint.h"
+#include "BulletDynamics/ConstraintSolver/btGeneric6DofConstraint.h"
 
 /*
  * A basic executable to use as starting point with our libraries
@@ -57,6 +58,10 @@ void configureApplication() {
 	cube2->translate(glm::vec3(0, 0, 0));
 	cube2->setPhysicsComponent(0.1,0,0,0,0,0);
 	btRigidBody* rigidBody2 = cube2->getPhysicsComponent()->getRigidBody();
+	rigidBody2->setActivationState(DISABLE_DEACTIVATION);
+	btTransform t;
+	t = btTransform::getIdentity();
+	t.setOrigin(btVector3(btScalar(0.),btScalar(0.),btScalar(0.)));
 
 	VirtualObject* cube3 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE,1.0, 8);
 	testingState->attachListenerOnBeginningProgramCycle( new UpdateVirtualObjectModelMatrixListener(cube3));
@@ -69,12 +74,37 @@ void configureApplication() {
 	cube3->getPhysicsComponent()->getRigidBody()->setSleepingThresholds(1,1);
 
 	btRigidBody* rigidBody3 = cube3->getPhysicsComponent()->getRigidBody();
+	rigidBody3->setActivationState(DISABLE_DEACTIVATION);
+	btTransform s;
+	s = btTransform::getIdentity();
+	s.setOrigin(btVector3(btScalar(0.),btScalar(0.),btScalar(0.)));
 
-	btGeneric6DofConstraint* constraint23 = new btGeneric6DofConstraint(*rigidBody2, *rigidBody3,btTransform::getIdentity(), btTransform::getIdentity(), false);
+	VirtualObject* cube4 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE,1.0, 8);
+	testingState->attachListenerOnBeginningProgramCycle( new UpdateVirtualObjectModelMatrixListener(cube4));
+	cube4->translate(glm::vec3(0, 3, 0));
+	cube4->setPhysicsComponent(0.5,0,5,0,1,0);
+	cube4->getPhysicsComponent()->getRigidBody()->applyForce(btVector3(0,150,0),btVector3(0,0,0));
+	cube4->getPhysicsComponent()->getRigidBody()->applyDamping(150);
+	cube4->getPhysicsComponent()->getRigidBody()->setDamping(10,100);
+	cube4->getPhysicsComponent()->getRigidBody()->setGravity((cube4->getPhysicsComponent()->getRigidBody()->getGravity())+btVector3(0,150,0));
+	cube4->getPhysicsComponent()->getRigidBody()->setSleepingThresholds(1,1);
+
+	btRigidBody* rigidBody4 = cube4->getPhysicsComponent()->getRigidBody();
+	rigidBody4->setActivationState(DISABLE_DEACTIVATION);
+	btTransform r;
+	r = btTransform::getIdentity();
+	r.setOrigin(btVector3(btScalar(0.),btScalar(0.),btScalar(0.)));
+
+	btGeneric6DofConstraint* constraint23 = new btGeneric6DofConstraint(*rigidBody2, *rigidBody3, t, s, false);
+	constraint23->setLinearUpperLimit(btVector3(0.,10.,0.));
+	btGeneric6DofConstraint* constraint24 = new btGeneric6DofConstraint(*rigidBody3, *rigidBody4, s, r, false);
+	constraint24->setLinearUpperLimit(btVector3(0.,10.,0.));
 
 
-	//btPoint2PointConstraint* p2p = new btPoint2PointConstraint(rigidBody2, btVector3(0,0,0));	//btVec 000 "center of mass vom root Obj"
-	//p2p = btPoint2PointConstraint(rigidBody2,rigidBody3,btVector3(0,0,0),btVector3(0,3,0));
+//	constraint23->setLinearLowerLimit(btVector3(springRestLen - springRange, 0., 0.));
+	PhysicWorld::getInstance()->dynamicsWorld->addConstraint(constraint23);
+	PhysicWorld::getInstance()->dynamicsWorld->addConstraint(constraint24);
+
 
 
 	testingState->attachListenerOnBeginningProgramCycle(new PhysicWorldSimulationListener(IOManager::getInstance()->getDeltaTimePointer()));// updates physics simulation
