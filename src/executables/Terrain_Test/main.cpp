@@ -50,11 +50,24 @@ void configIOHandler(){
 
 void configRendering(){
 
-	Shader* hfSader = new Shader(SHADERS_PATH"/HeightField/heightField.vert",SHADERS_PATH"/HeightField/heightField.frag");
+	Shader* hfShader = new Shader(SHADERS_PATH"/HeightField/heightField.vert",SHADERS_PATH"/HeightField/heightField.frag");
 
 	Listener* uniTex1 = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",0,"texture1",HeightfieldScene::ground1->getTextureHandle());
 	Listener* uniTex2 = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",1,"texture2",HeightfieldScene::ground2->getTextureHandle());
 	Listener* uniMask = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",2,"textureMask",HeightfieldScene::mask->getTextureHandle());
+
+
+
+	Listener* unbindCurrentFBO = new UnbindFrameBufferObjectListener();
+
+	myApp->attachListenerOnProgramInitialization(new SetCurrentShaderListener(hfShader));
+
+	myApp->attachListenerOnRenderManagerFrameLoop(new SetCurrentShaderListener(hfShader));
+	myApp->attachListenerOnRenderManagerFrameLoop(uniTex1);
+	myApp->attachListenerOnRenderManagerFrameLoop(uniTex2);
+	myApp->attachListenerOnRenderManagerFrameLoop(uniMask);
+	TerrainRenderPass* renderTerrain = new TerrainRenderPass(HeightfieldScene::fboGround);
+	myApp->attachListenerOnRenderManagerFrameLoop(renderTerrain);
 }
 void configureMyApp(){
 	/*	customize application a little bit*/

@@ -253,3 +253,21 @@ public:
 	void update();
 };
 */
+
+
+//eigener renderpass listener
+/// Listener which uses an FBO as Render Target and renders terrain
+class TerrainRenderPass : public Listener{
+public:
+	RenderManager* rm;
+	RenderQueue* currentRenderQueue;
+	list<VirtualObject* > voList;
+	Shader* currentShader;
+	vector<GraphicsComponent* > currentGCs;
+
+	/*außerdem*/
+	FrameBufferObject* fbo;
+
+	TerrainRenderPass(FrameBufferObject* fbo);
+	void update();
+};

@@ -461,3 +461,41 @@ void UpdateParticleSystemListener::update(){
 	particleSystem->update(*t);
 }
 
+
+//eigener renderpass listener
+TerrainRenderPass::TerrainRenderPass(FrameBufferObject* fbo){
+
+	rm = RenderManager::getInstance();
+	this->fbo = fbo;
+}
+
+void TerrainRenderPass::update(){
+
+	fbo->bindFBO();
+
+	glEnable(GL_DEPTH_TEST);
+	glClearColor(0.0,0.0,0.0,1.0);
+
+	glViewport(0,0,fbo->getWidth(),fbo->getHeight());
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	currentShader = rm->getCurrentShader();
+
+	if(currentShader != 0){
+
+		voList = currentRenderQueue->getVirtualObjectList();
+		for(std::list<VirtualObject*>::iterator i = voList.begin(); i != voList.end(); ++i){
+
+			currentGCs = (*i)->getGraphicsComponent();
+			for(unsigned int j=0; j<currentGCs.size(); j++){
+
+				rm->setCurrentGC(currentGCs[j]);
+				rm->getCurrentVO();
+
+				currentShader->uploadAllUniforms();
+				currentShader->render(currentGCs[j]);
+			}
+		}
+	}
+	fbo->unbindFBO();
+}
