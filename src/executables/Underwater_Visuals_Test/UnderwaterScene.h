@@ -126,8 +126,8 @@ namespace UnderwaterScene{
 		/*********************************************************************************/
 
 		/******************* particle System objects *****************************************/
-		water_particles = new ParticleSystem(target->getCamera()->getPositionPointer(), 1.0f);
-		water_particles->setParticleAmount(10);
+		water_particles = new ParticleSystem(target->getCamera()->getPositionPointer(), 2.0f);
+		water_particles->setParticleAmount(100);
 		target->attachListenerOnBeginningProgramCycle(new UpdateParticleSystemListener(water_particles, IOManager::getInstance()->getDeltaTimePointer()));
 		/*********************************************************************************/
 
@@ -150,7 +150,7 @@ namespace UnderwaterScene{
 		framebuffer_water_god_rays->makeDrawBuffers();	// draw color to color attachment 0
 		framebuffer_water_god_rays->unbindFBO();
 
-		framebuffer_water_particles = new FrameBufferObject(800,600);
+		framebuffer_water_particles = new FrameBufferObject(400,300);
 		framebuffer_water_particles->bindFBO();
 		framebuffer_water_particles->createPositionTexture();
 		framebuffer_water_particles->makeDrawBuffers();	// draw color to color attachment 0

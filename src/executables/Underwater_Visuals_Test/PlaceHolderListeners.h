@@ -73,8 +73,9 @@ public:
 	FrameBufferObject* fbo; // particles target
 	ParticleSystem* particleSystem;
 	GraphicsComponent* particleGC;
+	GLint vao;
 
-	ParticlesRenderPass(FrameBufferObject* fbo, ParticleSystem* particleSystem, GraphicsComponent* particleGC);
+	ParticlesRenderPass(FrameBufferObject* fbo, ParticleSystem* particleSystem, GLint vao);
 	void update();
 };
 
@@ -251,3 +252,6 @@ public:
 	UpdateParticleSystemListener(ParticleSystem* particleSystem, float* t);
 	void update();
 };
+
+static void createSquare();
+
