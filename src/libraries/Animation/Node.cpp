@@ -28,6 +28,12 @@ std::vector<Node*> Node::getChildren(){
 void Node::addTransformation(glm::vec3 pos, glm::vec3 scale, glm::quat rotation, float time){
 if(mTimes.size() == 0)
 	time = 0.0;
+
+using namespace std;
+//cout << "At time "<< time << " for Node " << mName <<endl;
+//cout << "(" << pos.x << "/" << pos.y << "/" << pos.z <<")" <<endl;
+//cout << "(" << scale.x << "/" << scale.y << "/" << scale.z <<")" <<endl;
+//cout << "(" << rotation.w << "/" << rotation.x << "/" << rotation.y << "/" << rotation.z <<")" <<endl;
 	mPositions.push_back(pos);
 	mScales.push_back(scale);
 	mRotations.push_back(rotation);

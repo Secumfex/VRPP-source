@@ -84,6 +84,25 @@ VirtualObject* VirtualObjectFactory::createNonAssimpVO(float mass){
 }
 
 
+bool VirtualObjectFactory::checkIfBlender(std::string filename){
+	std::ifstream myfile(filename.c_str());
+	if(myfile.fail())
+		return false;
+	if (myfile.is_open())
+	{
+		std::string line;
+
+
+		for (string line; getline(myfile, line);) {
+//			std::cout << line << std::endl;
+			if(line.find("Blender") != std::string::npos || line.find("blender") != std::string::npos){
+				std::cout << "Looks like this is a blender file." << std::endl;
+				return true;
+			}
+		}
+	}
+		return false;
+}
 
 VirtualObject* VirtualObjectFactory::createVirtualObject(){
 	return new VirtualObject();
@@ -94,7 +113,6 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 	VirtualObject* virtualObject = new VirtualObject();
 
 	Assimp::Importer Importer;
-	//TextureManager* texManager = TextureManager::getInstance();
 
 	std::string directory = filename.substr( filename.find_last_of( '/' ) + 1 );
 	std::string objName = directory;
@@ -128,15 +146,18 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 	);
 
+
+
+
 	// Melden, falls der Import nicht funktioniert hat
 	if( !pScene)
 	{
 		cout<<Importer.GetErrorString()<<endl;
 		return createNonAssimpVO();
 	}
-
 	cout<<"Import of scene " <<filename.c_str()<<" succeeded."<<endl;
 
+	bool isBlender = checkIfBlender(filename);
 
 	glm::vec3 physics_min = glm::vec3(FLT_MAX,FLT_MAX,FLT_MAX);
 	glm::vec3 physics_max = glm::vec3(-FLT_MAX,-FLT_MAX,-FLT_MAX);
@@ -239,10 +260,13 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 					boneweight[bone->mWeights[l].mVertexId] = bone->mWeights[l].mWeight;
 				}
 				std::string name = bone->mName.C_Str();
+
+
 				Bone *myBone;
 				if(bone_map.find(name) != bone_map.end()){
 					myBone = bone_map[name];
 				}else{
+
 					myBone = new Bone(name);
 					glm::mat4 offsetmatrix = glm::make_mat4x4(&(bone->mOffsetMatrix.a1));
 					myBone->setOffsetMatrix(offsetmatrix);

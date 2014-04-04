@@ -103,6 +103,8 @@ private:
 	 */
 	void color4_to_float4(const aiColor4D *c, float f[4]);
 
+	bool checkIfBlender(std::string filename);
+
 	AnimationLoop* makeAnimation(map<std::string, Bone*> bones, const aiScene* pScene);
 
 	vector<Node*> getNodeChildren(aiNode* node);
