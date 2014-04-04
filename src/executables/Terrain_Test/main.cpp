@@ -52,9 +52,10 @@ void configRendering(){
 
 	Shader* hfShader = new Shader(SHADERS_PATH"/HeightField/heightField.vert",SHADERS_PATH"/HeightField/heightField.frag");
 
-	Listener* uniTex1 = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",0,"texture1",HeightfieldScene::ground1->getTextureHandle());
-	Listener* uniTex2 = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",1,"texture2",HeightfieldScene::ground2->getTextureHandle());
-	Listener* uniMask = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",2,"textureMask",HeightfieldScene::mask->getTextureHandle());
+	//TODO: zahlen richtig anpassen (0,1,2)
+	Listener* uniTex1 = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",0,"uniformTexture1",HeightfieldScene::ground1->getTextureHandle());
+	Listener* uniTex2 = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",1,"uniformTexture2",HeightfieldScene::ground2->getTextureHandle());
+	Listener* uniMask = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",2,"uniformTextureMask",HeightfieldScene::mask->getTextureHandle());
 
 
 
