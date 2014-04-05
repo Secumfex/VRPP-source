@@ -94,14 +94,23 @@ bool VirtualObjectFactory::checkIfBlender(std::string filename){
 
 
 		for (string line; getline(myfile, line);) {
-//			std::cout << line << std::endl;
+			//			std::cout << line << std::endl;
 			if(line.find("Blender") != std::string::npos || line.find("blender") != std::string::npos){
 				std::cout << "Looks like this is a blender file." << std::endl;
 				return true;
 			}
 		}
 	}
-		return false;
+	return false;
+}
+
+void VirtualObjectFactory::fixBlenderVector(glm::vec3 &vector){
+	//	glm::vec4 temp_vector = glm::rotate(glm::mat4(), -90.0f, glm::vec3(1.0f, 0.0f, 0.0f)) * glm::vec4(vector,1);
+	//	vector = glm::vec3(temp_vector.x, temp_vector.y, temp_vector.z);
+}
+
+void VirtualObjectFactory::fixBlenderMatrix(glm::mat4 &matrix){
+	matrix = glm::rotate(matrix, -90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 }
 
 VirtualObject* VirtualObjectFactory::createVirtualObject(){
@@ -184,15 +193,23 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 		//Our Indices for our Vertexlist
 		vector<unsigned int> indices;
 
-		int incidesCounter = 0;
-
 		for (unsigned int t = 0; t < mesh->mNumFaces; ++t) {
 			unsigned int i=0;
 			for (i = 0; i < mesh->mFaces[t].mNumIndices; ++i) {
 				indices.push_back(mesh->mFaces[t].mIndices[i]);
-				incidesCounter++;
 			}
 		}
+
+		unsigned int j=0;
+		if(isBlender)
+			for (j = 0; j < mesh->mNumVertices; ++j) {
+				mesh->mVertices[j].Set(mesh->mVertices[j].x, mesh->mVertices[j].z, -mesh->mVertices[j].y);
+				if (mesh->HasNormals())
+				mesh->mNormals[j].Set(mesh->mNormals[j].x, mesh->mNormals[j].z, -mesh->mNormals[j].y);
+				if (mesh->HasTangentsAndBitangents())
+				mesh->mTangents[j].Set(mesh->mTangents[j].x, mesh->mTangents[j].z, -mesh->mTangents[j].y);
+			}
+
 
 		aMesh->setNumVertices(mesh->mNumVertices);
 		aMesh->setNumIndices(mesh->mNumFaces * 3);
@@ -269,6 +286,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 					myBone = new Bone(name);
 					glm::mat4 offsetmatrix = glm::make_mat4x4(&(bone->mOffsetMatrix.a1));
+					fixBlenderMatrix(offsetmatrix);
 					myBone->setOffsetMatrix(offsetmatrix);
 					bone_map.insert(std::pair<std::string, Bone*>(name, myBone));
 				}

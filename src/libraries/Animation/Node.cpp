@@ -26,14 +26,14 @@ std::vector<Node*> Node::getChildren(){
 }
 
 void Node::addTransformation(glm::vec3 pos, glm::vec3 scale, glm::quat rotation, float time){
-if(mTimes.size() == 0)
-	time = 0.0;
+	if(mTimes.size() == 0)
+		time = 0.0;
 
-using namespace std;
-//cout << "At time "<< time << " for Node " << mName <<endl;
-//cout << "(" << pos.x << "/" << pos.y << "/" << pos.z <<")" <<endl;
-//cout << "(" << scale.x << "/" << scale.y << "/" << scale.z <<")" <<endl;
-//cout << "(" << rotation.w << "/" << rotation.x << "/" << rotation.y << "/" << rotation.z <<")" <<endl;
+	using namespace std;
+	//cout << "At time "<< time << " for Node " << mName <<endl;
+	//cout << "(" << pos.x << "/" << pos.y << "/" << pos.z <<")" <<endl;
+	//cout << "(" << scale.x << "/" << scale.y << "/" << scale.z <<")" <<endl;
+	//cout << "(" << rotation.w << "/" << rotation.x << "/" << rotation.y << "/" << rotation.z <<")" <<endl;
 	mPositions.push_back(pos);
 	mScales.push_back(scale);
 	mRotations.push_back(rotation);
@@ -52,8 +52,14 @@ void Node::updateBone(float t, glm::mat4 parent_mat){
 	float next_time = t;
 
 
-	if(mTimes.size()<2)
-		return;
+	if(mTimes.size()<2){
+		unsigned int i;
+		for (i = 0; i < mChildren.size(); ++i) {
+			mChildren[i]->updateBone(next_time, parent_mat);
+		}
+		return;}
+
+	std::cout << "YOOO hier kommt er hin "<< mName << std::endl;
 
 	int index = getTimeIndex(t);
 	int index02 = (index + 1) % mTimes.size();
@@ -68,11 +74,12 @@ void Node::updateBone(float t, glm::mat4 parent_mat){
 	glm::vec3 scale = (mScales[index] * (1 - t)) + (mScales[index02] * t);
 	glm::quat rotate = (mRotations[index] * (1 - t)) + (mRotations[index02] * t);
 
-//	glm::mat4 transform = parent_mat * glm::translate(glm::mat4(1.0f), pos) * glm::mat4_cast(rotate) * glm::scale(glm::mat4(1.0f), scale);
-	glm::mat4 transform = parent_mat * glm::mat4_cast(rotate);
+	glm::mat4 transform = parent_mat * glm::translate(glm::mat4(1.0f), pos) * glm::mat4_cast(rotate) * glm::scale(glm::mat4(1.0f), scale);
+	//	glm::mat4 transform = parent_mat * glm::mat4_cast(rotate);
 
-//	mBone->setAnimationMatrix(glm::translate(glm::mat4(1.0f), pos) * glm::mat4_cast(rotate) * glm::scale(glm::mat4(1.0f), scale));
-	mBone->setAnimationMatrix(transform);
+	mBone->setAnimationMatrix(glm::translate(glm::mat4(1.0f), pos) * glm::mat4_cast(rotate) * glm::scale(glm::mat4(1.0f), scale));
+	//	mBone->setAnimationMatrix(transform);
+
 
 	unsigned int i;
 	for (i = 0; i < mChildren.size(); ++i) {
