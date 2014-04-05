@@ -27,6 +27,7 @@ public:
 	Bone* getBone();
 	void updateBone(float t, glm::mat4 parent_mat = glm::mat4(1.0f));
 	int getTimeIndex(float t);
+	void setCorrectOffsetMatrix(glm::mat4 parents_matrix);
 
 private:
 	Bone* mBone;

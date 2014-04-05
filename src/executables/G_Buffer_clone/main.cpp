@@ -123,7 +123,7 @@ int main() {
 	rm->setPerspectiveMatrix(40.0f, 1.0f, 0.1f, 100.f);
 	rm->setLightPosition(glm::vec3(5,2,-2),0);
 
-	cam->setPosition(glm::vec3(0.0f, 1.0f, -6.0f));
+	cam->setPosition(glm::vec3(0.0f, 2.0f, -10.0f));
 	cam->setCenter(glm::vec3(0.0f, 0.0f, 0.0f));
 
 	frustum->updateModelMatrix();
@@ -150,7 +150,7 @@ int main() {
 		//rotation angle
 		angle = fmod((float)(angle+rotationSpeed*glfwGetTime()), (float)(pi<float>()*2.0f));
 
-		animation->updateNodes(angle);
+//		animation->updateNodes(angle);
 
 		glfwSetTime(0.0);
 
@@ -160,7 +160,7 @@ int main() {
 		//nice rotation of a small cube
 		mat4 modelMatrix02 = scale(translate(rotate(mat4(1.0f), degrees(angle), vec3(1.0f, 1.0f, 0.0f)), vec3(0.0f, 0.5f, -0.5f)), vec3(0.9f, 0.9f, 0.9f));
 
-		mat4 modelMatrix03 = scale(translate(rotate(mat4(), degrees(angle), vec3(0.0f, 1.0f, 0.0f)), vec3(0.0, 0.0, 1.0)), vec3(0.25f, 0.25f, 0.25f));
+		mat4 modelMatrix03 = scale(translate(rotate(mat4(), degrees(angle), vec3(0.0f, 1.0f, 0.0f)), vec3(0.0, 0.0, 0.0)), vec3(0.25f, 0.25f, 0.25f));
 
 		object01->setModelMatrix(modelMatrix01);
 		object02->setModelMatrix(modelMatrix02);

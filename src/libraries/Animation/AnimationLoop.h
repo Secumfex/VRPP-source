@@ -22,6 +22,7 @@ public:
 	void updateNodes(float t);
 	void addNode(Node* node);
 	void setDuration(float t);
+	void setCorrectOffsetMatrix();
 
 private:
 	float duration;

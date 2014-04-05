@@ -30,3 +30,10 @@ void AnimationLoop::addNode(Node* node){
 void AnimationLoop::setDuration(float t){
 	duration = t;
 }
+void AnimationLoop::setCorrectOffsetMatrix(){
+	unsigned int i;
+
+	for (i = 0; i < mNodes.size(); ++i) {
+			mNodes[i]->setCorrectOffsetMatrix(glm::mat4());
+		}
+}

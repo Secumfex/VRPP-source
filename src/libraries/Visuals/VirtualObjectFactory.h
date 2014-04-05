@@ -108,14 +108,14 @@ private:
 	void fixBlenderVector(glm::vec3 &vector);
 	void fixBlenderMatrix(glm::mat4 &matrix);
 
-	AnimationLoop* makeAnimation(map<std::string, Bone*> bones, const aiScene* pScene);
+	AnimationLoop* makeAnimation(map<std::string, Bone*> bones, const aiScene* pScene, bool isBlender);
 
 	vector<Node*> getNodeChildren(aiNode* node);
 
 
 	void setBones(Node* node, map<std::string, Bone*> bones);
 
-	void setNodeTransform(Node* node, aiNodeAnim* nodeanim);
+	void setNodeTransform(Node* node, aiNodeAnim* nodeanim, bool isBlender);
 
 };
 

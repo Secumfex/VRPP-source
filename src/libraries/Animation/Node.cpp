@@ -74,11 +74,12 @@ void Node::updateBone(float t, glm::mat4 parent_mat){
 	glm::vec3 scale = (mScales[index] * (1 - t)) + (mScales[index02] * t);
 	glm::quat rotate = (mRotations[index] * (1 - t)) + (mRotations[index02] * t);
 
-	glm::mat4 transform = parent_mat * glm::translate(glm::mat4(1.0f), pos) * glm::mat4_cast(rotate) * glm::scale(glm::mat4(1.0f), scale);
+//	glm::mat4 transform = parent_mat * glm::translate(glm::mat4(1.0f), pos) * glm::mat4_cast(rotate) * glm::scale(glm::mat4(1.0f), scale);
+	glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * glm::toMat4(rotate) * glm::scale(glm::mat4(1.0f), scale);
 	//	glm::mat4 transform = parent_mat * glm::mat4_cast(rotate);
 
-	mBone->setAnimationMatrix(glm::translate(glm::mat4(1.0f), pos) * glm::mat4_cast(rotate) * glm::scale(glm::mat4(1.0f), scale));
-	//	mBone->setAnimationMatrix(transform);
+//	mBone->setAnimationMatrix(glm::translate(glm::mat4(1.0f), pos) * glm::toMat4(rotate) * glm::scale(glm::mat4(1.0f), scale));
+		mBone->setAnimationMatrix(transform * parent_mat);
 
 
 	unsigned int i;
@@ -98,4 +99,14 @@ int Node::getTimeIndex(float t){
 		}
 	}
 	return index;
+}
+
+void Node::setCorrectOffsetMatrix(glm::mat4 parents_matrix){
+	unsigned int i;
+	glm::mat4 temp_offset = mBone->getOffsetMatrix() * parents_matrix;
+	mBone->setOffsetMatrix(temp_offset);
+
+	for (i = 0; i < mChildren.size(); ++i) {
+		mChildren[i]->setCorrectOffsetMatrix(temp_offset);
+		}
 }

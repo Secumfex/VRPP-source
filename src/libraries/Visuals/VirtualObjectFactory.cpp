@@ -104,13 +104,9 @@ bool VirtualObjectFactory::checkIfBlender(std::string filename){
 	return false;
 }
 
-void VirtualObjectFactory::fixBlenderVector(glm::vec3 &vector){
-	//	glm::vec4 temp_vector = glm::rotate(glm::mat4(), -90.0f, glm::vec3(1.0f, 0.0f, 0.0f)) * glm::vec4(vector,1);
-	//	vector = glm::vec3(temp_vector.x, temp_vector.y, temp_vector.z);
-}
 
 void VirtualObjectFactory::fixBlenderMatrix(glm::mat4 &matrix){
-	matrix = glm::rotate(matrix, -90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+	matrix = glm::rotate(matrix, 90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 }
 
 VirtualObject* VirtualObjectFactory::createVirtualObject(){
@@ -286,6 +282,8 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 					myBone = new Bone(name);
 					glm::mat4 offsetmatrix = glm::make_mat4x4(&(bone->mOffsetMatrix.a1));
+					offsetmatrix = glm::transpose(offsetmatrix);
+					if(isBlender)
 					fixBlenderMatrix(offsetmatrix);
 					myBone->setOffsetMatrix(offsetmatrix);
 					bone_map.insert(std::pair<std::string, Bone*>(name, myBone));
@@ -547,7 +545,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 
 	if(pScene->HasAnimations()){
-		AnimationLoop *myAnimation = makeAnimation(bone_map, pScene);
+		AnimationLoop *myAnimation = makeAnimation(bone_map, pScene, isBlender);
 		virtualObject->setAnimation(myAnimation);
 	}else{
 		virtualObject->setAnimation(mDefaultAnimation);
@@ -571,7 +569,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 }
 
 
-AnimationLoop* VirtualObjectFactory::makeAnimation(map<std::string, Bone*> bones, const aiScene* pScene){
+AnimationLoop* VirtualObjectFactory::makeAnimation(map<std::string, Bone*> bones, const aiScene* pScene, bool isBlender){
 	AnimationLoop* myAnimation = new AnimationLoop();
 
 	cout << "Animation Tree is being build. This might take a while." << endl;
@@ -587,13 +585,14 @@ AnimationLoop* VirtualObjectFactory::makeAnimation(map<std::string, Bone*> bones
 
 	Node* myRootNode = new Node(getNodeChildren(node));
 	for (i = 0; i < pScene->mAnimations[0]->mNumChannels; ++i) {
-		setNodeTransform(myRootNode, pScene->mAnimations[0]->mChannels[i]);
+		setNodeTransform(myRootNode, pScene->mAnimations[0]->mChannels[i], isBlender);
 	}
 
 	setBones(myRootNode, bones);
 
 	myAnimation->addNode(myRootNode);
 	myAnimation->setDuration(pScene->mAnimations[0]->mDuration);
+	myAnimation->setCorrectOffsetMatrix();
 
 	return myAnimation;
 }
@@ -610,7 +609,7 @@ vector<Node*> VirtualObjectFactory::getNodeChildren(aiNode* node){
 	return children;
 }
 
-void VirtualObjectFactory::setNodeTransform(Node* node, aiNodeAnim* nodeanim){
+void VirtualObjectFactory::setNodeTransform(Node* node, aiNodeAnim* nodeanim, bool isBlender){
 	std::string name = nodeanim->mNodeName.C_Str();
 
 	unsigned int i;
@@ -621,12 +620,17 @@ void VirtualObjectFactory::setNodeTransform(Node* node, aiNodeAnim* nodeanim){
 			glm::vec3 position = glm::vec3(nodeanim->mPositionKeys[i].mValue.x, nodeanim->mPositionKeys[i].mValue.y, nodeanim->mPositionKeys[i].mValue.z);
 			glm::vec3 scale = glm::vec3(nodeanim->mScalingKeys[i].mValue.x, nodeanim->mScalingKeys[i].mValue.y, nodeanim->mScalingKeys[i].mValue.z);
 			glm::quat rotation = glm::quat(nodeanim->mRotationKeys[i].mValue.w, nodeanim->mRotationKeys[i].mValue.x, nodeanim->mRotationKeys[i].mValue.y, nodeanim->mRotationKeys[i].mValue.z);
+			if(isBlender){
+				position = glm::vec3(position.x, position.z, -position.y);
+				rotation = glm::rotate(rotation, -90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+				scale = glm::vec3(scale.x, scale.z, -scale.y);
+			}
 			node->addTransformation(position, scale, rotation, time);
 		}
 	}
 
 	for (i = 0; i < node->getChildren().size(); ++i) {
-		setNodeTransform(node->getChildren()[i], nodeanim);
+		setNodeTransform(node->getChildren()[i], nodeanim, isBlender);
 	}
 }
 
