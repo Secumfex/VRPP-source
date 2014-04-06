@@ -188,7 +188,7 @@ void ParticlesRenderPass::update(){
 			currentShader->uploadUniform(glm::translate(  glm::mat4(1.0f), particles[i]->getPosition()),	"uniformModel");
 			currentShader->uploadUniform(rm->getCamera()->getViewMatrix(), 	"uniformView");;
 			currentShader->uploadUniform(rm->getPerspectiveMatrix(), 		"uniformPerspective");
-			currentShader->uploadUniform(0.25f, "uniformScale");
+			currentShader->uploadUniform(1.0f, "uniformScale");
 
 			currentShader->uploadUniform(particles[i]->getPosition(), "uniformParticlePosition");
 
@@ -434,22 +434,24 @@ void RenderScreenFillingTriangleListener::update(){
 
 }
 
-UploadUniformSinusWaveListener::UploadUniformSinusWaveListener(std::string name, float* t, float frequency, std::string uniform_name){
+UploadUniformSinusWaveListener::UploadUniformSinusWaveListener(std::string name, float* t, float frequency, float phase, std::string uniform_name){
 	this->t = t;
 	this->frequency = frequency;
+	this->phase = phase;
 	this->uniform_name = uniform_name;
 	setName(name);
 }
 
-UploadUniformSinusWaveListener::UploadUniformSinusWaveListener(std::string name, float t, float frequency, std::string uniform_name){
+UploadUniformSinusWaveListener::UploadUniformSinusWaveListener(std::string name, float t, float frequency, float phase, std::string uniform_name){
 	this->t = new float(t);
 	this->frequency = frequency;
+	this->phase = phase;
 	this->uniform_name = uniform_name;
 	setName(name);
 }
 
 void UploadUniformSinusWaveListener::update(){
-	float sinus = std::sin( (*t) * frequency);
+	float sinus = std::sin( (*t) * frequency + phase ) ;
 
 	Shader* shader = RenderManager::getInstance()->getCurrentShader();
 	shader->uploadUniform(sinus, uniform_name);

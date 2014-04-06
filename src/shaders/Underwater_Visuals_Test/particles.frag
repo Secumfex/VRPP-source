@@ -2,14 +2,18 @@
 
 uniform sampler2D uniformParticleTexture;
 
+// uniform float uniformParticleDistanceMax;
+
 in vec2 passUVCoords;
+in float passDistance;
 
 out vec4 fragmentColor;
 
 void main() {
 	fragmentColor  = texture2D(uniformParticleTexture, passUVCoords);
-	float distance = gl_FragCoord.z / gl_FragCoord.w;
+	float distance = - passDistance;
+	float maxDistance = 3.0;
 
-    fragmentColor.w *= ( 1.0 - ( distance / 2.0 ) );
-    fragmentColor.w  = max( fragmentColor.w, 0.0 );
+	float alpha =  1.0 - pow( max ( min( (distance / maxDistance), 1.0 ), 0.0 ), 5);
+    fragmentColor.w  = max( fragmentColor.w * alpha, 0.0 );
 }

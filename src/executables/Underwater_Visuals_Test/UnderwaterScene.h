@@ -21,6 +21,9 @@ namespace UnderwaterScene{
 	float fog_end_above_water = 10000.0f;
 	float fog_begin_above_water = 100.0f;
 
+	int   particle_amount = 100;
+	float particle_distance_max = 3.5f;
+
 	glm::vec4 watercolor(95.0f / 255.0f * 0.7f, 158.0f / 255.0f * 0.7f, 160.0f/ 255.0f * 0.7f, 0.0f);
 	glm::vec3 lightPosition(0.0f,1000.0f,0.0f);
 	glm::vec4 skycolor(135.0f / 255.0f, 206.0f / 255.0f, 250.0f / 255.0f, 0.0f);
@@ -126,8 +129,8 @@ namespace UnderwaterScene{
 		/*********************************************************************************/
 
 		/******************* particle System objects *****************************************/
-		water_particles = new ParticleSystem(target->getCamera()->getPositionPointer(), 2.0f);
-		water_particles->setParticleAmount(100);
+		water_particles = new ParticleSystem(target->getCamera()->getPositionPointer(), particle_distance_max);
+		water_particles->setParticleAmount(particle_amount);
 		target->attachListenerOnBeginningProgramCycle(new UpdateParticleSystemListener(water_particles, IOManager::getInstance()->getDeltaTimePointer()));
 		/*********************************************************************************/
 

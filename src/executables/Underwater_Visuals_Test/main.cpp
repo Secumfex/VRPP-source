@@ -130,6 +130,8 @@ void configureRendering(){
 	Listener* uniTime2 		= new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", IOManager::getInstance()->getWindowTimePointer(), "uniformTime");
 	Listener* uniTime3 		= new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", IOManager::getInstance()->getWindowTimePointer(), "uniformTime");
 
+	Listener* uniSinusWave  = new UploadUniformSinusWaveListener("UNIFORMUPLOADLISTENER", IOManager::getInstance()->getWindowTimePointer(), 0.5f, 0.0f, "uniformSinus");
+
 	Listener* setClearColor 	= new SetClearColorListener 		( &UnderwaterScene::fog_color, 1.0);
 	Listener* setClearColor2 	= new SetClearColorListener 		( &UnderwaterScene::fog_color, 1.0);
 	Listener* setClearColorInv 	= new SetClearColorListener 		( &UnderwaterScene::fog_color_inverse, 1.0);
@@ -206,6 +208,7 @@ void configureRendering(){
 	// 6: render Particles in the water
 	testingApp->attachListenerOnRenderManagerFrameLoop( new SetCurrentShaderListener( particles_shader ));
 	testingApp->attachListenerOnRenderManagerFrameLoop( uniPartText);
+	testingApp->attachListenerOnRenderManagerFrameLoop( uniSinusWave);
 	ParticlesRenderPass* renderParticles = new ParticlesRenderPass(UnderwaterScene::framebuffer_water_particles, UnderwaterScene::water_particles, vaoID[0]);
 	testingApp->attachListenerOnRenderManagerFrameLoop(( renderParticles));
 

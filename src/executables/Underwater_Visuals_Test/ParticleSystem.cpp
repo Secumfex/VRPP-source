@@ -26,8 +26,8 @@ void ParticleSystem::testConstraint(Particle* particle){
 
 
 void ParticleSystem::moveToOppositeSide( Particle* particle ){
-	glm::vec3 centerToParticle = particle->getPosition() - *center;
-	particle->setPosition( *center - ( centerToParticle * 0.9f) );
+	glm::vec3 centerToParticle = glm::normalize( particle->getPosition() - *center );
+	particle->setPosition( *center - ( centerToParticle ) * radius );
 }
 
 
