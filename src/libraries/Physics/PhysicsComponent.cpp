@@ -239,10 +239,10 @@ btRigidBody* PhysicsComponent::addHeightfield(char* filename, int width, int len
 
 	groundShape->setUseDiamondSubdivision(true);
 
-	btVector3 localScaling(100,1,100);
-	localScaling[upIndex]=1.f;						//for use of legacy constructor
+	//btVector3 localScaling(10,10,10);
+	//localScaling[upIndex]=1.f;						//for use of legacy constructor
 	//localScaling[upAxis]=1.f;						//for use of preferred constructor
-	groundShape->setLocalScaling(localScaling);
+	//groundShape->setLocalScaling(localScaling);
 
 	x,y,z = 0;	//zum test
 
