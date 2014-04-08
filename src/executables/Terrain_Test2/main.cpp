@@ -44,7 +44,7 @@ void configureMyApp(){
 	//myVRState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(terrain));
 
 	btRigidBody* camBody = playercam->getRigidBody();
-	playercam->setPosition(0.0f,2.0f,5.0f);
+	playercam->setPosition(0.0f,3.0f,0.0f);
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(camBody);
 
 	/*
