@@ -203,27 +203,47 @@ btRigidBody* PhysicsComponent::addPlane(float x, float y, float z, glm::vec3 nor
 	return body;
 }
 
-btRigidBody* PhysicsComponent::addHeightfield(char* filename, int width, int height, float x, float y, float z){
+//btRigidBody* PhysicsComponent::addHeightfield(char* filename, int width, int height, float x, float y, float z){
+btRigidBody* PhysicsComponent::addHeightfield(char* filename, int width, int length, float x, float y, float z){
 
 	cout << "addHeightfield called" << endl;	//zum test
 	FILE* heightfieldFile;
-	BYTE* heightfieldData;
+	//BYTE* heightfieldData;
+	unsigned char* heightfieldData = new unsigned char[width*length];
+	for(int i=0; i<width*length; i++){
+		heightfieldData[i] = 0;
+	}
 
-	//char* path = "test/";		//pfad zum entspr. ordner
-	//char* temp = path + filename;		//char+char
 
 	heightfieldFile = fopen(filename,"r");
-	fread(heightfieldData,1,width*height,heightfieldFile);
+	if(heightfieldFile){
+		int numBytes = fread(heightfieldData,1,width*length,heightfieldFile);
+		if(!numBytes){
+			cout << "couldn't read heightfieldData at " << filename << endl;
+		}
+	}
+	//fread(heightfieldData,1,width*height,heightfieldFile);
 	fclose(heightfieldFile);
 
-	float heightScale = 0.2;
-	btScalar minHeight;		//min hoehe
-	btScalar maxHeight;		//max hoehe
-	int upAxis = 1;			//y-axis as "up"
-	PHY_ScalarType heightDataType = PHY_FLOAT;
+	//float heightScale = 0.2;
+	//btScalar minHeight;		//min hoehe
+	btScalar maxHeight = 100;		//max hoehe
+	//int upAxis = 1;			//y-axis as "up"
+	int upIndex = 1;	//y-axis as "up"
+	//PHY_ScalarType heightDataType = PHY_FLOAT;
+	bool useFloatData = false;
 	bool flipQuadEdges = false;
 
-	btHeightfieldTerrainShape* groundShape = new btHeightfieldTerrainShape(width, height, heightfieldData, heightScale, minHeight, maxHeight, upAxis, heightDataType, flipQuadEdges);
+	//btHeightfieldTerrainShape* groundShape = new btHeightfieldTerrainShape(width, height, heightfieldData, heightScale, minHeight, maxHeight, upAxis, heightDataType, flipQuadEdges);
+	btHeightfieldTerrainShape* groundShape = new btHeightfieldTerrainShape(width, length, heightfieldData, maxHeight, upIndex, useFloatData, flipQuadEdges);
+
+	groundShape->setUseDiamondSubdivision(true);
+
+	btVector3 localScaling(100,1,100);
+	localScaling[upIndex]=1.f;
+	groundShape->setLocalScaling(localScaling);
+
+	x,y,z = 0;	//zum test
 
 	btTransform t;
 	t.setIdentity();
