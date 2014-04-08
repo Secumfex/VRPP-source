@@ -21,6 +21,9 @@ namespace UnderwaterScene{
 	float fog_end_above_water = 10000.0f;
 	float fog_begin_above_water = 100.0f;
 
+	int   particle_amount = 100;
+	float particle_distance_max = 3.5f;
+
 	glm::vec4 watercolor(95.0f / 255.0f * 0.7f, 158.0f / 255.0f * 0.7f, 160.0f/ 255.0f * 0.7f, 0.0f);
 	glm::vec3 lightPosition(0.0f,1000.0f,0.0f);
 	glm::vec4 skycolor(135.0f / 255.0f, 206.0f / 255.0f, 250.0f / 255.0f, 0.0f);
@@ -126,8 +129,8 @@ namespace UnderwaterScene{
 		/*********************************************************************************/
 
 		/******************* particle System objects *****************************************/
-		water_particles = new ParticleSystem(target->getCamera()->getPositionPointer(), 1.0f);
-		water_particles->setParticleAmount(10);
+		water_particles = new ParticleSystem(target->getCamera()->getPositionPointer(), particle_distance_max);
+		water_particles->setParticleAmount(particle_amount);
 		target->attachListenerOnBeginningProgramCycle(new UpdateParticleSystemListener(water_particles, IOManager::getInstance()->getDeltaTimePointer()));
 		/*********************************************************************************/
 
@@ -150,7 +153,7 @@ namespace UnderwaterScene{
 		framebuffer_water_god_rays->makeDrawBuffers();	// draw color to color attachment 0
 		framebuffer_water_god_rays->unbindFBO();
 
-		framebuffer_water_particles = new FrameBufferObject(800,600);
+		framebuffer_water_particles = new FrameBufferObject(400,300);
 		framebuffer_water_particles->bindFBO();
 		framebuffer_water_particles->createPositionTexture();
 		framebuffer_water_particles->makeDrawBuffers();	// draw color to color attachment 0
