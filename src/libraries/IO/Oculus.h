@@ -1,7 +1,7 @@
 #ifndef OCULUS_H
 #define OCULUS_H
 
-#include "OVR.h"
+#include <OVR.h>
 #include "Tools/ShaderTools.h"
 #include "Oculus_Shaders.h"
 #include "Visuals/FrameBufferObject.h"

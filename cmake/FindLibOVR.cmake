@@ -1,5 +1,5 @@
 #
-# Try to find GLFW3 library and include path.
+# Try to find OculusVR library and include path.
 # Once done this will define
 #
 # LIBOVR_FOUND
@@ -13,20 +13,20 @@ IF (MINGW)
 	)
 	message(${LIBOVR_INCLUDE_PATH})
 
-    FIND_LIBRARY( OVR_LIBRARY
+    FIND_LIBRARY( LIBOVR_LIBRARY
         NAMES libovr
         PATHS
-        ${DEPENDENCIES_PATH}/LibOVR/lib/lib_mingw
+        ${DEPENDENCIES_PATH}/LibOVR/Lib/lib_mingw
     )
 
 ELSEIF (MSVC)
     FIND_PATH( LIBOVR_INCLUDE_PATH OVR.h
         ${DEPENDENCIES_PATH}/LibOVR/Include 
     )
-    FIND_LIBRARY( OVR_LIBRARY
+    FIND_LIBRARY( LIBOVR_LIBRARY
         NAMES libovr 
         PATHS
-        ${DEPENDENCIES_PATH}/LibOVR/lib/lib_vs
+        ${DEPENDENCIES_PATH}/LibOVR/Lib/lib_vs
     )
 
 ELSEIF(APPLE)
