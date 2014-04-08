@@ -30,10 +30,10 @@ void configureMyApp(){
 	myVRState->		attachListenerOnActivation(			new SetClearColorListener(0.44,0.5,0.56));					// custom background color
 	myVRState-> 	attachListenerOnActivation(			new PrintCameraStatusListener( myVRState->getCamera()));
 
-	/*
+
 	playercam = new PlayerCamera();
 	myVRState->setCamera(playercam);
-	*/
+
 
 	/*	customize virtual objects*/
 
@@ -45,11 +45,11 @@ void configureMyApp(){
 	//terrain->setPhysicsComponent(RESOURCES_PATH"/terrainTest.png", 2048, 2048, 0.0f, 0.0f, 1);
 	//myVRState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(terrain));
 
-	/*
+
 	btRigidBody* camBody = playercam->getRigidBody();
 	playercam->setPosition(0.0f,3.0f,0.0f);
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(camBody);
-	*/
+
 
 	/*
 	VirtualObject* 	cube20 = 	myVRState->	createVirtualObject(RESOURCES_PATH "/cube.obj");
@@ -85,10 +85,10 @@ void configureMyApp(){
 	SelectionHandler* sh = myVRStateIOHandler->getSelectionHandler();
 	myVRStateIOHandler->attachListenerOnMouseButtonPress(new ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener(sh, myVRState->getCamera(),50.0f), GLFW_MOUSE_BUTTON_RIGHT);
 
-	/*
+
 	myVRStateIOHandler->attachListenerOnKeyPress(new ApplyLinearImpulseOnRigidBody(playercam->getRigidBody(), btVector3(0.0f,5.0f,0.0f)), GLFW_KEY_SPACE );
 	myVRStateIOHandler->attachListenerOnKeyPress(new SetCameraPositionListener(playercam, glm::vec3(0.0f,5.0f,0.0f)), GLFW_KEY_R );
-	*/
+
 
 	/*	further customize application functionality by adding various listeners */
 	myApp->attachListenerOnProgramInitialization(	new PrintMessageListener(		string("Application is booting")));

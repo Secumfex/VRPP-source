@@ -222,25 +222,26 @@ btRigidBody* PhysicsComponent::addHeightfield(char* filename, int width, int len
 			cout << "couldn't read heightfieldData at " << filename << endl;
 		}
 	}
-	//fread(heightfieldData,1,width*height,heightfieldFile);
+	//fread(heightfieldData,1,width*height,heightfieldFile);	//for use of preferred constructor
 	fclose(heightfieldFile);
 
-	//float heightScale = 0.2;
-	//btScalar minHeight;		//min hoehe
+	//float heightScale = 0.2;									//for use of preferred constructor
+	//btScalar minHeight = 0;		//min hoehe						//for use of preferred constructor
 	btScalar maxHeight = 100;		//max hoehe
-	//int upAxis = 1;			//y-axis as "up"
-	int upIndex = 1;	//y-axis as "up"
-	//PHY_ScalarType heightDataType = PHY_FLOAT;
-	bool useFloatData = false;
+	//int upAxis = 1;			//y-axis as "up"				//for use of preferred constructor
+	int upIndex = 1;	//y-axis as "up"						//for use of legacy constructor
+	//PHY_ScalarType heightDataType = PHY_FLOAT;				//for use of preferred constructor
+	bool useFloatData = false;									//for use of legacy constructor
 	bool flipQuadEdges = false;
 
-	//btHeightfieldTerrainShape* groundShape = new btHeightfieldTerrainShape(width, height, heightfieldData, heightScale, minHeight, maxHeight, upAxis, heightDataType, flipQuadEdges);
-	btHeightfieldTerrainShape* groundShape = new btHeightfieldTerrainShape(width, length, heightfieldData, maxHeight, upIndex, useFloatData, flipQuadEdges);
+	//btHeightfieldTerrainShape* groundShape = new btHeightfieldTerrainShape(width, length, heightfieldData, heightScale, minHeight, maxHeight, upAxis, heightDataType, flipQuadEdges);	//for use of preferred constructor
+	btHeightfieldTerrainShape* groundShape = new btHeightfieldTerrainShape(width, length, heightfieldData, maxHeight, upIndex, useFloatData, flipQuadEdges);	//for use of legacy constructor
 
 	groundShape->setUseDiamondSubdivision(true);
 
 	btVector3 localScaling(100,1,100);
-	localScaling[upIndex]=1.f;
+	localScaling[upIndex]=1.f;						//for use of legacy constructor
+	//localScaling[upAxis]=1.f;						//for use of preferred constructor
 	groundShape->setLocalScaling(localScaling);
 
 	x,y,z = 0;	//zum test
@@ -250,6 +251,11 @@ btRigidBody* PhysicsComponent::addHeightfield(char* filename, int width, int len
 	t.setOrigin(btVector3(x,y,z));
 
 	float mass = 0.0;	//damit dann static
+
+	btVector3 inertia;
+	if(mass != 0.0){
+		groundShape->calculateLocalInertia(mass, inertia);
+	}
 
 	btDefaultMotionState* motion = new btDefaultMotionState(t);
 	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,groundShape);
