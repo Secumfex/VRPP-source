@@ -73,8 +73,9 @@ public:
 	FrameBufferObject* fbo; // particles target
 	ParticleSystem* particleSystem;
 	GraphicsComponent* particleGC;
+	GLint vao;
 
-	ParticlesRenderPass(FrameBufferObject* fbo, ParticleSystem* particleSystem, GraphicsComponent* particleGC);
+	ParticlesRenderPass(FrameBufferObject* fbo, ParticleSystem* particleSystem, GLint vao);
 	void update();
 };
 
@@ -214,13 +215,13 @@ public:
 /// Uploads a sinus value
 class UploadUniformSinusWaveListener : public Listener{
 private:
-	float phase;
 	float* t;
 	float frequency;
+	float phase;
 	std::string uniform_name;
 public:
-	UploadUniformSinusWaveListener(std::string name, float* t, float frequency, std::string uniform_name);
-	UploadUniformSinusWaveListener(std::string name, float t, float frequency, std::string uniform_name);
+	UploadUniformSinusWaveListener(std::string name, float* t, float frequency, float phase, std::string uniform_name);
+	UploadUniformSinusWaveListener(std::string name, float t, float frequency, float phase, std::string uniform_name);
 	void update();
 };
 
@@ -251,3 +252,6 @@ public:
 	UpdateParticleSystemListener(ParticleSystem* particleSystem, float* t);
 	void update();
 };
+
+static void createSquare();
+
