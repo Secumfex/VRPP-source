@@ -12,6 +12,7 @@
 #include "Physics/PhysicWorldSimulationListener.h"
 #include "BulletDynamics/ConstraintSolver/btPoint2PointConstraint.h"
 #include "BulletDynamics/ConstraintSolver/btGeneric6DofConstraint.h"
+#include "BulletDynamics/ConstraintSolver/btTypedConstraint.h"
 
 /*
  * A basic executable to use as starting point with our libraries
@@ -52,58 +53,84 @@ void configureApplication() {
 	floor->setPhysicsComponent(10.0f, 0.4f, 10.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1);
 
 
-	VirtualObject* cube2 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE, 0.0, 8);
-	testingState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube2));
-	testingState->attachListenerOnBeginningProgramCycle(new UpdatePhysicsComponentListener(cube2));
-	cube2->translate(glm::vec3(0, 0, 0));
-	cube2->setPhysicsComponent(0.1,0,0,0,0,0);
-	btRigidBody* rigidBody2 = cube2->getPhysicsComponent()->getRigidBody();
-	rigidBody2->setActivationState(DISABLE_DEACTIVATION);
+	VirtualObject* sphere0 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE, 0.0, 8);
+	testingState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(sphere0));
+	testingState->attachListenerOnBeginningProgramCycle(new UpdatePhysicsComponentListener(sphere0));
+	sphere0->translate(glm::vec3(0, 0, 0));
+	sphere0->setPhysicsComponent(0.1,0,0,0,0,0);
+	btRigidBody* rigidBody0 = sphere0->getPhysicsComponent()->getRigidBody();
+	//rigidBody2->setActivationState(DISABLE_DEACTIVATION);
 	btTransform t;
 	t = btTransform::getIdentity();
 	t.setOrigin(btVector3(btScalar(0.),btScalar(0.),btScalar(0.)));
 
-	VirtualObject* cube3 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE,1.0, 8);
-	testingState->attachListenerOnBeginningProgramCycle( new UpdateVirtualObjectModelMatrixListener(cube3));
-	cube3->translate(glm::vec3(0, 3, 0));
-	cube3->setPhysicsComponent(0.5,0,3,0,1,0);
-	cube3->getPhysicsComponent()->getRigidBody()->applyForce(btVector3(0,150,0),btVector3(0,0,0));
-	cube3->getPhysicsComponent()->getRigidBody()->applyDamping(150);
-	cube3->getPhysicsComponent()->getRigidBody()->setDamping(10,100);
-	cube3->getPhysicsComponent()->getRigidBody()->setGravity((cube3->getPhysicsComponent()->getRigidBody()->getGravity())+btVector3(0,150,0));
-	cube3->getPhysicsComponent()->getRigidBody()->setSleepingThresholds(1,1);
-
-	btRigidBody* rigidBody3 = cube3->getPhysicsComponent()->getRigidBody();
-	rigidBody3->setActivationState(DISABLE_DEACTIVATION);
+	VirtualObject* sphere1 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE,1.0, 8);
+	testingState->attachListenerOnBeginningProgramCycle( new UpdateVirtualObjectModelMatrixListener(sphere1));
+	sphere1->translate(glm::vec3(0, 10, 0));
+	sphere1->setPhysicsComponent(0.5,0,10,0,1,0);
+	btRigidBody* rigidBody1 = sphere1->getPhysicsComponent()->getRigidBody();
+	rigidBody1->applyForce(btVector3(0,150,0),btVector3(0,0,0));
+	rigidBody1->applyDamping(150);
+	rigidBody1->setDamping(10,100);
+	rigidBody1->setGravity((sphere1->getPhysicsComponent()->getRigidBody()->getGravity())+btVector3(0,150,0));
+	rigidBody1->setSleepingThresholds(1,1);
+	rigidBody1->setActivationState(DISABLE_DEACTIVATION);
 	btTransform s;
 	s = btTransform::getIdentity();
 	s.setOrigin(btVector3(btScalar(0.),btScalar(0.),btScalar(0.)));
 
 	VirtualObject* cube4 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE,1.0, 8);
 	testingState->attachListenerOnBeginningProgramCycle( new UpdateVirtualObjectModelMatrixListener(cube4));
-	cube4->translate(glm::vec3(0, 3, 0));
-	cube4->setPhysicsComponent(0.5,0,5,0,1,0);
-	cube4->getPhysicsComponent()->getRigidBody()->applyForce(btVector3(0,150,0),btVector3(0,0,0));
-	cube4->getPhysicsComponent()->getRigidBody()->applyDamping(150);
-	cube4->getPhysicsComponent()->getRigidBody()->setDamping(10,100);
-	cube4->getPhysicsComponent()->getRigidBody()->setGravity((cube4->getPhysicsComponent()->getRigidBody()->getGravity())+btVector3(0,150,0));
-	cube4->getPhysicsComponent()->getRigidBody()->setSleepingThresholds(1,1);
-
-	btRigidBody* rigidBody4 = cube4->getPhysicsComponent()->getRigidBody();
-	rigidBody4->setActivationState(DISABLE_DEACTIVATION);
+	cube4->translate(glm::vec3(0, 20, 0));
+	cube4->setPhysicsComponent(0.5,0,20,0,1,0);
+	btRigidBody* rigidBody2 = cube4->getPhysicsComponent()->getRigidBody();
+	rigidBody2->applyForce(btVector3(0,150,0),btVector3(0,0,0));
+	rigidBody2->applyDamping(150);
+	rigidBody2->setDamping(10,100);
+	rigidBody2->setGravity((rigidBody2->getGravity())+btVector3(0,150,0));
+	rigidBody2->setSleepingThresholds(1,1);
+	rigidBody2->setActivationState(DISABLE_DEACTIVATION);
 	btTransform r;
 	r = btTransform::getIdentity();
 	r.setOrigin(btVector3(btScalar(0.),btScalar(0.),btScalar(0.)));
 
-	btGeneric6DofConstraint* constraint23 = new btGeneric6DofConstraint(*rigidBody2, *rigidBody3, t, s, false);
-	constraint23->setLinearUpperLimit(btVector3(0.,10.,0.));
-	btGeneric6DofConstraint* constraint24 = new btGeneric6DofConstraint(*rigidBody3, *rigidBody4, s, r, false);
-	constraint24->setLinearUpperLimit(btVector3(0.,10.,0.));
+	//btGeneric6DofConstraint* constraint23 = new btGeneric6DofConstraint(*rigidBody2, *rigidBody1, t, s, false);
+
+	btGeneric6DofSpringConstraint* constraint01 = new btGeneric6DofSpringConstraint(*rigidBody0, *rigidBody1, t, s, true);
+	constraint01->setLinearUpperLimit(btVector3(0.,10.,0.));
+	constraint01->setLinearLowerLimit(btVector3(0.,10.,0.));
+	constraint01->enableSpring(0, false);
+	constraint01->enableSpring(1, false);
+	constraint01->setStiffness(0,50);
+	constraint01->setDamping(5,5);
+	constraint01->setEquilibriumPoint();
+
+	btGeneric6DofSpringConstraint* constraint12 = new btGeneric6DofSpringConstraint(*rigidBody1, *rigidBody2, s, r, true);
+	constraint12->setLinearUpperLimit(btVector3(0.,10.,0.));
+	constraint12->setLinearLowerLimit(btVector3(0.,10.,0.));
+	constraint12->enableSpring(0, false);
+	constraint12->enableSpring(1, false);
+	constraint12->setStiffness(0,50);
+	constraint12->setDamping(5,5);
+	constraint12->setEquilibriumPoint();
+
+
+	VirtualObject* cubeTop = testingState->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::OTHER, 1.0, 8);
+	testingState->attachListenerOnBeginningProgramCycle( new UpdateVirtualObjectModelMatrixListener(cubeTop));
+	cubeTop->translate(glm::vec3(0,30,0));
+	cubeTop->setPhysicsComponent(1,0,30,0,1,0);
+	btRigidBody* rigidBodyCubeTop = cubeTop->getPhysicsComponent()->getRigidBody();
+	rigidBodyCubeTop->setActivationState(DISABLE_DEACTIVATION);
+	rigidBodyCubeTop->setGravity((rigidBodyCubeTop->getGravity())+btVector3(0,-250,0));
+	rigidBodyCubeTop->applyGravity();
+	rigidBodyCubeTop->setDamping(10,10);
+	rigidBodyCubeTop->applyDamping(20);
 
 
 //	constraint23->setLinearLowerLimit(btVector3(springRestLen - springRange, 0., 0.));
-	PhysicWorld::getInstance()->dynamicsWorld->addConstraint(constraint23);
-	PhysicWorld::getInstance()->dynamicsWorld->addConstraint(constraint24);
+	PhysicWorld::getInstance()->dynamicsWorld->addConstraint(constraint01, true);
+	PhysicWorld::getInstance()->dynamicsWorld->addConstraint(constraint12, true);
+
 
 
 
