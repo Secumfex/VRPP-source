@@ -1,3 +1,5 @@
+//test class for shader
+
 #include "Application/Application.h"
 #include "Application/ApplicationStates.h"
 #include "Application/ApplicationListeners.h"
