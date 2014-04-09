@@ -13,6 +13,7 @@
 #include "BulletDynamics/ConstraintSolver/btPoint2PointConstraint.h"
 #include "BulletDynamics/ConstraintSolver/btGeneric6DofConstraint.h"
 #include "BulletDynamics/ConstraintSolver/btTypedConstraint.h"
+#include <cmath>
 
 /*
  * A basic executable to use as starting point with our libraries
@@ -62,11 +63,26 @@ void createVirtualObject(int height) {
 	transformsVec.push_back(transform_tmp);
 
 	float yPosPerVO = 0;
+	float xPosPerVO = 0;
+	float zPosPerVO = 0;
 
 	for (int i = 1; i < height; i++) {
 		yPosPerVO += 10;
+		if ( (i%2)==0){
+			xPosPerVO = 0;
+			zPosPerVO = 0;
+		}
+		else if ( (i%3) ==1){
+			xPosPerVO = 10;
+			zPosPerVO = 10;
+		}
+		else {
+			xPosPerVO =-10;
+			zPosPerVO =-10;
+		}
+
 		vo_tmp = testingState->createVirtualObject(	RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE, 1.0, 8);
-		vo_tmp->translate(glm::vec3(0, yPosPerVO, 0));
+		vo_tmp->translate(glm::vec3(xPosPerVO, yPosPerVO, zPosPerVO));
 		voVec.push_back(vo_tmp);
 		testingState->attachListenerOnBeginningProgramCycle(	new UpdateVirtualObjectModelMatrixListener(voVec[i]));
 		rb_tmp = vo_tmp->getPhysicsComponent()->getRigidBody();
