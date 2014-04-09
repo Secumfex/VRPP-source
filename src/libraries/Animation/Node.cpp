@@ -49,6 +49,8 @@ Bone* Node::getBone(){
 
 void Node::updateBone(float t, glm::mat4 parent_mat){
 
+//	std:: cout << mName << " father of ";
+
 	float next_time = t;
 
 
@@ -77,7 +79,8 @@ void Node::updateBone(float t, glm::mat4 parent_mat){
 	//	glm::mat4 transform = parent_mat * glm::mat4_cast(rotate);
 
 //	mBone->setAnimationMatrix(glm::translate(glm::mat4(1.0f), pos) * glm::toMat4(rotate) * glm::scale(glm::mat4(1.0f), scale));
-		mBone->setAnimationMatrix(transform * parent_mat);
+//		mBone->setAnimationMatrix(transform * parent_mat);
+		mBone->setAnimationMatrix(glm::translate(glm::mat4(1.0f), pos) * parent_mat);
 
 
 	unsigned int i;

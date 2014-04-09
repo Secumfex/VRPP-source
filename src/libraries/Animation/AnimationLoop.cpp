@@ -20,9 +20,12 @@ void AnimationLoop::updateNodes(float t){
 	unsigned int i;
 	float next_time = fmod(t, duration);
 
+//	std::cout << "Rootnode is ";
+
 	for (i = 0; i < mNodes.size(); ++i) {
 		mNodes[i]->updateBone(next_time);
 	}
+//	std::cout << std::endl;
 }
 void AnimationLoop::addNode(Node* node){
 	mNodes.push_back(node);

@@ -201,9 +201,9 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 			for (j = 0; j < mesh->mNumVertices; ++j) {
 				mesh->mVertices[j].Set(mesh->mVertices[j].x, mesh->mVertices[j].z, -mesh->mVertices[j].y);
 				if (mesh->HasNormals())
-				mesh->mNormals[j].Set(mesh->mNormals[j].x, mesh->mNormals[j].z, -mesh->mNormals[j].y);
+					mesh->mNormals[j].Set(mesh->mNormals[j].x, mesh->mNormals[j].z, -mesh->mNormals[j].y);
 				if (mesh->HasTangentsAndBitangents())
-				mesh->mTangents[j].Set(mesh->mTangents[j].x, mesh->mTangents[j].z, -mesh->mTangents[j].y);
+					mesh->mTangents[j].Set(mesh->mTangents[j].x, mesh->mTangents[j].z, -mesh->mTangents[j].y);
 			}
 
 
@@ -274,17 +274,29 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 				}
 				std::string name = bone->mName.C_Str();
 
-
 				Bone *myBone;
 				if(bone_map.find(name) != bone_map.end()){
 					myBone = bone_map[name];
 				}else{
 
 					myBone = new Bone(name);
+					aiVector3t<float> scale;
+					aiQuaterniont<float> rotate;
+					aiVector3t<float> translate;
+					bone->mOffsetMatrix.Decompose(scale, rotate, translate);
+
+
+
+					if(isBlender)
+						myBone->setBindPose(glm::vec3(translate.x, translate.z, -translate.y), glm::rotate(glm::quat(rotate.w, rotate.x, rotate.y, rotate.z), 90.0f, glm::vec3(1.0f, 0.0f, 0.0f)), glm::vec3(scale.x, scale.z, -scale.y));
+					else
+						myBone->setBindPose(glm::vec3(translate.x, translate.y, translate.z), glm::quat(rotate.w, rotate.x, rotate.y, rotate.z), glm::vec3(scale.x, scale.y, scale.z));
+
+
 					glm::mat4 offsetmatrix = glm::make_mat4x4(&(bone->mOffsetMatrix.a1));
 					offsetmatrix = glm::transpose(offsetmatrix);
 					if(isBlender)
-					fixBlenderMatrix(offsetmatrix);
+						fixBlenderMatrix(offsetmatrix);
 					myBone->setOffsetMatrix(offsetmatrix);
 					bone_map.insert(std::pair<std::string, Bone*>(name, myBone));
 				}
@@ -572,9 +584,8 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 AnimationLoop* VirtualObjectFactory::makeAnimation(map<std::string, Bone*> bones, const aiScene* pScene, bool isBlender){
 	AnimationLoop* myAnimation = new AnimationLoop();
 
-	cout << "Animation Tree is being build. This might take a while." << endl;
-
 	aiNode* node;
+
 
 	unsigned int i;
 	for (i = 0; i < pScene->mRootNode->mNumChildren; ++i) {
@@ -589,10 +600,10 @@ AnimationLoop* VirtualObjectFactory::makeAnimation(map<std::string, Bone*> bones
 	}
 
 	setBones(myRootNode, bones);
-
+	//todo:solve problem, lol
 	myAnimation->addNode(myRootNode);
 	myAnimation->setDuration(pScene->mAnimations[0]->mDuration);
-	myAnimation->setCorrectOffsetMatrix();
+//		myAnimation->setCorrectOffsetMatrix();
 
 	return myAnimation;
 }
@@ -603,7 +614,7 @@ vector<Node*> VirtualObjectFactory::getNodeChildren(aiNode* node){
 	unsigned int i;
 	for (i = 0; i < node->mNumChildren ; ++i) {
 		Node* temp = new Node(getNodeChildren(node->mChildren[i]));
-		temp->setName(node->mName.C_Str());
+		temp->setName(node->mChildren[i]->mName.C_Str());
 		children.push_back(temp);
 	}
 	return children;
@@ -616,7 +627,6 @@ void VirtualObjectFactory::setNodeTransform(Node* node, aiNodeAnim* nodeanim, bo
 	if(name == node->getName()){
 		for (i = 0; i < nodeanim->mNumPositionKeys; ++i) {
 			float time = nodeanim->mPositionKeys[i].mTime;
-			cout << "( " << nodeanim->mPositionKeys[i].mValue.x <<"/ " << nodeanim->mPositionKeys[i].mValue.y <<"/ " << nodeanim->mPositionKeys[i].mValue.z << ")" <<  endl;
 			glm::vec3 position = glm::vec3(nodeanim->mPositionKeys[i].mValue.x, nodeanim->mPositionKeys[i].mValue.y, nodeanim->mPositionKeys[i].mValue.z);
 			glm::vec3 scale = glm::vec3(nodeanim->mScalingKeys[i].mValue.x, nodeanim->mScalingKeys[i].mValue.y, nodeanim->mScalingKeys[i].mValue.z);
 			glm::quat rotation = glm::quat(nodeanim->mRotationKeys[i].mValue.w, nodeanim->mRotationKeys[i].mValue.x, nodeanim->mRotationKeys[i].mValue.y, nodeanim->mRotationKeys[i].mValue.z);
