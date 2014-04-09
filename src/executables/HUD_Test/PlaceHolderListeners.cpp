@@ -212,6 +212,60 @@ void ParticlesRenderPass::update(){
 		glViewport(0,0, 800, 600);
 	}
 
+HUDRenderPass::HUDRenderPass(FrameBufferObject* fbo, HUDSystem* hudSystem, GLint vao){
+		rm = RenderManager::getInstance();
+		this->fbo = fbo;
+		this->hudSystem = hudSystem;
+	//	this->particleGC = particleGC;
+		this->vao = vao;
+}
+
+void HUDRenderPass::update(){
+
+	/***************** save old state ******************/
+		FrameBufferObject* tempFBO = rm->getCurrentFBO();
+
+		fbo->bindFBO();
+		rm->setCurrentFBO(fbo);
+		Shader* currentShader;
+        glDisable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    	glViewport(0, 0, fbo->getWidth(), fbo->getHeight());
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		currentShader = rm->getCurrentShader();
+
+   /*****************render object************************/
+		vector <HUDElement* > HUDs = hudSystem->getHUDElements();
+		for (unsigned int i = 0; i < HUDs.size(); i++) {
+			currentShader->uploadUniform(glm::translate(  glm::mat4(1.0f), HUDs[i]->getPosition()),	"uniformModel");
+			currentShader->uploadUniform(rm->getCamera()->getViewMatrix(), 	"uniformView");;
+			currentShader->uploadUniform(rm->getPerspectiveMatrix(), 		"uniformPerspective");
+			currentShader->uploadUniform(1.0f, "uniformScale");
+//
+			currentShader->uploadUniform(HUDs[i]->getPosition(), "uniformParticlePosition");
+
+			glBindVertexArray(vao); // Bind our Vertex Array Object
+
+			glDrawArrays(GL_TRIANGLES, 0, 6); // Draw our square
+
+			glBindVertexArray(0); // Unbind our Vertex Array Object
+
+//			currentShader->render(particleGC);
+		}
+
+
+	/****************** back to old state *****************/
+		glDisable(GL_BLEND);
+		glEnable(GL_DEPTH_TEST);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+
+		fbo->unbindFBO();
+		rm->setCurrentFBO(tempFBO);
+		glViewport(0,0, 800, 600);
+	}
+
 
 RenderloopPlaceHolderListener::RenderloopPlaceHolderListener(VirtualObject* water_object){ 
 		rm = RenderManager::getInstance(); 

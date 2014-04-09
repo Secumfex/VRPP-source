@@ -9,6 +9,7 @@
 #include "Physics/PhysicWorldSimulationListener.h"
 
 #include "UnderwaterScene.h"
+#include "HUD.h"
 
 /*
 *	A basic executable to use as starting point with our libraries
@@ -71,6 +72,11 @@ void configureVirtualObjects(){
 	UnderwaterScene::createScene(testingState);
 
 	createSquare();
+}
+
+void configureOtherStuff(){
+	HUD::createHUD(testingState);
+
 }
 
 void configurePhysics(){
@@ -223,10 +229,6 @@ void configureRendering(){
 	testingApp->attachListenerOnRenderManagerFrameLoop( renderCompositing );
 }
 
-void configureOtherStuff(){
-	/* customization for other stuff */
-	
-}
 
 void configureApplication(){
 	/* create  minimal Application with one state */
@@ -239,10 +241,10 @@ void configureApplication(){
 	/* configure to satisfaction*/
 	configureTestingApplication();
 	configureVirtualObjects();
+	configureOtherStuff();
 	configurePhysics();
 	configureInputHandler();
 	configureRendering();
-	configureOtherStuff();
 }
 
 int main() {

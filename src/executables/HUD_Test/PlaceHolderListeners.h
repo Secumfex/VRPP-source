@@ -12,6 +12,7 @@
 #include "Visuals/VirtualObjectFactory.h"
 #include "Visuals/Shader.h"
 #include "ParticleSystem.h"
+#include "HUDSystem.h"
 
 /// Listener which renders a frame by using current Instance pointers of RenderManager
 class RenderloopPlaceHolderListener : public Listener{
@@ -76,6 +77,19 @@ public:
 	GLint vao;
 
 	ParticlesRenderPass(FrameBufferObject* fbo, ParticleSystem* particleSystem, GLint vao);
+	void update();
+};
+
+/// Listener for rendering HUD elements
+class HUDRenderPass : public Listener{
+public:
+	RenderManager* rm;
+
+	FrameBufferObject* fbo;
+	HUDSystem* hudSystem;
+	GLint vao;
+
+	HUDRenderPass(FrameBufferObject* fbo, HUDSystem* hudSystem, GLint vao);
 	void update();
 };
 
