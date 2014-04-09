@@ -30,187 +30,198 @@ PhysicsComponent* phyComp;
 //btRigidBody* Test;
 //PhysicsComponent* phyComp;
 
-void configureApplication() {
-	/* create minimal Application with one state */
-	testingApp = Application::getInstance();		//sets up Application
-	testingApp->setLabel("PROJEKT PRAKTIKUM");
+vector<VirtualObject*> voVec;
+vector<btRigidBody*> rigidBodyVec;
+vector<btTransform> transformsVec;
+vector<btGeneric6DofSpringConstraint*> constraintsVec;
+VirtualObject* vo_tmp;
+btRigidBody* rb_tmp;
+btTransform transform_tmp;
+btGeneric6DofSpringConstraint* constraint_tmp;
 
 
-	//customize VRState
-	testingState = new VRState("TESTING FRAMEWORK");
-	testingState->attachListenerOnAddingVirtualObject(	new PrintMessageListener(string("Added a VirtualObject to RenderQueue")));// console output when virtual object is added
-	testingState->attachListenerOnActivation(			new SetClearColorListener(0.44, 0.5, 0.56));// custom background color
-	testingState->attachListenerOnActivation(			new PrintCameraStatusListener(testingState->getCamera()));
-
-	cam = testingState->getCamera();
-	cam->setPosition(0,5,50);
-
-//customize VOs
-	//create Floor
-	VirtualObject* floor = testingState->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 0.0, 1);
-	glm::mat4 myModelMatrix1 = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.0f, 0.0f)),glm::vec3(5.0f, 0.2f, 5.0f));	//floor
+void createFloor() {
+	VirtualObject* floor = testingState->createVirtualObject( 	RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 0.0, 1);
+	glm::mat4 myModelMatrix1 = glm::scale(	glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.0f, 0.0f)),	glm::vec3(5.0f, 0.2f, 5.0f));	//floor
 	floor->setModelMatrix(myModelMatrix1); 	// override default Model Matrix
 	floor->setPhysicsComponent(10.0f, 0.4f, 10.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1);
 
+}
 
-	VirtualObject* sphere0 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE, 0.0, 8);
-	testingState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(sphere0));
-	testingState->attachListenerOnBeginningProgramCycle(new UpdatePhysicsComponentListener(sphere0));
-	sphere0->translate(glm::vec3(0, 0, 0));
-	sphere0->setPhysicsComponent(0.1,0,0,0,0,0);
-	btRigidBody* rigidBody0 = sphere0->getPhysicsComponent()->getRigidBody();
-	//rigidBody2->setActivationState(DISABLE_DEACTIVATION);
-	btTransform t;
-	t = btTransform::getIdentity();
-	t.setOrigin(btVector3(btScalar(0.),btScalar(0.),btScalar(0.)));
+void createVirtualObject(int height) {
 
-	VirtualObject* sphere1 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE,1.0, 8);
-	testingState->attachListenerOnBeginningProgramCycle( new UpdateVirtualObjectModelMatrixListener(sphere1));
-	sphere1->translate(glm::vec3(-20, 10, 0));
-	//sphere1->setPhysicsComponent(0.5,0,10,0,1,0);
-	btRigidBody* rigidBody1 = sphere1->getPhysicsComponent()->getRigidBody();
-	rigidBody1->applyForce(btVector3(0,50,0),btVector3(0,0,0));
-	rigidBody1->applyDamping(150);
-	rigidBody1->setDamping(10,100);
-	rigidBody1->setGravity((sphere1->getPhysicsComponent()->getRigidBody()->getGravity())+btVector3(0,150,0));
-	rigidBody1->setSleepingThresholds(1,1);
-	rigidBody1->setActivationState(DISABLE_DEACTIVATION);
-	btTransform s;
-	s = btTransform::getIdentity();
-	s.setOrigin(btVector3(btScalar(0.),btScalar(0.),btScalar(0.)));
+	vo_tmp = testingState->createVirtualObject( RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE, 0.0, 8);
+	testingState->attachListenerOnBeginningProgramCycle(	new UpdateVirtualObjectModelMatrixListener(vo_tmp));
+	testingState->attachListenerOnBeginningProgramCycle(	new UpdatePhysicsComponentListener(vo_tmp));
+	vo_tmp->translate(glm::vec3(0, 0, 0));
+	voVec.push_back(vo_tmp);
+	rb_tmp = vo_tmp->getPhysicsComponent()->getRigidBody();
+	rigidBodyVec.push_back(rb_tmp);
+	transform_tmp = btTransform::getIdentity();
+	transform_tmp.setOrigin(	btVector3(btScalar(0.), btScalar(0.), btScalar(0.)));
+	transformsVec.push_back(transform_tmp);
 
-	VirtualObject* sphere2 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE,1.0, 8);
-	testingState->attachListenerOnBeginningProgramCycle( new UpdateVirtualObjectModelMatrixListener(sphere2));
-	sphere2->translate(glm::vec3(0, 20, 0));
-	//sphere2->setPhysicsComponent(0.5,-11,20,0,1,0);
-	btRigidBody* rigidBody2 = sphere2->getPhysicsComponent()->getRigidBody();
-	rigidBody2->applyForce(btVector3(0,50,0),btVector3(0,0,0));
-	rigidBody2->applyDamping(150);
-	rigidBody2->setDamping(10,100);
-	rigidBody2->setGravity((rigidBody2->getGravity())+btVector3(0,150,0));
-	rigidBody2->setSleepingThresholds(1,1);
-	rigidBody2->setActivationState(DISABLE_DEACTIVATION);
-	btTransform r;
-	r = btTransform::getIdentity();
-	r.setOrigin(btVector3(btScalar(0.),btScalar(0.),btScalar(0.)));
+	float yPosPerVO = 0;
 
+	for (int i = 1; i < height; i++) {
+		yPosPerVO += 10;
+		vo_tmp = testingState->createVirtualObject(	RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE, 1.0, 8);
+		vo_tmp->translate(glm::vec3(0, yPosPerVO, 0));
+		voVec.push_back(vo_tmp);
+		testingState->attachListenerOnBeginningProgramCycle(	new UpdateVirtualObjectModelMatrixListener(voVec[i]));
+		rb_tmp = vo_tmp->getPhysicsComponent()->getRigidBody();
+		rb_tmp->applyForce(btVector3(10, 30, 0), btVector3(0, 0, 0));
+		rb_tmp->setDamping(.1, .1);
+		rb_tmp->setGravity((rb_tmp->getGravity()) + btVector3(0, 0, 0));
+		rb_tmp->setFriction(btScalar(250));
+		rb_tmp->setActivationState(DISABLE_DEACTIVATION);
+		rigidBodyVec.push_back(rb_tmp);
 
-	VirtualObject* sphere3 = testingState->createVirtualObject(RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE,1.0, 8);
-	testingState->attachListenerOnBeginningProgramCycle( new UpdateVirtualObjectModelMatrixListener(sphere3));
-	sphere3->translate(glm::vec3(20, 30, 0));
-	//sphere3->setPhysicsComponent(0.5,20,30,0,1,0);
-	btRigidBody* rigidBody3 = sphere3->getPhysicsComponent()->getRigidBody();
-	rigidBody3->applyForce(btVector3(0,50,0),btVector3(0,0,0));
-	rigidBody3->applyDamping(150);
-	rigidBody3->setDamping(10,100);
-	rigidBody3->setGravity((rigidBody2->getGravity())+btVector3(0,150,0));
-	rigidBody3->setSleepingThresholds(1,1);
-	rigidBody3->setActivationState(DISABLE_DEACTIVATION);
-	btTransform w;
-	w = btTransform::getIdentity();
-	w.setOrigin(btVector3(btScalar(0.),btScalar(0.),btScalar(0.)));
+		transform_tmp = btTransform::getIdentity();
+		transform_tmp.setOrigin(	btVector3(btScalar(0.), btScalar(0.), btScalar(0.)));
+		transformsVec.push_back(transform_tmp);
 
-	//btGeneric6DofConstraint* constraint23 = new btGeneric6DofConstraint(*rigidBody2, *rigidBody1, t, s, false);
+		constraint_tmp = new btGeneric6DofSpringConstraint( *rigidBodyVec[i - 1], *rigidBodyVec[i], transformsVec[i - 1], transformsVec[i], true);
+		constraint_tmp->setLinearUpperLimit(btVector3(0., 10., 0.));
+		constraint_tmp->setLinearLowerLimit(btVector3(0., 10., 0.));
+		constraint_tmp->setDamping(.1, .1);
+		constraintsVec.push_back(constraint_tmp);
+		//constraints[i-1]->internalSetAppliedImpulse(btScalar(50));
+		//constraints[i-1]->enableSpring(0, false);
+		//constraints[i-1]->setStiffness(0,50);
+		//constraints[i-1]->setEquilibriumPoint();
 
-	btGeneric6DofSpringConstraint* constraint01 = new btGeneric6DofSpringConstraint(*rigidBody0, *rigidBody1, t, s, true);
-	constraint01->setLinearUpperLimit(btVector3(0.,10.,0.));
-	constraint01->setLinearLowerLimit(btVector3(0.,10.,0.));
-	constraint01->enableSpring(0, false);
-	constraint01->enableSpring(1, false);
-	constraint01->setStiffness(0,50);
-	constraint01->setDamping(5,5);
-	constraint01->setEquilibriumPoint();
+		//	VirtualObject* cubeTop = testingState->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::OTHER, 1.0, 8);
+		//	testingState->attachListenerOnBeginningProgramCycle( new UpdateVirtualObjectModelMatrixListener(cubeTop));
+		//	cubeTop->translate(glm::vec3(0,30,0));
+		//	cubeTop->setPhysicsComponent(1,0,30,0,1,0);
+		//	btRigidBody* rigidBodyCubeTop = cubeTop->getPhysicsComponent()->getRigidBody();
+		//	rigidBodyCubeTop->setActivationState(DISABLE_DEACTIVATION);
+		//	rigidBodyCubeTop->setGravity((rigidBodyCubeTop->getGravity())+btVector3(0,-250,0));
+		//	rigidBodyCubeTop->applyGravity();
+		//	rigidBodyCubeTop->setDamping(10,10);
+		//	rigidBodyCubeTop->applyDamping(20);
 
-	btGeneric6DofSpringConstraint* constraint12 = new btGeneric6DofSpringConstraint(*rigidBody1, *rigidBody2, s, r, true);
-	constraint12->setLinearUpperLimit(btVector3(0.,10.,0.));
-	constraint12->setLinearLowerLimit(btVector3(0.,10.,0.));
-	constraint12->enableSpring(0, false);
-	constraint12->enableSpring(1, false);
-	constraint12->setStiffness(0,50);
-	constraint12->setDamping(5,5);
-	constraint12->setEquilibriumPoint();
+		//	constraint23->setLinearLowerLimit(btVector3(springRestLen - springRange, 0., 0.));
+		PhysicWorld::getInstance()->dynamicsWorld->addConstraint( constraintsVec[i-1], true);
+	}
+}
 
-	btGeneric6DofSpringConstraint* constraint23 = new btGeneric6DofSpringConstraint(*rigidBody2, *rigidBody3, r, w, true);
-	constraint23->setLinearUpperLimit(btVector3(0.,10.,0.));
-	constraint23->setLinearLowerLimit(btVector3(0.,10.,0.));
-	constraint23->enableSpring(0, false);
-	constraint23->enableSpring(1, false);
-	constraint23->setStiffness(0,50);
-	constraint23->setDamping(5,5);
-	constraint23->setEquilibriumPoint();
+void catMullRomeSpline(){
+	if(voVec.size()>= 2){
+		int pos = 0;
+		float p0x,p1x,p2x,p3x,p0y,p1y,p2y,p3y,p0z,p1z,p2z,p3z;
+		VirtualObject* vo1;
+		VirtualObject* vo2;
+		VirtualObject* vo3;
+		VirtualObject* vo4;
+		VirtualObject* cat_tmp;
+		vector<VirtualObject*>  catmullVec;
+		for (int i = 0; i < voVec.size()-2; ++i) {
+std::cout << "enter inner for" << i << " / " << voVec.size() << endl;
+			for (float T = 0.0; T < 1.0; T += 0.1) {
+				float Catmullx, Catmully, Catmullz = 0.0;
 
+				if (i==0){							//1. Element
+					vo1 = voVec[i];
+					vo2 = voVec[i];
+					if((i+1) == voVec.size()){
+						vo3 = voVec[i+1];
+						vo4 = voVec[i+1];
+					}else{
+						vo3 = voVec[i+1];
+						vo4 = voVec[i+2];
+					}
+				}
+				else if ((i+1) == (voVec.size()-1)){	//letzte Element
+					vo1 = voVec[i-1];
+					vo2 = voVec[i];
+					vo3 = voVec[i+1];
+					vo4 = voVec[i+1];
+					std::cout << "if else" << endl;
+				}
+				else{								// Mitte
+					vo1 = voVec[i-1];
+					vo2 = voVec[i];
+					vo3 = voVec[i+1];
+					vo4 = voVec[i+2];
+					std::cout << "else" << endl;
+				}
+				p0x = (vo1->getPhysicsComponent()->getPosition()).x;
+				p1x = (vo2->getPhysicsComponent()->getPosition()).x;
+				p2x = (vo3->getPhysicsComponent()->getPosition()).x;
+				p3x = (vo4->getPhysicsComponent()->getPosition()).x;
 
-//	VirtualObject* cubeTop = testingState->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::OTHER, 1.0, 8);
-//	testingState->attachListenerOnBeginningProgramCycle( new UpdateVirtualObjectModelMatrixListener(cubeTop));
-//	cubeTop->translate(glm::vec3(0,30,0));
-//	cubeTop->setPhysicsComponent(1,0,30,0,1,0);
-//	btRigidBody* rigidBodyCubeTop = cubeTop->getPhysicsComponent()->getRigidBody();
-//	rigidBodyCubeTop->setActivationState(DISABLE_DEACTIVATION);
-//	rigidBodyCubeTop->setGravity((rigidBodyCubeTop->getGravity())+btVector3(0,-250,0));
-//	rigidBodyCubeTop->applyGravity();
-//	rigidBodyCubeTop->setDamping(10,10);
-//	rigidBodyCubeTop->applyDamping(20);
+				p0y = (vo1->getPhysicsComponent()->getPosition()).y;
+				p1y = (vo2->getPhysicsComponent()->getPosition()).y;
+				p2y = (vo3->getPhysicsComponent()->getPosition()).y;
+				p3y = (vo4->getPhysicsComponent()->getPosition()).y;
 
+				p0z = (vo1->getPhysicsComponent()->getPosition()).z;
+				p1z = (vo2->getPhysicsComponent()->getPosition()).z;
+				p2z = (vo3->getPhysicsComponent()->getPosition()).z;
+				p3z = (vo4->getPhysicsComponent()->getPosition()).z;
 
-//	constraint23->setLinearLowerLimit(btVector3(springRestLen - springRange, 0., 0.));
-	PhysicWorld::getInstance()->dynamicsWorld->addConstraint(constraint01, true);
-	PhysicWorld::getInstance()->dynamicsWorld->addConstraint(constraint12, true);
-	PhysicWorld::getInstance()->dynamicsWorld->addConstraint(constraint23, true);
+				Catmullx =(T * ((2.0 * p1x) + ((p2x - p0x) * T) + (((2.0 * p0x) - (5.0 * p1x) + (4.0 * p2x) - p3x) * (T * T))
+						+ (((3.0 * p1x) - p0x - (3.0 * p2x) + p3x) * (T * T * T))));
+				Catmully = (T * ((2.0 * p1y) + ((p2y - p0y) * T) + ((2.0 * p0y - 5.0 * p1y + 4.0 * p2y - p3y) * (T * T))
+						+ ((3.0 * p1y - p0y - 3.0 * p2y + p3y) * (T * T * T))));
+				Catmullz = (T * ((2.0 * p1z) + ((p2z - p0z) * T) + ((2.0 * p0z - 5.0 * p1z + 4.0 * p2z - p3z) * (T * T))
+						+ ((3.0 * p1z - p0z - 3.0 * p2z + p3z) * (T * T * T))));
 
-	//CatmullRomeSpline
-	int xyz=0;
-	for (float T=0.0;T<1.0; T+=0.1){
-		float Catmullx,Catmully,Catmullz=0.0;
-		xyz++;
-		float p0x=(sphere0->getPhysicsComponent()->getPosition()).x;
-		float p1x=(sphere1->getPhysicsComponent()->getPosition()).x;
-		float p2x=(sphere2->getPhysicsComponent()->getPosition()).x;
-		float p3x=(sphere3->getPhysicsComponent()->getPosition()).x;
-			float p0y=(sphere0->getPhysicsComponent()->getPosition()).y;
-			float p1y=(sphere1->getPhysicsComponent()->getPosition()).y;
-			float p2y=(sphere2->getPhysicsComponent()->getPosition()).y;
-			float p3y=(sphere3->getPhysicsComponent()->getPosition()).y;
-				float p0z=(sphere0->getPhysicsComponent()->getPosition()).z;
-				float p1z=(sphere1->getPhysicsComponent()->getPosition()).z;
-				float p2z=(sphere2->getPhysicsComponent()->getPosition()).z;
-				float p3z=(sphere3->getPhysicsComponent()->getPosition()).z;
-		Catmullx = (T*((2.0*p1x)+((p2x-p0x)*T)+(((2.0*p0x)-(5.0*p1x)+(4.0*p2x)-p3x)*(T*T))+(((3.0*p1x)-p0x-(3.0*p2x)+p3x)*(T*T*T))));
-		Catmully = (T*((2.0*p1y)+((p2y-p0y)*T)+((2.0*p0y - 5.0*p1y + 4.0*p2y - p3y) * (T * T))+((3.0*p1y -p0y - 3.0 * p2y + p3y) * (T * T * T))));
-		Catmullz = (T*((2.0*p1z)+((p2z-p0z)*T)+((2.0*p0z - 5.0*p1z + 4.0*p2z - p3z) * (T * T))+((3.0*p1z -p0z - 3.0 * p2z + p3z) * (T * T * T))));
-		VirtualObject* xyz = testingState->createVirtualObject(RESOURCES_PATH "/sphere.obj", VirtualObjectFactory::SPHERE,0.0, 8);
-		testingState->attachListenerOnBeginningProgramCycle( new UpdateVirtualObjectModelMatrixListener(xyz));
-		xyz->translate(glm::vec3(Catmullx, Catmully, Catmullz));
+				cat_tmp = testingState->createVirtualObject( RESOURCES_PATH "/sphere.obj", VirtualObjectFactory::SPHERE, 0.0, 8);
+				cat_tmp->translate(glm::vec3(Catmullx, Catmully, Catmullz));
+				catmullVec.push_back(cat_tmp);
+				testingState->attachListenerOnBeginningProgramCycle( new UpdateVirtualObjectModelMatrixListener(catmullVec[pos]));
+				pos++;
+			}
 		}
+	}
+std::cout << "End of for" << endl;
+}
 
 
+void configureApplication() {
+/* create minimal Application with one state */
+testingApp = Application::getInstance();		//sets up Application
+testingApp->setLabel("PROJEKT PRAKTIKUM");
+
+testingState = new VRState("TESTING FRAMEWORK");
+testingState->attachListenerOnAddingVirtualObject(		new PrintMessageListener( string("Added a VirtualObject to RenderQueue")));// console output when virtual object is added
+testingState->attachListenerOnActivation(		new SetClearColorListener(0.44, 0.5, 0.56));// custom background color
+testingState->attachListenerOnActivation(		new PrintCameraStatusListener(testingState->getCamera()));
+
+cam = testingState->getCamera();
+cam->setPosition(0, 15, 75);
 
 
-	testingState->attachListenerOnBeginningProgramCycle(new PhysicWorldSimulationListener(IOManager::getInstance()->getDeltaTimePointer()));// updates physics simulation
+createFloor();
+createVirtualObject(5);
+catMullRomeSpline();
 
-	testingInputHandler = testingState->getIOHandler();
-	testingInputHandler->attachListenerOnKeyPress(		new TerminateApplicationListener(testingApp), GLFW_KEY_ESCAPE);
-	testingInputHandler->attachListenerOnKeyPress(		new SetCameraPositionListener(testingState->getCamera(),glm::vec3(0.0f, 0.1f, 0.0)), GLFW_KEY_SPACE);
+testingState->attachListenerOnBeginningProgramCycle(	new PhysicWorldSimulationListener(	IOManager::getInstance()->getDeltaTimePointer()));// updates physics simulation
 
-	/*	further customize application functionality by adding various listeners */
-	testingApp->attachListenerOnProgramInitialization(	new PrintMessageListener(string("Application is booting")));
-	testingApp->attachListenerOnProgramTermination(		new PrintMessageListener(string("Application is terminating")));
-	testingApp->attachListenerOnBeginningProgramCycle(	new PhysicWorldSimulationListener(IOManager::getInstance()->getDeltaTimePointer()));
+testingInputHandler = testingState->getIOHandler();
+testingInputHandler->attachListenerOnKeyPress(			new TerminateApplicationListener(testingApp), GLFW_KEY_ESCAPE);
+testingInputHandler->attachListenerOnKeyPress(			new SetCameraPositionListener(testingState->getCamera(), glm::vec3(0.0f, 0.1f, 0.0)), GLFW_KEY_SPACE);
+testingInputHandler->attachListenerOnKeyPress( 			new ApplyLinearImpulseOnRigidBody(rigidBodyVec[3], btVector3(50, 0, 0)), GLFW_KEY_1);
 
-	testingApp->attachListenerOnProgramInitialization(	new SetDefaultShaderListener(
-														new Shader(SHADERS_PATH "/Phong/phong.vert", SHADERS_PATH "/Phong/phong.frag")));
-	testingApp->attachListenerOnRenderManagerFrameLoop(	new RenderloopPlaceHolderListener());
+std::cout << "Zeile 200" << endl;
 
-	std::cout<< PhysicWorld::getInstance()->dynamicsWorld->getNumCollisionObjects() << endl;
+testingApp->attachListenerOnProgramInitialization( 		new PrintMessageListener(string("Application is booting")));
+testingApp->attachListenerOnProgramTermination(			new PrintMessageListener(string("Application is terminating")));
+testingApp->attachListenerOnBeginningProgramCycle(		new PhysicWorldSimulationListener(	IOManager::getInstance()->getDeltaTimePointer()));
+testingApp->attachListenerOnProgramInitialization(		new SetDefaultShaderListener(	new Shader(SHADERS_PATH "/Phong/phong.vert", SHADERS_PATH "/Phong/phong.frag")));
+testingApp->attachListenerOnRenderManagerFrameLoop(		new RenderloopPlaceHolderListener());
 
-	/*	add customized states to application state pool*/
-	testingApp->addState(testingState);
+std::cout << PhysicWorld::getInstance()->dynamicsWorld->getNumCollisionObjects() << endl;
+
+testingApp->addState(testingState);
 }
 
 int main() {
 
 	configureApplication();	// 1 do some customization
-
 	testingApp->run();	// 2 run application
-
 	return 0;	// 3 end :)
 }
