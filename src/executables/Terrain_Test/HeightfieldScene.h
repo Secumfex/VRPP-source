@@ -12,6 +12,8 @@ namespace HeightfieldScene{
 
 	//FBOs
 	FrameBufferObject* fboGround;
+	FrameBufferObject* fboNormals;
+	FrameBufferObject* fboGloss;
 
 	//Camera
 	Camera* camera;
@@ -20,6 +22,11 @@ namespace HeightfieldScene{
 	Texture* ground1;
 	Texture* ground2;
 	Texture* mask;
+
+	Texture* normals1;	//normalmaps
+	Texture* normals2;
+
+	//glossmaps
 
 	static void createScene(ApplicationState* state){
 
@@ -37,6 +44,11 @@ namespace HeightfieldScene{
 		ground1 = new Texture(RESOURCES_PATH"/Heightfield/seamlessSandTest.jpg");
 		ground2 = new Texture(RESOURCES_PATH"/Heightfield/seamlessStonesTest.jpg");
 		mask = new Texture(RESOURCES_PATH"/Heightfield/terrainTest.png");
+
+		normals1 = new Texture(RESOURCES_PATH"/Heightfield/seamlessSandTestNormal.jpg");	//normalmaps
+		normals2 = new Texture(RESOURCES_PATH"/Heightfield/seamlessStonesNormals.jpg");
+
+		//glossmaps
 
 		//Camera
 

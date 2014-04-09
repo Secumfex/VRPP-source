@@ -59,7 +59,10 @@ void configRendering(){
 	Listener* uniTex2 = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",2,"uniformTexture2",HeightfieldScene::ground2->getTextureHandle());
 	Listener* uniMask = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",3,"uniformTextureMask",HeightfieldScene::mask->getTextureHandle());
 
+	Listener* uniNorm1 = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",4,"uniformNormals1",HeightfieldScene::normals1->getTextureHandle());	//normalmaps
+	Listener* uniNorm2 = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",5,"uniformNormals2",HeightfieldScene::normals2->getTextureHandle());
 
+	//glossmaps
 
 	Listener* unbindCurrentFBO = new UnbindFrameBufferObjectListener();
 
@@ -69,6 +72,12 @@ void configRendering(){
 	myApp->attachListenerOnRenderManagerFrameLoop(uniTex1);
 	myApp->attachListenerOnRenderManagerFrameLoop(uniTex2);
 	myApp->attachListenerOnRenderManagerFrameLoop(uniMask);
+
+	myApp->attachListenerOnRenderManagerFrameLoop(uniNorm1);	//normalmaps
+	myApp->attachListenerOnRenderManagerFrameLoop(uniNorm2);
+
+	//glossmaps
+
 	TerrainRenderPass* renderTerrain = new TerrainRenderPass(HeightfieldScene::fboGround);
 	myApp->attachListenerOnRenderManagerFrameLoop(renderTerrain);
 }

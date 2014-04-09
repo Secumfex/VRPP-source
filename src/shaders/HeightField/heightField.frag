@@ -8,6 +8,8 @@ uniform sampler2D uniformTexture1;
 uniform sampler2D uniformTexture2;
 uniform sampler2D uniformTextureMask;
 
+uniform sampler2D uniformNormals1;
+uniform sampler2D uniformNormals2;
 
 void main() { 
 
@@ -16,6 +18,10 @@ vec4 color2 = texture2D(uniformTexture2,uvCoordPass);
 vec4 mask = texture2D(uniformTextureMask,uvCoordPass);
 
 gl_FragColor = mix(color1,color2,mask.r);
-g
 
+//normals mit maske und in fbo
+//normals normalisieren
+//phong mit normals
+
+//selbe mit glossmaps
 }

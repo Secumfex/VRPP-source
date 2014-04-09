@@ -23,4 +23,5 @@ uvCoordPass = uvCoordAttr;
 positionPass = (uniformView*uniformModel*positionAttr).xyz;
 
 normalPass = normalize((uniformInverse*normalAttr).xyz);
+
 }
