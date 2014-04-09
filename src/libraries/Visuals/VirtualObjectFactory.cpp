@@ -569,8 +569,8 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 	//feste heightmap werte zum testen
 	char MapFilename[] = RESOURCES_PATH"/Heightfield/heightfield128x128.raw";	//terrainTest.raw	heightfield128x128.raw
 	char* heightMapFilename = MapFilename;
-	int mapWidth = 128;															//2018
-	int mapHeight = 128;														//2048
+	//int mapWidth = 128;															//2018
+	//int mapHeight = 128;														//2048
 	//
 
 	switch(bodyType)
@@ -581,7 +581,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 			break;
 		case SPHERE:	virtualObject->setPhysicsComponent((physics_max.x-physics_min.x)/2.0, (physics_max.x-physics_min.x)/2.0+physics_min.x, (physics_max.y-physics_min.y)/2.0+physics_min.y, (physics_max.z-physics_min.z)/2.0+physics_min.z, mass, collisionFlag);
 			break;
-		case TERRAIN:	virtualObject->setPhysicsComponent(heightMapFilename,mapWidth,mapHeight,x,y,z);
+		case TERRAIN:	virtualObject->setPhysicsComponent(heightMapFilename,x,y,z);
 			break;
 		case OTHER:		virtualObject->setPhysicsComponent(physics_min, physics_max, mass, collisionFlag);
 			break;

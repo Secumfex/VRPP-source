@@ -100,6 +100,7 @@ public:
 	 * @param bodyType
 	 * @param mass
 	 * @param collisionFlag
+	 * @param blenderAxes
 	 * @return VirtualObject reference
 	 */
 	VirtualObject* createVirtualObject(std::string path, VirtualObjectFactory::BodyType bodyType = VirtualObjectFactory::OTHER, float mass = 0.0, int collisionFlag = 1, bool blenderAxes = false); //!< create Object from path and add it to renderQueue

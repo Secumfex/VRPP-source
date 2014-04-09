@@ -70,11 +70,10 @@ public:
 	 * creates a heightfield as virtual object
 	 * creates physicComponent as a heightfield as well
 	 * @param filename filename of the heightfield picture
-	 * @param width,height resolution of the heightmap image
 	 * @param x,y,z start position in the world
 	 * no mass param because floor has to be a static object
 	 */
-	VirtualObject(char* filename,int width, int height, float x, float y, float z);
+	VirtualObject(char* filename, float x, float y, float z);
 
 	/** \brief destructor
 	 *
@@ -184,12 +183,11 @@ public:
 	 *
 	 * creates PhysicComponent with heightfield rigid Body
 	 * @param filename filename of the heightfield picture
-	 * @param width,height resolution of the heightmap image
 	 * @param x,y,z start position in the world
 	 * no mass param because floor has to be a static object
 	 * @return void
 	 */
-	void setPhysicsComponent(char* filename,int width, int height, float x, float y, float z);
+	void setPhysicsComponent(char* filename, float x, float y, float z);
 
 	/** \brief getter
 	 *

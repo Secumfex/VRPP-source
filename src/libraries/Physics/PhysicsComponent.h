@@ -3,7 +3,8 @@
 
 #include <glm/glm.hpp>
 #include "btBulletDynamicsCommon.h"
-
+#include <iostream>
+#include "Tools/stb_image.h"
 
 using namespace std;
 
@@ -78,10 +79,9 @@ public:
 	 *
 	 * constructor to create a heightfieldterrainshaped rigid body (btHeightfieldTerrainShape).
 	 * @param filename filename of the heightfield picture
-	 * @param width,height resolution of the heightmap image
 	 * @param x,y,z start position in the world
 	 */
-	PhysicsComponent(char* filename,int width, int height, float x, float y, float z);
+	PhysicsComponent(char* filename, float x, float y, float z);
 
 	/** \brief destructor
 	*
@@ -169,11 +169,10 @@ public:
 	 *
 	 * creates a heightfield rigid body with all necessary parts
 	 * @param filename name of the heightfield picture
-	 * @param width,height resolution of the heightmap image
 	 * @param x,y,z start position in the world
 	 * @return a bullet rigid body
 	 */
-	btRigidBody* addHeightfield(char* filename, int width, int height, float x, float y, float z);
+	btRigidBody* addHeightfield(string filename, float x, float y, float z);
 
 
 	/** \brief getter

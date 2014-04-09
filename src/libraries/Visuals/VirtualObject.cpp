@@ -35,8 +35,8 @@ VirtualObject::VirtualObject(float width, float height, float depth, float x, fl
 	physicsComponent->update(this);
 }
 
-VirtualObject::VirtualObject(char* filename,int width, int height, float x, float y, float z){
-	physicsComponent = new PhysicsComponent(filename,width,height,x,y,z);
+VirtualObject::VirtualObject(char* filename, float x, float y, float z){
+	physicsComponent = new PhysicsComponent(filename,x,y,z);
 
 	physicsComponent->update(this);
 }
@@ -146,11 +146,11 @@ void VirtualObject::setPhysicComponent(float x, float y, float z, glm::vec3 norm
 
 }
 
-void VirtualObject::setPhysicsComponent(char* filename,int width, int height, float x, float y, float z){
+void VirtualObject::setPhysicsComponent(char* filename, float x, float y, float z){
 	if(physicsComponent != NULL){
 		physicsComponent->~PhysicsComponent();
 	}
-	physicsComponent = new PhysicsComponent(filename,width,height,x,y,z);
+	physicsComponent = new PhysicsComponent(filename,x,y,z);
 }
 
 glm::mat4 VirtualObject::getModelMatrix(){
