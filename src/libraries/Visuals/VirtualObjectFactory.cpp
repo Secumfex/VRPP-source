@@ -635,7 +635,6 @@ void VirtualObjectFactory::setNodeTransform(Node* node, aiNodeAnim* nodeanim, bo
 }
 
 void VirtualObjectFactory::setBones(Node* node, map<std::string, Bone*> bones){
-	//TODO: fix problem here
 
 	if(bones.find(node->getName()) != bones.end()){
 		node->setBone(bones[node->getName()]);

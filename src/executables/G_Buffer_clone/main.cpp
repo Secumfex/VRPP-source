@@ -150,7 +150,7 @@ int main() {
 		//rotation angle
 		angle = fmod((float)(angle+rotationSpeed*glfwGetTime()), (float)(pi<float>()*2.0f));
 
-//		animation->updateNodes(angle);
+		animation->updateNodes(angle);
 
 		glfwSetTime(0.0);
 

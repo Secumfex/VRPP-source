@@ -59,8 +59,6 @@ void Node::updateBone(float t, glm::mat4 parent_mat){
 		}
 		return;}
 
-	std::cout << "YOOO hier kommt er hin "<< mName << std::endl;
-
 	int index = getTimeIndex(t);
 	int index02 = (index + 1) % mTimes.size();
 	float start = mTimes[index];
