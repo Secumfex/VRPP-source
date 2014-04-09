@@ -8,10 +8,7 @@
 
 namespace HUD{
 
-	FrameBufferObject* framebuffer_HUD = new FrameBufferObject(800, 600);
-
-	framebuffer_HUD->bindFBO();
-
+	FrameBufferObject* framebuffer_HUD;
 
 }
 
