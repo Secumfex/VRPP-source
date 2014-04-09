@@ -18,8 +18,8 @@ using namespace glm;
 
 void AlternativeRenderloopListener::update(){
         glEnable(GL_DEPTH_TEST);
-        glClear(GL_DEPTH_BUFFER_BIT);
-    	glViewport(0, 0, 800, 600);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glViewport(0, 0, 800, 600);
 
 
 		//activate the current shader
@@ -27,6 +27,7 @@ void AlternativeRenderloopListener::update(){
 		if (currentShader != 0){
 			currentShader->useProgram();
 		}
+        else std::cout<<"Please SET Shader!"<<endl;
 		
 		//get renderQueue	
 		currentRenderQueue = rm->getRenderQueue(); 
@@ -54,6 +55,9 @@ void AlternativeRenderloopListener::update(){
 		}	
 	}
 
+
+
+
 SetAlternativeDefaultRenderManagerPointersListener::SetAlternativeDefaultRenderManagerPointersListener(){
 	rm = RenderManager::getInstance();
 }
@@ -62,6 +66,15 @@ void SetAlternativeDefaultRenderManagerPointersListener::update(){
 	Shader* shader = new Shader( SHADERS_PATH "/chest_test/chest_phong.vert", SHADERS_PATH "/chest_test/chest_phong.frag"); 
 	rm->setCurrentShader(shader);
 }	
+
+SetCurrentShaderListener::SetCurrentShaderListener(Shader* shader){
+	rm = RenderManager::getInstance();
+	this->shader = shader;}
+
+void SetCurrentShaderListener::update(){
+	rm->setCurrentShader(shader);
+	shader->useProgram();
+}
 
 SetClearColorListener::SetClearColorListener(float r, float g, float b, float a){
 	this->r = r;
@@ -86,9 +99,26 @@ void AnimateRotatingModelMatrixListener::update(){
     angle = fmod((float)(angle+0.001), (float)(pi<float>()*2.0f));
 
 	glm::mat4 new_modelMatrix = glm::translate(glm::rotate(glm::mat4(1.0f), glm::degrees(angle), glm::vec3(1.0f, 1.0f, 0.0f)), glm::vec3(0.0f, 0.5f, -0.5f));
-       
+    
+    glm::mat4 new_modelMatrix2 = glm::translate(glm::rotate(glm::mat4(1.0f), glm::degrees(angle), glm::vec3(1.0f, 1.0f, 0.0f)), glm::vec3(0.0f, 0.5f, 0.5f));
+    
 	vo->setModelMatrix(new_modelMatrix);
+    vo->getGraphicsComponent()[1]->setModelMatrixGc(new_modelMatrix2);
 }
+
+/* my Listener for animate a GraphicComponent */
+AnimateGraphicComponentListener::AnimateGraphicComponentListener(GraphicsComponent* gc){
+    this->gc=gc;
+    angle = 0.0;
+}
+
+void AnimateGraphicComponentListener::update(){
+    angle=fmod((float)(angle+0.001), (float)(pi<float>()*2.0f));
+
+    glm::mat4 new_modelMatrix2 = glm::translate(glm::rotate(glm::mat4(1.0f), glm::degrees(angle), glm::vec3(1.0f, 1.0f, 0.0f)), glm::vec3(0.0f, 0.5f, -0.5f));
+    
+    gc->setModelMatrixGc(new_modelMatrix2);
+};
 
 AnimateSinusModelMatrixListener::AnimateSinusModelMatrixListener(VirtualObject* vo){
 	this->vo = vo;
@@ -208,3 +238,96 @@ void CreateVirtualObjectListener::update(){
     
 }
 
+SetFrameBufferObjectListener::SetFrameBufferObjectListener( FrameBufferObject* fbo){
+	this->fbo = fbo;
+}
+
+void SetFrameBufferObjectListener::update(){
+	if( fbo != 0){
+		RenderManager::getInstance()->setCurrentFBO( fbo );
+		fbo->bindFBO();
+	}
+}
+
+UnbindFrameBufferObjectListener::UnbindFrameBufferObjectListener(){
+}
+
+void UnbindFrameBufferObjectListener::update(){
+	FrameBufferObject* currentFBO = RenderManager::getInstance()->getCurrentFBO();
+	if (currentFBO != 0){
+		currentFBO->unbindFBO();
+	}
+	RenderManager::getInstance()->setCurrentFBO( 0 );
+}
+
+ReflectionMapRenderPass::ReflectionMapRenderPass(FrameBufferObject* fbo){
+    rm = RenderManager::getInstance();
+    this->fbo = fbo;
+  }
+
+void ReflectionMapRenderPass::update(){
+    /***************** save old state ******************/
+    FrameBufferObject* tempFBO = rm->getCurrentFBO();
+    
+    /***************** set shader state and get ready to draw ***************/
+    fbo->bindFBO();	// From now on, everything will be written into ColorAttachment0
+
+    rm->setCurrentFBO(fbo);
+    
+    glEnable(GL_DEPTH_TEST);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+    glViewport(0, 0, fbo->getWidth(), fbo->getHeight());
+    
+    currentShader = rm->getCurrentShader();
+    currentRenderQueue = rm->getRenderQueue();
+    
+    /***************** render objects ***************/
+    //render GCs with current Shader
+    if ( currentRenderQueue != 0 ){
+        voList = currentRenderQueue->getVirtualObjectList();	//get List of all VOs in RenderQueue
+        //for every VO
+        for (std::list<VirtualObject* >::iterator i = voList.begin(); i != voList.end(); ++i) {	//get GCs of VO
+
+            currentGCs = (*i)->getGraphicsComponent();
+            //for every GC
+            for (unsigned int j = 0; j < currentGCs.size(); j++){
+                rm->setCurrentGC(currentGCs[j]);
+                rm->getCurrentVO();
+                
+                //tell Shader to upload all Uniforms
+                currentShader->uploadAllUniforms();
+                //render the GC
+                currentShader->render(currentGCs[j]);
+            }
+            
+        }
+    }
+    /****************** back to old state *****************/
+    fbo->unbindFBO();	
+    rm->setCurrentFBO(tempFBO);
+    
+}
+
+RenderGraphicsComponentListener::RenderGraphicsComponentListener(GraphicsComponent* gc){
+	this->gc = gc;
+}
+
+void RenderGraphicsComponentListener::update(){
+	if( gc != 0){
+		RenderManager::getInstance()->setCurrentGC(gc);
+		RenderManager::getInstance()->getCurrentShader()->uploadAllUniforms();
+		RenderManager::getInstance()->getCurrentShader()->render(gc);
+	}
+}
+
+RenderScreenFillingTriangleListener::RenderScreenFillingTriangleListener(){
+	this->gc = VirtualObjectFactory::getInstance()->getTriangle();
+}
+
+void RenderScreenFillingTriangleListener::update(){
+	glDisable(GL_DEPTH_TEST);
+	RenderGraphicsComponentListener::update();
+	glEnable(GL_DEPTH_TEST);
+    
+}

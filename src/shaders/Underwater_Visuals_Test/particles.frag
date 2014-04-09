@@ -7,5 +7,5 @@ out vec4 fragmentColor;
 uniform sampler2D uniformParticleTexture;
 
 void main() {
-    fragmentColor = texture2D(uniformParticleTexture, passUVCoords);
+    fragmentColor = texture(uniformParticleTexture, passUVCoords);
 }

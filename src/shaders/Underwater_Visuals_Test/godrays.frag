@@ -69,8 +69,8 @@ void main() {
         projectedSampleUVCoords0 += sampling_offset0;
         projectedSampleUVCoords1 += sampling_offset1;
         
-        vec3 sample_color0   = texture2D( uniformCausticsTexture, projectedSampleUVCoords0 ).rgb;
-        vec3 sample_color1   = texture2D( uniformCausticsTexture, projectedSampleUVCoords1 ).rgb;
+        vec3 sample_color0   = texture( uniformCausticsTexture, projectedSampleUVCoords0 ).rgb;
+        vec3 sample_color1   = texture( uniformCausticsTexture, projectedSampleUVCoords1 ).rgb;
         vec3 sample_color    = ( sample_color0 + sample_color1 ) * ( depth_factor ); 
         
         god_ray_strength += sample_color * sample_color;

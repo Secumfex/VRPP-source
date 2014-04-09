@@ -29,6 +29,16 @@ public:
 	void update();
 };
 
+/// Listener which sets the Phont_Test Shader as the RenderManagers current Shader
+class SetCurrentShaderListener : public Listener{
+private:
+	RenderManager* rm;
+	Shader* shader;
+public:
+	SetCurrentShaderListener(Shader* shader);
+	void update();
+};
+
 /// Listener which sets the glClearColor
 class SetClearColorListener : public Listener {
 private:
@@ -47,6 +57,16 @@ private:
 public:
 	AnimateRotatingModelMatrixListener(VirtualObject* vo);
 	void update();
+};
+
+/// my Listener for animate a GraphicComponent
+class AnimateGraphicComponentListener : public Listener{
+private:
+    GraphicsComponent* gc;
+    float angle;
+public:
+    AnimateGraphicComponentListener(GraphicsComponent* gc);
+    void update();
 };
 
 /// Listener which moves the Model Matrix on a sinus curve by a tiny bit on every update
@@ -135,4 +155,57 @@ public:
 	CreateVirtualObjectListener(string path, glm::vec3 position, ApplicationState* state, float random_offset = 0.0f, VirtualObjectFactory::BodyType bodyType= VirtualObjectFactory::OTHER, float mass = 2.0f);
 	void update();
 };
+
+/// Sets the current FrameBufferObject
+class SetFrameBufferObjectListener : public Listener {
+private:
+	FrameBufferObject* fbo;
+public:
+	SetFrameBufferObjectListener( FrameBufferObject* fbo);
+	void update();
+};
+
+
+/// Unbinds the current FrameBufferObject
+class UnbindFrameBufferObjectListener : public Listener {
+public:
+	UnbindFrameBufferObjectListener();
+	void update();
+};
+
+
+/// Listener which uses an FBO as Render Target, activates certain camera, and ignores the water_object
+class ReflectionMapRenderPass : public Listener{
+public:
+	RenderManager* rm;
+	RenderQueue* currentRenderQueue;
+	list<VirtualObject* > voList;
+	Shader* currentShader;
+	vector<GraphicsComponent* > currentGCs;
+    
+	/*außerdem*/
+	FrameBufferObject* fbo; // reflectionmap target
+
+    
+	ReflectionMapRenderPass(FrameBufferObject* fbo);
+	void update();
+};
+
+/// Renders a single GraphicsComponent
+class RenderGraphicsComponentListener : public Listener{
+protected:
+	GraphicsComponent* gc;
+public:
+	RenderGraphicsComponentListener(GraphicsComponent* gc = 0);
+	virtual void update();
+};
+
+
+/// Renders a Screen Filling Triangle
+class RenderScreenFillingTriangleListener : public RenderGraphicsComponentListener{
+public:
+	RenderScreenFillingTriangleListener();
+	void update();
+};
+
 

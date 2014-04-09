@@ -239,8 +239,13 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 	for (unsigned int n = 0; n < pScene->mNumMeshes; ++n)
 	{
 		const aiMesh* mesh = pScene->mMeshes[n];
-
-
+        
+        /* name of each GraphicComponent */
+        const aiString name_gc = pScene->mMeshes[n]->mName;
+        std::string str( name_gc.data, name_gc.length );
+        std::cout <<"GraphicComponent: " << str <<endl;
+    
+        
 		//Our Material and Mash to be filled
 		Mesh* aMesh = new Mesh();
 		Material* aMat = new Material();
@@ -309,6 +314,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 		}
 		if (mesh->HasTangentsAndBitangents()) {
+            cout << "HAS TANGENT SPACE"<<endl;
 			glGenBuffers(1, &buffer);
 			glBindBuffer(GL_ARRAY_BUFFER, buffer);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(float)*3*mesh->mNumVertices, mesh->mTangents, GL_STATIC_DRAW);
