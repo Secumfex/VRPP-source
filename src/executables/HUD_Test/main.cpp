@@ -94,12 +94,14 @@ void configureRendering(){
 	Shader* godRay_shader 		= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/godrays.vert"		, SHADERS_PATH 	"/Underwater_Visuals_Test/godrays.frag");
 	Shader* water_shader 		= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/water.vert"		, SHADERS_PATH 	"/Underwater_Visuals_Test/water.frag");
 	Shader* particles_shader	= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/particles.vert"	, SHADERS_PATH  "/Underwater_Visuals_Test/particles.frag");
-	Shader *composition_shader  = new Shader( SHADERS_PATH "/Underwater_Visuals_Test/screenFill.vert"	, SHADERS_PATH  "/Underwater_Visuals_Test/finalCompositing.frag");
+	Shader* composition_shader  = new Shader( SHADERS_PATH "/Underwater_Visuals_Test/screenFill.vert"	, SHADERS_PATH  "/Underwater_Visuals_Test/finalCompositing.frag");
+	Shader* HUDShader			= new Shader( SHADERS_PATH "/HUD/HUD.vert"								, SHADERS_PATH  "/HUD/HUD.frag");
 
 	FrameBufferObject* preCompositingScene = new FrameBufferObject(800, 600);
 	preCompositingScene->bindFBO();
 	preCompositingScene->createPositionTexture();
 	preCompositingScene->makeDrawBuffers();	// draw color to color attachment 0
+
 	preCompositingScene->unbindFBO();
 
 	Listener* uniCamPos		= new UploadUniformVec3Listener		("UNIFORMUPLOADLISTENER", testingState->getCamera()->getPositionPointer(), 		"uniformCameraWorldPos");
