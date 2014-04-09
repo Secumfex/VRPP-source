@@ -27,10 +27,6 @@ IOHandler* testingInputHandler;
 Camera* cam;
 PhysicsComponent* phyComp;
 
-//Seetang* Sea;
-//btRigidBody* Test;
-//PhysicsComponent* phyComp;
-
 vector<VirtualObject*> voVec;
 vector<btRigidBody*> rigidBodyVec;
 vector<btTransform> transformsVec;
@@ -40,6 +36,20 @@ btRigidBody* rb_tmp;
 btTransform transform_tmp;
 btGeneric6DofSpringConstraint* constraint_tmp;
 
+
+void configureApplication() {
+/* create minimal Application with one state */
+testingApp = Application::getInstance();		//sets up Application
+testingApp->setLabel("PROJEKT PRAKTIKUM");
+
+testingState = new VRState("TESTING FRAMEWORK");
+testingState->attachListenerOnAddingVirtualObject(		new PrintMessageListener( string("Added a VirtualObject to RenderQueue")));// console output when virtual object is added
+testingState->attachListenerOnActivation(		new SetClearColorListener(0.44, 0.5, 0.56));// custom background color
+testingState->attachListenerOnActivation(		new PrintCameraStatusListener(testingState->getCamera()));
+
+cam = testingState->getCamera();
+cam->setPosition(0, 15, 75);
+}
 
 void createFloor() {
 	VirtualObject* floor = testingState->createVirtualObject( 	RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 0.0, 1);
@@ -107,17 +117,6 @@ void createVirtualObject(int height) {
 		//constraints[i-1]->setStiffness(0,50);
 		//constraints[i-1]->setEquilibriumPoint();
 
-		//	VirtualObject* cubeTop = testingState->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::OTHER, 1.0, 8);
-		//	testingState->attachListenerOnBeginningProgramCycle( new UpdateVirtualObjectModelMatrixListener(cubeTop));
-		//	cubeTop->translate(glm::vec3(0,30,0));
-		//	cubeTop->setPhysicsComponent(1,0,30,0,1,0);
-		//	btRigidBody* rigidBodyCubeTop = cubeTop->getPhysicsComponent()->getRigidBody();
-		//	rigidBodyCubeTop->setActivationState(DISABLE_DEACTIVATION);
-		//	rigidBodyCubeTop->setGravity((rigidBodyCubeTop->getGravity())+btVector3(0,-250,0));
-		//	rigidBodyCubeTop->applyGravity();
-		//	rigidBodyCubeTop->setDamping(10,10);
-		//	rigidBodyCubeTop->applyDamping(20);
-
 		//	constraint23->setLinearLowerLimit(btVector3(springRestLen - springRange, 0., 0.));
 		PhysicWorld::getInstance()->dynamicsWorld->addConstraint( constraintsVec[i-1], true);
 	}
@@ -134,7 +133,6 @@ void catMullRomeSpline(){
 		VirtualObject* cat_tmp;
 		vector<VirtualObject*>  catmullVec;
 		for (int i = 0; i < voVec.size()-2; ++i) {
-std::cout << "enter inner for" << i << " / " << voVec.size() << endl;
 			for (float T = 0.0; T < 1.0; T += 0.1) {
 				float Catmullx, Catmully, Catmullz = 0.0;
 
@@ -154,14 +152,12 @@ std::cout << "enter inner for" << i << " / " << voVec.size() << endl;
 					vo2 = voVec[i];
 					vo3 = voVec[i+1];
 					vo4 = voVec[i+1];
-					std::cout << "if else" << endl;
 				}
 				else{								// Mitte
 					vo1 = voVec[i-1];
 					vo2 = voVec[i];
 					vo3 = voVec[i+1];
 					vo4 = voVec[i+2];
-					std::cout << "else" << endl;
 				}
 				p0x = (vo1->getPhysicsComponent()->getPosition()).x;
 				p1x = (vo2->getPhysicsComponent()->getPosition()).x;
@@ -193,51 +189,46 @@ std::cout << "enter inner for" << i << " / " << voVec.size() << endl;
 			}
 		}
 	}
-std::cout << "End of for" << endl;
 }
+/*
+ * Neue Klasse Seagras physics component, erbt von PhysicsComponent
+ * kriegt den Vector von den Catmulls
+ * kriegt die Objekte, die mit Joints verbunden sind
+ * Ein Grafik Objekt, durch mehrer Physikcomponentne beschrieben -> neu schreiben
+ * Modelmatrix Rückgabe durch unterstes Objekt
+ * Jede Kugel muss ihre Position per UniformListener an den Shader übergeben werden
+ * Grafik Komponente des Shaders (auch ableiten/neu machen)
+ * 			-> statischer Buffer der die unterschiedlichen T's hochladen
+ * 			Liste T 0.1 bis n       -> Samplepunkte
+ * 			Kontrollpunkte aus den Objekten selber von der physikengine
+ * 			Spline im Shader implementieren
+ */
 
+void listenersEtc(){
+	testingState->attachListenerOnBeginningProgramCycle(	new PhysicWorldSimulationListener(	IOManager::getInstance()->getDeltaTimePointer()));// updates physics simulation
 
-void configureApplication() {
-/* create minimal Application with one state */
-testingApp = Application::getInstance();		//sets up Application
-testingApp->setLabel("PROJEKT PRAKTIKUM");
+	testingInputHandler = testingState->getIOHandler();
+	testingInputHandler->attachListenerOnKeyPress(			new TerminateApplicationListener(testingApp), GLFW_KEY_ESCAPE);
+	testingInputHandler->attachListenerOnKeyPress(			new SetCameraPositionListener(testingState->getCamera(), glm::vec3(0.0f, 0.1f, 0.0)), GLFW_KEY_SPACE);
+	testingInputHandler->attachListenerOnKeyPress( 			new ApplyLinearImpulseOnRigidBody(rigidBodyVec[3], btVector3(50, 0, 0)), GLFW_KEY_1);
 
-testingState = new VRState("TESTING FRAMEWORK");
-testingState->attachListenerOnAddingVirtualObject(		new PrintMessageListener( string("Added a VirtualObject to RenderQueue")));// console output when virtual object is added
-testingState->attachListenerOnActivation(		new SetClearColorListener(0.44, 0.5, 0.56));// custom background color
-testingState->attachListenerOnActivation(		new PrintCameraStatusListener(testingState->getCamera()));
+	testingApp->attachListenerOnProgramInitialization( 		new PrintMessageListener(string("Application is booting")));
+	testingApp->attachListenerOnProgramTermination(			new PrintMessageListener(string("Application is terminating")));
+	testingApp->attachListenerOnBeginningProgramCycle(		new PhysicWorldSimulationListener(	IOManager::getInstance()->getDeltaTimePointer()));
+	testingApp->attachListenerOnProgramInitialization(		new SetDefaultShaderListener(	new Shader(SHADERS_PATH "/Phong/phong.vert", SHADERS_PATH "/Phong/phong.frag")));
+	testingApp->attachListenerOnRenderManagerFrameLoop(		new RenderloopPlaceHolderListener());
 
-cam = testingState->getCamera();
-cam->setPosition(0, 15, 75);
+	std::cout << PhysicWorld::getInstance()->dynamicsWorld->getNumCollisionObjects() << endl;
 
-
-createFloor();
-createVirtualObject(5);
-catMullRomeSpline();
-
-testingState->attachListenerOnBeginningProgramCycle(	new PhysicWorldSimulationListener(	IOManager::getInstance()->getDeltaTimePointer()));// updates physics simulation
-
-testingInputHandler = testingState->getIOHandler();
-testingInputHandler->attachListenerOnKeyPress(			new TerminateApplicationListener(testingApp), GLFW_KEY_ESCAPE);
-testingInputHandler->attachListenerOnKeyPress(			new SetCameraPositionListener(testingState->getCamera(), glm::vec3(0.0f, 0.1f, 0.0)), GLFW_KEY_SPACE);
-testingInputHandler->attachListenerOnKeyPress( 			new ApplyLinearImpulseOnRigidBody(rigidBodyVec[3], btVector3(50, 0, 0)), GLFW_KEY_1);
-
-std::cout << "Zeile 200" << endl;
-
-testingApp->attachListenerOnProgramInitialization( 		new PrintMessageListener(string("Application is booting")));
-testingApp->attachListenerOnProgramTermination(			new PrintMessageListener(string("Application is terminating")));
-testingApp->attachListenerOnBeginningProgramCycle(		new PhysicWorldSimulationListener(	IOManager::getInstance()->getDeltaTimePointer()));
-testingApp->attachListenerOnProgramInitialization(		new SetDefaultShaderListener(	new Shader(SHADERS_PATH "/Phong/phong.vert", SHADERS_PATH "/Phong/phong.frag")));
-testingApp->attachListenerOnRenderManagerFrameLoop(		new RenderloopPlaceHolderListener());
-
-std::cout << PhysicWorld::getInstance()->dynamicsWorld->getNumCollisionObjects() << endl;
-
-testingApp->addState(testingState);
+	testingApp->addState(testingState);
 }
-
 int main() {
 
 	configureApplication();	// 1 do some customization
+	createFloor();
+	createVirtualObject(5);
+	catMullRomeSpline();
+	listenersEtc();
 	testingApp->run();	// 2 run application
 	return 0;	// 3 end :)
 }
