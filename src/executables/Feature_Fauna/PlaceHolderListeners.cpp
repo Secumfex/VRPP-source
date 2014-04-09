@@ -245,3 +245,12 @@ SetClearColorListener::SetClearColorListener(float r, float g, float b, float a)
 void SetClearColorListener::update(){
 		glClearColor(r,g,b,a);
 }
+
+ApplyLinearImpulseOnRigidBody::ApplyLinearImpulseOnRigidBody(btRigidBody* rigidBody, btVector3 force){
+	this->rigidBody = rigidBody;
+	this->force = force;
+}
+
+void ApplyLinearImpulseOnRigidBody::update(){
+	rigidBody->applyCentralImpulse(btVector3(force));
+}

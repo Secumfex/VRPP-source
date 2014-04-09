@@ -151,4 +151,15 @@ public:
 	void update();
 };
 
+class btRigidBody; class btVector3;
+
+class ApplyLinearImpulseOnRigidBody : public Listener{
+private:
+	btRigidBody* rigidBody;
+	btVector3 force;
+public:
+	ApplyLinearImpulseOnRigidBody(btRigidBody* rigidBody, btVector3 force);
+	void update();
+};
+
 
