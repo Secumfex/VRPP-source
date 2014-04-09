@@ -10,6 +10,9 @@
 #include "Visuals/Frustum.h"
 
 
+
+
+
 /// RenderManager is a Singleton and can be called by getInstance(), it is also a Subject
 class RenderManager : public Singleton<RenderManager>, public Subject{
 	friend class Singleton <RenderManager>;  //nötig damit Singleton Zugriff auf private und protected Membervariablen von RenderManager hat
@@ -145,7 +148,15 @@ public:
 	 */
 	glm::mat4 getLightPerspectiveMatrix(int index);
 
+	/**
+	*
+	* \brief get depth information from Kinect
+	* @param des
+	* @return positive/negative force
+	*/
 
+
+	float getKinectData(GLubyte* dest);
 	/** \brief !docu pls!
 	 *
 	 */

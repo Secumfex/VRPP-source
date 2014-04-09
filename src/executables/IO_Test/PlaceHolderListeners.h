@@ -1,5 +1,6 @@
 #include "Patterns/Listener.h"
-
+#include "Kinect.h"
+/*
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
@@ -11,6 +12,13 @@
 #include "Visuals/RenderManager.h"
 #include "Visuals/Shader.h"
 #include "IO/SelectionHandler.h"
+#include "IO/PlayerCamera.h"
+*/
+
+
+
+
+
 
 /// Listener which renders a frame by using current Instance pointers of RenderManager
 class RenderloopPlaceHolderListener : public Listener{
@@ -64,6 +72,15 @@ private:
 	glm::vec3 position;
 public:
 	SetCameraPositionListener(Camera* cam, glm::vec3 position);
+	void update();
+};
+
+class ApplyForceOnCameraListener : public Listener {
+private:
+	PlayerCamera* cam;
+	float* strength;
+public:
+	ApplyForceOnCameraListener(PlayerCamera* cam, float* strength);
 	void update();
 };
 

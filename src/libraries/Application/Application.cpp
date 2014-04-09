@@ -7,6 +7,12 @@
 
 #include "ApplicationListeners.h"
 #include "IO/IOListeners.h"
+
+
+
+
+
+
 //Application starts in the Idle State
 Application::Application(std::string label){
 	initialized = false;
@@ -84,6 +90,9 @@ void Application::run(){
 	}
 
 	while (!shouldTerminate){
+
+	
+
 		notify("BEGINNINGPROGRAMCYCLELISTENER");	// notify listeners of beginning program cycle
 
 		currentState->notify("BEGINNINGPROGRAMCYCLELISTENER");		// notify listeners of active state of beginning program cycle

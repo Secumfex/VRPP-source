@@ -7,87 +7,20 @@
 #include "IO/PlayerCamera.h"
 #include "Physics/PhysicWorld.h"
 #include "Physics/PhysicWorldSimulationListener.h"
+
+
+
 /*
 *	This executable tests various Input/Output related functionalities
 */	
 
 
-
+Kinect			kinect;
 Application* 	testingApp;
 VRState* 		testingState;
 IOHandler*   	testingInputHandler;
 VirtualObject*  cowObject;
 PlayerCamera*   playercam;
-
-// OpenGL Variables
-GLuint textureId;              // ID of the texture to contain Kinect RGB Data
-GLubyte data[640*480*4];  // BGRA array containing the texture data
-
-
-// Kinect variables
-HANDLE depthStream;              // The identifier of the Kinect's RGB Camera
-INuiSensor* sensor;            // The kinect sensor
-        
-
-bool initKinect() {
-    // Get a working kinect sensor
-    int numSensors;
-   // if (NuiGetSensorCount(&numSensors) < 0 || numSensors < 1) return false;
-   // if (NuiCreateSensorByIndex(0, &sensor) < 0) return false;
-
-    // Initialize sensor
-    sensor->NuiInitialize(NUI_INITIALIZE_FLAG_USES_DEPTH | NUI_INITIALIZE_FLAG_USES_SKELETON);
-    sensor->NuiImageStreamOpen(
-        NUI_IMAGE_TYPE_DEPTH,            // Depth camera or rgb camera?
-        NUI_IMAGE_RESOLUTION_640x480,    // Image resolution
-        0,      // Image stream flags, e.g. near mode
-        2,      // Number of frames to buffer
-        NULL,   // Event handle
-        &depthStream);
-    return sensor;
-}
-
-
- 
-void getKinectData(GLubyte* dest) {
-    NUI_IMAGE_FRAME imageFrame;
-    NUI_LOCKED_RECT LockedRect;
-    if (sensor->NuiImageStreamGetNextFrame(depthStream, 0, &imageFrame) < 0) return;
-    INuiFrameTexture* texture = imageFrame.pFrameTexture;
-    texture->LockRect(0, &LockedRect, NULL, 0);
-
-	if (LockedRect.Pitch != 0)
-    {
-        const BYTE* curr = (const BYTE*) LockedRect.pBits;
-        const BYTE* dataEnd = curr + (640*480)*4;
-
-        while (curr < dataEnd) {
-            *dest++ = *curr++;
-        }
-    }
-    texture->UnlockRect(0);
-    sensor->NuiImageStreamReleaseFrame(depthStream, &imageFrame);
-}
-
-
-
-void drawKinectData() {
-    glBindTexture(GL_TEXTURE_2D, textureId);
-    getKinectData(data);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 640, 480, GL_BGRA, GL_UNSIGNED_BYTE, (GLvoid*)data);
-         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glBegin(GL_QUADS);
-        glTexCoord2f(0.0f, 0.0f);
-        glVertex3f(0, 0, 0);
-        glTexCoord2f(1.0f, 0.0f);
-        glVertex3f(640, 0, 0);
-        glTexCoord2f(1.0f, 1.0f);
-        glVertex3f(640, 480, 0.0f);
-        glTexCoord2f(0.0f, 1.0f);
-        glVertex3f(0, 480, 0.0f);
-    glEnd();
-}
-
 
 
 
@@ -151,7 +84,7 @@ void configureInputHandler(){
 
 	SelectionHandler* sh = testingInputHandler->getSelectionHandler();
 	testingInputHandler->attachListenerOnMouseButtonPress(new ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener(sh, testingState->getCamera(),50.0f), GLFW_MOUSE_BUTTON_RIGHT);
-
+	testingApp->attachListenerOnRenderManagerFrameLoop(new ApplyForceOnCameraListener(playercam , kinect.force) );
 }
 
 void configureRendering(){
@@ -184,13 +117,17 @@ void configureApplication(){
 
 int main() {
 	
-	initKinect();
-
 	
+
+
+//directionForce=&direction;
+	
+	kinect.initKinect();
+	kinect.force=&kinect.forceDirection;
 	configureApplication();	// 1 do some customization
 
 	testingApp->run();		// 2 run application
-
+	
 	return 0;				// 3 end :)
 }
 

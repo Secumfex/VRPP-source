@@ -2,6 +2,8 @@
 
 #define PI 3.14159265f
 
+
+
 Camera::Camera(){
 	xPosition = 0.0;
 	yPosition = 0.0;

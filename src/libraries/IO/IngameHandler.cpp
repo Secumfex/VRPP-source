@@ -39,7 +39,7 @@ void IngameHandler::key_callback(GLFWwindow* window, int key, int scancode, int 
 
 			// Move forward
 			if (key == GLFW_KEY_W && action == GLFW_PRESS){
-				camObject->setSpeedForward(speed_movement);
+				camObject->setSpeedForward(speed_movement); //insert direction
 
 			}
 

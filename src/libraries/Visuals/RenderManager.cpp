@@ -23,6 +23,9 @@
 using namespace glm;
 
 
+
+
+
 void RenderManager::setRenderQueue(RenderQueue* currentRQ){
 	mRenderqueue = currentRQ;
 }
@@ -143,6 +146,9 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 	}
 }
 
+
+
+
 void RenderManager::libInit(){
 
 	std::cout<<"Initializing glew/glfw libraries.."<<std::endl;
@@ -199,6 +205,8 @@ void RenderManager::renderLoop(){
 	if(!glfwWindowShouldClose(window)){ //if window is not about to close
 		glfwMakeContextCurrent(window);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		
 
 		notify("FRAMELISTENER");      //notify all listeners labeled FRAMELISTENER
 

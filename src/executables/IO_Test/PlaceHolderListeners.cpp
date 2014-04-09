@@ -1,5 +1,4 @@
 #include "PlaceHolderListeners.h"
-
 #include <iostream>
 #include <typeinfo>
 
@@ -80,11 +79,25 @@ void TurnCameraListener::update(){
 	cam->setTheta(old_theta + delta_theta);
 }
 
+ ApplyForceOnCameraListener::ApplyForceOnCameraListener(PlayerCamera* cam, float* strength){
+	 this->cam=cam;
+	 this->strength= strength;
+}
+
+ void ApplyForceOnCameraListener::update(){
+ btRigidBody* rigidBody = cam->getRigidBody();
+ glm::vec3 force = cam->getViewDirection() * *strength;
+			rigidBody->applyCentralImpulse(btVector3(force.x,force.y,force.z));	
+ }
+
+
 ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener::ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener(SelectionHandler* selectionHandler, Camera* cam, float strength){
 	this->selectionHandler = selectionHandler;
 	this->cam = cam;
 	this->strength = strength; 
 }
+
+
 
 void ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener::update(){
 	if (selectionHandler->somethingIsSelected()){

@@ -7,6 +7,10 @@
 
 using namespace std;
 
+
+
+
+
 /** @brief Camera here means a first person camera.
  *	a Camera is a construct consisting only of a position and a view direction
  *  it can return a view matrix
