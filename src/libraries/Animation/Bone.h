@@ -24,6 +24,7 @@ public:
 	virtual ~Bone();
 
 	void setOffsetMatrix(glm::mat4 offsetmatrix);
+	void setInverseSceneMatrix(glm::mat4 inversematrix);
 	void setBindPose(glm::vec3 trans, glm::quat rot, glm::vec3 scale);
 	void setAnimationMatrix(glm::mat4 animationmatrix);
 	glm::mat4 getOffsetMatrix();
@@ -35,6 +36,7 @@ protected:
 	std::string mName;
 
 	glm::mat4 mOffsetMatrix;
+	glm::mat4 mInverseMatrix;
 	glm::mat4 mAnimationMatrix;
 
 	glm::vec3 mTranslation;

@@ -151,8 +151,9 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 	);
 
+	//todo: scenen transformation bla
 
-
+	glm::mat4 inversesceneMatrix = glm::inverse(glm::transpose(glm::make_mat4x4(&(pScene->mRootNode->mTransformation.a1))));
 
 	// Melden, falls der Import nicht funktioniert hat
 	if( !pScene)
@@ -197,6 +198,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 		}
 
 		unsigned int j=0;
+
 		if(isBlender)
 			for (j = 0; j < mesh->mNumVertices; ++j) {
 				mesh->mVertices[j].Set(mesh->mVertices[j].x, mesh->mVertices[j].z, -mesh->mVertices[j].y);
@@ -603,7 +605,7 @@ AnimationLoop* VirtualObjectFactory::makeAnimation(map<std::string, Bone*> bones
 	//todo:solve problem, lol
 	myAnimation->addNode(myRootNode);
 	myAnimation->setDuration(pScene->mAnimations[0]->mDuration);
-//		myAnimation->setCorrectOffsetMatrix();
+	//		myAnimation->setCorrectOffsetMatrix();
 
 	return myAnimation;
 }
@@ -615,6 +617,11 @@ vector<Node*> VirtualObjectFactory::getNodeChildren(aiNode* node){
 	for (i = 0; i < node->mNumChildren ; ++i) {
 		Node* temp = new Node(getNodeChildren(node->mChildren[i]));
 		temp->setName(node->mChildren[i]->mName.C_Str());
+
+
+		glm::mat4 sceneMatrix = glm::make_mat4x4(&(node->mChildren[i]->mTransformation.a1));
+		sceneMatrix = glm::rotate(glm::mat4(), 90.0f, glm::vec3(1.0f, 0.0f, 0.0f)) * glm::transpose(sceneMatrix);
+		cout << node->mChildren[i]->mName.C_Str() << " " << glm::to_string(sceneMatrix) << endl;
 		children.push_back(temp);
 	}
 	return children;
@@ -624,17 +631,31 @@ void VirtualObjectFactory::setNodeTransform(Node* node, aiNodeAnim* nodeanim, bo
 	std::string name = nodeanim->mNodeName.C_Str();
 
 	unsigned int i;
+
 	if(name == node->getName()){
 		for (i = 0; i < nodeanim->mNumPositionKeys; ++i) {
 			float time = nodeanim->mPositionKeys[i].mTime;
+
 			glm::vec3 position = glm::vec3(nodeanim->mPositionKeys[i].mValue.x, nodeanim->mPositionKeys[i].mValue.y, nodeanim->mPositionKeys[i].mValue.z);
 			glm::vec3 scale = glm::vec3(nodeanim->mScalingKeys[i].mValue.x, nodeanim->mScalingKeys[i].mValue.y, nodeanim->mScalingKeys[i].mValue.z);
 			glm::quat rotation = glm::quat(nodeanim->mRotationKeys[i].mValue.w, nodeanim->mRotationKeys[i].mValue.x, nodeanim->mRotationKeys[i].mValue.y, nodeanim->mRotationKeys[i].mValue.z);
-			if(isBlender){
-				position = glm::vec3(position.x, position.z, -position.y);
-				rotation = glm::rotate(rotation, -90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-				scale = glm::vec3(scale.x, scale.z, -scale.y);
-			}
+			//			if(isBlender){
+			//				position = glm::vec3(position.x, position.z, -position.y);
+			//				rotation = glm::quat(rotation.w, rotation.x, rotation.z, -rotation.y);
+			//				scale = glm::vec3(scale.x, scale.z, -scale.y);
+			//			}
+
+			//			glm::vec4(nodeanim->mRotationKeys[i].mValue.
+
+			//			cout << "Round " << i << " is blender: "<< isBlender <<endl;
+			//			cout << glm::to_string(position) << endl;
+			//			cout << glm::to_string(scale) << endl;
+			//			cout << glm::to_string(glm::vec4(rotation.w, rotation.x, rotation.y, rotation.z)) << endl;
+			//
+			glm::mat4 transform = glm::mat4_cast(rotation) * glm::translate(glm::mat4(1.0f), position)  * glm::scale(glm::mat4(1.0f), scale);
+
+			cout << name << " is da shit " << glm::to_string(transform) << endl;
+
 			node->addTransformation(position, scale, rotation, time);
 		}
 	}

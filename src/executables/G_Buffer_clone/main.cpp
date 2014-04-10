@@ -162,7 +162,7 @@ int main() {
 		//nice rotation of a small cube
 		mat4 modelMatrix02 = translate(rotate(scale(mat4(), vec3(0.25f, 0.25f, 0.25f)), degrees(angle), vec3(1.0f, 1.0f, 0.0f)), vec3(0.0f, 1.5f, -0.5f));
 
-		mat4 modelMatrix03 = scale(translate(rotate(mat4(), degrees(angle), vec3(0.0f, 1.0f, 0.0f)), vec3(0.0, 0.0, 0.0)), vec3(0.25f, 0.25f, 0.25f));
+		mat4 modelMatrix03 = scale(rotate(mat4(), 90.0f, vec3(0.0f, 1.0f, 0.0f)), vec3(0.25f, 0.25f, 0.25f));
 
 		object01->setModelMatrix(modelMatrix01);
 		object02->setModelMatrix(modelMatrix02);
