@@ -48,15 +48,22 @@ void Bone::setAnimationMatrix(glm::mat4 animationmatrix){
 glm::mat4 Bone::getOffsetMatrix(){
 	return mOffsetMatrix;
 }
+glm::mat4 Bone::getInverseMatrix(){
+	return mInverseMatrix;
+}
 
 glm::mat4 Bone::getAnimationMatrix(){
 	return mAnimationMatrix;
 }
 
 glm::mat4 Bone::getBoneMatrix(){
-	//	return glm::inverse(mOffsetMatrix) * mAnimationMatrix;
-	//	return glm::mat4() * glm::inverse(mOffsetMatrix) ;
-	return mOffsetMatrix * mAnimationMatrix;
-//		return mOffsetMatrix * glm::mat4();
-	//	return mOffsetMatrix ;
+
+	std::cout << mName << std::endl;
+	std::cout <<"ani " << glm::to_string(mAnimationMatrix) << std::endl;
+	std::cout <<"inv " << glm::to_string(mInverseMatrix) << std::endl;
+	std::cout <<"ina " << glm::to_string(glm::inverse(mInverseMatrix) * mAnimationMatrix) << std::endl;
+	std::cout <<"ina " << glm::to_string(mAnimationMatrix * glm::inverse(mInverseMatrix)) << std::endl;
+	std::cout <<"off " << glm::to_string(mOffsetMatrix) << std::endl << std::endl;
+
+	return mOffsetMatrix * glm::inverse(mInverseMatrix) * mAnimationMatrix;
 }

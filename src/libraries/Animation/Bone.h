@@ -28,6 +28,7 @@ public:
 	void setBindPose(glm::vec3 trans, glm::quat rot, glm::vec3 scale);
 	void setAnimationMatrix(glm::mat4 animationmatrix);
 	glm::mat4 getOffsetMatrix();
+	glm::mat4 getInverseMatrix();
 	glm::mat4 getAnimationMatrix();
 	glm::mat4 getBoneMatrix();
 	std::string getName();

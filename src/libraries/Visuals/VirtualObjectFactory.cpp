@@ -287,7 +287,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 					aiVector3t<float> translate;
 					bone->mOffsetMatrix.Decompose(scale, rotate, translate);
 
-
+					myBone->setInverseSceneMatrix(inversesceneMatrix);
 
 					if(isBlender)
 						myBone->setBindPose(glm::vec3(translate.x, translate.z, -translate.y), glm::rotate(glm::quat(rotate.w, rotate.x, rotate.y, rotate.z), 90.0f, glm::vec3(1.0f, 0.0f, 0.0f)), glm::vec3(scale.x, scale.z, -scale.y));
@@ -298,7 +298,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 					glm::mat4 offsetmatrix = glm::make_mat4x4(&(bone->mOffsetMatrix.a1));
 					offsetmatrix = glm::transpose(offsetmatrix);
 					if(isBlender)
-						fixBlenderMatrix(offsetmatrix);
+						offsetmatrix = inversesceneMatrix * offsetmatrix;
 					myBone->setOffsetMatrix(offsetmatrix);
 					bone_map.insert(std::pair<std::string, Bone*>(name, myBone));
 				}
@@ -618,10 +618,6 @@ vector<Node*> VirtualObjectFactory::getNodeChildren(aiNode* node){
 		Node* temp = new Node(getNodeChildren(node->mChildren[i]));
 		temp->setName(node->mChildren[i]->mName.C_Str());
 
-
-		glm::mat4 sceneMatrix = glm::make_mat4x4(&(node->mChildren[i]->mTransformation.a1));
-		sceneMatrix = glm::rotate(glm::mat4(), 90.0f, glm::vec3(1.0f, 0.0f, 0.0f)) * glm::transpose(sceneMatrix);
-		cout << node->mChildren[i]->mName.C_Str() << " " << glm::to_string(sceneMatrix) << endl;
 		children.push_back(temp);
 	}
 	return children;

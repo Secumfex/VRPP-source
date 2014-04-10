@@ -49,8 +49,6 @@ Bone* Node::getBone(){
 
 void Node::updateBone(float t, glm::mat4 parent_mat){
 
-//	std:: cout << mName << " father of ";
-
 	float next_time = t;
 
 
@@ -70,18 +68,19 @@ void Node::updateBone(float t, glm::mat4 parent_mat){
 	end = end - start;
 	t = t / end;
 
-//	std::cout << "first " << glm::to_string(mPositions[index]) << std::endl;
-//	std::cout << "second " <<glm::to_string(mPositions[index02]) << std::endl;
+	glm::mat4 inverseMatrix = mBone->getInverseMatrix();
 
 	glm::vec3 pos = (mPositions[index] * (1 - t)) + (mPositions[index02] * t);
 	glm::vec3 scale = (mScales[index] * (1 - t)) + (mScales[index02] * t);
 	glm::quat rotate = glm::lerp(mRotations[index], mRotations[index02], t);
-	std::cout << mName << "  " <<glm::to_string(glm::vec4(rotate.w, rotate.x, rotate.y, rotate.z)) << std::endl;
+
+
+
+	//	std::cout << mName << "  " <<glm::to_string(glm::vec4(rotate.w, rotate.x, rotate.y, rotate.z)) << std::endl;
 
 //	glm::mat4 transform = parent_mat * glm::translate(glm::mat4(1.0f), pos) * glm::mat4_cast(rotate) * glm::scale(glm::mat4(1.0f), scale);
-	glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * glm::scale(glm::mat4(1.0f), scale);
-//	glm::mat4 transform = glm::mat4_cast(rotate) * glm::translate(glm::mat4(1.0f), pos)  * glm::scale(glm::mat4(1.0f), scale);
-//		glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos);
+//	glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * glm::scale(glm::mat4(1.0f), scale);
+	glm::mat4 transform = glm::mat4_cast(rotate) * glm::translate(glm::mat4(1.0f), pos)  * glm::scale(glm::mat4(1.0f), scale);
 
 //	mBone->setAnimationMatrix(glm::translate(glm::mat4(1.0f), pos) * glm::toMat4(rotate) * glm::scale(glm::mat4(1.0f), scale));
 //		mBone->setAnimationMatrix(transform * parent_mat);
