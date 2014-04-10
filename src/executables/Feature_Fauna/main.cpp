@@ -191,9 +191,10 @@ void catMullRomeSpline(){
 	}
 }
 /*
- * Neue Klasse Seagras physics component, erbt von PhysicsComponent
- * kriegt den Vector von den Catmulls
- * kriegt die Objekte, die mit Joints verbunden sind
+ * Neue Klasse Seagras physics component, erbt von PhysicsComponent  		-> SeaGrasPhysicsComponent #include PhysicsComponent.h
+ * kriegt den Vector von den Catmulls										vector aus GraphicsComponents? Oder doch eigene Klasse ?!
+ * kriegt die Objekte, die mit Joints verbunden sind						-> vector aus btGeneric6dofCoinstraints
+ *
  * Ein Grafik Objekt, durch mehrer Physikcomponentne beschrieben -> neu schreiben
  * Modelmatrix Rückgabe durch unterstes Objekt
  * Jede Kugel muss ihre Position per UniformListener an den Shader übergeben werden
