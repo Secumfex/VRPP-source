@@ -2,45 +2,58 @@
 #include "Seetang.h"
 using namespace std;
 
-float x=0;
-float y=0;
-float z=0;
-
-vector<VirtualObject*> mVOVec;
-
-
-Seetang::Seetang(){
-	mVOVec[0]->createVirtualObject(RESOURCES_PATH "/sphere.obj", VirtualObjectFactory::SPHERE, 1.0, 8);
-	mVOVec[0].addSphere(1.0,x,y,z,0.0);
-	mVOVec[0]->setDamping(5,100);
-	mVOVec[0]->setSleepingThresholds(1,1);
-	mVOVec[0]->applyForce(btVector3(0,0,0),btVector3(0,0,0));
+Seetang::Seetang() {
 
 }
 
-//VirtualObject SetUpGroundTarget(){
-//
-//
-//return 0;
-//}
+vector<btRigidBody*> rb_vec;
+vector<btTransform*> transform_vec;
+vector<btGeneric6DofSpringConstraint*> constraint_vec;
+btTransform transform_tmp;
+btGeneric6DofSpringConstraint* constraint_tmp;
 
-VirtualObject SetUpFurtherTarget(){
-	for (int i = 1; i < 5; i++) {
-		mVOVec[i].addSphere(1.0,x,y+5.0,z,1.0);
-		y+=5.0;
-		mVOVec[i]->setDamping(-3,100);
-		mVOVec[i]->setSleepingThresholds(1,1);
-		mVOVec[i]->applyForce(btVector3(0,5,0),btVector3(0,0,0));
-		//TODO Constraint später einbauen/benutzen
+//SetUpGroundTarget(50, 200, 50, 0, 0, 0, 0, 1);
+VirtualObject SetUpGroundTarget(float width, float height, float depth, float x, float y, float z, float mass, int collisionFlag) {
+	VirtualObject* baseSeaGras = new VirtualObject(width, height, depth, x, y, z, mass, collisionFlag);
+	/*	VirtualObject::VirtualObject(float width, float height, float depth, float x, float y, float z, float mass, int collisionFlag){
+	 physicsComponent = new PhysicsComponent(width, height, depth, x, y, z, mass, collisionFlag);
+	 physicsComponent->update(this);		*/
+
+//TODO Das mesh drüber ziehen ?!
+	baseSeaGras->addGraphicsComponent(new GraphicsComponent());
+
+	float tmp_height = 20;	//Hilfsvariable zum erstellen der Rigidboys
+	int iterator = 0;
+	btDefaultMotionState* motionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
+
+	while (tmp_height < height-20) {
+		//btScalar mass, btMotionState *motionState, btCollisionShape *collisionShape, const btVector3 &localInertia
+		motionState = btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,tmp_height,0)));
+		btRigidBody* rb_tmp = new btRigidBody(0, motionState, 1, btVector3(0, 0, 0));
+		rb_tmp->applyForce(btVector3(10, 30, 0), btVector3(0, 0, 0));
+		rb_tmp->setDamping(.1, .1);
+		rb_tmp->setGravity((rb_tmp->getGravity()) + btVector3(0, 30, 0));
+		rb_tmp->setFriction(btScalar(250));
+		rb_tmp->setActivationState(DISABLE_DEACTIVATION);
+		rb_vec.push_back(rb_tmp);
+
+
+		transform_tmp = btTransform::getIdentity();
+		transform_tmp.setOrigin(	btVector3(btScalar(0.), btScalar(tmp_height), btScalar(0.)));
+		transformsVec.push_back(transform_tmp);
+
+		constraint_tmp = new btGeneric6DofSpringConstraint( *rb_vec[iterator - 1], *rb_vec[iterator], transformsVec[iterator - 1], transformsVec[iterator], true);
+		constraint_tmp->setLinearUpperLimit(btVector3(0., 10., 0.));
+		constraint_tmp->setDamping(.1, .1);
+		constraint_vec.push_back(constraint_tmp);
+
+		PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rb_tmp);
+		PhysicWorld::getInstance()->dynamicsWorld->addConstraint( constraint_vec[iterator-1], true);
+
+		tmp_height += 20;
+		iterator ++;
 	}
 
-return 0;
+	return baseSeaGras;
 }
-
-
-
-
-
-
-
 
