@@ -17,7 +17,14 @@ IOHandler*   	testingInputHandler;
 Oculus*			oculus;
 
 void configureOtherStuff(){
+	std::cout<< "_______ OCULUS CONFIGRATION ________" << std::endl;
+
+	std::cout<< "Initializing Oculus System..." << std::endl;
+	OVR::System::Init(OVR::Log::ConfigureDefaultLog(OVR::LogMask_All));	// init System first, or there will be a crash
+	std::cout<< "Initializing Oculus Instance..." << std::endl;
 	oculus = new Oculus();
+	oculus->InitOculus();
+	std::cout<< "Initializing Oculus Instance complete!" << std::endl;
 }
 
 void configureTestingApplication(){
@@ -26,6 +33,7 @@ void configureTestingApplication(){
 }
 
 void configureVirtualObjects(){
+	std::cout<< "_______ STATE CONFIGRATION  ________" << std::endl;
 	testingState->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::OTHER, 0.0f, 1, false);
 }
 
@@ -39,7 +47,7 @@ void configureRendering(){
 }
 
 void configureApplication(){
-	/* create  minimal Application with one state */
+	std::cout<< "_______ APPLICATION INITIALZATION __" << std::endl;
 	testingApp  		= 	Application::getInstance();	
 	testingApp 			->	setLabel("PROJEKT PRAKTIKUM");
 	testingState 	= 	new VRState("TESTING FRAMEWORK");
@@ -59,5 +67,5 @@ int main() {
 
 	testingApp->run();			// 2 run application
 
-	return 0;				// 3 end :)
+	return 0;					// 3 end :)
 }

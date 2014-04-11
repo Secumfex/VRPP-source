@@ -224,9 +224,8 @@ void Oculus::UpdateEyeParams()
 }
 
 
-int Oculus::InitOculus()
+void Oculus::InitOculus()
 {
-	OVR::System::Init(OVR::Log::ConfigureDefaultLog(OVR::LogMask_All));
 	// Create DeviceManager
 	ovrManager = *OVR::DeviceManager::Create();
 	if (!ovrManager) {
@@ -280,6 +279,7 @@ int Oculus::InitOculus()
     {
     	std::cout << "Oculus Rift ERROR\n";
         //::MessageBoxA(0, detectionMessage, "Oculus Rift ERROR", MB_OK);
+        std::cout << detectionMessage << std::endl;
     }
 
 	// The HMDInfo structure contains everything we need for now, so no need to 

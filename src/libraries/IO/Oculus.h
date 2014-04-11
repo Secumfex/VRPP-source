@@ -5,6 +5,7 @@
 #include "Tools/ShaderTools.h"
 #include "Oculus_Shaders.h"
 #include "Visuals/FrameBufferObject.h"
+#include <iostream>
 
 struct RiftDistortionParams
 {
@@ -74,7 +75,7 @@ public:
 
 	Oculus();
 	~Oculus();
-	int InitOculus();
+	void InitOculus();
 
     bool       SensorActive() const { return ovrSensor != NULL; }
     OVR::Quatf GetOrientation() const { return sensorFusion.GetOrientation(); }

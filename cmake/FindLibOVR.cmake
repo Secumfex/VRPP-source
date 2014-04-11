@@ -39,8 +39,6 @@ ELSEIF(APPLE)
         PATHS ${DEPENDENCIES_PATH}/LibOVR_OSX/Lib/MacOS
     )
 	
-	
-	
 ELSE()
 	FIND_PATH(LIBOVR_INCLUDE_PATH OVR.h)
 	FIND_LIBRARY(LIBOVR_LIBRARY
@@ -48,6 +46,9 @@ ELSE()
 	PATH_SUFFIXES dynamic) 
 ENDIF ()
 
+if("${CMAKE_SYSTEM}" MATCHES "Windows")
+        set(ALL_LIBRARIES ${ALL_LIBRARIES} winmm setupapi)
+endif()
 
 
 SET(LIBOVR_FOUND "NO")
