@@ -199,14 +199,14 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 		unsigned int j=0;
 
-		if(isBlender)
-			for (j = 0; j < mesh->mNumVertices; ++j) {
-				mesh->mVertices[j].Set(mesh->mVertices[j].x, mesh->mVertices[j].z, -mesh->mVertices[j].y);
-				if (mesh->HasNormals())
-					mesh->mNormals[j].Set(mesh->mNormals[j].x, mesh->mNormals[j].z, -mesh->mNormals[j].y);
-				if (mesh->HasTangentsAndBitangents())
-					mesh->mTangents[j].Set(mesh->mTangents[j].x, mesh->mTangents[j].z, -mesh->mTangents[j].y);
-			}
+//		if(isBlender)
+//			for (j = 0; j < mesh->mNumVertices; ++j) {
+//				mesh->mVertices[j].Set(mesh->mVertices[j].x, mesh->mVertices[j].z, -mesh->mVertices[j].y);
+//				if (mesh->HasNormals())
+//					mesh->mNormals[j].Set(mesh->mNormals[j].x, mesh->mNormals[j].z, -mesh->mNormals[j].y);
+//				if (mesh->HasTangentsAndBitangents())
+//					mesh->mTangents[j].Set(mesh->mTangents[j].x, mesh->mTangents[j].z, -mesh->mTangents[j].y);
+//			}
 
 
 		aMesh->setNumVertices(mesh->mNumVertices);
@@ -297,8 +297,8 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 					glm::mat4 offsetmatrix = glm::make_mat4x4(&(bone->mOffsetMatrix.a1));
 					offsetmatrix = glm::transpose(offsetmatrix);
-					if(isBlender)
-						offsetmatrix = inversesceneMatrix * offsetmatrix;
+//					if(isBlender)
+//						offsetmatrix = inversesceneMatrix * offsetmatrix;
 					myBone->setOffsetMatrix(offsetmatrix);
 					bone_map.insert(std::pair<std::string, Bone*>(name, myBone));
 				}

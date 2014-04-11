@@ -65,5 +65,5 @@ glm::mat4 Bone::getBoneMatrix(){
 	std::cout <<"ina " << glm::to_string(mAnimationMatrix * glm::inverse(mInverseMatrix)) << std::endl;
 	std::cout <<"off " << glm::to_string(mOffsetMatrix) << std::endl << std::endl;
 
-	return mOffsetMatrix * glm::inverse(mInverseMatrix) * mAnimationMatrix;
+	return glm::inverse(mInverseMatrix) * mAnimationMatrix * mOffsetMatrix;
 }

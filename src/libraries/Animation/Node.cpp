@@ -78,17 +78,13 @@ void Node::updateBone(float t, glm::mat4 parent_mat){
 
 	//	std::cout << mName << "  " <<glm::to_string(glm::vec4(rotate.w, rotate.x, rotate.y, rotate.z)) << std::endl;
 
-//	glm::mat4 transform = parent_mat * glm::translate(glm::mat4(1.0f), pos) * glm::mat4_cast(rotate) * glm::scale(glm::mat4(1.0f), scale);
-//	glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * glm::scale(glm::mat4(1.0f), scale);
 	glm::mat4 transform = glm::mat4_cast(rotate) * glm::translate(glm::mat4(1.0f), pos)  * glm::scale(glm::mat4(1.0f), scale);
 
-//	mBone->setAnimationMatrix(glm::translate(glm::mat4(1.0f), pos) * glm::toMat4(rotate) * glm::scale(glm::mat4(1.0f), scale));
-//		mBone->setAnimationMatrix(transform * parent_mat);
-		mBone->setAnimationMatrix(transform * parent_mat);
+		mBone->setAnimationMatrix(parent_mat * transform);
 
 	unsigned int i;
 	for (i = 0; i < mChildren.size(); ++i) {
-		mChildren[i]->updateBone(next_time, transform * parent_mat);
+		mChildren[i]->updateBone(next_time, parent_mat * transform);
 	}
 
 }
