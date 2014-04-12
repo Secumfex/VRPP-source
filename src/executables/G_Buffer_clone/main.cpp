@@ -65,8 +65,6 @@ int main() {
 
 	MaterialManager::getInstance()->makeMaterial("rough_wood_brighter", object03->getGraphicsComponent());
 
-	object02->getGraphicsComponent()[0]->setAnimated(false);
-
 	//----------------------------//
 	//        SHADERS BABY        //
 	//----------------------------//
@@ -160,13 +158,13 @@ int main() {
 		mat4 modelMatrix01 = scale(translate(mat4(1.0f), vec3(0.0f, -1.0f, 0.0f)), vec3(2.5f, 0.2f, 2.5f));
 
 		//nice rotation of a small cube
-		mat4 modelMatrix03 = translate(rotate(scale(mat4(), vec3(0.25f, 0.25f, 0.25f)), degrees(angle), vec3(1.0f, 1.0f, 0.0f)), vec3(0.0f, 1.5f, -0.5f));
+		mat4 modelMatrix02 = translate(rotate(scale(mat4(), vec3(0.25f, 0.25f, 0.25f)), degrees(angle), vec3(1.0f, 1.0f, 0.0f)), vec3(0.0f, 1.5f, -0.5f));
 
-		mat4 modelMatrix02 = scale(rotate(mat4(), 0.0f, vec3(0.0f, 1.0f, 0.0f)), vec3(0.25f, 0.25f, 0.25f));
+		mat4 modelMatrix03 = scale(rotate(mat4(), 0.0f, vec3(0.0f, 1.0f, 0.0f)), vec3(0.25f, 0.25f, 0.25f));
 
 		object01->setModelMatrix(modelMatrix01);
 		object02->setModelMatrix(modelMatrix02);
-		object03->setModelMatrix(modelMatrix03);
+//		object03->setModelMatrix(modelMatrix03);
 
 		//--------------------------------------------//
 		//        Render the scene into the FBO       //

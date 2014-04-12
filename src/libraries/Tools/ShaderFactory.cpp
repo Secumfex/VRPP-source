@@ -31,7 +31,7 @@ Shader* ShaderFactory::createGBuffer(GraphicsComponent* gc){
 	shaders.push_back(vert.c_str());
 	shaders.push_back(frag.c_str());
 
-//		cout << shaders[0] << endl;
+			cout << shaders[0] << endl;
 	//	cout << shaders[1] << endl;
 
 	Shader* shader = new Shader(shaders);
@@ -51,14 +51,17 @@ std::string ShaderFactory::createGBuffer_vertex(GraphicsComponent* gc){
 	vert += "\
 void main(){\n\
 passUVCoord = uvCoordAttribute;\n\
+			";
+	vert += createGBuffer_vertex_animation(gc);
+	vert += "\
 passPosition = uniformView * uniformModel *";
 
-	vert += createGBuffer_vertex_animation(gc);
+	vert += createGBuffer_vertex_animation_matrix(gc);
 
 	vert +=	"positionAttribute;\n\
 gl_Position =  uniformPerspective * uniformView * uniformModel * ";
 
-	vert += createGBuffer_vertex_animation(gc);
+	vert += createGBuffer_vertex_animation_matrix(gc);
 
 	vert +=			"positionAttribute;\n\
 ";
@@ -162,14 +165,18 @@ uniform sampler2D normalTexture;\n\
 	return vertexUniforms;
 }
 std::string ShaderFactory::createGBuffer_vertexNormal(GraphicsComponent* gc){
+	std::string bones = "";
+	if(gc->hasAnimation())
+		bones = "* boneMatrix ";
+
 	if(gc->getMaterial()->hasNormalTexture())
 		return "\
-passNormal = vec3(transpose(inverse(uniformView * uniformModel)) * normalAttribute);\n\
-passTangent = vec3(transpose(inverse(uniformView * uniformModel)) * tangentAttribute);\n\
+passNormal = vec3(transpose(inverse(uniformView * uniformModel"+ bones +")) * normalAttribute);\n\
+passTangent = vec3(transpose(inverse(uniformView * uniformModel"+ bones +")) * tangentAttribute);\n\
 ";
 	else
 		return "\
-passNormal = vec3(transpose(inverse(uniformView * uniformModel)) * normalAttribute);\n\
+passNormal = vec3(transpose(inverse(uniformView * uniformModel"+ bones +")) * normalAttribute);\n\
 ";
 }
 std::string ShaderFactory::createGBuffer_fragmentNormal(GraphicsComponent* gc){
@@ -271,7 +278,7 @@ std::string ShaderFactory::createGBuffer_vertex_animation(GraphicsComponent* gc)
 	if(gc->hasAnimation()){
 		unsigned int i;
 		vector<Bone*> bones = gc->getBones();
-			boneTransforms += " ( ";
+		boneTransforms += " mat4 boneMatrix = ( ";
 		for (i = 0; i < bones.size(); ++i) {
 			ostringstream convert_index;
 			convert_index << i;
@@ -282,12 +289,21 @@ std::string ShaderFactory::createGBuffer_vertex_animation(GraphicsComponent* gc)
 			boneTransforms += " ) ";
 
 			if(i != (bones.size() - 1))
-			boneTransforms += " + ";
+				boneTransforms += " + ";
 		}
 
-			boneTransforms += " ) * ";
+		boneTransforms += " );\n";
 
 	}
+
+	return boneTransforms;
+
+}
+std::string ShaderFactory::createGBuffer_vertex_animation_matrix(GraphicsComponent* gc){
+	std::string boneTransforms = "";
+
+	if(gc->hasAnimation())
+		boneTransforms += "boneMatrix * ";
 
 	return boneTransforms;
 

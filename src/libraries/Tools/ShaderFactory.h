@@ -56,6 +56,7 @@ protected:
 	std::string createGBuffer_vertexUniforms_bones(GraphicsComponent* gc);
 	std::string createGBuffer_vertexNormal(GraphicsComponent* gc);
 	std::string createGBuffer_vertex_animation(GraphicsComponent* gc);
+	std::string createGBuffer_vertex_animation_matrix(GraphicsComponent* gc);
 	std::string createGBuffer_fragment(GraphicsComponent* gc);
 	std::string createGBuffer_fragmentUniforms(GraphicsComponent* gc);
 	std::string createGBuffer_fragmentNormal(GraphicsComponent* gc);
