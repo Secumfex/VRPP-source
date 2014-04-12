@@ -199,15 +199,23 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 		unsigned int j=0;
 
-		if(isBlender && !pScene->HasAnimations())
-			for (j = 0; j < mesh->mNumVertices; ++j) {
-				mesh->mVertices[j].Set(mesh->mVertices[j].x, mesh->mVertices[j].z, -mesh->mVertices[j].y);
-				if (mesh->HasNormals())
-					mesh->mNormals[j].Set(mesh->mNormals[j].x, mesh->mNormals[j].z, -mesh->mNormals[j].y);
-				if (mesh->HasTangentsAndBitangents())
-					mesh->mTangents[j].Set(mesh->mTangents[j].x, mesh->mTangents[j].z, -mesh->mTangents[j].y);
-			}
 
+		if(pScene->mRootNode->FindNode(mesh->mName) && !pScene->HasAnimations())
+				for (j = 0; j < mesh->mNumVertices; ++j) {
+					//todo: fix mesh_transform
+					glm::mat4 blamatrix = glm::transpose(glm::make_mat4(&(pScene->mRootNode->FindNode(mesh->mName)->mTransformation.a1)));
+
+					std::cout << "GO " << mesh->mName.C_Str() << std::endl;
+					std::cout << glm::to_string(blamatrix) << std::endl;
+
+
+					mesh->mVertices[j] = pScene->mRootNode->FindNode(mesh->mName)->mTransformation * mesh->mVertices[j];
+					mesh->mVertices[j] = pScene->mRootNode->mTransformation * mesh->mVertices[j];
+					if (mesh->HasNormals())
+						mesh->mNormals[j].Set(mesh->mNormals[j].x, mesh->mNormals[j].z, -mesh->mNormals[j].y);
+					if (mesh->HasTangentsAndBitangents())
+						mesh->mTangents[j].Set(mesh->mTangents[j].x, mesh->mTangents[j].z, -mesh->mTangents[j].y);
+				}
 
 		aMesh->setNumVertices(mesh->mNumVertices);
 		aMesh->setNumIndices(mesh->mNumFaces * 3);
@@ -287,11 +295,14 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 					aiVector3t<float> translate;
 					bone->mOffsetMatrix.Decompose(scale, rotate, translate);
 
+					glm::mat4 modelmatrix = glm::transpose(glm::make_mat4(&(pScene->mRootNode->FindNode(mesh->mName)->mTransformation.a1)));
+
+
 
 					if(isBlender)
-					myBone->setInverseSceneMatrix(glm::rotate(glm::mat4(), -90.0f, glm::vec3(1.0f, 0.0f, 0.0f)) * inversesceneMatrix);
+						myBone->setInverseSceneMatrix(glm::rotate(glm::mat4(), -90.0f, glm::vec3(1.0f, 0.0f, 0.0f)) * inversesceneMatrix );
 					else
-					myBone->setInverseSceneMatrix(inversesceneMatrix);
+						myBone->setInverseSceneMatrix(inversesceneMatrix );
 
 					if(isBlender)
 						myBone->setBindPose(glm::vec3(translate.x, translate.z, -translate.y), glm::rotate(glm::quat(rotate.w, rotate.x, rotate.y, rotate.z), 90.0f, glm::vec3(1.0f, 0.0f, 0.0f)), glm::vec3(scale.x, scale.z, -scale.y));
@@ -589,17 +600,18 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 AnimationLoop* VirtualObjectFactory::makeAnimation(map<std::string, Bone*> bones, const aiScene* pScene, bool isBlender){
 	AnimationLoop* myAnimation = new AnimationLoop();
 
-	aiNode* node;
+	aiNode* node = pScene->mRootNode;
 
+	node = node->FindNode(pScene->mAnimations[0]->mChannels[0]->mNodeName);
+	node = node->mParent;
 
-	unsigned int i;
-	for (i = 0; i < pScene->mRootNode->mNumChildren; ++i) {
-		std::string node_name = pScene->mRootNode->mChildren[i]->mName.C_Str();
-		if(node_name == "Armature")
-			node = pScene->mRootNode->mChildren[i];
-	}
+	cout << pScene->mAnimations[0]->mChannels[0]->mNodeName.C_Str() << endl;
+	cout << pScene->mAnimations[0]->mChannels[0]->mNodeName.C_Str() << " ERSTER NODE " << node->mParent->mName.C_Str() << endl;
+
 
 	Node* myRootNode = new Node(getNodeChildren(node));
+
+	unsigned int i;
 	for (i = 0; i < pScene->mAnimations[0]->mNumChannels; ++i) {
 		setNodeTransform(myRootNode, pScene->mAnimations[0]->mChannels[i], isBlender);
 	}

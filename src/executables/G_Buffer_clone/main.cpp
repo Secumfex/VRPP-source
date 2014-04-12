@@ -54,8 +54,8 @@ int main() {
 
 	VirtualObjectFactory *voFactory = VirtualObjectFactory::getInstance();
 
-	VirtualObject *object03 = voFactory->createVirtualObject(RESOURCES_PATH "/animation_test/Fish_bones.dae", VirtualObjectFactory::OTHER);
-	VirtualObject *object02 = voFactory->createVirtualObject(RESOURCES_PATH "/animation_test/tentacle.dae", VirtualObjectFactory::OTHER);
+	VirtualObject *object02 = voFactory->createVirtualObject(RESOURCES_PATH "/animation_test/Fish_bones.dae", VirtualObjectFactory::OTHER);
+	VirtualObject *object03 = voFactory->createVirtualObject(RESOURCES_PATH "/animation_test/tentacle.dae", VirtualObjectFactory::OTHER);
 //	VirtualObject *object02 = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj", VirtualObjectFactory::OTHER);
 	VirtualObject *object01 = voFactory->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE);
 
@@ -160,11 +160,11 @@ int main() {
 		//nice rotation of a small cube
 		mat4 modelMatrix02 = translate(rotate(scale(mat4(), vec3(0.25f, 0.25f, 0.25f)), degrees(angle), vec3(1.0f, 1.0f, 0.0f)), vec3(0.0f, 1.5f, -0.5f));
 
-		mat4 modelMatrix03 = scale(rotate(mat4(), 0.0f, vec3(0.0f, 1.0f, 0.0f)), vec3(0.25f, 0.25f, 0.25f));
+		mat4 modelMatrix03 = scale(rotate(mat4(), 90.0f, vec3(0.0f, 1.0f, 0.0f)), vec3(0.25f, 0.25f, 0.25f));
 
 		object01->setModelMatrix(modelMatrix01);
-//		object02->setModelMatrix(modelMatrix02);
-//		object03->setModelMatrix(modelMatrix03);
+		object02->setModelMatrix(modelMatrix02);
+		object03->setModelMatrix(modelMatrix03);
 
 		//--------------------------------------------//
 		//        Render the scene into the FBO       //
