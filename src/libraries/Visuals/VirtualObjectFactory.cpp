@@ -287,6 +287,10 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 					aiVector3t<float> translate;
 					bone->mOffsetMatrix.Decompose(scale, rotate, translate);
 
+
+					if(isBlender)
+					myBone->setInverseSceneMatrix(glm::rotate(glm::mat4(), -90.0f, glm::vec3(1.0f, 0.0f, 0.0f)) * inversesceneMatrix);
+					else
 					myBone->setInverseSceneMatrix(inversesceneMatrix);
 
 					if(isBlender)
@@ -294,11 +298,10 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 					else
 						myBone->setBindPose(glm::vec3(translate.x, translate.y, translate.z), glm::quat(rotate.w, rotate.x, rotate.y, rotate.z), glm::vec3(scale.x, scale.y, scale.z));
 
-
 					glm::mat4 offsetmatrix = glm::make_mat4x4(&(bone->mOffsetMatrix.a1));
 					offsetmatrix = glm::transpose(offsetmatrix);
-					//					if(isBlender)
-					//						offsetmatrix = inversesceneMatrix * offsetmatrix;
+
+
 					myBone->setOffsetMatrix(offsetmatrix);
 					bone_map.insert(std::pair<std::string, Bone*>(name, myBone));
 				}
@@ -605,7 +608,7 @@ AnimationLoop* VirtualObjectFactory::makeAnimation(map<std::string, Bone*> bones
 	//todo:solve problem, lol
 	myAnimation->addNode(myRootNode);
 	myAnimation->setDuration(pScene->mAnimations[0]->mDuration);
-	//		myAnimation->setCorrectOffsetMatrix();
+	myAnimation->updateNodes(0.0f);
 
 	return myAnimation;
 }

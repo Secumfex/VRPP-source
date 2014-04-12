@@ -59,12 +59,11 @@ glm::mat4 Bone::getAnimationMatrix(){
 
 glm::mat4 Bone::getBoneMatrix(){
 
-//	std::cout << mName << std::endl;
-//	std::cout <<"ani " << glm::to_string(mAnimationMatrix) << std::endl;
-//	std::cout <<"inv " << glm::to_string(mInverseMatrix) << std::endl;
-//	std::cout <<"ina " << glm::to_string(glm::inverse(mInverseMatrix) * mAnimationMatrix) << std::endl;
-//	std::cout <<"ina " << glm::to_string(mAnimationMatrix * glm::inverse(mInverseMatrix)) << std::endl;
-//	std::cout <<"off " << glm::to_string(mOffsetMatrix) << std::endl << std::endl;
+	std::cout << mName << std::endl;
+	std::cout <<"ani " << glm::to_string(mAnimationMatrix) << std::endl;
+	std::cout <<"off " << glm::to_string(mOffsetMatrix) << std::endl;
+	std::cout <<"tra " << glm::to_string(mAnimationMatrix * mOffsetMatrix) << std::endl;
+	std::cout <<"inv " << glm::to_string(glm::inverse(mInverseMatrix) * mAnimationMatrix * mOffsetMatrix) << std::endl;
 
 	return glm::inverse(mInverseMatrix) * mAnimationMatrix * mOffsetMatrix;
 }

@@ -61,7 +61,7 @@ int main() {
 
 	GraphicsComponent* triangle = voFactory->getTriangle();
 
-	AnimationLoop* animation = object03->getAnimation();
+	AnimationLoop* animation = object02->getAnimation();
 
 	MaterialManager::getInstance()->makeMaterial("rough_wood_brighter", object03->getGraphicsComponent());
 
@@ -163,7 +163,7 @@ int main() {
 		mat4 modelMatrix03 = scale(rotate(mat4(), 0.0f, vec3(0.0f, 1.0f, 0.0f)), vec3(0.25f, 0.25f, 0.25f));
 
 		object01->setModelMatrix(modelMatrix01);
-		object02->setModelMatrix(modelMatrix02);
+//		object02->setModelMatrix(modelMatrix02);
 //		object03->setModelMatrix(modelMatrix03);
 
 		//--------------------------------------------//
