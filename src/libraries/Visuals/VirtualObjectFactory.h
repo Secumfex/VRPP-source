@@ -116,6 +116,7 @@ private:
 	void setBones(Node* node, map<std::string, Bone*> bones);
 
 	void setNodeTransform(Node* node, aiNodeAnim* nodeanim, bool isBlender);
+	glm::mat4 getBoneTransform(aiNode* node);
 
 };
 

@@ -28,6 +28,7 @@ public:
 	void updateBone(float t, glm::mat4 parent_mat = glm::mat4(1.0f));
 	int getTimeIndex(float t);
 	void setCorrectOffsetMatrix(glm::mat4 parents_matrix);
+	void setNodeMatrix(glm::mat4 mat);
 
 private:
 	Bone* mBone;
@@ -38,6 +39,7 @@ private:
 	std::vector<glm::quat> mRotations;
 	std::vector<Node*> mChildren;
 	std::string mName;
+	glm::mat4 mNodeTransform;
 };
 
 #endif /* NODE_H_ */

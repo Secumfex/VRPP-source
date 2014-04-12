@@ -9,6 +9,8 @@
 
 Node::Node(std::vector<Node*> node) {
 	mChildren = node;
+	mNodeTransform = glm::mat4();
+	mName = "";
 }
 
 Node::~Node() {
@@ -51,6 +53,9 @@ void Node::updateBone(float t, glm::mat4 parent_mat){
 
 	float next_time = t;
 
+	if(!mTimes.size()){
+		parent_mat = parent_mat * mNodeTransform;
+	}
 
 	if(mTimes.size()<2){
 		unsigned int i;
@@ -109,4 +114,8 @@ void Node::setCorrectOffsetMatrix(glm::mat4 parents_matrix){
 	for (i = 0; i < mChildren.size(); ++i) {
 		mChildren[i]->setCorrectOffsetMatrix(temp_offset);
 		}
+}
+
+void Node::setNodeMatrix(glm::mat4 mat){
+	mNodeTransform = mat;
 }

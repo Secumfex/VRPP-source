@@ -60,5 +60,6 @@ glm::mat4 Bone::getBoneMatrix(){
 //	std::cout <<"tra " << glm::to_string(mAnimationMatrix * mOffsetMatrix) << std::endl;
 //	std::cout <<"inv " << glm::to_string(glm::inverse(mInverseMatrix) * mAnimationMatrix * mOffsetMatrix) << std::endl;
 
-	return glm::inverse(mInverseMatrix) * mAnimationMatrix * mOffsetMatrix;
+//	return glm::inverse(mInverseMatrix) * mAnimationMatrix * mOffsetMatrix;
+	return mAnimationMatrix * mOffsetMatrix;
 }

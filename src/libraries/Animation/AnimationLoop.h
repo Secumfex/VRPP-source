@@ -23,8 +23,10 @@ public:
 	void addNode(Node* node);
 	void setDuration(float t);
 	void setCorrectOffsetMatrix();
+	void setStartTransformation(glm::mat4 armature);
 
 private:
+	glm::mat4 mStartMatrix;
 	float duration;
 	float pasttime;
 };

@@ -200,21 +200,22 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 		unsigned int j=0;
 
 
-		if(pScene->mRootNode->FindNode(mesh->mName) && !pScene->HasAnimations())
+		if(pScene->mRootNode->FindNode(mesh->mName))
 				for (j = 0; j < mesh->mNumVertices; ++j) {
 					//todo: fix mesh_transform
 					glm::mat4 blamatrix = glm::transpose(glm::make_mat4(&(pScene->mRootNode->FindNode(mesh->mName)->mTransformation.a1)));
 
-					std::cout << "GO " << mesh->mName.C_Str() << std::endl;
-					std::cout << glm::to_string(blamatrix) << std::endl;
-
-
 					mesh->mVertices[j] = pScene->mRootNode->FindNode(mesh->mName)->mTransformation * mesh->mVertices[j];
+					if(!pScene->HasAnimations())
 					mesh->mVertices[j] = pScene->mRootNode->mTransformation * mesh->mVertices[j];
-					if (mesh->HasNormals())
+					if (mesh->HasNormals()){
+						if(!pScene->HasAnimations())
 						mesh->mNormals[j].Set(mesh->mNormals[j].x, mesh->mNormals[j].z, -mesh->mNormals[j].y);
-					if (mesh->HasTangentsAndBitangents())
+					}
+					if (mesh->HasTangentsAndBitangents()){
+						if(!pScene->HasAnimations())
 						mesh->mTangents[j].Set(mesh->mTangents[j].x, mesh->mTangents[j].z, -mesh->mTangents[j].y);
+					}
 				}
 
 		aMesh->setNumVertices(mesh->mNumVertices);
@@ -296,18 +297,9 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 					bone->mOffsetMatrix.Decompose(scale, rotate, translate);
 
 					glm::mat4 modelmatrix = glm::transpose(glm::make_mat4(&(pScene->mRootNode->FindNode(mesh->mName)->mTransformation.a1)));
+					cout << "THIS IS MODELMATRIX " << glm::to_string(modelmatrix) << endl;
 
-
-
-					if(isBlender)
-						myBone->setInverseSceneMatrix(glm::rotate(glm::mat4(), -90.0f, glm::vec3(1.0f, 0.0f, 0.0f)) * inversesceneMatrix );
-					else
 						myBone->setInverseSceneMatrix(inversesceneMatrix );
-
-					if(isBlender)
-						myBone->setBindPose(glm::vec3(translate.x, translate.z, -translate.y), glm::rotate(glm::quat(rotate.w, rotate.x, rotate.y, rotate.z), 90.0f, glm::vec3(1.0f, 0.0f, 0.0f)), glm::vec3(scale.x, scale.z, -scale.y));
-					else
-						myBone->setBindPose(glm::vec3(translate.x, translate.y, translate.z), glm::quat(rotate.w, rotate.x, rotate.y, rotate.z), glm::vec3(scale.x, scale.y, scale.z));
 
 					glm::mat4 offsetmatrix = glm::make_mat4x4(&(bone->mOffsetMatrix.a1));
 					offsetmatrix = glm::transpose(offsetmatrix);
@@ -601,25 +593,34 @@ AnimationLoop* VirtualObjectFactory::makeAnimation(map<std::string, Bone*> bones
 	AnimationLoop* myAnimation = new AnimationLoop();
 
 	aiNode* node = pScene->mRootNode;
-
-	node = node->FindNode(pScene->mAnimations[0]->mChannels[0]->mNodeName);
-	node = node->mParent;
-
-	cout << pScene->mAnimations[0]->mChannels[0]->mNodeName.C_Str() << endl;
-	cout << pScene->mAnimations[0]->mChannels[0]->mNodeName.C_Str() << " ERSTER NODE " << node->mParent->mName.C_Str() << endl;
+	cout <<  node->mName.C_Str() << " name of root"<< endl;
 
 
+//	node = node->FindNode(pScene->mAnimations[0]->mChannels[0]->mNodeName);
+//	node = node->mParent;
+
+	glm::mat4 matrix = glm::transpose(glm::make_mat4(&(node->mTransformation.a1)));
 	Node* myRootNode = new Node(getNodeChildren(node));
+	myRootNode->setName(node->mName.C_Str());
+	myRootNode->setNodeMatrix(matrix);
 
 	unsigned int i;
 	for (i = 0; i < pScene->mAnimations[0]->mNumChannels; ++i) {
 		setNodeTransform(myRootNode, pScene->mAnimations[0]->mChannels[i], isBlender);
 	}
 
+	for (std::map<std::string, Bone*> ::iterator it=bones.begin(); it!=bones.end(); ++it) {
+	Bone* tempBone = it->second;
+	getBoneTransform(node->FindNode(tempBone->getName().c_str()));
+	cout << glm::to_string(	tempBone->getInverseMatrix() * tempBone->getOffsetMatrix()) << endl;
+	}
+
 	setBones(myRootNode, bones);
 	//todo:solve problem, lol
 	myAnimation->addNode(myRootNode);
 	myAnimation->setDuration(pScene->mAnimations[0]->mDuration);
+//	myAnimation->setStartTransformation(armaturematrix);
+
 	myAnimation->updateNodes(0.0f);
 
 	return myAnimation;
@@ -632,7 +633,9 @@ vector<Node*> VirtualObjectFactory::getNodeChildren(aiNode* node){
 	for (i = 0; i < node->mNumChildren ; ++i) {
 		Node* temp = new Node(getNodeChildren(node->mChildren[i]));
 		temp->setName(node->mChildren[i]->mName.C_Str());
+		glm::mat4 matrix = glm::transpose(glm::make_mat4(&(node->mTransformation.a1)));
 
+		temp->setNodeMatrix(matrix);
 		children.push_back(temp);
 	}
 	return children;
@@ -650,22 +653,8 @@ void VirtualObjectFactory::setNodeTransform(Node* node, aiNodeAnim* nodeanim, bo
 			glm::vec3 position = glm::vec3(nodeanim->mPositionKeys[i].mValue.x, nodeanim->mPositionKeys[i].mValue.y, nodeanim->mPositionKeys[i].mValue.z);
 			glm::vec3 scale = glm::vec3(nodeanim->mScalingKeys[i].mValue.x, nodeanim->mScalingKeys[i].mValue.y, nodeanim->mScalingKeys[i].mValue.z);
 			glm::quat rotation = glm::quat(nodeanim->mRotationKeys[i].mValue.w, nodeanim->mRotationKeys[i].mValue.x, nodeanim->mRotationKeys[i].mValue.y, nodeanim->mRotationKeys[i].mValue.z);
-			//			if(isBlender){
-			//				position = glm::vec3(position.x, position.z, -position.y);
-			//				rotation = glm::quat(rotation.w, rotation.x, rotation.z, -rotation.y);
-			//				scale = glm::vec3(scale.x, scale.z, -scale.y);
-			//			}
 
-			//			glm::vec4(nodeanim->mRotationKeys[i].mValue.
-
-			//			cout << "Round " << i << " is blender: "<< isBlender <<endl;
-			//			cout << glm::to_string(position) << endl;
-			//			cout << glm::to_string(scale) << endl;
-			//			cout << glm::to_string(glm::vec4(rotation.w, rotation.x, rotation.y, rotation.z)) << endl;
-			//
 			glm::mat4 transform = glm::mat4_cast(rotation) * glm::translate(glm::mat4(1.0f), position)  * glm::scale(glm::mat4(1.0f), scale);
-
-			cout << name << " is da shit " << glm::to_string(transform) << endl;
 
 			node->addTransformation(position, scale, rotation, time);
 		}
@@ -688,5 +677,21 @@ void VirtualObjectFactory::setBones(Node* node, map<std::string, Bone*> bones){
 	for (i = 0; i < node->getChildren().size(); ++i) {
 		setBones(node->getChildren()[i], bones);
 	}
+}
+
+glm::mat4 VirtualObjectFactory::getBoneTransform(aiNode* node){
+
+		std::cout << "WHAT" << node->mName.C_Str() << std::endl;
+		aiMatrix4x4 mat ;
+		while(node->mParent){
+			mat = node->mTransformation * mat;
+			node = node->mParent;
+		}
+			mat = node->mTransformation * mat;
+
+			glm::mat4 matrix = glm::transpose(glm::make_mat4(&(mat.a1)));
+		cout << node->mName.C_Str() <<" " << glm::to_string(matrix) << endl;
+
+	return glm::mat4();
 }
 

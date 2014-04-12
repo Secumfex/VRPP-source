@@ -8,7 +8,7 @@
 #include "Animation/AnimationLoop.h"
 
 AnimationLoop::AnimationLoop() {
-	// TODO Auto-generated constructor stub
+	mStartMatrix = glm::mat4();
 
 }
 
@@ -23,7 +23,7 @@ void AnimationLoop::updateNodes(float t){
 //	std::cout << "Rootnode is ";
 
 	for (i = 0; i < mNodes.size(); ++i) {
-		mNodes[i]->updateBone(next_time);
+		mNodes[i]->updateBone(next_time, mStartMatrix);
 	}
 //	std::cout << std::endl;
 }
@@ -39,4 +39,8 @@ void AnimationLoop::setCorrectOffsetMatrix(){
 	for (i = 0; i < mNodes.size(); ++i) {
 			mNodes[i]->setCorrectOffsetMatrix(glm::mat4());
 		}
+}
+
+void AnimationLoop::setStartTransformation(glm::mat4 armature){
+	mStartMatrix = armature;
 }
