@@ -191,12 +191,13 @@ void RenderManager::manageShaderProgram(){
 			SHADERS_PATH "/RenderManagerApp/RenderManagerApp.frag");
 
 	glUseProgram(shaderProgramHandle);
+	MVPHandle = glGetUniformLocation(shaderProgramHandle, "uniformMVP");
 }
 
 void RenderManager::renderLoop(){
 	//   std::cout<<"Render loop reached successfully."<<std::endl;
 
-	MVPHandle = glGetUniformLocation(shaderProgramHandle, "uniformMVP");
+	//MVPHandle = glGetUniformLocation(shaderProgramHandle, "uniformMVP");
 
 	if(!glfwWindowShouldClose(window)){ //if window is not about to close
 		glfwMakeContextCurrent(window);

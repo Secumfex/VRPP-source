@@ -133,7 +133,7 @@ public:
 	 * @param collisionFlag sets collisiontype of the collisionshape
 	 * @return void
 	 */
-	void setPhysicsComponent(float mass=0.0f, int collisionFlag=1);
+	void setPhysicsComponent(float x, float y, float z, float mass=0.0f, int collisionFlag=1);
 
 	/** \brief sets PhysicsComponent
 	 *

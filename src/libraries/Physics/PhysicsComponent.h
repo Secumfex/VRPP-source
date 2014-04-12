@@ -42,7 +42,7 @@ public:
 	* creates a physics component with a given model matrix. does not define any rigid body.
 	* @param modelMatrix 4x4Matrix
 	*/
-	PhysicsComponent(vector<GraphicsComponent*> mGraphComponent, float mass=0.0f, int collisionFlag=1);
+	PhysicsComponent(float x, float y, float z, vector<GraphicsComponent*> mGraphComponent, float mass=0.0f, int collisionFlag=1);
 
 	/** \brief constructor
 	*
@@ -185,7 +185,7 @@ public:
 	 * @param mGraphComponent graphic components of vo
 	 * @return a bullet rigid body
 	 */
-	btRigidBody* addTriangleMesh(vector<GraphicsComponent*> mGraphComponent);
+	btRigidBody* addTriangleMesh(float x, float y, float z, vector<GraphicsComponent*> mGraphComponent, float mass);
 
 	/** \brief getter
 	 *

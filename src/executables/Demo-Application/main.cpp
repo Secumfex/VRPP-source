@@ -53,14 +53,14 @@ void configureMyApp(){
 	/*	load some virtual objects into vr state scene*/
 
 	VirtualObject* 	myCowObject1 = 		myVRState->			createVirtualObject(RESOURCES_PATH "/cow.obj", VirtualObjectFactory::OTHER);	 		// create a Virtual Object by reading an .obj file and add it to VRState automatically
-	myCowObject1->	setPhysicsComponent(0.5,0.5,7.5,0.5,0.5);
+	//myCowObject1->	setPhysicsComponent(0.5,0.5,7.5,0.5,0.5);
 	PhysicsComponent* myCowObject1PhysicsComponent = 		myCowObject1->getPhysicsComponent();					// get PhysicsComponent pointer
 	myVRState->		attachListenerOnBeginningProgramCycle(  new UpdatePhysicsComponentListener(			myCowObject1));	// update PhysicsComponent on every program cycle iteration
 	myVRState->		attachListenerOnBeginningProgramCycle(  new UpdateVirtualObjectModelMatrixListener(	myCowObject1));	// update VirtualObject Model Matrix on every program cycle iteration
 
 
 	VirtualObject* 	myCowObject2 = 		myVRState->			createVirtualObject(RESOURCES_PATH "/cow.obj", VirtualObjectFactory::OTHER);	 		// create a Virtual Object by reading an .obj file and add it to VRState automatically
-	myCowObject2->	setPhysicsComponent(0.5,0.75,15.0,0.75,0.5);
+	//myCowObject2->	setPhysicsComponent(0.5,0.75,15.0,0.75,0.5);
 	PhysicsComponent* myCowObject2PhysicsComponent = 		myCowObject2->getPhysicsComponent();					// get PhysicsComponent pointer
 	myVRState->		attachListenerOnBeginningProgramCycle(  new UpdatePhysicsComponentListener(			myCowObject2));	// update PhysicsComponent on every program cycle iteration
 	myVRState->		attachListenerOnBeginningProgramCycle(  new UpdateVirtualObjectModelMatrixListener(	myCowObject2));	// update VirtualObject Model Matrix on every program cycle iteration

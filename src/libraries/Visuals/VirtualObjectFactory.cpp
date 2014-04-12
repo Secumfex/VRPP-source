@@ -552,7 +552,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 			break;
 		case SPHERE:	virtualObject->setPhysicsComponent((physics_max.x-physics_min.x)/2.0, (physics_max.x-physics_min.x)/2.0+physics_min.x, (physics_max.y-physics_min.y)/2.0+physics_min.y, (physics_max.z-physics_min.z)/2.0+physics_min.z, mass, collisionFlag);
 			break;
-		case MESH:		virtualObject->setPhysicsComponent(mass, collisionFlag);
+		case MESH:		virtualObject->setPhysicsComponent(x, y, z, mass, collisionFlag);
 			break;
 		case OTHER:		virtualObject->setPhysicsComponent(physics_min, physics_max, mass, collisionFlag);
 			break;
