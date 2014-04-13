@@ -5,7 +5,7 @@
  *      Author: Dirk Diggler
  */
 
-#include "D:SeaGrasPhysicsComponent.h"
+#include "SeaGrasPhysicsComponent.h"
 
 SeaGrasPhysicsComponent::SeaGrasPhysicsComponent() {
 	// TODO Auto-generated constructor stub

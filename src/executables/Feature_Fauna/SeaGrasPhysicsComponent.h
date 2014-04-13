@@ -8,8 +8,8 @@
 #ifndef SEAGRASPHYSICSCOMPONENT_H_
 #define SEAGRASPHYSICSCOMPONENT_H_
 
-#include "PhysicsComponent.h"
-#include "VirtualObjectFactory.h"
+#include "Physics/PhysicsComponent.h"
+#include "Visuals/VirtualObjectFactory.h"
 #include <vector>
 
 class SeaGrasPhysicsComponent {
