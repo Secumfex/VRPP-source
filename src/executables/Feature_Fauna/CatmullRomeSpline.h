@@ -1,5 +1,5 @@
-#include "../Feature_Fauna/Seetang.h"
-#include "../IO/Camera.h"
+#include "Seetang.h"
+#include "../libraries/IO/Camera.h"
 
 #ifndef CATMULLROMESPLINE_H_
 #define CATMULLROMESPLINE_H_

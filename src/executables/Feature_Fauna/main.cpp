@@ -3,7 +3,7 @@
 #include "Application/ApplicationListeners.h"
 #include "Tools/UtilityListeners.h"
 #include "PlaceHolderListeners.h"
-#include "../libraries/Feature_Fauna/Seetang.h"
+#include "Seetang.h"
 #include "BulletDynamics/Dynamics/btRigidBody.h"
 #include "IO/IOManager.h"
 #include "IO/PlayerCamera.h"

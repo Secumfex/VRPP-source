@@ -11,6 +11,9 @@ vector<btTransform*> transform_vec;
 vector<btGeneric6DofSpringConstraint*> constraint_vec;
 btTransform transform_tmp;
 btGeneric6DofSpringConstraint* constraint_tmp;
+btDefaultMotionState motionState;
+btCollisionShape* collisionShape = 0;
+
 
 //SetUpGroundTarget(50, 200, 50, 0, 0, 0, 0, 1);
 VirtualObject SetUpGroundTarget(float width, float height, float depth, float x, float y, float z, float mass, int collisionFlag) {
@@ -24,12 +27,14 @@ VirtualObject SetUpGroundTarget(float width, float height, float depth, float x,
 
 	float tmp_height = 20;	//Hilfsvariable zum erstellen der Rigidboys
 	int iterator = 0;
-	btDefaultMotionState* motionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
+
 
 	while (tmp_height < height-20) {
 		//btScalar mass, btMotionState *motionState, btCollisionShape *collisionShape, const btVector3 &localInertia
 		motionState = btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,tmp_height,0)));
-		btRigidBody* rb_tmp = new btRigidBody(0, motionState, 1, btVector3(0, 0, 0));
+		collisionShape = 0;
+		btRigidBody* rm_tmp = new btRigidBody(0.0f,motionState, collisionShape ,btVector3(0,tmp_height,0));
+		//btRigidBody* rb_tmp = new btRigidBody(0, btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,tmp_height,0))), 0, btVector3(0, 0, 0));
 		rb_tmp->applyForce(btVector3(10, 30, 0), btVector3(0, 0, 0));
 		rb_tmp->setDamping(.1, .1);
 		rb_tmp->setGravity((rb_tmp->getGravity()) + btVector3(0, 30, 0));
@@ -40,9 +45,9 @@ VirtualObject SetUpGroundTarget(float width, float height, float depth, float x,
 
 		transform_tmp = btTransform::getIdentity();
 		transform_tmp.setOrigin(	btVector3(btScalar(0.), btScalar(tmp_height), btScalar(0.)));
-		transformsVec.push_back(transform_tmp);
+		transform_vec.push_back(tranform_tmp);
 
-		constraint_tmp = new btGeneric6DofSpringConstraint( *rb_vec[iterator - 1], *rb_vec[iterator], transformsVec[iterator - 1], transformsVec[iterator], true);
+		constraint_tmp = new btGeneric6DofSpringConstraint( *rb_vec[iterator - 1], *rb_vec[iterator], transform_vec[iterator - 1], transform_vec[iterator], true);
 		constraint_tmp->setLinearUpperLimit(btVector3(0., 10., 0.));
 		constraint_tmp->setDamping(.1, .1);
 		constraint_vec.push_back(constraint_tmp);
