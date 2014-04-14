@@ -414,3 +414,18 @@ bool Oculus::getSensorOrientation(float mult)
     }
     */
 }
+
+float Oculus::getEyeYaw()
+{
+	return EyeYaw;
+}
+
+float Oculus::getEyePitch()
+{
+	return EyePitch;
+}
+
+float Oculus::getEyeRoll()
+{
+	return EyeRoll;
+}

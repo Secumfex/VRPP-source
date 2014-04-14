@@ -96,7 +96,7 @@ public:
     void PresentFbo_PostProcessDistortion(
         const OVR::Util::Render::StereoEyeParams& eyeParams,
         const RiftDistortionParams& distParams);
-    bool getSensorOrientation(float mult);
+    bool getSensorOrientation(float mult = 1.0f);
 
     enum DisplayMode
     {
@@ -127,6 +127,11 @@ public:
 		hmdInfo.ChromaAbCorrection[2] = 1.01400f;
 		hmdInfo.ChromaAbCorrection[3] = 0;
 	}	
+
+	/*Getter*/
+	float getEyeYaw();
+	float getEyePitch();
+	float getEyeRoll();
 };
 
 #endif

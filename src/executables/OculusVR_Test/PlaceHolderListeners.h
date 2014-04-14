@@ -42,3 +42,24 @@ public:
 	SetClearColorListener(float r = 0.0, float g = 0.0, float b = 0.0, float a = 1.0);
 	void update();
 };
+
+#include "IO/Oculus.h"
+/// Listener which prints the Oculus Orientation on update
+class PrintOculusOrientationListener : public Listener
+{
+private:
+	Oculus* oculus;
+public:
+	PrintOculusOrientationListener(Oculus* oculus);
+	void update();
+};
+
+/// Listener which updates the Oculus Orientation variables on update
+class UpdateOculusOrientationListener : public Listener
+{
+private:
+	Oculus* oculus;
+public:
+	UpdateOculusOrientationListener(Oculus* oculus = 0);
+	void update();
+};

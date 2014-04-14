@@ -4,6 +4,7 @@
 #include "Tools/UtilityListeners.h"
 #include "PlaceHolderListeners.h"
 #include "IO/Oculus.h"
+#include "IO/OculusCamera.h"
 
 /*
 *	A basic executable to use as starting point with our libraries
@@ -24,6 +25,8 @@ void configureOtherStuff(){
 	std::cout<< "Initializing Oculus Instance..." << std::endl;
 	oculus = new Oculus();
 	oculus->InitOculus();
+	testingState->setCamera(new OculusCamera(oculus));
+
 	std::cout<< "Initializing Oculus Instance complete!" << std::endl;
 }
 
@@ -39,6 +42,7 @@ void configureVirtualObjects(){
 
 void configureInputHandler(){
 	testingInputHandler->attachListenerOnKeyPress(		new TerminateApplicationListener(testingApp), GLFW_KEY_ESCAPE);
+	testingInputHandler->attachListenerOnKeyPress(		new PrintOculusOrientationListener(oculus), GLFW_KEY_SPACE);
 }
 
 void configureRendering(){

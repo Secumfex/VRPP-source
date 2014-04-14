@@ -221,14 +221,14 @@ public:
 	 * compute ViewMatrix
 	 * @return viewMatrix
 	 */
-	glm::mat4 getViewMatrix();
+	virtual glm::mat4 getViewMatrix();
 
 
 	/** \brief getter
 	 *
 	 * @return viewMatrixPointer
 	 */
-	glm::mat4* getViewMatrixPointer();
+	virtual glm::mat4* getViewMatrixPointer();
 
 	/** \brief setter
 	 * 

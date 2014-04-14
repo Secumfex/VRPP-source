@@ -61,3 +61,31 @@ SetClearColorListener::SetClearColorListener(float r, float g, float b, float a)
 void SetClearColorListener::update(){
 		glClearColor(r,g,b,a);
 }
+
+PrintOculusOrientationListener::PrintOculusOrientationListener(Oculus* oculus)
+{
+	this->oculus = oculus;
+}
+
+
+void PrintOculusOrientationListener::update()
+{
+	if(oculus)
+	{
+		std::cout << "Oculus - yaw: " << oculus->getEyeYaw() <<", pitch: " << oculus->getEyePitch() <<", roll: " << oculus->getEyeRoll() << std::endl;
+	}
+}
+
+
+UpdateOculusOrientationListener::UpdateOculusOrientationListener(Oculus* oculus)
+{
+	this->oculus = oculus;
+}
+
+void UpdateOculusOrientationListener::update()
+{
+	if(oculus)
+	{
+		oculus->getSensorOrientation();
+	}
+}
