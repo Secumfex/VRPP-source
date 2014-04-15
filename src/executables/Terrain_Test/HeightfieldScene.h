@@ -26,7 +26,8 @@ namespace HeightfieldScene{
 	Texture* normals1;	//normalmaps
 	Texture* normals2;
 
-	//glossmaps
+	Texture* specular1;	//glossmaps
+	Texture* specular2;
 
 	static void createScene(ApplicationState* state){
 
@@ -46,9 +47,10 @@ namespace HeightfieldScene{
 		mask = new Texture(RESOURCES_PATH"/Heightfield/terrainTest.png");
 
 		normals1 = new Texture(RESOURCES_PATH"/Heightfield/seamlessSandTestNormal.jpg");	//normalmaps
-		normals2 = new Texture(RESOURCES_PATH"/Heightfield/seamlessStonesNormals.jpg");
+		normals2 = new Texture(RESOURCES_PATH"/Heightfield/seamlessStonesTestNormal.jpg");
 
-		//glossmaps
+		specular1 = new Texture(RESOURCES_PATH"/Heightfield/seamlessSandTestSpecular.jpg");	//glossmaps
+		specular2 = new Texture(RESOURCES_PATH"/Heightfield/seamlessStonesTestSpecular.jpg");
 
 		//Camera
 

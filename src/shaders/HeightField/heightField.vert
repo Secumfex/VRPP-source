@@ -12,7 +12,7 @@ uniform mat4 uniformPerspective;
 out vec3 positionPass;
 out vec3 normalPass;
 out vec2 uvCoordPass;
-out vec3 worldPass;
+
 
 void main() {
 
