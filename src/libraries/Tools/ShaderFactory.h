@@ -31,7 +31,7 @@ public:
 	virtual ~ShaderFactory();
 	/** \brief creates GBuffer by GraphicsComponent's flags
 	 *
-	 * @param GraphicsComponent*
+	 * @param gc GraphicsComponent*
 	 * @return Shader*
 	 */
 	Shader* createGBuffer(GraphicsComponent* gc);
