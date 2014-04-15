@@ -25,6 +25,10 @@ void configureOtherStuff(){
 	std::cout<< "Initializing Oculus Instance..." << std::endl;
 	oculus = new Oculus();
 	oculus->InitOculus();
+
+	oculus->CreateShaders();			// Create Post Processing Shaders
+	oculus->CreateRenderBuffer(1.0f);	// Create RenderBuffer
+
 	testingState->setCamera(new OculusCamera(oculus));
 
 	std::cout<< "Initializing Oculus Instance complete!" << std::endl;
@@ -47,8 +51,14 @@ void configureInputHandler(){
 
 void configureRendering(){
 	testingApp->attachListenerOnProgramInitialization(	new SetDefaultShaderListener( new Shader (SHADERS_PATH "/Phong_Test/phong.vert", SHADERS_PATH "/Phong_Test/phong.frag")));
+
+	testingApp->attachListenerOnRenderManagerFrameLoop(	new SetDefaultShaderListener( new Shader (SHADERS_PATH "/Phong_Test/phong.vert", SHADERS_PATH "/Phong_Test/phong.frag")));
+	testingApp->attachListenerOnRenderManagerFrameLoop( new BindOculusFrameBufferObjectListener(oculus));
 	testingApp->attachListenerOnRenderManagerFrameLoop(	new RenderloopPlaceHolderListener());
-}
+	testingApp->attachListenerOnRenderManagerFrameLoop( new UnbindOculusFrameBufferObjectListener(oculus));
+	testingApp->attachListenerOnRenderManagerFrameLoop( new OculusPostProcessingRenderpass(oculus));
+
+	}
 
 void configureApplication(){
 	std::cout<< "_______ APPLICATION INITIALZATION __" << std::endl;

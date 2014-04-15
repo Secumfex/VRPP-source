@@ -5,6 +5,9 @@
 #include "Tools/ShaderTools.h"
 #include "Oculus_Shaders.h"
 #include "Visuals/FrameBufferObject.h"
+#include "Visuals/VirtualObjectFactory.h"
+#include "Visuals/Shader.h"
+
 #include <iostream>
 
 struct RiftDistortionParams
@@ -54,6 +57,9 @@ protected:
 
     GLuint progRiftDistortion;
     GLuint progPresFbo;
+
+    Shader* RiftDistortion;
+    Shader* PresFbo;
 	
 	int windowWidth, windowHeight;
 

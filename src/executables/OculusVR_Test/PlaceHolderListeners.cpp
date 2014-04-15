@@ -8,7 +8,7 @@ RenderloopPlaceHolderListener::RenderloopPlaceHolderListener(){
 
 void RenderloopPlaceHolderListener::update(){
         glEnable(GL_DEPTH_TEST);
-        glClear(GL_DEPTH_BUFFER_BIT);
+        glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
     	glViewport(0, 0, 800, 600);
 
 
@@ -72,6 +72,7 @@ void PrintOculusOrientationListener::update()
 {
 	if(oculus)
 	{
+		oculus->getSensorOrientation();
 		std::cout << "Oculus - yaw: " << oculus->getEyeYaw() <<", pitch: " << oculus->getEyePitch() <<", roll: " << oculus->getEyeRoll() << std::endl;
 	}
 }
@@ -87,5 +88,48 @@ void UpdateOculusOrientationListener::update()
 	if(oculus)
 	{
 		oculus->getSensorOrientation();
+	}
+}
+
+OculusPostProcessingRenderpass::OculusPostProcessingRenderpass(Oculus* oculus)
+{
+	this->oculus = oculus;
+}
+
+void OculusPostProcessingRenderpass::update()
+{
+	if (oculus)
+	{
+		// just draw this on the active FBO
+	//	oculus->PresentFbo(Oculus::PostProcess_Distortion, RiftDistortionParams());
+
+		oculus->PresentFbo_NoDistortion();
+	}
+}
+
+BindOculusFrameBufferObjectListener:: BindOculusFrameBufferObjectListener(Oculus* oculus)
+{
+	this->oculus = oculus;
+}
+
+void BindOculusFrameBufferObjectListener::update()
+{
+	if(oculus)
+	{
+		oculus->BindRenderBuffer();
+	}
+}
+
+
+UnbindOculusFrameBufferObjectListener:: UnbindOculusFrameBufferObjectListener(Oculus* oculus)
+{
+	this->oculus = oculus;
+}
+
+void UnbindOculusFrameBufferObjectListener::update()
+{
+	if(oculus)
+	{
+		oculus->UnBindRenderBuffer();
 	}
 }

@@ -63,3 +63,35 @@ public:
 	UpdateOculusOrientationListener(Oculus* oculus = 0);
 	void update();
 };
+
+
+/// Listener which uses it's own FBOs image and applies post processing distortion on it
+class OculusPostProcessingRenderpass : public Listener
+{
+private:
+	Oculus* oculus;
+public:
+	OculusPostProcessingRenderpass(Oculus* oculus = 0);
+	void update();
+};
+
+/// Listener which binds the Oculus' FBO image
+class BindOculusFrameBufferObjectListener : public Listener
+{
+private:
+	Oculus* oculus;
+public:
+	BindOculusFrameBufferObjectListener(Oculus* oculus = 0);
+	void update();
+};
+
+
+/// Listener which unbinds the Oculus' FBO image
+class UnbindOculusFrameBufferObjectListener : public Listener
+{
+private:
+	Oculus* oculus;
+public:
+	UnbindOculusFrameBufferObjectListener(Oculus* oculus = 0);
+	void update();
+};

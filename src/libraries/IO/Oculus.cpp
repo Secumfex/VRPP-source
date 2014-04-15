@@ -35,8 +35,12 @@ Oculus::Oculus()
  /// We need an active GL context for this
 void Oculus::CreateShaders()
 {
-    progPresFbo = ShaderTools::makeShaderProgram(PresentFboVertSrc, PresentFboFragSrc);
-    progRiftDistortion = ShaderTools::makeShaderProgram(PostProcessVertexShaderSrc, PostProcessFragShaderSrc);
+    PresFbo 	   = new Shader( PresentFboVertSrc, PresentFboFragSrc);
+	RiftDistortion = new Shader( PostProcessVertexShaderSrc, PostProcessFragShaderSrc );
+
+	progPresFbo 		= PresFbo->getProgramHandle();
+	progRiftDistortion 	= RiftDistortion->getProgramHandle();
+
 }
 
 /// We need an active GL context for this
@@ -45,6 +49,8 @@ void Oculus::CreateRenderBuffer(float bufferScaleUp)
     fboWidth = (int)((bufferScaleUp) * (float)windowWidth );
     fboHeight = (int)((bufferScaleUp) * (float)windowHeight );
     renderBuffer.resize(fboWidth, fboHeight);
+    renderBuffer.createPositionTexture();
+    renderBuffer.makeDrawBuffers();
 }
 
 void Oculus::BindRenderBuffer() 
@@ -59,46 +65,16 @@ void Oculus::UnBindRenderBuffer()
 
 void Oculus::PresentFbo_NoDistortion()
 {
-    glUseProgram(progPresFbo);
-    {
-        OVR::Matrix4f ortho = OVR::Matrix4f::Ortho2D((float)fboWidth, (float)fboHeight);
-        glUniformMatrix4fv(glGetUniformLocation(progPresFbo, "prmtx"), 1, false, &ortho.Transposed().M[0][0]);
+	glViewport(0,0,renderBuffer.getWidth(), renderBuffer.getHeight());
 
-        const float verts[] = {
-            0                ,  0,
-            (float)fboWidth,  0,
-            (float)fboWidth, (float)fboHeight,
-            0                , (float)fboHeight,
-        };
-        const float texs[] = {
-            0,1,
-            1,1,
-            1,0,
-            0,0,
-        };
-        const unsigned int tris[] = {
-            0,1,2, 0,3,2, // ccw
-        };
+	glDisable(GL_DEPTH_TEST);
+	PresFbo->useProgram();
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, renderBuffer.getPositionTextureHandle());
+		glUniform1i(glGetUniformLocation(progPresFbo, "diffuseTexture"), 0);
+	PresFbo->render(VirtualObjectFactory::getInstance()->getTriangle());
+	glEnable(GL_DEPTH_TEST);
 
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, verts);
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, texs);
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
-
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, renderBuffer.getColorTextureHandle());
-        glUniform1i(glGetUniformLocation(progPresFbo, "fboTex"), 0);
-
-        glDrawElements(GL_TRIANGLES,
-                       6,
-                       GL_UNSIGNED_INT,
-                       &tris[0]);
-
-        glDisableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
-    }
-    glUseProgram(0);
 }
 
 void Oculus::PresentFbo_PostProcessDistortion(
@@ -109,7 +85,8 @@ void Oculus::PresentFbo_PostProcessDistortion(
     if (pDistortion == NULL)
         return;
 
-    glUseProgram(progRiftDistortion);
+//    glUseProgram(progRiftDistortion);
+    RiftDistortion->useProgram();
     {
         // Set uniforms for distortion shader
         OVR::Matrix4f ident;
@@ -153,7 +130,7 @@ void Oculus::PresentFbo_PostProcessDistortion(
         );
 
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, renderBuffer.getColorTextureHandle());
+        glBindTexture(GL_TEXTURE_2D, renderBuffer.getPositionTextureHandle());
         glUniform1i(glGetUniformLocation(progRiftDistortion, "Texture0"), 0);
 
         float verts[] = { // Left eye coords
@@ -183,6 +160,9 @@ void Oculus::PresentFbo_PostProcessDistortion(
             texs[2*3] += 0.5f;
         }
 
+        glDisable(GL_DEPTH_TEST);
+//        RiftDistortion->render(VirtualObjectFactory::getInstance()->getTriangle());
+
         const unsigned int tris[] = {
             0,1,2,  0,2,3, // ccw
         };
@@ -201,6 +181,8 @@ void Oculus::PresentFbo_PostProcessDistortion(
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
     }
+    glEnable(GL_DEPTH_TEST);
+
     glUseProgram(0);
 }
 
