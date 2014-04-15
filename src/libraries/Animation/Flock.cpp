@@ -19,7 +19,7 @@ Flock::~Flock() {
 }
 void Flock::addBoid(VirtualObject *vo, glm::mat4 basePosition){
 	mBoids.push_back(vo);
-	mBasePositions.push_back(basePosition);
+	mBaseTransform.push_back(basePosition);
 	vo->getPhysicsComponent()->getRigidBody()->setLinearVelocity(startBtVelocity);
 }
 
@@ -55,6 +55,7 @@ void Flock::initializeStartPositions(float maxDistance, glm::vec3 startPosition)
 void Flock::update(float t){
 	unsigned int i;
 
+
 	std::vector<btVector3> next_velocities;
 	float delta_time = IOManager::getInstance()->getDeltaTime();
 
@@ -66,6 +67,8 @@ void Flock::update(float t){
 		btVector3 v;
 		next_velocities.push_back(v);
 	}
+
+
 	for (i = 0; i < mBoids.size(); ++i){
 		VirtualObject* vo_temp = mBoids[i];
 		btVector3 v_temp = mBoids[i]->getPhysicsComponent()->getRigidBody()->getLinearVelocity();
@@ -78,6 +81,11 @@ void Flock::update(float t){
 
 		v_temp01 += vo_temp->getPhysicsComponent()->getPosition();
 		vo_temp->getPhysicsComponent()->setPosition(v_temp01.x, v_temp01.y, v_temp01.z);
+
+		glm::mat4 transformation = glm::translate(glm::mat4(), v_temp01) * glm::mat4_cast(rotation) * mBaseTransform[i];
+		cout << glm::to_string(transformation) << endl;
+
+		vo_temp->setModelMatrix(transformation);
 	}
 }
 
@@ -86,7 +94,7 @@ btVector3 Flock::getSeparation(std::vector<VirtualObject*> neighbors){
 
 	unsigned int i;
 	for (i = 0; i < neighbors.size(); ++i) {
-	btVector3 v_temp = neighbors[i]->getPhysicsComponent()->getRigidBody()->getLinearVelocity();
+		btVector3 v_temp = neighbors[i]->getPhysicsComponent()->getRigidBody()->getLinearVelocity();
 
 	}
 
@@ -114,8 +122,34 @@ btVector3 Flock::getCohesion(std::vector<VirtualObject*> neighbors){
 }
 
 glm::quat Flock::getRotation(glm::vec3 velocity){
+
+	glm::quat rotation = glm::quat (1.0, 0.0, 0.0, 0.0);
+
+	if(velocity.length() == 0)
+		return rotation;
+
 	velocity = glm::normalize(velocity);
 
-	glm::vec3 axis =
+	if(velocity == startVelocity)
+		return rotation;
 
+
+	glm::vec3 axis = glm::cross(velocity, startVelocity);
+	axis = glm::normalize(axis);
+
+	float angle = glm::dot(velocity, startVelocity);
+	axis *= glm::sin(angle) * axis;
+
+		return rotation;
+
+	rotation = glm::quat(glm::cos(angle), axis);
+
+	return rotation;
+}
+
+void Flock::updateAnimations(float t){
+	unsigned int i;
+	for (i = 0; i < mBoids.size(); ++i) {
+		mBoids[i]->getAnimation()->updateNodes(t);
+	}
 }

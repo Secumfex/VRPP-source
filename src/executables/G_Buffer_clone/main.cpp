@@ -13,6 +13,7 @@
 #include "Tools/ShaderTools.h"
 #include "Tools/TextureTools.h"
 
+#include "Animation/Flock.h"
 #include "Visuals/Shader.h"
 #include "Visuals/FrameBufferObject.h"
 #include "Visuals/VirtualObjectFactory.h"
@@ -56,14 +57,28 @@ int main() {
 
 	VirtualObject *object02 = voFactory->createVirtualObject(RESOURCES_PATH "/animation_test/Fish_bones.dae", VirtualObjectFactory::OTHER);
 	VirtualObject *object03 = voFactory->createVirtualObject(RESOURCES_PATH "/animation_test/tentacle.dae", VirtualObjectFactory::OTHER);
-//	VirtualObject *object02 = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj", VirtualObjectFactory::OTHER);
 	VirtualObject *object01 = voFactory->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE);
+
+
+	VirtualObject *object10 = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj", VirtualObjectFactory::OTHER);
+	VirtualObject *object11 = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj", VirtualObjectFactory::OTHER);
+	VirtualObject *object12 = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj", VirtualObjectFactory::OTHER);
+	VirtualObject *object13 = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj", VirtualObjectFactory::OTHER);
 
 	GraphicsComponent* triangle = voFactory->getTriangle();
 
 	AnimationLoop* animation = object02->getAnimation();
 
 	MaterialManager::getInstance()->makeMaterial("rough_wood_brighter", object03->getGraphicsComponent());
+
+	Flock* myFlock = new Flock();
+
+	glm::mat4 trans = glm::scale(glm::mat4(), glm::vec3(0.25f, 0.25f, 0.25f));
+
+	myFlock->addBoid(object10, trans);
+	myFlock->addBoid(object11, trans);
+	myFlock->addBoid(object12, trans);
+	myFlock->addBoid(object13, trans);
 
 	//----------------------------//
 	//        SHADERS BABY        //
@@ -114,6 +129,10 @@ int main() {
 	rq->addVirtualObject(object01);
 	rq->addVirtualObject(object02);
 	rq->addVirtualObject(object03);
+	rq->addVirtualObject(object10);
+	rq->addVirtualObject(object11);
+	rq->addVirtualObject(object12);
+	rq->addVirtualObject(object13);
 
 
 	rm->setRenderQueue(rq);
@@ -151,6 +170,8 @@ int main() {
 		angle = fmod((float)(angle+rotationSpeed*glfwGetTime()), (float)(pi<float>()*2.0f));
 
 		animation->updateNodes(angle);
+		myFlock->update(angle);
+
 
 		glfwSetTime(0.0);
 

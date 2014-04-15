@@ -31,11 +31,13 @@ private:
 	btVector3 getSeparation(std::vector<VirtualObject*> neighbors);
 	btVector3 getAllignment(std::vector<VirtualObject*> neighbors);
 	btVector3 getCohesion(std::vector<VirtualObject*> neighbors);
+	void updateAnimations(float t);
+
 
 	glm::vec3 startVelocity;
 	btVector3 startBtVelocity;
 	std::vector<VirtualObject*> mBoids;
-	std::vector<glm::mat4> mBasePositions;
+	std::vector<glm::mat4> mBaseTransform;
 
 };
 
