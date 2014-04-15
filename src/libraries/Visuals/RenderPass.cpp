@@ -18,16 +18,16 @@ RenderPass::RenderPass(Shader* shader, FrameBufferObject* fbo){
 	mShader = shader;
 
 	clearColorBufferBit = false;
-	clearDepthBufferBit = false;
+	clearDepthBufferBit = true;
 	useDepthTest = true;
 	useAlphaBlending = false;
 
 	viewPort_x = 0;
 	viewPort_y = 0;
-	if (fbo)
+	if (mFBO)
 	{
-		viewPort_width  = fbo->getWidth();
-		viewPort_height = fbo->getHeight();	
+		viewPort_width  = mFBO->getWidth();
+		viewPort_height = mFBO->getHeight();
 	}else{
 		viewPort_width = IOManager::getInstance()->getWidth();
 		viewPort_height = IOManager::getInstance()->getHeight();
@@ -39,9 +39,17 @@ void RenderPass::activate()
 	RenderManager *rm = RenderManager::getInstance();
 	rm->setCurrentShader(mShader);
 	rm->setCurrentFBO(mFBO);	
+	mShader->useProgram();
+
 	if (mFBO)
 	{
 		mFBO->bindFBO();
+		viewPort_width = mFBO->getWidth();
+		viewPort_height =mFBO->getHeight();
+	}
+	else{
+		viewPort_width  = IOManager::getInstance()->getWidth();
+		viewPort_height = IOManager::getInstance()->getHeight();
 	}
 
 	glViewport(viewPort_x, viewPort_y, viewPort_width, viewPort_height);
@@ -70,7 +78,7 @@ void RenderPass::activate()
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}else{
 		glDisable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 	}
 
 	notify("ACTIVATION");
@@ -108,11 +116,11 @@ void RenderPass::uploadUniforms()
 
 void RenderPass::render(){
 	RenderManager *rm = RenderManager::getInstance();
-	std::list<GraphicsComponent*> visibleGC = extractGCsFromRenderQueue();
-	
+	std::list<GraphicsComponent*> renderables = extractGCsFromRenderQueue();
+
 	notify("PRERENDER");
 
-	for(list<GraphicsComponent*>::iterator gc_it = visibleGC.begin(); gc_it != visibleGC.end(); ++gc_it){
+	for(list<GraphicsComponent*>::iterator gc_it = renderables.begin(); gc_it != renderables.end(); ++gc_it){
 		GraphicsComponent* myGC = *gc_it;
 		rm->setCurrentGC(myGC);
 		

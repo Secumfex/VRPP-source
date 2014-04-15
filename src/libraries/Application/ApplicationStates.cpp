@@ -84,7 +84,7 @@ void ApplicationState::bindObjects(){
 	rm->setCurrentFrustum(frustum);
 	rm->setPerspectiveMatrix(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
 	rm->setRenderQueue(renderQueue);
-	rm->setCurrentRenderLoop(renderLoop);
+	rm->setRenderLoop(renderLoop);
 
 	IOManager* io = IOManager::getInstance();
 	io->setCurrentIOHandler(iOHandler);

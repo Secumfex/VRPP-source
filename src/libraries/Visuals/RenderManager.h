@@ -62,10 +62,10 @@ public:
 
     /** \brief setter
      *
-     * sets/changes mCurrentRenderLoop
+     * sets/changes mRenderLoop
      * @param renderloop
      */
-	void setCurrentRenderLoop(RenderLoop* renderLoop);
+	void setRenderLoop(RenderLoop* renderLoop);
 
     /** \brief setter
      *
@@ -211,7 +211,7 @@ private:
 	VirtualObject* mCurrentVO;			/**< !docu pls! */
 	FrameBufferObject* mCurrentFBO;		/**< !docu pls! */
 	vector<glm::vec3> mLightPositions;	/**< !docu pls! */
-	RenderLoop* mCurrentRenderLoop;		/**< current renderloop */
+	RenderLoop* mRenderLoop;		/**< current renderloop */
 
 };
 

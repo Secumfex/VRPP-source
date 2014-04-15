@@ -31,10 +31,10 @@ void configureVirtualObjects(){
 	cowObject->translate(glm::vec3(0.0f,4.0f,0.0f));
 	testingState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cowObject));
 	
-	VirtualObject* groundObject = testingState->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_ground.dae", VirtualObjectFactory::OTHER);
+	VirtualObject* groundObject = testingState->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_ground.dae", VirtualObjectFactory::OTHER,0.0f,1,true);
 
-	VirtualObject* wallObject1 = testingState->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_wall1.dae", VirtualObjectFactory::OTHER);	// to have something in the scene
-	VirtualObject* wallObject2 = testingState->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_wall2.dae", VirtualObjectFactory::OTHER);	// to have something in the scene
+	VirtualObject* wallObject1 = testingState->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_wall1.dae", VirtualObjectFactory::OTHER,0.0f,1,true);	// to have something in the scene
+	VirtualObject* wallObject2 = testingState->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_wall2.dae", VirtualObjectFactory::OTHER,0.0f,1,true);	// to have something in the scene
 	VirtualObject* cubeObject2 = testingState->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::OTHER, 10.0f);	// to have something in the scene
 	cubeObject2->translate(glm::vec3(0.0f,2.0f,0.0f));
 	testingState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cubeObject2));
@@ -81,9 +81,10 @@ void configureInputHandler(){
 }
 
 void configureRendering(){
-	/*customize Rendermanager, Renderloop, etc. via framelisteners and such*/
-	testingApp->attachListenerOnProgramInitialization(	new SetDefaultShaderListener( new Shader (SHADERS_PATH "/Phong_Test_Textures/phong.vert", SHADERS_PATH "/Phong_Test_Textures/phong.frag")));
-	testingApp->attachListenerOnRenderManagerFrameLoop(	new RenderloopPlaceHolderListener());
+	// use a single renderpass
+	RenderPass* default_renderpass = new RenderPass(new Shader(SHADERS_PATH "/Phong_Test_Textures/phong.vert", SHADERS_PATH "/Phong_Test_Textures/phong.frag"), 0);
+	default_renderpass->setInitialGraphicsComponentList(testingState->getRenderQueue()->getGraphicsComponentList());	// render all graphics components
+	testingState->getRenderLoop()->addRenderPass(default_renderpass);	//add renderpass to renderloop
 
 	testingApp->attachListenerOnProgramInitialization(	new SetClearColorListener(1.0f,1.0f,1.0f));	// white background
 }

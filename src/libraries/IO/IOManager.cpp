@@ -87,6 +87,7 @@ void IOManager::setWindow(GLFWwindow* window){
 	this->window = window;
 
 	glfwGetWindowSize(window, &WIDTH, &HEIGHT);
+
 }
 
 int IOManager::getWidth()

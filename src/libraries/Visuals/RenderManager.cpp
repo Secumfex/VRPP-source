@@ -27,9 +27,9 @@ void RenderManager::setRenderQueue(RenderQueue* currentRQ){
 	mRenderqueue = currentRQ;
 }
 
-void RenderManager::setCurrentRenderLoop(RenderLoop* renderLoop)
+void RenderManager::setRenderLoop(RenderLoop* renderLoop)
 {
-	mCurrentRenderLoop = renderLoop;
+	mRenderLoop = renderLoop;
 }
 
 glm::mat4 RenderManager::getPerspectiveMatrix(){
@@ -205,13 +205,12 @@ void RenderManager::renderLoop(){
 
 	if(!glfwWindowShouldClose(window)){ //if window is not about to close
 		glfwMakeContextCurrent(window);
-		glClear(GL_COLOR_BUFFER_BIT);
 
 		notify("FRAMELISTENER");      //notify all listeners labeled FRAMELISTENER
 
-		if (mCurrentRenderLoop)
+		if (mRenderLoop)
 		{
-			mCurrentRenderLoop->render();
+			mRenderLoop->render();
 		}
 
 		glfwSwapBuffers(window);
@@ -231,7 +230,7 @@ RenderManager::~RenderManager(){
 RenderManager::RenderManager(){
 	mCamera = 0;
 	mRenderqueue = 0;   //must be set from outside
-	mCurrentRenderLoop = 0;
+	mRenderLoop = 0;
 
 	mCurrentGC = 0;
 	mCurrentFBO = 0;
