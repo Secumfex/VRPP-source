@@ -91,6 +91,13 @@ public:
 
 	/** \brief getter
 	 *
+	 * return list of all graphicscomponents in this queue
+	 *
+	 */
+	 list<GraphicsComponent* > getGraphicsComponentList();
+
+	/** \brief getter
+	 *
 	 * @return gcFlagStorage
 	 */
 	map<string, vector<GraphicsComponent* > > getGcFlagStorage();

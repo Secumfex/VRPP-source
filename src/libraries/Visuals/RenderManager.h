@@ -7,6 +7,7 @@
 #include "IO/Camera.h"
 #include "Visuals/Shader.h"
 #include "Visuals/FrameBufferObject.h"
+#include "Visuals/RenderLoop.h"
 #include "Visuals/Frustum.h"
 
 
@@ -58,6 +59,13 @@ public:
      * @param fbo
      */
 	void setCurrentFBO(FrameBufferObject* fbo);
+
+    /** \brief setter
+     *
+     * sets/changes mCurrentRenderLoop
+     * @param renderloop
+     */
+	void setCurrentRenderLoop(RenderLoop* renderLoop);
 
     /** \brief setter
      *
@@ -114,6 +122,12 @@ public:
 	 * @return mCurrentFBO
 	 */
 	FrameBufferObject* getCurrentFBO();
+
+	 /** \brief getter
+     *
+     * @return mCurrentRenderLoop
+     */
+	RenderLoop* getCurrentRenderLoop();
 
 	/** \brief getter
 	 *
@@ -197,6 +211,7 @@ private:
 	VirtualObject* mCurrentVO;			/**< !docu pls! */
 	FrameBufferObject* mCurrentFBO;		/**< !docu pls! */
 	vector<glm::vec3> mLightPositions;	/**< !docu pls! */
+	RenderLoop* mCurrentRenderLoop;		/**< current renderloop */
 
 };
 

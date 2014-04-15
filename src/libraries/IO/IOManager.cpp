@@ -89,6 +89,16 @@ void IOManager::setWindow(GLFWwindow* window){
 	glfwGetWindowSize(window, &WIDTH, &HEIGHT);
 }
 
+int IOManager::getWidth()
+{
+	return WIDTH;
+}
+
+int IOManager::getHeight()
+{
+	return HEIGHT;
+}
+
 void IOManager::computeFrameTimeDifference(){
 	if (window != 0){
 		if (lastTime 	== 0.0f){ 			// if glfwGetTime() has never been called before

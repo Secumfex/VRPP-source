@@ -27,6 +27,11 @@ void RenderManager::setRenderQueue(RenderQueue* currentRQ){
 	mRenderqueue = currentRQ;
 }
 
+void RenderManager::setCurrentRenderLoop(RenderLoop* renderLoop)
+{
+	mCurrentRenderLoop = renderLoop;
+}
+
 glm::mat4 RenderManager::getPerspectiveMatrix(){
 	return mFrustum->getPerspectiveMatrix();
 }
@@ -204,6 +209,11 @@ void RenderManager::renderLoop(){
 
 		notify("FRAMELISTENER");      //notify all listeners labeled FRAMELISTENER
 
+		if (mCurrentRenderLoop)
+		{
+			mCurrentRenderLoop->render();
+		}
+
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
@@ -221,11 +231,11 @@ RenderManager::~RenderManager(){
 RenderManager::RenderManager(){
 	mCamera = 0;
 	mRenderqueue = 0;   //must be set from outside
+	mCurrentRenderLoop = 0;
 
 	mCurrentGC = 0;
 	mCurrentFBO = 0;
 	mCurrentShader = 0;
-
 }
 
 void RenderManager::attachListenerOnNewFrame(Listener* listener){

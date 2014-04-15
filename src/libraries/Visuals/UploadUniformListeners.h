@@ -6,7 +6,7 @@
 
 #include "Patterns/Listener.h"
 
-
+class FrameBufferObject;
 
 /** \brief This class provides a number of Listeners for our Shaders.
  *
@@ -64,46 +64,51 @@ class UploadUniformModelMatrixListener : public Listener{
  };
 
  class UploadUniformPositionMapListener : public Listener{
-
- 	public:
+ private:
+ 	FrameBufferObject* mSourceFBO;
+ public:
 	 	///constructor @param name
- 		UploadUniformPositionMapListener(std::string name);
+ 		UploadUniformPositionMapListener(std::string name, FrameBufferObject* source_fbo = 0);
  	 	///
  		void update();
  };
 
  class UploadUniformNormalMapListener : public Listener{
-
+ private:
+ 	FrameBufferObject* mSourceFBO;
  	public:
 	 	///constructor @param name
- 		UploadUniformNormalMapListener(std::string name);
+ 		UploadUniformNormalMapListener(std::string name, FrameBufferObject* source_fbo = 0);
  	 	///
  		void update();
  };
 
  class UploadUniformColorMapListener : public Listener{
-
+ private:
+ 	FrameBufferObject* mSourceFBO;
  	public:
 	 	///constructor @param name
- 		UploadUniformColorMapListener(std::string name);
+ 		UploadUniformColorMapListener(std::string name, FrameBufferObject* source_fbo = 0);
  	 	///
  		void update();
  };
 
  class UploadUniformShadowMapListener : public Listener{
-
+ private:
+ 	FrameBufferObject* mSourceFBO;
  	public:
 	 	///constructor @param name
- 		UploadUniformShadowMapListener(std::string name);
+ 		UploadUniformShadowMapListener(std::string name, FrameBufferObject* source_fbo = 0);
  	 	///
  		void update();
  };
 
  class UploadUniformDepthMapListener : public Listener{
-
+ private:
+ 	FrameBufferObject* mSourceFBO;
  	public:
 	 	///constructor @param name
-	 	UploadUniformDepthMapListener(std::string name);
+	 	UploadUniformDepthMapListener(std::string name, FrameBufferObject* source_fbo = 0);
  	 	///
 	 	void update();
  };
@@ -127,11 +132,12 @@ class UploadUniformModelMatrixListener : public Listener{
   };
 
  class UploadUniformSpecularMapListener : public Listener{
-
+ private:
+ 	FrameBufferObject* mSourceFBO;
   	public:
 
 	 ///constructor @param name
-	 UploadUniformSpecularMapListener(std::string name);
+	 UploadUniformSpecularMapListener(std::string name, FrameBufferObject* source_fbo = 0);
 	 ///
   	 void update();
 
@@ -271,6 +277,9 @@ public:
 		GLuint texture_handle;
 		std::string uniform_name;
 	public:		
+		void setTextureHandle(GLuint texture_handle);
+		void setTextureUnit(GLint unit);
+		void setUniformName(std::string uniform_name);
 
 		UploadUniformTextureListener(std::string name = std::string("UNIFORMUPLOADLISTENER"), GLint unit = 0, std::string uniform_name = "custom_uniform", GLuint texture_handle = 0);
 		void update();	

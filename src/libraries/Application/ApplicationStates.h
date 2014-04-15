@@ -10,7 +10,8 @@
 #include "Visuals/VirtualObjectFactory.h"
 #include "Visuals/Frustum.h"
 
-class Camera; class RenderQueue; class VirtualObject;
+
+class Camera; class RenderQueue; class RenderLoop; class VirtualObject;
 
 /// Base class of States specifically for the Application-Class
 class ApplicationState : public State{
@@ -22,6 +23,7 @@ protected:
 	Camera* camera;					/**< camera to be used for view in this state */
 	RenderQueue* renderQueue;		/**< renderqueue to be used for rendering in this state */
 	IOHandler* iOHandler;			/**< IOHandler to be used for input interpretation */
+	RenderLoop* renderLoop;			/**< RenderLoop to be used for rendering */
 	glm::mat4 perspectiveMatrix;	/**< perspective matrix to be used by rendering! */
 
 	/** \brief bind objects to RenderManager, IOManager, PhysicsWorld etc.
@@ -64,6 +66,14 @@ public:
 	 */
 	glm::mat4 		getPerspectiveMatrix();
 
+
+	/** \brief getter
+	 *
+	 * @return Renderloop
+	 */
+
+	RenderLoop* getRenderLoop();
+	
 	/** \brief setter
 	 *
 	 * @param camera
