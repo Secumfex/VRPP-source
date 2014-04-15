@@ -3,6 +3,7 @@
 #include <typeinfo>
 
 
+
 RenderloopPlaceHolderListener::RenderloopPlaceHolderListener(){ 
 		rm = RenderManager::getInstance(); 
 	}
@@ -79,12 +80,19 @@ void TurnCameraListener::update(){
 	cam->setTheta(old_theta + delta_theta);
 }
 
- ApplyForceOnCameraListener::ApplyForceOnCameraListener(PlayerCamera* cam, float* strength){
+ ApplyForceOnCameraListener::ApplyForceOnCameraListener(PlayerCamera* cam,Kinect* kinect, float* strength){
+	// kinect->initKinect();
 	 this->cam=cam;
 	 this->strength= strength;
 }
 
  void ApplyForceOnCameraListener::update(){
+	 float temp;
+	 kinect->forceOld=kinect->forceNew;
+	 kinect->forceNew=kinect->getKinectData(kinect->data);
+	 temp=kinect->forceNew-kinect->forceOld;
+	 std::cout<<temp<<"FOOOOOOOORCE"<<endl;
+
  btRigidBody* rigidBody = cam->getRigidBody();
  glm::vec3 force = cam->getViewDirection() * *strength;
 			rigidBody->applyCentralImpulse(btVector3(force.x,force.y,force.z));	

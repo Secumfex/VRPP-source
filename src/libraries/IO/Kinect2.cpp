@@ -4,6 +4,7 @@
 
 
 
+
 bool Kinect::initKinect() {
     // Get a working kinect sensor
     int numSensors;
@@ -82,7 +83,9 @@ void Kinect::drawKinectData() {
 
 
 Kinect::Kinect(void)
-{
+{	force=&forceDirection;
+	forceOldp=&forceOld;
+	forceNewp=&forceNew;
 }
 
 

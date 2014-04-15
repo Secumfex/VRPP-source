@@ -77,10 +77,11 @@ public:
 
 class ApplyForceOnCameraListener : public Listener {
 private:
+	Kinect* kinect;
 	PlayerCamera* cam;
 	float* strength;
 public:
-	ApplyForceOnCameraListener(PlayerCamera* cam, float* strength);
+	ApplyForceOnCameraListener(PlayerCamera* cam, Kinect* kinect, float* strength);
 	void update();
 };
 

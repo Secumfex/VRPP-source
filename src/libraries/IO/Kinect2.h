@@ -16,7 +16,7 @@
 
 
 
-#ifdef USE_KINECT
+//#ifdef USE_KINECT
 
 #include <Windows.h>
 #include <Ole2.h>
@@ -29,14 +29,16 @@
 #include <NuiImageCamera.h>
 #include <NuiSensor.h>
 
-#endif
+//#endif
 
 
 class Kinect
 {
 public:
-	GLuint textureId;              // ID of the texture to contain Kinect RGB Data
-GLubyte data[640*480*4];  // BGRA array containing the texture data
+	//GLuint* textureId;              // ID of the texture to contain Kinect RGB Data
+GLubyte* datap[640*480*4];  // BGRA array containing the texture data
+GLubyte data[640*480*4];
+
 
 
 // Kinect variables
@@ -47,6 +49,8 @@ float* force;
 float forceDirection;
 
 
+float* forceOldp;
+float* forceNewp;
 float forceOld;
 float forceNew;
 

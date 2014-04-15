@@ -15,7 +15,7 @@
 */	
 
 
-Kinect			kinect;
+Kinect*			kinect;
 Application* 	testingApp;
 VRState* 		testingState;
 IOHandler*   	testingInputHandler;
@@ -84,7 +84,7 @@ void configureInputHandler(){
 
 	SelectionHandler* sh = testingInputHandler->getSelectionHandler();
 	testingInputHandler->attachListenerOnMouseButtonPress(new ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener(sh, testingState->getCamera(),50.0f), GLFW_MOUSE_BUTTON_RIGHT);
-	testingApp->attachListenerOnRenderManagerFrameLoop(new ApplyForceOnCameraListener(playercam , kinect.force) );
+	testingApp->attachListenerOnRenderManagerFrameLoop(new ApplyForceOnCameraListener(playercam ,kinect, kinect->force) );
 }
 
 void configureRendering(){
@@ -122,8 +122,11 @@ int main() {
 
 //directionForce=&direction;
 	
-	kinect.initKinect();
-	kinect.force=&kinect.forceDirection;
+	kinect->initKinect();
+//	kinect->force=&(kinect->forceDirection);
+//	kinect->forceOldp=&(kinect->forceOld);
+	//kinect->forceNewp=&(kinect->forceNew);
+
 	configureApplication();	// 1 do some customization
 
 	testingApp->run();		// 2 run application

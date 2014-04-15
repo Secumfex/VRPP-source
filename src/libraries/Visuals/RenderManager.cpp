@@ -25,7 +25,6 @@ using namespace glm;
 
 
 
-
 void RenderManager::setRenderQueue(RenderQueue* currentRQ){
 	mRenderqueue = currentRQ;
 }
@@ -206,6 +205,7 @@ void RenderManager::renderLoop(){
 		glfwMakeContextCurrent(window);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		
 		
 
 		notify("FRAMELISTENER");      //notify all listeners labeled FRAMELISTENER
