@@ -1,4 +1,5 @@
-#include "Kinect.h"
+
+ #include "Kinecti.h"
 	#define width 640
 #define height 480
 
@@ -78,7 +79,7 @@ void Kinect::drawKinectData() {
 
 	*/
 }
-
+ 
 
 
 Kinect::Kinect(void)
@@ -89,3 +90,4 @@ Kinect::Kinect(void)
 Kinect::~Kinect(void)
 {
 }
+

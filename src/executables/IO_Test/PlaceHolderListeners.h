@@ -1,5 +1,5 @@
 #include "Patterns/Listener.h"
-#include "Kinect.h"
+#include "IO/Kinect2.h"
 /*
 #include <GL/glew.h>
 #include <glm/glm.hpp>
