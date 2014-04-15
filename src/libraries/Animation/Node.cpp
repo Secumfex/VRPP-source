@@ -78,7 +78,7 @@ void Node::updateBone(float t, glm::mat4 parent_mat){
 	glm::vec3 pos = (mPositions[index] * (1 - t)) + (mPositions[index02] * t);
 	glm::vec3 scale = (mScales[index] * (1 - t)) + (mScales[index02] * t);
 	glm::quat rotate = glm::lerp(mRotations[index], mRotations[index02], t);
-
+	rotate = glm::normalize(rotate);
 
 
 	//	std::cout << mName << "  " <<glm::to_string(glm::vec4(rotate.w, rotate.x, rotate.y, rotate.z)) << std::endl;

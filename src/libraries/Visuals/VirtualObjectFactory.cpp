@@ -656,7 +656,7 @@ void VirtualObjectFactory::setNodeTransform(Node* node, aiNodeAnim* nodeanim, bo
 
 			glm::mat4 transform = glm::mat4_cast(rotation) * glm::translate(glm::mat4(1.0f), position)  * glm::scale(glm::mat4(1.0f), scale);
 
-			node->addTransformation(position, scale, rotation, time);
+			node->addTransformation(position, scale, glm::normalize(rotation), time);
 		}
 	}
 
