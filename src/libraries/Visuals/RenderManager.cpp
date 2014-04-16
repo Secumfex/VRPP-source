@@ -197,7 +197,7 @@ void RenderManager::manageShaderProgram(){
 }
 
 void RenderManager::renderLoop(){
-	//   std::cout<<"Render loop reached successfully."<<std::endl;
+	//   std::cout<<"RENDER LOOP REACHED SUCCESFULLY."<<std::endl;
 
 	MVPHandle = glGetUniformLocation(shaderProgramHandle, "uniformMVP");
 

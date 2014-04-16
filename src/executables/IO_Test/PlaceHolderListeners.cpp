@@ -81,20 +81,29 @@ void TurnCameraListener::update(){
 }
 
  ApplyForceOnCameraListener::ApplyForceOnCameraListener(PlayerCamera* cam,Kinect* kinect, float* strength){
-	// kinect->initKinect();
+	 this->kinect=kinect;
 	 this->cam=cam;
 	 this->strength= strength;
 }
 
  void ApplyForceOnCameraListener::update(){
-	 float temp;
-	 kinect->forceOld=kinect->forceNew;
+	 float temp=0;
+	//kinect->forceOld=kinect->forceNew;
+	 kinect->forceOld=kinect->getKinectData(kinect->data);
 	 kinect->forceNew=kinect->getKinectData(kinect->data);
-	 temp=kinect->forceNew-kinect->forceOld;
-	 std::cout<<temp<<"FOOOOOOOORCE"<<endl;
 
+	 std::cout<<kinect->forceOld<<"AAAAAAALT"<<endl;
+	 std::cout<<kinect->forceNew<<"NEEEEUUUUU"<<endl;
+	 
+	/*
+	 temp=kinect->forceOld-kinect->forceNew;
+	 if((kinect->forceNew-2)>kinect->forceOld) temp=5;
+	 else if((kinect->forceOld-2)>kinect->forceNew) temp=-5;
+	 else temp=0;
+	std::cout<<temp<<"FOOOOOOOORCE"<<endl;
+	*/
  btRigidBody* rigidBody = cam->getRigidBody();
- glm::vec3 force = cam->getViewDirection() * *strength;
+ glm::vec3 force = cam->getViewDirection() * temp;
 			rigidBody->applyCentralImpulse(btVector3(force.x,force.y,force.z));	
  }
 

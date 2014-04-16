@@ -15,7 +15,8 @@
 */	
 
 
-Kinect*			kinect;
+Kinect			kinect;
+Kinect*			kinectp;
 Application* 	testingApp;
 VRState* 		testingState;
 IOHandler*   	testingInputHandler;
@@ -84,14 +85,14 @@ void configureInputHandler(){
 
 	SelectionHandler* sh = testingInputHandler->getSelectionHandler();
 	testingInputHandler->attachListenerOnMouseButtonPress(new ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener(sh, testingState->getCamera(),50.0f), GLFW_MOUSE_BUTTON_RIGHT);
-	testingApp->attachListenerOnRenderManagerFrameLoop(new ApplyForceOnCameraListener(playercam ,kinect, kinect->force) );
+	
 }
 
 void configureRendering(){
 	/*customize Rendermanager, Renderloop, etc. via framelisteners and such*/
 	testingApp->attachListenerOnProgramInitialization(	new SetDefaultShaderListener( new Shader (SHADERS_PATH "/Phong_Test_Textures/phong.vert", SHADERS_PATH "/Phong_Test_Textures/phong.frag")));
 	testingApp->attachListenerOnRenderManagerFrameLoop(	new RenderloopPlaceHolderListener());
-
+	testingApp->attachListenerOnRenderManagerFrameLoop(new ApplyForceOnCameraListener(playercam ,kinectp, kinectp->force) );
 	testingApp->attachListenerOnProgramInitialization(	new SetClearColorListener(1.0f,1.0f,1.0f));	// white background
 }
 
@@ -116,19 +117,19 @@ void configureApplication(){
 }
 
 int main() {
-	
-	
+	kinectp=&kinect;
+
 
 
 //directionForce=&direction;
 	
-	kinect->initKinect();
+	kinectp->initKinect();
 //	kinect->force=&(kinect->forceDirection);
 //	kinect->forceOldp=&(kinect->forceOld);
 	//kinect->forceNewp=&(kinect->forceNew);
 
 	configureApplication();	// 1 do some customization
-
+	std::cout<<"BIS ZUR MAIN BIN ICH GEKOMMEN"<< endl;
 	testingApp->run();		// 2 run application
 	
 	return 0;				// 3 end :)

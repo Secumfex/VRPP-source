@@ -81,7 +81,7 @@ private:
 	PlayerCamera* cam;
 	float* strength;
 public:
-	ApplyForceOnCameraListener(PlayerCamera* cam, Kinect* kinect, float* strength);
+	ApplyForceOnCameraListener(PlayerCamera* cam,Kinect* kinect, float* strength);
 	void update();
 };
 

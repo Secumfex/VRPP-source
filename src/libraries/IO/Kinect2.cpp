@@ -54,7 +54,7 @@ float Kinect::getKinectData(GLubyte* dest) {
 	for(int i=0; i<640*480*4; i+=16){
 	temp+=data[i];
 	}
-	return temp/100000;
+	return temp/1000000 ;
 }
 
 
@@ -83,7 +83,8 @@ void Kinect::drawKinectData() {
 
 
 Kinect::Kinect(void)
-{	force=&forceDirection;
+{	//datap[640*480*4]=&data[640*480*4];
+	force=&forceDirection;
 	forceOldp=&forceOld;
 	forceNewp=&forceNew;
 }

@@ -36,7 +36,7 @@ class Kinect
 {
 public:
 	//GLuint* textureId;              // ID of the texture to contain Kinect RGB Data
-GLubyte* datap[640*480*4];  // BGRA array containing the texture data
+//GLubyte* datap[640*480*4];  // BGRA array containing the texture data
 GLubyte data[640*480*4];
 
 
@@ -44,6 +44,7 @@ GLubyte data[640*480*4];
 // Kinect variables
 HANDLE depthStream;              // The identifier of the Kinect's RGB Camera
 INuiSensor* sensor;            // The kinect sensor
+
 
 float* force;
 float forceDirection;
