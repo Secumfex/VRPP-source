@@ -84,6 +84,7 @@ void RenderManager::setCurrentFrustum(Frustum* frustum){
 	mFrustum = frustum;
 }
 void RenderManager::setLightPosition (glm::vec3 pos, int index){
+    mLightPositions.push_back(pos);
 if(mLightPositions.empty())
 	createFourLightsources();
 if(index < 0 || index > 3)

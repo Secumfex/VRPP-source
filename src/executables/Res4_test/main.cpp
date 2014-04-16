@@ -34,92 +34,94 @@ void configureTestingApplication(){
 
 void configureScene(ApplicationState* target){
 
-  	myState->		attachListenerOnActivation(new SetClearColorListener(0.0,0.0,0.5)); // custom background color
+  	myState->		attachListenerOnActivation(new SetClearColorListener(0,1,1)); // custom background color
 	myState->       attachListenerOnActivation(new PrintCameraStatusListener( myState->getCamera()));
     myState->		attachListenerOnBeginningProgramCycle( 	new PhysicWorldSimulationListener( IOManager::getInstance()->getDeltaTimePointer()));        // updates physics simulation
-    // Camera* necam = new Camera();
+
+    
     rm = RenderManager::getInstance();
-    GLFWwindow* window = rm->getWindow();
-    int width, height;
-	glfwGetFramebufferSize(window, &width, &height);
-    RenderQueue* rq = myState->getRenderQueue();
+    
     PlayerCamera* playercam = new PlayerCamera();
-    Frustum* frustum = myState->getFrustum();
-    playercam->setPosition(glm::vec3(0.0f, 2.0f, -10.0f));
+    playercam->setPosition(glm::vec3(0.0f, -5.0f, -5.0f));
 	playercam->setCenter(glm::vec3(0.0f, 0.0f, 0.0f));
 	myState->setCamera(playercam);
-	rm->setLightPosition(glm::vec3(5,2,-2),0);
+	rm->setLightPosition(glm::vec3(500,2,-2),0); // for uniformLightPerspective
     
     
  	VirtualObject* scene_chest_Object;
     scene_chest_Object	= target->createVirtualObject(RESOURCES_PATH "/chest_scene/nicer_chest.dae",VirtualObjectFactory::OTHER, 0.0f, 1, true);
+    scene_chest_Object->setModelMatrix(glm::rotate(glm::mat4(1.0f), 180.0f, glm::vec3(0,1,0)));
     /* to animate the VirtualObject */
     // Listener* new_lesten = new AnimateRotatingModelMatrixListener(scene_chest_Object);
-    //   myApp->attachListenerOnRenderManagerFrameLoop(new_lesten);
+    // myApp->attachListenerOnRenderManagerFrameLoop(new_lesten);
 
     Shader* phong_shader 		= new Shader( SHADERS_PATH "/chest_test/shader_chest.vert"	, SHADERS_PATH 	"/chest_test/shader_chest.frag");
+    
+   // Shader* depth_shader 		= new Shader( SHADERS_PATH "/chest_test/Depthwrite.vert"	, SHADERS_PATH 	"/chest_test/Depthwrite.frag");
+    
 	Shader *composition_shader  = new Shader( SHADERS_PATH "/chest_test/screenFill.vert", SHADERS_PATH "/chest_test/finalCompositing.frag");
 
-    rq->addShader(phong_shader);
-    rq->addCompositingShader(composition_shader);
+   // rq->addShader(phong_shader);
+   // rq->addCompositingShader(composition_shader);
     
     
     /******************* framebuffer objects *****************************************/
     
-    FrameBufferObject* framebuffer_render = new FrameBufferObject(width, height);
-   // framebuffer_render->bindFBO();
-    
+    FrameBufferObject* framebuffer_render = new FrameBufferObject(800, 600);
     myState->attachListenerOnActivation(new SetFrameBufferObjectListener(framebuffer_render)); //bindFBO;
 
     framebuffer_render->createPositionTexture();
     framebuffer_render->createNormalTexture();
     framebuffer_render->createColorTexture();
 	framebuffer_render->createSpecularTexture();
-	framebuffer_render->createShadowMap();
-    
-    
     framebuffer_render->makeDrawBuffers();
-    
-	// draw color to color attachment 0
-   // framebuffer_render->unbindFBO();
-    
-    rm->setRenderQueue(rq);
-    rm->setCurrentFBO(framebuffer_render);
-    rm->setCamera(playercam);
-    rm->setCurrentFrustum(frustum);
-    
-    frustum->updateModelMatrix();
-    
-    //glm::vec3 lightPosition(0.0f,1000.0f,0.0f);
 
 
-  //  myApp->attachListenerOnProgramInitialization(	new SetCurrentShaderListener( phong_shader ));
     
-    // 4: render regular Scene
-   framebuffer_render->bindFBO();
-    SetFrameBufferObjectListener *bindFBO = new SetFrameBufferObjectListener(framebuffer_render);
-    myApp->attachListenerOnRenderManagerFrameLoop(bindFBO);
-    
-    
-	myApp->attachListenerOnRenderManagerFrameLoop(	new SetCurrentShaderListener( phong_shader ));
-	AlternativeRenderloopListener* renderloop = new AlternativeRenderloopListener();
-	myApp->attachListenerOnRenderManagerFrameLoop(	renderloop );
-    UnbindFrameBufferObjectListener* unbindFBO = new UnbindFrameBufferObjectListener();
-myApp->attachListenerOnRenderManagerFrameLoop(unbindFBO);
-   // framebuffer_render->unbindFBO();
-  
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glDisable(GL_DEPTH_TEST);
-    // 7: Compositing
-	myApp->attachListenerOnRenderManagerFrameLoop( new SetCurrentShaderListener( composition_shader ));
-	RenderGraphicsComponentListener* renderCompositing = new RenderScreenFillingTriangleListener();
+    /* render regular Scene */
+    // bindFBO
+    myApp->attachListenerOnRenderManagerFrameLoop(new SetFrameBufferObjectListener(framebuffer_render));
+	myApp->attachListenerOnRenderManagerFrameLoop(new SetCurrentShaderListener(phong_shader));
+	myApp->attachListenerOnRenderManagerFrameLoop(new AlternativeRenderloopListener());
+    // unbindFBO
+    myApp->attachListenerOnRenderManagerFrameLoop(new UnbindFrameBufferObjectListener());
 
-	myApp->attachListenerOnRenderManagerFrameLoop( renderCompositing );
     
-}
-
-void configureRendering(){
-
+    
+    
+   /******************* framebuffer objects *****************************************/
+   /*
+    FrameBufferObject* framebuffer_render2 = new FrameBufferObject(800, 600);
+    myState->attachListenerOnActivation(new SetFrameBufferObjectListener(framebuffer_render2)); //bindFBO;
+    
+    framebuffer_render2->createShadowMap();
+    framebuffer_render2->makeDrawBuffers();
+    
+    
+    myApp->attachListenerOnRenderManagerFrameLoop(new SetCurrentShaderListener(depth_shader));
+	myApp->attachListenerOnRenderManagerFrameLoop(new AlternativeRenderloopListener());
+    myApp->attachListenerOnRenderManagerFrameLoop(new UnbindFrameBufferObjectListener());
+ */
+    
+    
+    /* compositing */
+	myApp->attachListenerOnRenderManagerFrameLoop(new SetCurrentShaderListener(composition_shader));
+	myApp->attachListenerOnRenderManagerFrameLoop(new RenderScreenFillingTriangleListener());
+    
+    IOHandler* myVRStateIOHandler = myState-> getIOHandler();
+    myVRStateIOHandler->attachListenerOnKeyPress(new TerminateApplicationListener(myApp), 	GLFW_KEY_ESCAPE);	// Terminate Application by pressing Escape
+    myVRStateIOHandler->attachListenerOnKeyPress(new SetClearColorListener(0.0,0.0,0.0),	GLFW_KEY_1);		// pressing '1' : black background
+    myVRStateIOHandler->attachListenerOnKeyPress(new SetClearColorListener(1.0,1.0,1.0), 	GLFW_KEY_2);		// pressing '2' : white background
+    myVRStateIOHandler->attachListenerOnKeyPress(new SetClearColorListener(0.44,0.5,0.56), 	GLFW_KEY_3);		// pressing '3' : default greyish-blue background
+    myVRStateIOHandler->attachListenerOnKeyPress(new TurnCameraListener(myState->getCamera(), 0.1f, 0.0f), 	GLFW_KEY_LEFT);		// pressing '<-' : view direction at an angle to the left
+    myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myState->getCamera()), 								GLFW_KEY_LEFT);
+    myVRStateIOHandler->attachListenerOnKeyPress(new TurnCameraListener(myState->getCamera(), -0.1f, 0.0f), 	GLFW_KEY_RIGHT);	// pressing '->' : view direction at an angle to the right
+    myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myState->getCamera()), 								GLFW_KEY_RIGHT);
+    myVRStateIOHandler->attachListenerOnKeyPress(new TurnCameraListener(myState->getCamera(), 0.0f, 0.1f), 	GLFW_KEY_UP);		// pressing '<-' : view direction straight ahead
+    myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myState->getCamera()), 								GLFW_KEY_UP);
+    myVRStateIOHandler->attachListenerOnKeyPress(new TurnCameraListener(myState->getCamera(), 0.0f, -0.1f), 	GLFW_KEY_DOWN);		// pressing '->' : view direction straight ahead
+    myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myState->getCamera()), 								GLFW_KEY_DOWN);
+    
 }
 
 
@@ -134,13 +136,9 @@ void configureMyApp(){
     
     configureTestingApplication();
     
-    
-    
 	configureScene(myState);
-
-    
-	
 }
+
 
 int main() {
 	configureMyApp();		// 1 do some customization

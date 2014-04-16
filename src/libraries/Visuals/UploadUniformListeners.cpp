@@ -107,7 +107,7 @@ UploadUniformColorMapListener::UploadUniformColorMapListener(std::string name){
 
 void UploadUniformColorMapListener::update(){
 	FrameBufferObject* fbo = RenderManager::getInstance()->getCurrentFBO();
-    std::cout<<"FBOHandle: "<<fbo->getFboHandle();
+    //std::cout<<"FBOHandle: "<<fbo->getFboHandle();
 	Shader* shader = RenderManager::getInstance()->getCurrentShader();
 
 	glActiveTexture(GL_TEXTURE6);

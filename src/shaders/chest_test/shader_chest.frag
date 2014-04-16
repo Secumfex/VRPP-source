@@ -5,6 +5,7 @@ in vec4 passPosition;
 in vec2 passUVCoord;
 in vec3 passNormal;
 in vec3 passTangent;
+//in vec3 vVaryingLightDir;
 
 uniform sampler2D diffuseTexture;
 uniform sampler2D normalTexture;
@@ -32,7 +33,7 @@ void main(){
     
     
     positionOutput = passPosition;
-    normalOutput = normalize(vec4((tangentSpace * (texture(normalTexture, passUVCoord).rgb * 2.0 - 1.0)), 0.0));
+    normalOutput = normalize(vec4((tangentSpace * (texture(normalTexture, passUVCoord).rgb - 0.5 ) * 2.0), 0.0));
     colorOutput = texture(diffuseTexture, passUVCoord);
     specularOutput = vec4(specularColor, shininess);
 }

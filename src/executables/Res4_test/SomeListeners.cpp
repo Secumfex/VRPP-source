@@ -258,7 +258,7 @@ void UnbindFrameBufferObjectListener::update(){
 	if (currentFBO != 0){
 		currentFBO->unbindFBO();
 	}
-	//RenderManager::getInstance()->setCurrentFBO( 0 );
+	// RenderManager::getInstance()->setCurrentFBO( 0 );
 }
 
 ReflectionMapRenderPass::ReflectionMapRenderPass(FrameBufferObject* fbo){

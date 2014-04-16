@@ -29,7 +29,7 @@ void main() {
     
 	lightPerspective = vec4(lightPerspective.xyz / lightPerspective.w, 0.0);
     lightPerspective = lightPerspective * 0.5 + 0.5;
-    //float lightDepth = texture(shadowMap, lightPerspective.xy).x;
+   // float lightDepth = texture(shadowMap, lightPerspective.xy).x;
     
 	float visibility = 1.0;
     //
@@ -66,6 +66,6 @@ void main() {
     }
     glow /= strength * strength * 4;
 
-    fragmentColor = color * ambient + (color * diffuse + specularColor * specular) * lightColor;
+    fragmentColor = color * ambient + (color * diffuse  + specularColor * specular) * lightColor;
     fragmentColor += glow;
 }
