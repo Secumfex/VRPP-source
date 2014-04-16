@@ -18,6 +18,7 @@ ApplicationState::ApplicationState(){
 	camera = new Camera();
 	renderQueue = new RenderQueue();
 	iOHandler = new IngameHandler();
+	renderLoop = new RenderLoop();
 	frustum = new Frustum(camera);
 	iOHandler->setCameraObject(camera);
 	attachListenerOnBeginningProgramCycle(	new UpdateCameraPositionListener(camera, IOManager::getInstance()->getDeltaTimePointer()));
@@ -44,6 +45,11 @@ IOHandler* ApplicationState::getIOHandler(){
 
 glm::mat4 ApplicationState::getPerspectiveMatrix(){
 	return perspectiveMatrix;
+}
+
+RenderLoop* ApplicationState::getRenderLoop()
+{
+	return renderLoop;
 }
 
 void ApplicationState::setRenderQueue(		RenderQueue* renderQueue){
@@ -78,6 +84,7 @@ void ApplicationState::bindObjects(){
 	rm->setCurrentFrustum(frustum);
 	rm->setPerspectiveMatrix(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
 	rm->setRenderQueue(renderQueue);
+	rm->setRenderLoop(renderLoop);
 
 	IOManager* io = IOManager::getInstance();
 	io->setCurrentIOHandler(iOHandler);

@@ -73,12 +73,17 @@ void UploadUniformLightPerspectiveMatrixListener::update(){
 	shader->uploadUniform(lightPerspectiveMatrix, "uniformLightPerspective");
 }
 
-UploadUniformPositionMapListener::UploadUniformPositionMapListener(std::string name){
+UploadUniformPositionMapListener::UploadUniformPositionMapListener(std::string name, FrameBufferObject* source_fbo){
 	setName(name);
+	mSourceFBO = source_fbo;
 }
 
 void UploadUniformPositionMapListener::update(){
-	FrameBufferObject* fbo = RenderManager::getInstance()->getCurrentFBO();
+	FrameBufferObject* fbo = mSourceFBO;
+	if(!fbo) {
+		fbo = RenderManager::getInstance()->getCurrentFBO();
+	}
+
 	Shader* shader = RenderManager::getInstance()->getCurrentShader();
 
 	glActiveTexture(GL_TEXTURE4);
@@ -87,13 +92,16 @@ void UploadUniformPositionMapListener::update(){
 	shader->uploadUniform(4,"positionMap");
 }
 
-UploadUniformNormalMapListener::UploadUniformNormalMapListener(std::string name){
+UploadUniformNormalMapListener::UploadUniformNormalMapListener(std::string name, FrameBufferObject* source_fbo){
 	setName(name);
+	mSourceFBO = source_fbo;
 }
 
 void UploadUniformNormalMapListener::update(){
-	FrameBufferObject* fbo = RenderManager::getInstance()->getCurrentFBO();
-	Shader* shader = RenderManager::getInstance()->getCurrentShader();
+	FrameBufferObject* fbo = mSourceFBO;
+	if(!fbo) {
+		fbo = RenderManager::getInstance()->getCurrentFBO();
+	}Shader* shader = RenderManager::getInstance()->getCurrentShader();
 
 	glActiveTexture(GL_TEXTURE5);
 	glEnable(GL_TEXTURE_2D);
@@ -101,12 +109,16 @@ void UploadUniformNormalMapListener::update(){
 	shader->uploadUniform(5,"normalMap");
 }
 
-UploadUniformColorMapListener::UploadUniformColorMapListener(std::string name){
+UploadUniformColorMapListener::UploadUniformColorMapListener(std::string name, FrameBufferObject* source_fbo){
 	setName(name);
+	mSourceFBO = source_fbo;
 }
 
 void UploadUniformColorMapListener::update(){
-	FrameBufferObject* fbo = RenderManager::getInstance()->getCurrentFBO();
+	FrameBufferObject* fbo = mSourceFBO;
+	if(!fbo) {
+		fbo = RenderManager::getInstance()->getCurrentFBO();
+	}
 	Shader* shader = RenderManager::getInstance()->getCurrentShader();
 
 	glActiveTexture(GL_TEXTURE6);
@@ -114,11 +126,15 @@ void UploadUniformColorMapListener::update(){
 	fbo->bindColorTexture();
 	shader->uploadUniform(6,"colorMap");
 }
-UploadUniformShadowMapListener::UploadUniformShadowMapListener(std::string name){
+UploadUniformShadowMapListener::UploadUniformShadowMapListener(std::string name, FrameBufferObject* source_fbo){
 	setName(name);
+	mSourceFBO = source_fbo;
 }
 void UploadUniformShadowMapListener::update(){
-	FrameBufferObject* fbo = RenderManager::getInstance()->getCurrentFBO();
+	FrameBufferObject* fbo = mSourceFBO;
+	if(!fbo) {
+		fbo = RenderManager::getInstance()->getCurrentFBO();
+	}
 	Shader* shader = RenderManager::getInstance()->getCurrentShader();
 
 	glActiveTexture(GL_TEXTURE8);
@@ -126,12 +142,16 @@ void UploadUniformShadowMapListener::update(){
 	fbo->bindShadowMap();
 	shader->uploadUniform(8,"shadowMap");
 }
-UploadUniformSpecularMapListener::UploadUniformSpecularMapListener(std::string name){
+UploadUniformSpecularMapListener::UploadUniformSpecularMapListener(std::string name, FrameBufferObject* source_fbo){
 	setName(name);
+	mSourceFBO = source_fbo;
 }
 
 void UploadUniformSpecularMapListener::update(){
-	FrameBufferObject* fbo = RenderManager::getInstance()->getCurrentFBO();
+	FrameBufferObject* fbo = mSourceFBO;
+	if(!fbo) {
+		fbo = RenderManager::getInstance()->getCurrentFBO();
+	}
 	Shader* shader = RenderManager::getInstance()->getCurrentShader();
 
 
@@ -141,8 +161,9 @@ void UploadUniformSpecularMapListener::update(){
 	shader->uploadUniform(7,"specularMap");
 }
 
-UploadUniformDepthMapListener::UploadUniformDepthMapListener(std::string name){
+UploadUniformDepthMapListener::UploadUniformDepthMapListener(std::string name,FrameBufferObject* source_fbo){
 	setName(name);
+	mSourceFBO = source_fbo;
 }
 
 void UploadUniformDepthMapListener::update(){
@@ -360,4 +381,19 @@ void UploadUniformTextureListener::update(){
 
 	Shader* shader = RenderManager::getInstance()->getCurrentShader();
 	shader->uploadUniform( unit, uniform_name);		// upload texture unit to shader uniform sampler2d variable
+}
+
+void UploadUniformTextureListener::setTextureHandle(GLuint texture_handle)
+{
+	this->texture_handle = texture_handle;
+}
+
+void UploadUniformTextureListener::setTextureUnit(GLint unit)
+{
+	this->unit = unit;
+}
+
+void UploadUniformTextureListener::setUniformName(std::string uniform_name)
+{
+	this->uniform_name = uniform_name;
 }
