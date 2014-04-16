@@ -9,8 +9,8 @@
 
 Flock::Flock() {
 	srand(time(0));
-	startVelocity = glm::vec3(0.1f, 0.0f, 0.0f);
-	startBtVelocity = btVector3(0.1f, 0.0f, 0.0f);
+	startVelocity = glm::vec3(0.001f, 0.0f, 0.0f);
+	startBtVelocity = btVector3(0.001f, 0.0f, 0.0f);
 
 }
 
@@ -33,9 +33,9 @@ std::vector<Boid*> Flock::getNeighbors(Boid* boid){
 	glm::vec3 vo_pos = boid->getPosition();
 
 	for (i = 0; i < mBoids.size(); ++i) {
-		glm::vec3 temp_pos = mBoids[i]->getPosition();
+		glm::vec3 temp_pos = mBoids[i]->getPosition() - vo_pos;
 
-		if(glm::vec3(temp_pos  - vo_pos).length() < NEIGHBORHOOD && boid != mBoids[i])
+		if(glm::length(temp_pos) < NEIGHBORHOOD && boid != mBoids[i])
 			neighbors.push_back(mBoids[i]);
 	}
 
@@ -54,8 +54,6 @@ void Flock::initializeStartPositions(float maxDistance, glm::vec3 startPosition)
 		y = (y * 2) - maxDistance;
 		z = (z * 2) - maxDistance;
 
-		cout << x << "/" << y << "/" << z << " LOL" << rand() << endl;
-
 		mBoids[i]->setPosition(glm::vec3(x, y, z));
 	}
 }
@@ -72,8 +70,15 @@ void Flock::update(float t){
 		Boid* boid_temp = mBoids[i];
 		std::vector<Boid*> neightbors = getNeighbors(boid_temp);
 
-		glm::vec3 v;
+		glm::vec3 v = getAllignment(neightbors, boid_temp);
+		cout << "CHECK IT OUT MON " << neightbors.size()<< endl;
+		cout << glm::to_string(v) << endl;
+		v = getCohesion(neightbors, boid_temp);
+		cout << glm::to_string(v) << endl;
+		v = getSeparation(neightbors, boid_temp);
+		cout << glm::to_string(v) << endl << endl;
 		next_velocities.push_back(v);
+
 	}
 
 
@@ -99,8 +104,11 @@ void Flock::update(float t){
 	}
 }
 
-glm::vec3 Flock::getSeparation(std::vector<Boid*> neighbors){
+glm::vec3 Flock::getCohesion(std::vector<Boid*> neighbors, Boid* boid){
 	glm::vec3 v = glm::vec3(0.0f, 0.0f, 0.0f);
+
+	if(neighbors.size() <= 0)
+		return v;
 
 	unsigned int i;
 	for (i = 0; i < neighbors.size(); ++i) {
@@ -109,24 +117,34 @@ glm::vec3 Flock::getSeparation(std::vector<Boid*> neighbors){
 	}
 	v = v * (1.0f/(neighbors.size() * 1.0f));
 
-	return v * 0.01f;
+	return (v - boid->getPosition()) * 0.01f;
 }
-glm::vec3 Flock::getAllignment(std::vector<Boid*> neighbors){
+glm::vec3 Flock::getAllignment(std::vector<Boid*> neighbors, Boid* boid){
 	glm::vec3 v = glm::vec3(0.0f, 0.0f, 0.0f);
+
+	if(neighbors.size() <= 0)
+		return v;
+
+	glm::vec3 v1 = boid->getVelocity();
 
 	unsigned int i;
 	for (i = 0; i < neighbors.size(); ++i) {
-
+		v += neighbors[i]->getVelocity();
 	}
+	v = v * (1.0f/(neighbors.size() * 1.0f));
 
-	return v;
+	return v * 0.125f;
 }
-glm::vec3 Flock::getCohesion(std::vector<Boid*> neighbors){
+glm::vec3 Flock::getSeparation(std::vector<Boid*> neighbors, Boid* boid){
 	glm::vec3 v = glm::vec3(0.0f, 0.0f, 0.0f);
+
+	glm::vec3 v1 = boid->getPosition();
 
 	unsigned int i;
 	for (i = 0; i < neighbors.size(); ++i) {
-
+		glm::vec3 v2 = v1 - neighbors[i]->getPosition();
+		if(v2.length() < 0.1f)
+			v = v - v2;
 	}
 
 	return v;
@@ -140,7 +158,6 @@ glm::quat Flock::getRotation(glm::vec3 velocity){
 		return rotation;
 
 	float min_value = std::numeric_limits<float>::min();
-	cout << "blablabla v: " << glm::to_string(velocity) << " length " << velocity.length() << endl;
 
 	velocity *= (1.0f / velocity.length());
 	glm::vec3 start = glm::normalize(startVelocity);
@@ -149,18 +166,14 @@ glm::quat Flock::getRotation(glm::vec3 velocity){
 		return rotation;
 
 	glm::vec3 axis = glm::cross(velocity, start);
-	cout << min_value <<" BLAAA" << glm::to_string(axis) << " von " << glm::to_string(velocity) << " und " << glm::to_string(start) << endl;
 	axis = glm::normalize(axis);
-	//	cout << "oder normalisieren?" << endl;
 
 	float angle = glm::dot(velocity, start);
 	axis *= glm::sin(angle) * axis;
-	//	cout << "oder skalarprodukt?" << endl;
 
 	return rotation;
 
 	rotation = glm::quat(glm::cos(angle), axis);
-	cout << "fertisch" << endl;
 
 	return rotation;
 }

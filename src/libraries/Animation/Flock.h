@@ -28,9 +28,9 @@ public:
 
 private:
 
-	glm::vec3 getSeparation(std::vector<Boid*> neighbors);
-	glm::vec3 getAllignment(std::vector<Boid*> neighbors);
-	glm::vec3 getCohesion(std::vector<Boid*> neighbors);
+	glm::vec3 getSeparation(std::vector<Boid*> neighbors, Boid* boid);
+	glm::vec3 getAllignment(std::vector<Boid*> neighbors, Boid* boid);
+	glm::vec3 getCohesion(std::vector<Boid*> neighbors, Boid* boid);
 	void updateAnimations(float t);
 
 
