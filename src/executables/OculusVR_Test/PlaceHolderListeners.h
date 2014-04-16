@@ -10,7 +10,6 @@
 
 #include "Visuals/RenderManager.h"
 #include "Visuals/Shader.h"
-#include "IO/SelectionHandler.h"
 
 /// Listener which renders a frame by using current Instance pointers of RenderManager
 class RenderloopPlaceHolderListener : public Listener{
@@ -44,55 +43,55 @@ public:
 	void update();
 };
 
-
-
-/// Listener which sets the direction of the given Camera Object
-class TurnCameraListener : public Listener {
+#include "IO/Oculus.h"
+/// Listener which prints the Oculus Orientation on update
+class PrintOculusOrientationListener : public Listener
+{
 private:
-	Camera* 	cam;
-	float delta_theta; // inlcination step
-	float delta_phi;   // rotation step
+	Oculus* oculus;
 public:
-	TurnCameraListener(Camera* cam, float delta_phi, float delta_theta);
+	PrintOculusOrientationListener(Oculus* oculus);
 	void update();
 };
 
-/// Listener which sets the Position of the given Camera Object
-class SetCameraPositionListener : public Listener {
+/// Listener which updates the Oculus Orientation variables on update
+class UpdateOculusOrientationListener : public Listener
+{
 private:
-	Camera* 	cam;
-	glm::vec3 position;
+	Oculus* oculus;
 public:
-	SetCameraPositionListener(Camera* cam, glm::vec3 position);
+	UpdateOculusOrientationListener(Oculus* oculus = 0);
 	void update();
 };
 
-class ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener : public Listener {
+
+/// Listener which uses it's own FBOs image and applies post processing distortion on it
+class OculusPostProcessingRenderpass : public Listener
+{
 private:
-	SelectionHandler* selectionHandler;
-	Camera* cam;
-	float strength;
+	Oculus* oculus;
 public:
-	ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener(SelectionHandler* selectionHandler, Camera* cam, float strength = 100.0f);
+	OculusPostProcessingRenderpass(Oculus* oculus = 0);
 	void update();
 };
 
-/// Listener which updates the VirtualObject Modelmatrix by reading the PhysicsComponent Modelmatrix
-class UpdateVirtualObjectModelMatrixListener : public Listener{
+/// Listener which binds the Oculus' FBO image
+class BindOculusFrameBufferObjectListener : public Listener
+{
 private:
-	VirtualObject* vo;
+	Oculus* oculus;
 public:
-	UpdateVirtualObjectModelMatrixListener(VirtualObject* vo);
+	BindOculusFrameBufferObjectListener(Oculus* oculus = 0);
 	void update();
 };
 
-class btRigidBody; class btVector3;
 
-class ApplyLinearImpulseOnRigidBody : public Listener{
+/// Listener which unbinds the Oculus' FBO image
+class UnbindOculusFrameBufferObjectListener : public Listener
+{
 private:
-	btRigidBody* rigidBody;
-	glm::vec3 force;
+	Oculus* oculus;
 public:
-	ApplyLinearImpulseOnRigidBody(btRigidBody* rigidBody, glm::vec3 force);
+	UnbindOculusFrameBufferObjectListener(Oculus* oculus = 0);
 	void update();
 };

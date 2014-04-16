@@ -10,12 +10,6 @@
 
 #include "UnderwaterScene.h"
 
-/*
-*	A basic executable to use as starting point with our libraries
-*	see Demo-Application to see exemplary usage of listener interfaces, virtual object, input configuration and more
-*	tip: write short Listener classes to wrap code and attach to suitable listener interfaces; i.e. use attachListenerOnBeginningProgramCycle to use code during a program cycle
-*/
-
 Application* 	testingApp;
 VRState* 		testingState;
 IOHandler*   	testingInputHandler;
