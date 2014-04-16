@@ -7,16 +7,13 @@ Seetang::Seetang() {
 }
 
 vector<btRigidBody*> rb_vec;
-vector<btTransform*> transform_vec;
+vector<btTransform> transform_vec;
 vector<btGeneric6DofSpringConstraint*> constraint_vec;
-btTransform transform_tmp;
 btGeneric6DofSpringConstraint* constraint_tmp;
-btDefaultMotionState motionState;
-btCollisionShape* collisionShape = 0;
-
+btTransform transform_tmp;
 
 //SetUpGroundTarget(50, 200, 50, 0, 0, 0, 0, 1);
-VirtualObject SetUpGroundTarget(float width, float height, float depth, float x, float y, float z, float mass, int collisionFlag) {
+VirtualObject* SetUpGroundTarget(float width, float height, float depth, float x, float y, float z, float mass, int collisionFlag) {
 	VirtualObject* baseSeaGras = new VirtualObject(width, height, depth, x, y, z, mass, collisionFlag);
 	/*	VirtualObject::VirtualObject(float width, float height, float depth, float x, float y, float z, float mass, int collisionFlag){
 	 physicsComponent = new PhysicsComponent(width, height, depth, x, y, z, mass, collisionFlag);
@@ -31,9 +28,11 @@ VirtualObject SetUpGroundTarget(float width, float height, float depth, float x,
 
 	while (tmp_height < height-20) {
 		//btScalar mass, btMotionState *motionState, btCollisionShape *collisionShape, const btVector3 &localInertia
-		motionState = btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,tmp_height,0)));
-		collisionShape = 0;
-		btRigidBody* rm_tmp = new btRigidBody(0.0f,motionState, collisionShape ,btVector3(0,tmp_height,0));
+		btCollisionShape* cShape = new btStaticPlaneShape(btVector3(0,1,0),0);
+		btDefaultMotionState* ms = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,-4,5)));
+		btRigidBody::btRigidBodyConstructionInfo rbCI(0,ms,cShape,btVector3(0,0,0));
+
+		btRigidBody* rb_tmp = new btRigidBody(rbCI);
 		//btRigidBody* rb_tmp = new btRigidBody(0, btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,tmp_height,0))), 0, btVector3(0, 0, 0));
 		rb_tmp->applyForce(btVector3(10, 30, 0), btVector3(0, 0, 0));
 		rb_tmp->setDamping(.1, .1);
@@ -45,7 +44,7 @@ VirtualObject SetUpGroundTarget(float width, float height, float depth, float x,
 
 		transform_tmp = btTransform::getIdentity();
 		transform_tmp.setOrigin(	btVector3(btScalar(0.), btScalar(tmp_height), btScalar(0.)));
-		transform_vec.push_back(tranform_tmp);
+		transform_vec.push_back(transform_tmp);
 
 		constraint_tmp = new btGeneric6DofSpringConstraint( *rb_vec[iterator - 1], *rb_vec[iterator], transform_vec[iterator - 1], transform_vec[iterator], true);
 		constraint_tmp->setLinearUpperLimit(btVector3(0., 10., 0.));
