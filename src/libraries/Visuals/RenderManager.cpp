@@ -206,6 +206,8 @@ void RenderManager::renderLoop(){
 	if(!glfwWindowShouldClose(window)){ //if window is not about to close
 		glfwMakeContextCurrent(window);
 
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 		notify("FRAMELISTENER");      //notify all listeners labeled FRAMELISTENER
 
 		if (mRenderLoop)
