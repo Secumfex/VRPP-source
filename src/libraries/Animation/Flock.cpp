@@ -18,22 +18,24 @@ Flock::~Flock() {
 	// TODO Auto-generated destructor stub
 }
 void Flock::addBoid(VirtualObject *vo, glm::mat4 basePosition){
-	mBoids.push_back(vo);
-	mBaseTransform.push_back(basePosition);
-	vo->getPhysicsComponent()->getRigidBody()->setLinearVelocity(startBtVelocity);
+	Boid* myBoid = new Boid(vo);
+	myBoid->setBaseMatrix(basePosition);
+	myBoid->setVelocity(startVelocity);
+
+	mBoids.push_back(myBoid);
 }
 
 
-std::vector<VirtualObject*> Flock::getNeighbors(VirtualObject *vo){
-	std::vector<VirtualObject*> neighbors;
+std::vector<Boid*> Flock::getNeighbors(Boid* boid){
+	std::vector<Boid*> neighbors;
 	unsigned int i;
 
-	glm::vec3 vo_pos = vo->physicsComponent->getPosition();
+	glm::vec3 vo_pos = boid->getPosition();
 
 	for (i = 0; i < mBoids.size(); ++i) {
-		glm::vec3 temp_pos = mBoids[i]->physicsComponent->getPosition();
+		glm::vec3 temp_pos = mBoids[i]->getPosition();
 
-		if(glm::vec3(temp_pos  - vo_pos).length() < NEIGHBORHOOD)
+		if(glm::vec3(temp_pos  - vo_pos).length() < NEIGHBORHOOD && boid != mBoids[i])
 			neighbors.push_back(mBoids[i]);
 	}
 
@@ -44,13 +46,17 @@ void Flock::initializeStartPositions(float maxDistance, glm::vec3 startPosition)
 	unsigned int i;
 
 	for (i = 0; i < mBoids.size(); ++i){
-		float x = startPosition.x + ((rand()/RAND_MAX) * maxDistance);
-		float y = startPosition.y + ((rand()/RAND_MAX) * maxDistance);
-		float z = startPosition.z + ((rand()/RAND_MAX) * maxDistance);
+		float x = startPosition.x + ((1.0f * rand()/RAND_MAX) * maxDistance);
+		float y = startPosition.y + ((1.0f * rand()/RAND_MAX) * maxDistance);
+		float z = startPosition.z + ((1.0f * rand()/RAND_MAX) * maxDistance);
 
-		cout << x << "/" << y << "/" << z << " LOL" << endl;
+		x = (x * 2) - maxDistance;
+		y = (y * 2) - maxDistance;
+		z = (z * 2) - maxDistance;
 
-		mBoids[i]->physicsComponent->setPosition(x, y, z);
+		cout << x << "/" << y << "/" << z << " LOL" << rand() << endl;
+
+		mBoids[i]->setPosition(glm::vec3(x, y, z));
 	}
 }
 
@@ -58,65 +64,65 @@ void Flock::update(float t){
 	unsigned int i;
 
 
-	std::vector<btVector3> next_velocities;
+	std::vector<glm::vec3> next_velocities;
 	float delta_time = IOManager::getInstance()->getDeltaTime();
 
 	for (i = 0; i < mBoids.size(); ++i){
 
-		VirtualObject* vo_temp = mBoids[i];
-		std::vector<VirtualObject*> neightbors = getNeighbors(vo_temp);
+		Boid* boid_temp = mBoids[i];
+		std::vector<Boid*> neightbors = getNeighbors(boid_temp);
 
-		btVector3 v;
+		glm::vec3 v;
 		next_velocities.push_back(v);
 	}
 
 
 	for (i = 0; i < mBoids.size(); ++i){
-		VirtualObject* vo_temp = mBoids[i];
-		btVector3 v_temp = mBoids[i]->getPhysicsComponent()->getRigidBody()->getLinearVelocity();
+		Boid* boid_temp = mBoids[i];
+		glm::vec3 v_temp = mBoids[i]->getVelocity();
 		v_temp += next_velocities[i];
-		mBoids[i]->getPhysicsComponent()->getRigidBody()->setLinearVelocity(v_temp);
-		v_temp *= delta_time;
+		mBoids[i]->setVelocity(v_temp);
 
-		glm::vec3 v_temp01 = glm::vec3(v_temp.x(), v_temp.y(), v_temp.z());
-//		glm::quat rotation = getRotation(v_temp01);
-		glm::quat rotation = glm::quat (1.0f, 0.0f, 0.0f, 0.0f);
 
-		cout << glm::to_string(v_temp01) << "  " << v_temp.x() << "/" <<v_temp.y() << "/" <<v_temp.z()<< endl;
+		glm::vec3 v_temp01 = v_temp * delta_time;
 
-		v_temp01 += vo_temp->getPhysicsComponent()->getPosition();
-		vo_temp->getPhysicsComponent()->setPosition(v_temp01.x, v_temp01.y, v_temp01.z);
+		//		glm::quat rotation = getRotation(v_temp);
+				glm::quat rotation = glm::quat (1.0f, 0.0f, 0.0f, 0.0f);
 
-		glm::mat4 transformation = glm::translate(glm::mat4(), v_temp01) * glm::mat4_cast(rotation) * mBaseTransform[i];
-		//		cout << glm::to_string(transformation) << endl;
 
-		vo_temp->setModelMatrix(transformation);
+		v_temp01 += boid_temp->getPosition();
+		boid_temp->setPosition(v_temp01);
+
+		glm::mat4 transformation = glm::translate(glm::mat4(), v_temp01) * glm::mat4_cast(rotation) * boid_temp->getBasePosition();
+
+		boid_temp->getVirtualObject()->setModelMatrix(transformation);
 	}
 }
 
-btVector3 Flock::getSeparation(std::vector<VirtualObject*> neighbors){
-	btVector3 v = btVector3(0.0f, 0.0f, 0.0f);
+glm::vec3 Flock::getSeparation(std::vector<Boid*> neighbors){
+	glm::vec3 v = glm::vec3(0.0f, 0.0f, 0.0f);
 
 	unsigned int i;
 	for (i = 0; i < neighbors.size(); ++i) {
-		btVector3 v_temp = neighbors[i]->getPhysicsComponent()->getRigidBody()->getLinearVelocity();
+		glm::vec3 v_temp = neighbors[i]->getPosition();
+		v += v_temp;
+	}
+	v = v * (1.0f/(neighbors.size() * 1.0f));
+
+	return v * 0.01f;
+}
+glm::vec3 Flock::getAllignment(std::vector<Boid*> neighbors){
+	glm::vec3 v = glm::vec3(0.0f, 0.0f, 0.0f);
+
+	unsigned int i;
+	for (i = 0; i < neighbors.size(); ++i) {
 
 	}
 
 	return v;
 }
-btVector3 Flock::getAllignment(std::vector<VirtualObject*> neighbors){
-	btVector3 v = btVector3(0.0f, 0.0f, 0.0f);
-
-	unsigned int i;
-	for (i = 0; i < neighbors.size(); ++i) {
-
-	}
-
-	return v;
-}
-btVector3 Flock::getCohesion(std::vector<VirtualObject*> neighbors){
-	btVector3 v = btVector3(0.0f, 0.0f, 0.0f);
+glm::vec3 Flock::getCohesion(std::vector<Boid*> neighbors){
+	glm::vec3 v = glm::vec3(0.0f, 0.0f, 0.0f);
 
 	unsigned int i;
 	for (i = 0; i < neighbors.size(); ++i) {
@@ -145,11 +151,11 @@ glm::quat Flock::getRotation(glm::vec3 velocity){
 	glm::vec3 axis = glm::cross(velocity, start);
 	cout << min_value <<" BLAAA" << glm::to_string(axis) << " von " << glm::to_string(velocity) << " und " << glm::to_string(start) << endl;
 	axis = glm::normalize(axis);
-//	cout << "oder normalisieren?" << endl;
+	//	cout << "oder normalisieren?" << endl;
 
 	float angle = glm::dot(velocity, start);
 	axis *= glm::sin(angle) * axis;
-//	cout << "oder skalarprodukt?" << endl;
+	//	cout << "oder skalarprodukt?" << endl;
 
 	return rotation;
 
@@ -162,6 +168,6 @@ glm::quat Flock::getRotation(glm::vec3 velocity){
 void Flock::updateAnimations(float t){
 	unsigned int i;
 	for (i = 0; i < mBoids.size(); ++i) {
-		mBoids[i]->getAnimation()->updateNodes(t);
+		mBoids[i]->getVirtualObject()->getAnimation()->updateNodes(t);
 	}
 }

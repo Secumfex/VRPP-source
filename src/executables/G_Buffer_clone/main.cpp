@@ -80,7 +80,7 @@ int main() {
 	myFlock->addBoid(object12, trans);
 	myFlock->addBoid(object13, trans);
 
-//	myFlock->initializeStartPositions(2.0f, glm::vec3(0.0f, 0.0f, 0.0f));
+	myFlock->initializeStartPositions(1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
 
 	//----------------------------//
 	//        SHADERS BABY        //

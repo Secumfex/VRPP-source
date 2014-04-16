@@ -10,7 +10,7 @@
 
 #define NEIGHBORHOOD 2
 
-#include <Visuals/VirtualObject.h>
+#include "Animation/Boid.h"
 #include <cstdlib>
 #include <time.h>
 #include <IO/IOManager.h>
@@ -21,22 +21,22 @@ public:
 	virtual ~Flock();
 
 	void addBoid(VirtualObject *vo, glm::mat4 basePosition = glm::mat4());
-	std::vector<VirtualObject*>getNeighbors(VirtualObject *vo);
+	std::vector<Boid*> getNeighbors(Boid* boid);
 	void initializeStartPositions(float maxDistance, glm::vec3 startPosition);
 	void update(float t);
 	glm::quat getRotation(glm::vec3 velocity);
 
 private:
 
-	btVector3 getSeparation(std::vector<VirtualObject*> neighbors);
-	btVector3 getAllignment(std::vector<VirtualObject*> neighbors);
-	btVector3 getCohesion(std::vector<VirtualObject*> neighbors);
+	glm::vec3 getSeparation(std::vector<Boid*> neighbors);
+	glm::vec3 getAllignment(std::vector<Boid*> neighbors);
+	glm::vec3 getCohesion(std::vector<Boid*> neighbors);
 	void updateAnimations(float t);
 
 
 	glm::vec3 startVelocity;
 	btVector3 startBtVelocity;
-	std::vector<VirtualObject*> mBoids;
+	std::vector<Boid*> mBoids;
 	std::vector<glm::mat4> mBaseTransform;
 
 };

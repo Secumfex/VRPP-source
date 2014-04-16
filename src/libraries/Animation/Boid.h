@@ -24,7 +24,10 @@ public:
 	void setBaseMatrix(glm::mat4 mat);
 	void setPosition(glm::vec3 pos);
 	void setVelocity(glm::vec3 vel);
+	void setVirtualObject(VirtualObject* vo);
 
+
+	VirtualObject* getVirtualObject();
 	glm::vec3 getPosition();
 	glm::vec3 getVelocity();
 	glm::mat4 getBasePosition();

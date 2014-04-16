@@ -24,6 +24,12 @@ void Boid::setPosition(glm::vec3 pos){
 void Boid::setVelocity(glm::vec3 vel){
 	mVelocity = vel;
 }
+void Boid::setVirtualObject(VirtualObject* vo){
+	mVirtualObject = vo;
+}
+VirtualObject* Boid::getVirtualObject(){
+	return mVirtualObject;
+}
 glm::vec3 Boid::getPosition(){
 	return mPosition;
 }
