@@ -72,8 +72,9 @@ SetCurrentShaderListener::SetCurrentShaderListener(Shader* shader){
 	this->shader = shader;}
 
 void SetCurrentShaderListener::update(){
-	rm->setCurrentShader(shader);
-	shader->useProgram();
+    shader->useProgram();
+    rm->setCurrentShader(shader);
+
 }
 
 SetClearColorListener::SetClearColorListener(float r, float g, float b, float a){
@@ -257,7 +258,7 @@ void UnbindFrameBufferObjectListener::update(){
 	if (currentFBO != 0){
 		currentFBO->unbindFBO();
 	}
-	RenderManager::getInstance()->setCurrentFBO( 0 );
+	//RenderManager::getInstance()->setCurrentFBO( 0 );
 }
 
 ReflectionMapRenderPass::ReflectionMapRenderPass(FrameBufferObject* fbo){
@@ -326,8 +327,9 @@ RenderScreenFillingTriangleListener::RenderScreenFillingTriangleListener(){
 }
 
 void RenderScreenFillingTriangleListener::update(){
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glDisable(GL_DEPTH_TEST);
 	RenderGraphicsComponentListener::update();
-	glEnable(GL_DEPTH_TEST);
+
     
 }

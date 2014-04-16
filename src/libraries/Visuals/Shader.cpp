@@ -105,7 +105,7 @@ Shader::Shader(std::string vertexShader, std::string fragmentShader) {
 
 
 		mUniformHandles.insert(std::pair<std::string, GLuint>(name, location));
-
+        std::cout<<name<<", "<<location<<endl;
 		mUniformNames.push_back(name);
 		attachUniformListener(name);
 	}
