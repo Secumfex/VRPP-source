@@ -40,27 +40,18 @@ void configureTestingApplication(){
 
 void configureVirtualObjects(){
 
-	/*	customize virtual objects*/
-	VirtualObject* groundObject = myState->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_ground.dae", VirtualObjectFactory::OTHER);
-	VirtualObject* 	akropolis = 	myState->createVirtualObject(RESOURCES_PATH "/AkropolTest.obj", VirtualObjectFactory::CUBE);
-	VirtualObject* cube = myState->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 1.0, 8);
-	//cube->translate(glm::vec3(-0.5,2.0,0.0));
-	akropolis->translate(glm::vec3(0.0, -56.0, 0.0));
-	myState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube));
-
-
+	/*	load model of akropolis as virtual object*/
+	VirtualObject* 	akropolis = myState->createVirtualObject(RESOURCES_PATH "/AkropolTest.obj", VirtualObjectFactory::MESH);
+	akropolis->translate(glm::vec3(0.0, -60.0, 0.0));
 	//myState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(akropolis));
+
+	//VirtualObject* cube = myState->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 1.0, 8);
+	//myState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube));
 
 
 }
 
 void configurePhysics(){
-	btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,1,0),0);
-	//create an invisible ground plane
-		btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,-4,5)));
-    	btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0,groundMotionState,groundShape,btVector3(0,0,0));
-   	 	btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
-    	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(groundRigidBody);
 
 	btRigidBody* camBody = myPlayercam->getRigidBody();
 	myPlayercam->setPosition(0.0f,2.0f,5.0f);

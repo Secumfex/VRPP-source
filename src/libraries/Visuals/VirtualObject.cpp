@@ -118,11 +118,11 @@ void VirtualObject::setPhysicsComponent(glm::vec3 min, glm::vec3 max, float mass
 	physicsComponent = new PhysicsComponent(min, max, mass,collisionFlag);
 }
 
-void VirtualObject::setPhysicsComponent(float x, float y, float z, float mass, int collisionFlag){
+void VirtualObject::setPhysicsComponent(float x, float y, float z, Mesh* mesh, btTriangleMesh btMesh, float mass, int collisionFlag){
 	if(physicsComponent != NULL)
 	physicsComponent->~PhysicsComponent();
 
-	physicsComponent = new PhysicsComponent(x,y,z, mGraphComponent, mass, collisionFlag);
+	physicsComponent = new PhysicsComponent(x,y,z, mesh, btMesh, mGraphComponent, mass, collisionFlag);
 }
 
 void VirtualObject::setPhysicsComponent(float radius, float x, float y, float z, float mass, int collisionFlag){

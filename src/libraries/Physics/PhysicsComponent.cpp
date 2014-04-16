@@ -44,11 +44,11 @@ PhysicsComponent::PhysicsComponent(glm::vec3 min, glm::vec3 max, float mass, int
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
 
-PhysicsComponent::PhysicsComponent(float x, float y, float z, vector<GraphicsComponent*> mGraphComponent, float mass, int collisionFlag) {
+PhysicsComponent::PhysicsComponent(float x, float y, float z, Mesh* mesh, btTriangleMesh btMesh, vector<GraphicsComponent*> mGraphComponent, float mass, int collisionFlag) {
 
 	hit = false;
 
-	rigidBody = addTriangleMesh(x,y,z,mGraphComponent, mass);
+	rigidBody = addTriangleMesh(x,y,z, mesh, btMesh, mGraphComponent, mass);
 	rigidBody->setUserPointer(this);	// use bullet's user pointer to refer to this Object
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 
@@ -254,51 +254,51 @@ btRigidBody* PhysicsComponent::addHeightfield(char* filename, float x, float y, 
 	return body;
 }
 
-btRigidBody* PhysicsComponent::addTriangleMesh(float x, float y, float z, vector<GraphicsComponent*> mGraphComponent, float mass){
+btRigidBody* PhysicsComponent::addTriangleMesh(float x, float y, float z, Mesh* mesh, btTriangleMesh btMesh, vector<GraphicsComponent*> mGraphComponent, float mass){
 
-	btTriangleMesh tetraMesh;
-	btBvhTriangleMeshShape* tetraShape;
-	tetraMesh = new btTriangleMesh();
+	btTriangleMesh triangleMesh = btMesh;
+	//btTriangleIndexVertexArray* tiva = new btTriangleIndexVertexArray();
+	btBvhTriangleMeshShape* triangleShape;
+	//btIndexedMesh* indexedMesh = new btIndexedMesh();
 
-	for (unsigned int n = 0; n < mGraphComponent.size()-1; n++)
+	/*
+	for (unsigned int n = 0; n < mGraphComponent.size(); n++)
 	{
 
-		//Mesh* mesh =mGraphComponent[n]->getMesh();
-		//std::vector<glm::vec3> vertizes = mesh->getVertices();
-		//cout << "vertizes size: " << vertizes.size()<< endl;
-		/*
-		for (unsigned int i = 0; i < mesh->getNumVertices()-1; i++)
+
+		int num = mesh->getNumIndices();
+		std::vector<glm::vec3> vertizes = mesh->getVertices();
+		indexedMesh.m_numVertices= mesh->getNumVertices();
+		indexedMesh.m_numTriangles = mesh->getNumFaces();
+		tiva->addIndexedMesh(indexedMesh);
+		//tiva->addIndexedMesh(mesh);
+
+		for (unsigned int i = 0; i < 3; i++)
 		{
 
-
-			for (unsigned int j = 0; j < vertizes.size()-3; j+=3)
-			{
-
-				btVector3 vec0 = btVector3(vertizes[j].x,vertizes[j].y,vertizes[j].z);
-				btVector3 vec1 = btVector3(vertizes[j+1].x,vertizes[j+1].y,vertizes[j+1].z);
-				btVector3 vec2 = btVector3(vertizes[j+2].x,vertizes[j+2].y,vertizes[j+2].z);
+				btVector3 vec0 = btVector3(vertizes[i].x,vertizes[i].y,vertizes[i].z);
+				btVector3 vec1 = btVector3(vertizes[i+1].x,vertizes[i+1].y,vertizes[i+1].z);
+				btVector3 vec2 = btVector3(vertizes[i+2].x,vertizes[i+2].y,vertizes[i+2].z);
 				tetraMesh.addTriangle(vec0,vec1,vec2,false);
 
-			}
-
 		}
-		 */
+
 	}
-	/*
-	tetraShape = new btBvhTriangleMeshShape(&tetraMesh, false);
+*/
+	triangleShape = new btBvhTriangleMeshShape(&triangleMesh, false);
 
 	btVector3 inertia;
-	tetraShape->calculateLocalInertia(mass, inertia);
+	triangleShape->calculateLocalInertia(mass, inertia);
 
 	btTransform trans;
 	trans.setIdentity();
-	trans.setOrigin(btVector3(0, 0, 0));
+	trans.setOrigin(btVector3(x, y, z));
 	btDefaultMotionState* motionState = new btDefaultMotionState(trans);
-	btRigidBody::btRigidBodyConstructionInfo info(mass,motionState,tetraShape, inertia);
+	btRigidBody::btRigidBodyConstructionInfo info(mass,motionState,triangleShape, inertia);
 	btRigidBody* body = new btRigidBody(info);
 	return body;
-*/
 
+	/*
 	btTransform t;
 	t.setIdentity();
 	t.setOrigin(btVector3(x,y,z));
@@ -319,7 +319,7 @@ btRigidBody* PhysicsComponent::addTriangleMesh(float x, float y, float z, vector
 	body->setLinearFactor(btVector3(1,1,1));
 
 	return body;
-
+	*/
 }
 
 btRigidBody* PhysicsComponent::getRigidBody(){

@@ -1,5 +1,7 @@
 #ifndef VIRTUALOBJECT_H
 #define VIRTUALOBJECT_H
+#include "Visuals/Resource.h"
+
 #include "Physics/PhysicsComponent.h"
 #include "Visuals/GraphicsComponent.h"
 
@@ -133,7 +135,7 @@ public:
 	 * @param collisionFlag sets collisiontype of the collisionshape
 	 * @return void
 	 */
-	void setPhysicsComponent(float x, float y, float z, float mass=0.0f, int collisionFlag=1);
+	void setPhysicsComponent(float x, float y, float z, Mesh* mesh, btTriangleMesh btMesh, float mass=0.0f, int collisionFlag=1);
 
 	/** \brief sets PhysicsComponent
 	 *
