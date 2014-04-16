@@ -9,8 +9,8 @@
 
 Flock::Flock() {
 	srand(time(0));
-	startVelocity = glm::vec3(1.0f, 0.0f, 0.0f);
-	startBtVelocity = btVector3(1.0f, 0.0f, 0.0f);
+	startVelocity = glm::vec3(0.1f, 0.0f, 0.0f);
+	startBtVelocity = btVector3(0.1f, 0.0f, 0.0f);
 
 }
 
@@ -48,6 +48,8 @@ void Flock::initializeStartPositions(float maxDistance, glm::vec3 startPosition)
 		float y = startPosition.y + ((rand()/RAND_MAX) * maxDistance);
 		float z = startPosition.z + ((rand()/RAND_MAX) * maxDistance);
 
+		cout << x << "/" << y << "/" << z << " LOL" << endl;
+
 		mBoids[i]->physicsComponent->setPosition(x, y, z);
 	}
 }
@@ -77,13 +79,16 @@ void Flock::update(float t){
 		v_temp *= delta_time;
 
 		glm::vec3 v_temp01 = glm::vec3(v_temp.x(), v_temp.y(), v_temp.z());
-		glm::quat rotation = getRotation(v_temp01);
+//		glm::quat rotation = getRotation(v_temp01);
+		glm::quat rotation = glm::quat (1.0f, 0.0f, 0.0f, 0.0f);
+
+		cout << glm::to_string(v_temp01) << "  " << v_temp.x() << "/" <<v_temp.y() << "/" <<v_temp.z()<< endl;
 
 		v_temp01 += vo_temp->getPhysicsComponent()->getPosition();
 		vo_temp->getPhysicsComponent()->setPosition(v_temp01.x, v_temp01.y, v_temp01.z);
 
 		glm::mat4 transformation = glm::translate(glm::mat4(), v_temp01) * glm::mat4_cast(rotation) * mBaseTransform[i];
-		cout << glm::to_string(transformation) << endl;
+		//		cout << glm::to_string(transformation) << endl;
 
 		vo_temp->setModelMatrix(transformation);
 	}
@@ -123,26 +128,33 @@ btVector3 Flock::getCohesion(std::vector<VirtualObject*> neighbors){
 
 glm::quat Flock::getRotation(glm::vec3 velocity){
 
-	glm::quat rotation = glm::quat (1.0, 0.0, 0.0, 0.0);
+	glm::quat rotation = glm::quat (1.0f, 0.0f, 0.0f, 0.0f);
 
-	if(velocity.length() == 0)
+	if(velocity.length() == 0.0f)
 		return rotation;
 
-	velocity = glm::normalize(velocity);
+	float min_value = std::numeric_limits<float>::min();
+	cout << "blablabla v: " << glm::to_string(velocity) << " length " << velocity.length() << endl;
 
-	if(velocity == startVelocity)
+	velocity *= (1.0f / velocity.length());
+	glm::vec3 start = glm::normalize(startVelocity);
+
+	if(velocity == start)
 		return rotation;
 
-
-	glm::vec3 axis = glm::cross(velocity, startVelocity);
+	glm::vec3 axis = glm::cross(velocity, start);
+	cout << min_value <<" BLAAA" << glm::to_string(axis) << " von " << glm::to_string(velocity) << " und " << glm::to_string(start) << endl;
 	axis = glm::normalize(axis);
+//	cout << "oder normalisieren?" << endl;
 
-	float angle = glm::dot(velocity, startVelocity);
+	float angle = glm::dot(velocity, start);
 	axis *= glm::sin(angle) * axis;
+//	cout << "oder skalarprodukt?" << endl;
 
-		return rotation;
+	return rotation;
 
 	rotation = glm::quat(glm::cos(angle), axis);
+	cout << "fertisch" << endl;
 
 	return rotation;
 }
