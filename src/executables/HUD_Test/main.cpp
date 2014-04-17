@@ -99,9 +99,9 @@ void configureRendering(){
 	Shader* refraction_shader 	= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/phong.vert"		, SHADERS_PATH 	"/Underwater_Visuals_Test/phong_clipping.frag");
 	Shader* godRay_shader 		= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/godrays.vert"		, SHADERS_PATH 	"/Underwater_Visuals_Test/godrays.frag");
 	Shader* water_shader 		= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/water.vert"		, SHADERS_PATH 	"/Underwater_Visuals_Test/water.frag");
-	Shader* particles_shader	= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/particles.vert"	, SHADERS_PATH  "/Underwater_Visuals_Test/particles.frag");
+	Shader* particles_shader	= new Shader( SHADERS_PATH "/HUD/Copy of particles.vert"	, SHADERS_PATH  "/HUD/Copy of particles.frag");
 	Shader* composition_shader  = new Shader( SHADERS_PATH "/Underwater_Visuals_Test/screenFill.vert"	, SHADERS_PATH  "/Underwater_Visuals_Test/finalCompositing.frag");
-	Shader* HUDShader			= new Shader( SHADERS_PATH "/HUD/HUD.vert"								, SHADERS_PATH  "/HUD/HUD.frag");
+	Shader* HUDShader			= new Shader( SHADERS_PATH "/HUD/HUD.pervert"								, SHADERS_PATH  "/HUD/HUD.faggot");
 
 	FrameBufferObject* preCompositingScene = new FrameBufferObject(800, 600);
 	preCompositingScene->bindFBO();
@@ -220,12 +220,12 @@ void configureRendering(){
 	ParticlesRenderPass* renderParticles = new ParticlesRenderPass(UnderwaterScene::framebuffer_water_particles, UnderwaterScene::water_particles, vaoID[0]);
 	testingApp->attachListenerOnRenderManagerFrameLoop(( renderParticles));
 
-	// 7: render Particles in the water
-	testingApp->attachListenerOnRenderManagerFrameLoop( new SetCurrentShaderListener( HUDShader ));
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniPartText);
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniSinusWave);
-	ParticlesRenderPass* renderHUD = new ParticlesRenderPass(UnderwaterScene::framebuffer_water_particles, UnderwaterScene::water_particles, vaoID[0]);
-	testingApp->attachListenerOnRenderManagerFrameLoop(( renderParticles));
+//	// 8: render HUD
+//	testingApp->attachListenerOnRenderManagerFrameLoop( new SetCurrentShaderListener( HUDShader ));
+//	testingApp->attachListenerOnRenderManagerFrameLoop( uniPartText);
+//	testingApp->attachListenerOnRenderManagerFrameLoop( uniSinusWave);
+//	ParticlesRenderPass* renderHUD = new ParticlesRenderPass(UnderwaterScene::framebuffer_water_particles, UnderwaterScene::water_particles, vaoID[0]);
+//	testingApp->attachListenerOnRenderManagerFrameLoop(( renderHUD));
 
 	// 7: Compositing
 	testingApp->attachListenerOnRenderManagerFrameLoop( new SetCurrentShaderListener( composition_shader ));
