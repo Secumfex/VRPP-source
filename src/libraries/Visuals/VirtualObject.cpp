@@ -16,6 +16,18 @@ VirtualObject::VirtualObject() {
 	physicsComponent = new PhysicsComponent();
 }
 
+VirtualObject::VirtualObject(VirtualObject* vo){
+	unsigned int i;
+
+	for (i = 0; i < vo->getGraphicsComponent().size(); ++i) {
+		this->addGraphicsComponent(new GraphicsComponent(vo->getGraphicsComponent()[i]));
+	}
+
+	this->setModelMatrix(vo->getModelMatrix());
+	this->setAnimation(vo->getAnimation());
+	physicsComponent = new PhysicsComponent(vo->getPhysicsComponent());
+}
+
 VirtualObject::VirtualObject(glm::vec3 min, glm::vec3 max){
 	physicsComponent = new PhysicsComponent(min,max);
 
@@ -80,33 +92,33 @@ vector<GraphicsComponent*> VirtualObject:: getGraphicsComponent(std::string tag)
 
 void VirtualObject::setPhysicsComponent(){
 	if(physicsComponent != NULL)
-	physicsComponent->~PhysicsComponent();
+		physicsComponent->~PhysicsComponent();
 	physicsComponent = new PhysicsComponent();
 }
 
 void VirtualObject::setPhysicsComponent(glm::vec3 min, glm::vec3 max, float mass){
 	if(physicsComponent != NULL)
-	physicsComponent->~PhysicsComponent();
+		physicsComponent->~PhysicsComponent();
 
 	physicsComponent = new PhysicsComponent(min, max, mass);
 }
 
 void VirtualObject::setPhysicsComponent(float radius, float x, float y, float z, float mass){
 	if(physicsComponent != NULL)
-	physicsComponent->~PhysicsComponent();
+		physicsComponent->~PhysicsComponent();
 	physicsComponent = new PhysicsComponent(radius, x, y, z, mass);
 }
 
 void VirtualObject::setPhysicsComponent(float width, float height, float depth, float x, float y, float z, float mass){
 	if(physicsComponent != NULL)
-	physicsComponent->~PhysicsComponent();
+		physicsComponent->~PhysicsComponent();
 	physicsComponent = new PhysicsComponent(width, height, depth, x, y, z, mass);
 }
 
 
 void VirtualObject::setPhysicComponent(float x, float y, float z, glm::vec3 normal, float mass){	//TODO: change the type of normal
 	if(physicsComponent != NULL)
-	physicsComponent->~PhysicsComponent();
+		physicsComponent->~PhysicsComponent();
 
 	physicsComponent = new PhysicsComponent(x,y,z,normal,mass);
 }

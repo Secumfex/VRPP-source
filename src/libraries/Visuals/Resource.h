@@ -40,6 +40,15 @@ public:
 	 */
 	Material ();
 
+	/** \brief constructor
+	 *
+	 *this constructor copies every component of the input material
+	 *
+	 * @param mat
+	 */
+
+	Material (Material* mat);
+
 	/** \brief destructor
 	 *
 	 */
@@ -378,6 +387,15 @@ public:
 	 *
 	 */
 	Mesh();
+
+	/** \brief constructor
+	 *
+	 *this constructor copies every component of the input mesh
+	 *
+	 * @param mat
+	 */
+
+	Mesh(Mesh* mesh);
 
 	/** \brief destructor
 	 *

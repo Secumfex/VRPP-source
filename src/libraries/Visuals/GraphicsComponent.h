@@ -178,6 +178,15 @@ public:
 
 	GraphicsComponent(Mesh* mesh, Material* material);
 
+	/** \brief constructor
+	 *
+	 *this constructor copies every component of the input graphicscomponent
+	 *
+	 * @param gc
+	 */
+
+	GraphicsComponent(GraphicsComponent* gc);
+
 
 private:
 	Mesh *mMesh;					/**< !docu pls! */

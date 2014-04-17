@@ -36,6 +36,14 @@ public:
 
 	/** \brief constructor
 	 *
+	 *this constructor will copy a VirtualObject and all its pointers.
+	 *
+	 * @param vo VirtualObject*
+	 */
+	VirtualObject(VirtualObject* vo);
+
+	/** \brief constructor
+	 *
 	 * creates VirtualObject with min and max vector of the mesh
 	 * creates physicComponent with same vectors
 	 * @param min,max glm::vec3 vector for max an min x,y and z values

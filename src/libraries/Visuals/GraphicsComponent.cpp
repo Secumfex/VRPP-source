@@ -14,6 +14,19 @@ GraphicsComponent::GraphicsComponent(){
 	mGhostObject = new btGhostObject();
 }
 
+GraphicsComponent::GraphicsComponent(GraphicsComponent* gc){
+	this->setAnimated(gc->hasAnimation());
+	this->setDynamic(gc->isDynamic());
+	this->setEmission(gc->hasEmission());
+	this->setModelMatrixGc(gc->getModelMatrix());
+	this->setShadow(gc->hasShadow());
+	this->setTransparency(gc->hasTransparency());
+	mGhostObject = new btGhostObject();
+	mGhostObject->setCollisionShape(gc->getGhostObject()->getCollisionShape());
+	this->setMesh(new Mesh(gc->getMesh()));
+	this->setMaterial(new Material(gc->getMaterial()));
+	}
+
 GraphicsComponent::GraphicsComponent(Mesh* mesh, Material* material){
 	mMesh = mesh;
 	mMaterial = material;
