@@ -17,10 +17,10 @@ void ParticleSystem::update(float d_t){
 
 
 void ParticleSystem::testConstraint(Particle* particle){
-	float distance = glm::length( glm::vec3( particle->getPosition() - *center ) );
-	if ( distance > radius ){
-		moveToOppositeSide ( particle );
-	}
+//	float distance = glm::length( glm::vec3( particle->getPosition() - *center ) );
+//	if ( distance > radius ){
+//		moveToOppositeSide ( particle );
+//	}
 
 }
 
