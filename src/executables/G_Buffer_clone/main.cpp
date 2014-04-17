@@ -82,6 +82,8 @@ int main() {
 
 	myFlock->initializeStartPositions(1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
 
+	Boid* myBoid = myFlock->getBoids()[0];
+
 	//----------------------------//
 	//        SHADERS BABY        //
 	//----------------------------//
@@ -144,8 +146,6 @@ int main() {
 	rm->setPerspectiveMatrix(40.0f, 1.0f, 0.1f, 100.f);
 	rm->setLightPosition(glm::vec3(5,2,-2),0);
 
-	cam->setPosition(glm::vec3(0.0f, 2.0f, -10.0f));
-	cam->setCenter(glm::vec3(0.0f, 0.0f, 0.0f));
 
 	frustum->updateModelMatrix();
 
@@ -173,7 +173,14 @@ int main() {
 
 		animation->updateNodes(angle);
 		myFlock->update(angle);
+		myFlock->setPlaceToGo(vec3(sin(angle) * 3.0f, 0.0f, cos(angle) * 2.0f));
+//		myFlock->setPlaceToGo(glm::vec3(0.0f, 0.0f, 0.0f));
 
+
+		cam->setPosition(glm::vec3(0.0f, 2.0f, -20.0f));
+		cam->setCenter(glm::vec3(0.0f, 0.0f, 0.0f));
+//		cam->setPosition(myBoid->getPosition() + glm::vec3(0.0f, 2.0f, -10.0f));
+//		cam->setCenter(myBoid->getPosition());
 
 		glfwSetTime(0.0);
 

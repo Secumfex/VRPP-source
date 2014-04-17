@@ -8,7 +8,7 @@
 #ifndef FLOCK_H_
 #define FLOCK_H_
 
-#define NEIGHBORHOOD 2
+#define NEIGHBORHOOD 1
 
 #include "Animation/Boid.h"
 #include <cstdlib>
@@ -25,19 +25,25 @@ public:
 	void initializeStartPositions(float maxDistance, glm::vec3 startPosition);
 	void update(float t);
 	glm::quat getRotation(glm::vec3 velocity);
+	std::vector<Boid*> getBoids();
+	void setPlaceToGo(glm::vec3 place);
+
 
 private:
 
+	glm::vec3 clampVelocity(glm::vec3 velocity);
+	glm::vec3 getPlace(Boid* boid);
 	glm::vec3 getSeparation(std::vector<Boid*> neighbors, Boid* boid);
 	glm::vec3 getAllignment(std::vector<Boid*> neighbors, Boid* boid);
 	glm::vec3 getCohesion(std::vector<Boid*> neighbors, Boid* boid);
 	void updateAnimations(float t);
 
-
+	float mSpeedlimit;
+	glm::vec3 mPlaceToGo;
 	glm::vec3 startVelocity;
 	btVector3 startBtVelocity;
 	std::vector<Boid*> mBoids;
-	std::vector<glm::mat4> mBaseTransform;
+
 
 };
 
