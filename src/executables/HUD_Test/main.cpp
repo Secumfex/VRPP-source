@@ -213,19 +213,19 @@ void configureRendering(){
 	testingApp->attachListenerOnRenderManagerFrameLoop(	renderwater);
 	testingApp->attachListenerOnRenderManagerFrameLoop( unbindCurrentFBO );
 
-	// 6: render Particles in the water
-	testingApp->attachListenerOnRenderManagerFrameLoop( new SetCurrentShaderListener( particles_shader ));
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniPartText);
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniSinusWave);
-	ParticlesRenderPass* renderParticles = new ParticlesRenderPass(UnderwaterScene::framebuffer_water_particles, UnderwaterScene::water_particles, vaoID[0]);
-	testingApp->attachListenerOnRenderManagerFrameLoop(( renderParticles));
-
-//	// 8: render HUD
-//	testingApp->attachListenerOnRenderManagerFrameLoop( new SetCurrentShaderListener( HUDShader ));
+//	// 6: render Particles in the water
+//	testingApp->attachListenerOnRenderManagerFrameLoop( new SetCurrentShaderListener( particles_shader ));
 //	testingApp->attachListenerOnRenderManagerFrameLoop( uniPartText);
 //	testingApp->attachListenerOnRenderManagerFrameLoop( uniSinusWave);
-//	ParticlesRenderPass* renderHUD = new ParticlesRenderPass(UnderwaterScene::framebuffer_water_particles, UnderwaterScene::water_particles, vaoID[0]);
-//	testingApp->attachListenerOnRenderManagerFrameLoop(( renderHUD));
+//	ParticlesRenderPass* renderParticles = new ParticlesRenderPass(UnderwaterScene::framebuffer_water_particles, UnderwaterScene::water_particles, vaoID[0]);
+//	testingApp->attachListenerOnRenderManagerFrameLoop(( renderParticles));
+
+	// 8: render HUD
+	testingApp->attachListenerOnRenderManagerFrameLoop( new SetCurrentShaderListener( HUDShader ));
+	testingApp->attachListenerOnRenderManagerFrameLoop( uniPartText);
+	testingApp->attachListenerOnRenderManagerFrameLoop( uniSinusWave);
+	ParticlesRenderPass* renderHUD = new ParticlesRenderPass(UnderwaterScene::framebuffer_water_particles, UnderwaterScene::water_particles, vaoID[0]);
+	testingApp->attachListenerOnRenderManagerFrameLoop(( renderHUD));
 
 	// 7: Compositing
 	testingApp->attachListenerOnRenderManagerFrameLoop( new SetCurrentShaderListener( composition_shader ));
