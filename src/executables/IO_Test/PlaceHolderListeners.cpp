@@ -89,33 +89,28 @@ void TurnCameraListener::update(){
  void ApplyForceOnCameraListener::update(){
 	 float temp=0;
 	float strength=0;
+
 	temp= kinect->getKinectData(kinect->data);
 	
-	/* 
-	 if(!(kinect->isnew)){
-		 temp=kinect->getKinectData(kinect->data);
-		 kinect->isnew=true;
-	 }
-	 else {
-	 temp=0;
-	 kinect->isnew=false;
-	 }
-	 std::cout<<temp<<kinect->isnew<<endl;
-	 */
-	if(temp!=0 && !(kinect->isnew)){
+	
+	if(temp!=0 && !(kinect->isnew))
+	{
+
  kinect->forceOld=kinect->forceNew;
  kinect->forceNew=temp;
  
  kinect->isnew=true;
 
  if(kinect->forceNew>kinect->forceOld){ strength=1.0;}
- else if(kinect->forceNew<kinect->forceOld){strength=-1.0;} 
+ else if(kinect->forceNew<kinect->forceOld){strength=-0.2;} 
  else strength=0.0f; 
 
 
 
 	std::cout<<strength<<endl;
 	}
+
+
 	kinect->isnew=false;
 
 	

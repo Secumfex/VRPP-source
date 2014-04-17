@@ -54,7 +54,8 @@ float Kinect::getKinectData(GLubyte* dest) {
 	for(int i=0; i<640*480*4; i+=16){
 	temp+=data[i];
 	}
-	return temp/1000000 ;
+	
+	return temp/100000 ;
 }
 
 
