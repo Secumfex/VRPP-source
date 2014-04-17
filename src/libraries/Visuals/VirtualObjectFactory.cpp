@@ -94,7 +94,6 @@ bool VirtualObjectFactory::checkIfBlender(std::string filename){
 
 		if(filename.find("dae") != std::string::npos)
 			for (string line; getline(myfile, line);) {
-				//			std::cout << line << std::endl;
 				if(line.find("Blender") != std::string::npos || line.find("blender") != std::string::npos){
 					std::cout << "Looks like this is a blender file." << std::endl;
 					return true;
@@ -102,11 +101,6 @@ bool VirtualObjectFactory::checkIfBlender(std::string filename){
 			}
 	}
 	return false;
-}
-
-
-void VirtualObjectFactory::fixBlenderMatrix(glm::mat4 &matrix){
-	matrix = glm::rotate(matrix, 90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 }
 
 VirtualObject* VirtualObjectFactory::createVirtualObject(){
@@ -151,7 +145,6 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 	);
 
-	//todo: scenen transformation bla
 
 	glm::mat4 inversesceneMatrix = glm::inverse(glm::transpose(glm::make_mat4x4(&(pScene->mRootNode->mTransformation.a1))));
 
@@ -297,7 +290,6 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 					bone->mOffsetMatrix.Decompose(scale, rotate, translate);
 
 					glm::mat4 modelmatrix = glm::transpose(glm::make_mat4(&(pScene->mRootNode->FindNode(mesh->mName)->mTransformation.a1)));
-					cout << "THIS IS MODELMATRIX " << glm::to_string(modelmatrix) << endl;
 
 						myBone->setInverseSceneMatrix(inversesceneMatrix );
 
@@ -593,8 +585,6 @@ AnimationLoop* VirtualObjectFactory::makeAnimation(map<std::string, Bone*> bones
 	AnimationLoop* myAnimation = new AnimationLoop();
 
 	aiNode* node = pScene->mRootNode;
-	cout <<  node->mName.C_Str() << " name of root"<< endl;
-
 
 //	node = node->FindNode(pScene->mAnimations[0]->mChannels[0]->mNodeName);
 //	node = node->mParent;
@@ -607,12 +597,6 @@ AnimationLoop* VirtualObjectFactory::makeAnimation(map<std::string, Bone*> bones
 	unsigned int i;
 	for (i = 0; i < pScene->mAnimations[0]->mNumChannels; ++i) {
 		setNodeTransform(myRootNode, pScene->mAnimations[0]->mChannels[i], isBlender);
-	}
-
-	for (std::map<std::string, Bone*> ::iterator it=bones.begin(); it!=bones.end(); ++it) {
-	Bone* tempBone = it->second;
-	getBoneTransform(node->FindNode(tempBone->getName().c_str()));
-	cout << glm::to_string(	tempBone->getInverseMatrix() * tempBone->getOffsetMatrix()) << endl;
 	}
 
 	setBones(myRootNode, bones);
@@ -678,20 +662,3 @@ void VirtualObjectFactory::setBones(Node* node, map<std::string, Bone*> bones){
 		setBones(node->getChildren()[i], bones);
 	}
 }
-
-glm::mat4 VirtualObjectFactory::getBoneTransform(aiNode* node){
-
-		std::cout << "WHAT" << node->mName.C_Str() << std::endl;
-		aiMatrix4x4 mat ;
-		while(node->mParent){
-			mat = node->mTransformation * mat;
-			node = node->mParent;
-		}
-			mat = node->mTransformation * mat;
-
-			glm::mat4 matrix = glm::transpose(glm::make_mat4(&(mat.a1)));
-		cout << node->mName.C_Str() <<" " << glm::to_string(matrix) << endl;
-
-	return glm::mat4();
-}
-

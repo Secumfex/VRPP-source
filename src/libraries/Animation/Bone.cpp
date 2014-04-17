@@ -18,7 +18,6 @@ Bone::~Bone() {
 }
 
 void Bone::setOffsetMatrix(glm::mat4 offsetmatrix){
-	std::cout << glm::to_string(offsetmatrix) << std::endl;
 
 	mOffsetMatrix = offsetmatrix;
 	mAnimationMatrix = glm::inverse(offsetmatrix);
@@ -26,12 +25,6 @@ void Bone::setOffsetMatrix(glm::mat4 offsetmatrix){
 
 void Bone::setInverseSceneMatrix(glm::mat4 inversematrix){
 	mInverseMatrix = inversematrix;
-}
-
-void Bone::setBindPose(glm::vec3 trans, glm::quat rot, glm::vec3 scale){
-	mTranslation = trans;
-	mRotation = rot;
-	mScale = scale;
 }
 
 std::string Bone::getName(){
@@ -54,12 +47,5 @@ glm::mat4 Bone::getAnimationMatrix(){
 
 glm::mat4 Bone::getBoneMatrix(){
 
-//	std::cout << mName << std::endl;
-//	std::cout <<"ani " << glm::to_string(mAnimationMatrix) << std::endl;
-//	std::cout <<"off " << glm::to_string(mOffsetMatrix) << std::endl;
-//	std::cout <<"tra " << glm::to_string(mAnimationMatrix * mOffsetMatrix) << std::endl;
-//	std::cout <<"inv " << glm::to_string(glm::inverse(mInverseMatrix) * mAnimationMatrix * mOffsetMatrix) << std::endl;
-
-//	return glm::inverse(mInverseMatrix) * mAnimationMatrix * mOffsetMatrix;
 	return mAnimationMatrix * mOffsetMatrix;
 }

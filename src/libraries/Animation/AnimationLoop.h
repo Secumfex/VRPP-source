@@ -12,23 +12,56 @@
 #include <Animation/Node.h>
 #include <vector>
 
+	/*! @brief AnimationLoop.
+	 *
+	 *	a this animation loop is a domain for the scene graph and its bones. the animation loop updates the node and manages time input.
+	 */
+
 class AnimationLoop {
 public:
+
+	/** \brief constructor
+	*
+	* Default constructor with no values.
+	*/
+
 	AnimationLoop();
+
+	/** \brief destructor
+	*
+	* clears the allocated memory.
+	*/
+
 	virtual ~AnimationLoop();
 
-	std::vector<Node*> mNodes;
+	/** \brief updates the rootnodes about animation time
+	 *
+	 * @param float t : animation time
+	 */
 
 	void updateNodes(float t);
+
+	/** \brief adds a rootnode
+	 *
+	 * @param Node* node : new root node
+	 */
+
 	void addNode(Node* node);
+
+	/** \brief setter
+	 *
+	 *sets the duration of an animation
+	 *
+	 * @param float t : duration
+	 */
+
 	void setDuration(float t);
-	void setCorrectOffsetMatrix();
-	void setStartTransformation(glm::mat4 armature);
 
 private:
-	glm::mat4 mStartMatrix;
-	float duration;
-	float pasttime;
+
+	std::vector<Node*> mNodes;/**< root node */
+	float duration;/**< animation duration */
+
 };
 
 #endif /* ANIMATIONLOOP_H_ */

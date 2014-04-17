@@ -10,7 +10,6 @@
 Flock::Flock() {
 	srand(time(0));
 	startVelocity = glm::vec3(0.001f, 0.0f, 0.0f);
-	startBtVelocity = btVector3(0.001f, 0.0f, 0.0f);
 	setPlaceToGo(glm::vec3(0.0f, 0.0f, 0.0f));
 	mSpeedlimit = 0.5f;
 }
@@ -18,9 +17,9 @@ Flock::Flock() {
 Flock::~Flock() {
 	// TODO Auto-generated destructor stub
 }
-void Flock::addBoid(VirtualObject *vo, glm::mat4 basePosition){
+void Flock::addBoid(VirtualObject *vo, glm::mat4 baseTransformation){
 	Boid* myBoid = new Boid(vo);
-	myBoid->setBaseMatrix(basePosition);
+	myBoid->setBaseMatrix(baseTransformation);
 	myBoid->setVelocity(startVelocity);
 
 	mBoids.push_back(myBoid);

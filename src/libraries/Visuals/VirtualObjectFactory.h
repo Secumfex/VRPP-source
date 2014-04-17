@@ -103,21 +103,46 @@ private:
 	 */
 	void color4_to_float4(const aiColor4D *c, float f[4]);
 
+	/** \brief checks if a file was created in blender
+	 *
+	 * @param filename : the file to check
+	 */
 	bool checkIfBlender(std::string filename);
 
-	void fixBlenderVector(glm::vec3 &vector);
-	void fixBlenderMatrix(glm::mat4 &matrix);
+	/** \brief checks if a file was created in blender
+	 *
+	 * @param map<string, Bone*> bones : a hashmap of bones
+	 * @param aiScene* pScene : the scene to extract the animation from
+	 * @param bool isBlender : a bool if this scene comes from blender
+	 * @return a new animation
+	 */
 
 	AnimationLoop* makeAnimation(map<std::string, Bone*> bones, const aiScene* pScene, bool isBlender);
 
+	/** \brief makes a node hierarchy of a scene
+	 *
+	 * @param aiNode* node : the root node of assimps node stucture
+	 * @return an array of nodes
+	 */
+
 	vector<Node*> getNodeChildren(aiNode* node);
 
+	/** \brief inserts bones into nodes
+	 *
+	 * @param map<string, Bone*> bones : a hashmap of bones
+	 * @param Node* node : a node from our scene graph
+	 */
 
 	void setBones(Node* node, map<std::string, Bone*> bones);
 
-	void setNodeTransform(Node* node, aiNodeAnim* nodeanim, bool isBlender);
-	glm::mat4 getBoneTransform(aiNode* node);
+	/** \brief extracts assimps transformations and inserts them into our nodes
+	 *
+	 * @param Node* node : a node from our scene graph
+	 * @param aiNodeAnim* nodeanim : animated nodes from assimp
+	 * @param bool isBlender : a bool if this scene comes from blender
+	 */
 
+	void setNodeTransform(Node* node, aiNodeAnim* nodeanim, bool isBlender);
 };
 
 #endif /* VIRTUALOBJECTFACTORY_H_ */
