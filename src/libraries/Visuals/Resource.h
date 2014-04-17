@@ -249,6 +249,13 @@ public:
 	 */
 	Texture* getLightMap();
 
+	/** \brief getter
+	 *
+	 * @return
+	 */
+
+	std::vector<Texture*> getAllMaps();
+
 
 	/** \brief getter
 	 *

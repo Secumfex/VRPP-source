@@ -10,6 +10,15 @@
 AnimationLoop::AnimationLoop() {
 }
 
+AnimationLoop::AnimationLoop(AnimationLoop* aniloop){
+	unsigned int i;
+
+	for (i = 0; i < aniloop->getNodes().size(); ++i) {
+		this->addNode(aniloop->getNodes()[i]);
+	}
+	this->setDuration(aniloop->getDuration());
+}
+
 AnimationLoop::~AnimationLoop() {
 	// TODO Auto-generated destructor stub
 }
@@ -27,4 +36,10 @@ void AnimationLoop::addNode(Node* node){
 }
 void AnimationLoop::setDuration(float t){
 	duration = t;
+}
+float AnimationLoop::getDuration(){
+	return duration;
+}
+std::vector<Node*> AnimationLoop::getNodes(){
+	return mNodes;
 }

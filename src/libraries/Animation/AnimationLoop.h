@@ -27,6 +27,15 @@ public:
 
 	AnimationLoop();
 
+	/** \brief constructor
+	 *
+	 *this constructor copies every component of the input graphicscomponent
+	 *
+	 * @param gc
+	 */
+
+	AnimationLoop(AnimationLoop* aniloop);
+
 	/** \brief destructor
 	*
 	* clears the allocated memory.
@@ -56,6 +65,20 @@ public:
 	 */
 
 	void setDuration(float t);
+
+	/** \brief getter
+	 *
+	 * @return duration
+	 */
+
+	float getDuration();
+
+	/** \brief getter
+	 *
+	 * @return rootnodes
+	 */
+
+	std::vector<Node*> getNodes();
 
 private:
 

@@ -22,10 +22,10 @@ VirtualObject::VirtualObject(VirtualObject* vo){
 	for (i = 0; i < vo->getGraphicsComponent().size(); ++i) {
 		this->addGraphicsComponent(new GraphicsComponent(vo->getGraphicsComponent()[i]));
 	}
-
 	this->setModelMatrix(vo->getModelMatrix());
-	this->setAnimation(vo->getAnimation());
+	this->setAnimation(new AnimationLoop(vo->getAnimation()));
 	physicsComponent = new PhysicsComponent(vo->getPhysicsComponent());
+	cout << "bla" << endl;
 }
 
 VirtualObject::VirtualObject(glm::vec3 min, glm::vec3 max){

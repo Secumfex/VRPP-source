@@ -11,7 +11,7 @@ Flock::Flock() {
 	srand(time(0));
 	startVelocity = glm::vec3(0.001f, 0.0f, 0.0f);
 	setPlaceToGo(glm::vec3(0.0f, 0.0f, 0.0f));
-	mSpeedlimit = 0.5f;
+	mSpeedlimit = 0.3f;
 }
 
 Flock::~Flock() {
@@ -41,7 +41,7 @@ std::vector<Boid*> Flock::getNeighbors(Boid* boid){
 		if(glm::length(temp_pos) < NEIGHBORHOOD && boid != mBoids[i]){
 			temp_pos *= (1.0f / glm::length(temp_pos));
 
-			if(glm::dot(temp_pos, vo_vel) > -0.7f)
+			if(glm::dot(temp_pos, vo_vel) > 0.0f)
 			neighbors.push_back(mBoids[i]);}
 	}
 
@@ -76,16 +76,11 @@ void Flock::update(float t){
 		Boid* boid_temp = mBoids[i];
 		std::vector<Boid*> neightbors = getNeighbors(boid_temp);
 
-		glm::vec3 v = getAllignment(neightbors, boid_temp);
+		glm::vec3 v = getAllignment(neightbors, boid_temp) * 0.8f;
 //		glm::vec3 v = glm::vec3(0.0f, 0.0f, 0.0f);
-		cout << "CHECK IT OUT MON " << neightbors.size()<< endl;
-		cout << glm::to_string(v) << endl;
-		v += getCohesion(neightbors, boid_temp);
-		cout << glm::to_string(v) << endl;
-		v += getSeparation(neightbors, boid_temp);
-		cout << glm::to_string(v) << endl;
-		v += getPlace(boid_temp);
-		cout << glm::to_string(v) << endl << endl;
+		v += getCohesion(neightbors, boid_temp) * 0.8f;
+		v += getSeparation(neightbors, boid_temp) * 1.5f;
+		v += getPlace(boid_temp) * 1.0f;
 		next_velocities.push_back(v);
 
 	}
@@ -102,8 +97,8 @@ void Flock::update(float t){
 
 		glm::vec3 v_temp01 = v_temp * delta_time;
 
-		//		glm::quat rotation = getRotation(v_temp);
-				glm::quat rotation = glm::quat (1.0f, 0.0f, 0.0f, 0.0f);
+				glm::quat rotation = getRotation(v_temp);
+//				glm::quat rotation = glm::quat (1.0f, 0.0f, 0.0f, 0.0f);
 
 
 		v_temp01 += boid_temp->getPosition();
@@ -169,23 +164,22 @@ glm::quat Flock::getRotation(glm::vec3 velocity){
 	if(glm::length(velocity) == 0.0f)
 		return rotation;
 
-	float min_value = std::numeric_limits<float>::min();
-
 	velocity *= (1.0f / glm::length(velocity));
-	glm::vec3 start = glm::normalize(startVelocity);
+	glm::vec3 start = startVelocity * (1.0f / glm::length(startVelocity));
 
 	if(velocity == start)
 		return rotation;
 
 	glm::vec3 axis = glm::cross(velocity, start);
-	axis = glm::normalize(axis);
+	axis /= glm::length(velocity);
 
 	float angle = glm::dot(velocity, start);
+	angle = glm::acos(angle);
+	cout << angle << " " << glm::to_string(axis) << endl;
 	axis *= glm::sin(angle) * axis;
 
-	return rotation;
-
 	rotation = glm::quat(glm::cos(angle), axis);
+
 
 	return rotation;
 }

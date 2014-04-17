@@ -63,24 +63,25 @@ int main() {
 	VirtualObject *object10 = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj", VirtualObjectFactory::OTHER);
 	VirtualObject *object11 = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj", VirtualObjectFactory::OTHER);
 	VirtualObject *object12 = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj", VirtualObjectFactory::OTHER);
-	VirtualObject *object13 = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj", VirtualObjectFactory::OTHER);
+//	VirtualObject *object13 = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj", VirtualObjectFactory::OTHER);
 
 	GraphicsComponent* triangle = voFactory->getTriangle();
 
 	AnimationLoop* animation = object02->getAnimation();
 
-	MaterialManager::getInstance()->makeMaterial("rough_wood_brighter", object03->getGraphicsComponent());
-
 	Flock* myFlock = new Flock();
 
-	glm::mat4 trans = glm::scale(glm::mat4(), glm::vec3(0.25f, 0.25f, 0.25f));
+	glm::mat4 trans = glm::rotate(glm::mat4(), -90.0f, glm::vec3(0.0f, 0.0f, 1.0f)) * glm::scale(glm::mat4(), glm::vec3(0.2f, 0.25f, 0.2f));
 
-	myFlock->addBoid(object10, trans);
-	myFlock->addBoid(object11, trans);
-	myFlock->addBoid(object12, trans);
-	myFlock->addBoid(object13, trans);
+	unsigned int i;
+	for (i = 0; i < 50; ++i) {
+		VirtualObject *object13 = new VirtualObject(object10);
+		myFlock->addBoid(object13, trans);
+		rq->addVirtualObject(object13);
+	}
 
-	myFlock->initializeStartPositions(1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
+
+	myFlock->initializeStartPositions(5.0f, glm::vec3(0.0f, 0.0f, 0.0f));
 
 	Boid* myBoid = myFlock->getBoids()[0];
 
@@ -104,6 +105,7 @@ int main() {
 	rq->addCompositingShader(simpleTexShader);
 	rq->addCompositingShader(finalCompShader);
 
+	cout << "nein hier3" << endl;
 
 
 	//--------------------------------------------//
@@ -126,6 +128,7 @@ int main() {
 	//rotation of the cube
 	float angle = 0.0f;
 	float rotationSpeed = 1.0f;
+	cout << "nein hier2" << endl;
 
 	//Statisches "binden" unserer Uniforms/Objekte
 	//Muss man also nur einmal machen
@@ -133,11 +136,9 @@ int main() {
 	rq->addVirtualObject(object01);
 	rq->addVirtualObject(object02);
 	rq->addVirtualObject(object03);
-	rq->addVirtualObject(object10);
-	rq->addVirtualObject(object11);
-	rq->addVirtualObject(object12);
-	rq->addVirtualObject(object13);
 
+
+	cout << "nein hier1" << endl;
 
 	rm->setRenderQueue(rq);
 	rm->setCurrentFBO(fbo);
@@ -149,6 +150,7 @@ int main() {
 
 	frustum->updateModelMatrix();
 
+	cout << "nein hier0" << endl;
 
 	while(!glfwWindowShouldClose(window)) {
 
@@ -173,14 +175,14 @@ int main() {
 
 		animation->updateNodes(angle);
 		myFlock->update(angle);
-		myFlock->setPlaceToGo(vec3(sin(angle) * 3.0f, 0.0f, cos(angle) * 2.0f));
+		myFlock->setPlaceToGo(vec3(sin(angle) * 10.0f, 0.0f, cos(angle) * 2.0f));
 //		myFlock->setPlaceToGo(glm::vec3(0.0f, 0.0f, 0.0f));
 
 
-		cam->setPosition(glm::vec3(0.0f, 2.0f, -20.0f));
-		cam->setCenter(glm::vec3(0.0f, 0.0f, 0.0f));
-//		cam->setPosition(myBoid->getPosition() + glm::vec3(0.0f, 2.0f, -10.0f));
-//		cam->setCenter(myBoid->getPosition());
+//		cam->setPosition(glm::vec3(0.0f, 2.0f, -20.0f));
+//		cam->setCenter(glm::vec3(0.0f, 0.0f, 0.0f));
+		cam->setPosition(myBoid->getPosition() + glm::vec3(0.0f, 2.0f, -10.0f));
+		cam->setCenter(myBoid->getPosition());
 
 		glfwSetTime(0.0);
 

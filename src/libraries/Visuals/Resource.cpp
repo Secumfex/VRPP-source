@@ -34,23 +34,15 @@ Material :: Material(){
 }
 
 Material::Material (Material* mat){
+
+	mTextures = std::vector<Texture*>(mat->getAllMaps());
+
 	this->setAmbient(mat->getAmbient());
-	this->setAmbientMap(mat->getAmbientMap());
 	this->setDiffuse(mat->getDiffuse());
-	this->setDiffuseMap(mat->getDiffuseMap());
-	this->setDisplacementMap(mat->getDisplacementMap());
 	this->setEmission(mat->getEmission());
-	this->setEmissiveMap(mat->getEmissiveMap());
-	this->setHeightMap(mat->getHeightMap());
-	this->setLightMap(mat->getLightMap());
 	this->setName(mat->getName());
-	this->setNormalMap(mat->getNormalMap());
-	this->setOpacityMap(mat->getOpacityMap());
-	this->setReflectionMap(mat->getReflectionMap());
 	this->setShininess(mat->getShininess());
-	this->setShininessMap(mat->getShininessMap());
 	this->setSpecular(mat->getSpecular());
-	this->setSpecularMap(mat->getSpecularMap());
 	this->setTransparency(mat->getTransparency());
 }
 
@@ -170,6 +162,9 @@ Texture* Material ::getLightMap(){
 	return mTextures[10];
 }
 
+std::vector<Texture*> Material::getAllMaps(){
+	return mTextures;
+}
 
 std::string Material::getName(){
 	return mName;
