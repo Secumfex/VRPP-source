@@ -88,13 +88,37 @@ void TurnCameraListener::update(){
 
  void ApplyForceOnCameraListener::update(){
 	 float temp=0;
-	//kinect->forceOld=kinect->forceNew;
-	 kinect->forceOld=kinect->getKinectData(kinect->data);
-	 kinect->forceNew=kinect->getKinectData(kinect->data);
+	float strength=0;
+	temp= kinect->getKinectData(kinect->data);
+	
+	/* 
+	 if(!(kinect->isnew)){
+		 temp=kinect->getKinectData(kinect->data);
+		 kinect->isnew=true;
+	 }
+	 else {
+	 temp=0;
+	 kinect->isnew=false;
+	 }
+	 std::cout<<temp<<kinect->isnew<<endl;
+	 */
+	if(temp!=0 && !(kinect->isnew)){
+ kinect->forceOld=kinect->forceNew;
+ kinect->forceNew=temp;
+ 
+ kinect->isnew=true;
 
-	 std::cout<<kinect->forceOld<<"AAAAAAALT"<<endl;
-	 std::cout<<kinect->forceNew<<"NEEEEUUUUU"<<endl;
-	 
+ if(kinect->forceNew>kinect->forceOld){ strength=1.0;}
+ else if(kinect->forceNew<kinect->forceOld){strength=-1.0;} 
+ else strength=0.0f; 
+
+
+
+	std::cout<<strength<<endl;
+	}
+	kinect->isnew=false;
+
+	
 	/*
 	 temp=kinect->forceOld-kinect->forceNew;
 	 if((kinect->forceNew-2)>kinect->forceOld) temp=5;
@@ -103,7 +127,7 @@ void TurnCameraListener::update(){
 	std::cout<<temp<<"FOOOOOOOORCE"<<endl;
 	*/
  btRigidBody* rigidBody = cam->getRigidBody();
- glm::vec3 force = cam->getViewDirection() * temp;
+ glm::vec3 force = cam->getViewDirection() * strength;
 			rigidBody->applyCentralImpulse(btVector3(force.x,force.y,force.z));	
  }
 

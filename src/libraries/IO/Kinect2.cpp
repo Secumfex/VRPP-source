@@ -87,6 +87,9 @@ Kinect::Kinect(void)
 	force=&forceDirection;
 	forceOldp=&forceOld;
 	forceNewp=&forceNew;
+	isnew=false;
+	forceOld=0;
+	forceNew=0;
 }
 
 

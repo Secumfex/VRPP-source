@@ -45,7 +45,7 @@ GLubyte data[640*480*4];
 HANDLE depthStream;              // The identifier of the Kinect's RGB Camera
 INuiSensor* sensor;            // The kinect sensor
 
-
+bool isnew;
 float* force;
 float forceDirection;
 
