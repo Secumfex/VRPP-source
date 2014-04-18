@@ -193,23 +193,31 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 		unsigned int j=0;
 
 
-		if(pScene->mRootNode->FindNode(mesh->mName))
+		if(pScene->mRootNode->FindNode(mesh->mName)){
+			aiMatrix4x4 mesh_transform = pScene->mRootNode->FindNode(mesh->mName)->mTransformation;
+				aiNode* mesh_node = pScene->mRootNode->FindNode(mesh->mName);
+
+				while(mesh_node->mParent){
+					mesh_node = mesh_node->mParent;
+					mesh_transform = mesh_node->mTransformation * mesh_transform;
+				}
+
+
 				for (j = 0; j < mesh->mNumVertices; ++j) {
 					//todo: fix mesh_transform
 					glm::mat4 blamatrix = glm::transpose(glm::make_mat4(&(pScene->mRootNode->FindNode(mesh->mName)->mTransformation.a1)));
 
-					mesh->mVertices[j] = pScene->mRootNode->FindNode(mesh->mName)->mTransformation * mesh->mVertices[j];
 					if(!pScene->HasAnimations())
-					mesh->mVertices[j] = pScene->mRootNode->mTransformation * mesh->mVertices[j];
+					mesh->mVertices[j] = mesh_transform * mesh->mVertices[j];
 					if (mesh->HasNormals()){
 						if(!pScene->HasAnimations())
-						mesh->mNormals[j].Set(mesh->mNormals[j].x, mesh->mNormals[j].z, -mesh->mNormals[j].y);
+						mesh->mNormals[j] = mesh_transform.Inverse().Transpose() * mesh->mNormals[j];
 					}
 					if (mesh->HasTangentsAndBitangents()){
 						if(!pScene->HasAnimations())
-						mesh->mTangents[j].Set(mesh->mTangents[j].x, mesh->mTangents[j].z, -mesh->mTangents[j].y);
+						mesh->mTangents[j] = mesh_transform.Inverse().Transpose() * mesh->mTangents[j];
 					}
-				}
+				}}
 
 		aMesh->setNumVertices(mesh->mNumVertices);
 		aMesh->setNumIndices(mesh->mNumFaces * 3);

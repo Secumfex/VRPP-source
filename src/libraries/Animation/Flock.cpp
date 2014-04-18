@@ -170,16 +170,18 @@ glm::quat Flock::getRotation(glm::vec3 velocity){
 	if(velocity == start)
 		return rotation;
 
-	glm::vec3 axis = glm::cross(velocity, start);
-	axis /= glm::length(velocity);
+	if(velocity == -start)
+		return glm::quat (-1.0f, 0.0f, 0.0f, 0.0f);
+
+	glm::vec3 axis = glm::cross(start, velocity);
+	axis /= glm::length(axis);
 
 	float angle = glm::dot(velocity, start);
 	angle = glm::acos(angle);
-	cout << angle << " " << glm::to_string(axis) << endl;
-	axis *= glm::sin(angle) * axis;
+	axis = glm::sin(angle) * axis;
 
-	rotation = glm::quat(glm::cos(angle), axis);
-
+	rotation = glm::quat(glm::cos(angle), axis.x, axis.y, axis.z);
+	cout << glm::to_string(glm::vec4(rotation.w, rotation.x, rotation.y, rotation.z)) << endl << glm::cos(angle) << " "<< glm::to_string(axis) << endl;
 
 	return rotation;
 }

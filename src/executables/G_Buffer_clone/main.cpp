@@ -56,14 +56,12 @@ int main() {
 	VirtualObjectFactory *voFactory = VirtualObjectFactory::getInstance();
 
 	VirtualObject *object02 = voFactory->createVirtualObject(RESOURCES_PATH "/animation_test/Fish_bones.dae", VirtualObjectFactory::OTHER);
-	VirtualObject *object03 = voFactory->createVirtualObject(RESOURCES_PATH "/animation_test/tentacle.dae", VirtualObjectFactory::OTHER);
+	VirtualObject *object03 = voFactory->createVirtualObject(RESOURCES_PATH "/animation_test/fish.dae", VirtualObjectFactory::OTHER);
 	VirtualObject *object01 = voFactory->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE);
 
 
-	VirtualObject *object10 = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj", VirtualObjectFactory::OTHER);
-	VirtualObject *object11 = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj", VirtualObjectFactory::OTHER);
-	VirtualObject *object12 = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj", VirtualObjectFactory::OTHER);
-//	VirtualObject *object13 = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj", VirtualObjectFactory::OTHER);
+	VirtualObject *object10 = voFactory->createVirtualObject(RESOURCES_PATH "/animation_test/fish.dae", VirtualObjectFactory::OTHER);
+
 
 	GraphicsComponent* triangle = voFactory->getTriangle();
 
@@ -71,7 +69,7 @@ int main() {
 
 	Flock* myFlock = new Flock();
 
-	glm::mat4 trans = glm::rotate(glm::mat4(), -90.0f, glm::vec3(0.0f, 0.0f, 1.0f)) * glm::scale(glm::mat4(), glm::vec3(0.2f, 0.25f, 0.2f));
+	glm::mat4 trans = glm::rotate(glm::mat4(), 0.0f, glm::vec3(0.0f, 0.0f, 1.0f)) * glm::scale(glm::mat4(), glm::vec3(0.2f, 0.25f, 0.2f));
 
 	unsigned int i;
 	for (i = 0; i < 50; ++i) {
@@ -105,8 +103,6 @@ int main() {
 	rq->addCompositingShader(simpleTexShader);
 	rq->addCompositingShader(finalCompShader);
 
-	cout << "nein hier3" << endl;
-
 
 	//--------------------------------------------//
 	//         Create a Framebuffer Object        //
@@ -128,7 +124,6 @@ int main() {
 	//rotation of the cube
 	float angle = 0.0f;
 	float rotationSpeed = 1.0f;
-	cout << "nein hier2" << endl;
 
 	//Statisches "binden" unserer Uniforms/Objekte
 	//Muss man also nur einmal machen
@@ -137,8 +132,6 @@ int main() {
 	rq->addVirtualObject(object02);
 	rq->addVirtualObject(object03);
 
-
-	cout << "nein hier1" << endl;
 
 	rm->setRenderQueue(rq);
 	rm->setCurrentFBO(fbo);
@@ -149,8 +142,6 @@ int main() {
 
 
 	frustum->updateModelMatrix();
-
-	cout << "nein hier0" << endl;
 
 	while(!glfwWindowShouldClose(window)) {
 
@@ -179,7 +170,7 @@ int main() {
 //		myFlock->setPlaceToGo(glm::vec3(0.0f, 0.0f, 0.0f));
 
 
-//		cam->setPosition(glm::vec3(0.0f, 2.0f, -20.0f));
+//		cam->setPosition(glm::vec3(0.0f, 2.0f, -5.0f));
 //		cam->setCenter(glm::vec3(0.0f, 0.0f, 0.0f));
 		cam->setPosition(myBoid->getPosition() + glm::vec3(0.0f, 2.0f, -10.0f));
 		cam->setCenter(myBoid->getPosition());
@@ -192,7 +183,7 @@ int main() {
 		//nice rotation of a small cube
 		mat4 modelMatrix02 = translate(rotate(scale(mat4(), vec3(0.25f, 0.25f, 0.25f)), degrees(angle), vec3(1.0f, 1.0f, 0.0f)), vec3(0.0f, 1.5f, -0.5f));
 
-		mat4 modelMatrix03 = scale(rotate(mat4(), 90.0f, vec3(0.0f, 1.0f, 0.0f)), vec3(0.25f, 0.25f, 0.25f));
+		mat4 modelMatrix03 = scale(rotate(mat4(), 0.0f, vec3(0.0f, 1.0f, 0.0f)), vec3(0.25f, 0.25f, 0.25f));
 
 		object01->setModelMatrix(modelMatrix01);
 		object02->setModelMatrix(modelMatrix02);
