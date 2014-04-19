@@ -17,7 +17,7 @@ out float passDistance;
 void main() {
    
 	vec4 modelPos = ( uniformModel * vec4( 1.0, 0.0, 1.0, 1.0 ) ); 		//eigentliche Sinusbewegung
-	vec4 viewPos  = ( uniformView  * modelPos)- ( vec4( positionAttribute.x, positionAttribute.y, 0.0, 0.0 ) * uniformScale) ;		
+	vec4 viewPos  = ( uniformView  * modelPos) - vec4( positionAttribute.x, positionAttribute.y, 0.0, 0.0 );		
 	
 	passDistance = viewPos.z;
 

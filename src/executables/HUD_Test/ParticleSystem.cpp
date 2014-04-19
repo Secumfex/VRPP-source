@@ -3,7 +3,7 @@
 
 ParticleSystem::ParticleSystem(glm::vec3* center, float radius){
 	this->center = center;
-	camOld = glm::vec3(0.0f, 1.5f, 5.0f);
+	camOld = *center;
 	camNew = camOld;
 	this->radius = radius;
 
@@ -17,28 +17,19 @@ void ParticleSystem::update(float d_t){
 	oldToNew = camNew - camOld;
 	if(camOld != camNew)
 		for (unsigned int i = 0; i < particles.size(); i ++){
-			moveToOppositeSide( particles[i] );
+			updateHUDPosition( particles[i] );
 		}
 }
 
 
-void ParticleSystem::testConstraint(Particle* particle){
-	float distance = glm::length( glm::vec3( particle->getPosition() - *center ) );
-	if ( distance > radius ){
-		moveToOppositeSide ( particle );
-	}
-
-}
-
-
-void ParticleSystem::moveToOppositeSide( Particle* particle ){
-	glm::vec3 centerToParticle = glm::normalize( particle->getPosition() - *center );
-	std::cout<<"Old:  x: "<<camOld.x<<",    "<<"y: "<<camOld.y<<",    "<<"z: "<<camOld.z<<endl;
-	std::cout<<"New:  x: "<<camNew.x<<",    "<<"y: "<<camNew.y<<",    "<<"z: "<<camNew.z<<endl;
-	std::cout<<"TO:   x: "<<oldToNew.x<<",    "<<"y: "<<oldToNew.y<<",    "<<"z: "<<oldToNew.z<<endl;
-	std::cout<<"POld:  x: "<<particle->getPosition().x<<",    "<<"y: "<<particle->getPosition().y<<",    "<<"z: "<<particle->getPosition().z<<endl;
+void ParticleSystem::updateHUDPosition( Particle* particle ){
+//	glm::vec3 centerToParticle = glm::normalize( particle->getPosition() - *center );
+//	std::cout<<"Old:  x: "<<camOld.x<<",    "<<"y: "<<camOld.y<<",    "<<"z: "<<camOld.z<<endl;
+//	std::cout<<"New:  x: "<<camNew.x<<",    "<<"y: "<<camNew.y<<",    "<<"z: "<<camNew.z<<endl;
+//	std::cout<<"TO:   x: "<<oldToNew.x<<",    "<<"y: "<<oldToNew.y<<",    "<<"z: "<<oldToNew.z<<endl;
+//	std::cout<<"POld:  x: "<<particle->getPosition().x<<",    "<<"y: "<<particle->getPosition().y<<",    "<<"z: "<<particle->getPosition().z<<endl;
 	particle->setPosition( particle->getPosition() + oldToNew );
-	std::cout<<"PNew:  x: "<<particle->getPosition().x<<",    "<<"y: "<<particle->getPosition().y<<",    "<<"z: "<<particle->getPosition().z<<endl;
+//	std::cout<<"PNew:  x: "<<particle->getPosition().x<<",    "<<"y: "<<particle->getPosition().y<<",    "<<"z: "<<particle->getPosition().z<<endl;
 }
 
 

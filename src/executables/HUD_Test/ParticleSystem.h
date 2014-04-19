@@ -20,7 +20,7 @@ private:
 	float radius;	
 
 	void testConstraint( 	 Particle* particle );
-	void moveToOppositeSide( Particle* particle );
+	void updateHUDPosition( Particle* particle );
 public:
 	ParticleSystem( glm::vec3* center = new glm::vec3( 0.0f, 0.0f, 0.0f), float radius = 1.0f );
 	void update(float d_t);
