@@ -166,7 +166,7 @@ int main() {
 
 		animation->updateNodes(angle);
 		myFlock->update(angle);
-		myFlock->setPlaceToGo(vec3(sin(angle) * 10.0f, 0.0f, cos(angle) * 2.0f));
+		myFlock->setPlaceToGo(vec3(sin(angle) * 10.0f, sin(angle) * 2.0f, cos(angle) * 5.0f));
 //		myFlock->setPlaceToGo(glm::vec3(0.0f, 0.0f, 0.0f));
 
 

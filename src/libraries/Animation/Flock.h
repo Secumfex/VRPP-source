@@ -85,7 +85,7 @@ public:
 
 private:
 
-	glm::quat getRotation(glm::vec3 velocity);/**< calculates the rotation for the current velocity vector */
+	glm::quat getRotation(Boid* boid);/**< calculates the rotation for the current velocity vector */
 	glm::vec3 clampVelocity(glm::vec3 velocity);/**< clamps the velocity vectors to a speedlimit */
 	glm::vec3 getPlace(Boid* boid);/**< calculates a vector for the boids to follow */
 	glm::vec3 getSeparation(std::vector<Boid*> neighbors, Boid* boid);/**< calculates the 1.rule of boids */

@@ -76,9 +76,9 @@ void Flock::update(float t){
 		Boid* boid_temp = mBoids[i];
 		std::vector<Boid*> neightbors = getNeighbors(boid_temp);
 
-		glm::vec3 v = getAllignment(neightbors, boid_temp) * 0.8f;
+		glm::vec3 v = getAllignment(neightbors, boid_temp) * 0.5f;
 //		glm::vec3 v = glm::vec3(0.0f, 0.0f, 0.0f);
-		v += getCohesion(neightbors, boid_temp) * 0.8f;
+		v += getCohesion(neightbors, boid_temp) * -0.8f;
 		v += getSeparation(neightbors, boid_temp) * 1.5f;
 		v += getPlace(boid_temp) * 1.0f;
 		next_velocities.push_back(v);
@@ -97,7 +97,7 @@ void Flock::update(float t){
 
 		glm::vec3 v_temp01 = v_temp * delta_time;
 
-				glm::quat rotation = getRotation(v_temp);
+				glm::quat rotation = getRotation(boid_temp);
 //				glm::quat rotation = glm::quat (1.0f, 0.0f, 0.0f, 0.0f);
 
 
@@ -157,9 +157,13 @@ glm::vec3 Flock::getSeparation(std::vector<Boid*> neighbors, Boid* boid){
 	return v * 1.5f;
 }
 
-glm::quat Flock::getRotation(glm::vec3 velocity){
+glm::quat Flock::getRotation(Boid* boid){
 
 	glm::quat rotation = glm::quat (1.0f, 0.0f, 0.0f, 0.0f);
+
+	glm::vec3 velocity = mPlaceToGo - boid->getPosition();
+
+	velocity = 0.25f * velocity + 0.75f * boid->getVelocity();
 
 	if(glm::length(velocity) == 0.0f)
 		return rotation;
@@ -178,10 +182,10 @@ glm::quat Flock::getRotation(glm::vec3 velocity){
 
 	float angle = glm::dot(velocity, start);
 	angle = glm::acos(angle);
-	axis = glm::sin(angle) * axis;
 
-	rotation = glm::quat(glm::cos(angle), axis.x, axis.y, axis.z);
-	cout << glm::to_string(glm::vec4(rotation.w, rotation.x, rotation.y, rotation.z)) << endl << glm::cos(angle) << " "<< glm::to_string(axis) << endl;
+	glm::mat4 rot_matrix = glm::rotate(glm::mat4(), glm::degrees(angle), axis);
+
+	rotation = glm::quat_cast(rot_matrix);
 
 	return rotation;
 }
