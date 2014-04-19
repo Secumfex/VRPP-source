@@ -24,7 +24,7 @@ void main() {
 	gl_Position = uniformPerspective * viewPos;
 //	gl_Position = uniformPerspective * ( ( uniformModel * positionAttribute )  + vec4( uniformView[3].xyz, 0.0) );
 //	gl_Position = uniformPerspective * uniformView * uniformModel * positionAttribute;   
-  //	gl_Position =  uniformPerspective * ( positionAttribute + vec4 ( uniformView[3].xyz, 0.0));
+// 	gl_Position =  uniformPerspective * ( positionAttribute + vec4 ( uniformView[3].xyz, 0.0));
    
 	passUVCoords = vec2( positionAttribute.x + 0.5, positionAttribute.y + 0.5);
 

@@ -15,6 +15,8 @@ private:
 	std::vector< Particle* > particles;
 	
 	glm::vec3* center;
+	glm::vec3 camOld, camNew;
+	glm::vec3 oldToNew;
 	float radius;	
 
 	void testConstraint( 	 Particle* particle );
