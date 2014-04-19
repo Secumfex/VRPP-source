@@ -95,14 +95,14 @@ void TurnCameraListener::update(){
 	
 	if(temp!=0 && !(kinect->isnew))
 	{
-
+	//	std::cout<<temp<<endl;
  kinect->forceOld=kinect->forceNew;
  kinect->forceNew=temp;
  
  kinect->isnew=true;
 
- if(kinect->forceNew>kinect->forceOld){ strength=1.0;}
- else if(kinect->forceNew<kinect->forceOld){strength=-0.2;} 
+ if(kinect->forceNew-0.8f>kinect->forceOld){ strength=2.0;}
+ else if(kinect->forceNew<kinect->forceOld-1.0f){strength=-0.2;} 
  else strength=0.0f; 
 
 

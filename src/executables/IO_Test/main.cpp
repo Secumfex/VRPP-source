@@ -92,11 +92,19 @@ void configureRendering(){
 	/*customize Rendermanager, Renderloop, etc. via framelisteners and such*/
 	testingApp->attachListenerOnProgramInitialization(	new SetDefaultShaderListener( new Shader (SHADERS_PATH "/Phong_Test_Textures/phong.vert", SHADERS_PATH "/Phong_Test_Textures/phong.frag")));
 	testingApp->attachListenerOnRenderManagerFrameLoop(	new RenderloopPlaceHolderListener());
+	/*
+	*Listener for Kinect gets attached
+	*
+	*/
 	testingApp->attachListenerOnRenderManagerFrameLoop(new ApplyForceOnCameraListener(playercam ,kinectp, kinectp->force) );
 	testingApp->attachListenerOnProgramInitialization(	new SetClearColorListener(1.0f,1.0f,1.0f));	// white background
 }
 
 void configureOtherStuff(){	
+	/*
+	* Initialize Kinect
+	*/
+	kinectp->initKinect();
 }
 
 void configureApplication(){
@@ -118,18 +126,12 @@ void configureApplication(){
 
 int main() {
 	kinectp=&kinect;
+	PlayerCamera playercam2;
+	playercam=&playercam2;
 
-
-
-//directionForce=&direction;
-	
-	kinectp->initKinect();
-//	kinect->force=&(kinect->forceDirection);
-//	kinect->forceOldp=&(kinect->forceOld);
-	//kinect->forceNewp=&(kinect->forceNew);
-
+	playercam->getRigidBody()->setGravity(btVector3(5,5,5));  
+//	playercam->getRigidBody->setMass
 	configureApplication();	// 1 do some customization
-	std::cout<<"BIS ZUR MAIN BIN ICH GEKOMMEN"<< endl;
 	testingApp->run();		// 2 run application
 	
 	return 0;				// 3 end :)
