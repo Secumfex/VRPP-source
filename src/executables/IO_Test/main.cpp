@@ -129,8 +129,12 @@ int main() {
 	PlayerCamera playercam2;
 	playercam=&playercam2;
 
-	playercam->getRigidBody()->setGravity(btVector3(5,5,5));  
+
+	btRigidBody* rigid=playercam->getRigidBody();
+	rigid->setGravity(btVector3(0,0,0));  
 //	playercam->getRigidBody->setMass
+
+
 	configureApplication();	// 1 do some customization
 	testingApp->run();		// 2 run application
 	

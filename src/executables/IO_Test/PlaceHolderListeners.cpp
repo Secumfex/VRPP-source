@@ -101,8 +101,8 @@ void TurnCameraListener::update(){
  
  kinect->isnew=true;
 
- if(kinect->forceNew-0.8f>kinect->forceOld){ strength=2.0;}
- else if(kinect->forceNew<kinect->forceOld-1.0f){strength=-0.2;} 
+ if(kinect->forceNew-1.6f>kinect->forceOld){ strength=0.5;}
+ else if(kinect->forceNew<kinect->forceOld-2.0f){strength=-0.22222222;} 
  else strength=0.0f; 
 
 

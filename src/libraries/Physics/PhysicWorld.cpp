@@ -13,7 +13,8 @@ PhysicWorld::PhysicWorld() {
 	solver = new btSequentialImpulseConstraintSolver();
 	dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher,broadphase,solver,collisionConfiguration);
 
-	dynamicsWorld->setGravity(btVector3(0,-10,0));
+	// changed for Kinect. original= (btVector3(0,-10,0)
+	dynamicsWorld->setGravity(btVector3(0,-0.5,0));
 
 //	cout<<dynamicsWorld<<endl;
 
