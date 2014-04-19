@@ -83,7 +83,9 @@ void configRendering(){
 	myApp->attachListenerOnRenderManagerFrameLoop(uniSpec2);
 
 	TerrainRenderPass* renderTerrain = new TerrainRenderPass(HeightfieldScene::fboGround);
+	HeightfieldScene::fboGround->bindFBO();
 	myApp->attachListenerOnRenderManagerFrameLoop(renderTerrain);
+	HeightfieldScene::fboGround->unbindFBO();
 
 	//final compositing
 	myApp->attachListenerOnRenderManagerFrameLoop(new SetCurrentShaderListener(fcShader));

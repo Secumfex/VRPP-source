@@ -16,10 +16,13 @@ namespace HeightfieldScene{
 
 	//FBOs
 	FrameBufferObject* fboGround;
-	FrameBufferObject* fboNormals;
-	FrameBufferObject* fboGloss;
+	//FrameBufferObject* fboNormals;
+	//FrameBufferObject* fboGloss;
 
 	GLuint fboTexture;
+	GLuint fboNormals;
+	GLuint fboSpecular;
+	GLuint depthrenderbuffer;
 
 	//Camera
 	Camera* camera;
@@ -44,8 +47,8 @@ namespace HeightfieldScene{
 		//FBOs
 		fboGround = new FrameBufferObject(800,600);
 		fboGround->bindFBO();
-		fboGround->createPositionTexture();
-		/*
+		//fboGround->createPositionTexture();
+
 		glGenTextures(1,&fboTexture);
 		glBindTexture(GL_TEXTURE_2D,fboTexture);
 		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
@@ -53,8 +56,25 @@ namespace HeightfieldScene{
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA16F,800,600,0,GL_RGBA,GL_FLOAT,0);
-		 */
-		fboGround->makeDrawBuffers();
+
+		//glGenTextures();
+		glBindTexture(GL_TEXTURE_2D,fboNormals);
+		//...
+
+		//glGenTextures();
+		glBindTexture(GL_TEXTURE_2D,fboSpecular);
+		//...
+
+		glGenRenderbuffers(1, &depthrenderbuffer);
+		glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1024, 768);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer);
+
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, fboTexture, 0);
+		GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
+		glDrawBuffers(1, DrawBuffers);
+
+		//fboGround->makeDrawBuffers();
 		fboGround->unbindFBO();
 
 		//Textures
