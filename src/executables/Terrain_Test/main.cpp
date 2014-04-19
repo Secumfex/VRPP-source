@@ -53,6 +53,7 @@ void configIOHandler(){
 void configRendering(){
 
 	Shader* hfShader = new Shader(SHADERS_PATH"/HeightField/heightField.vert",SHADERS_PATH"/HeightField/heightField.frag");
+	Shader* fcShader = new Shader(SHADERS_PATH"/Underwater_Visuals_Test/screenFill.vert",SHADERS_PATH"/HeightField/finalComp.frag");
 
 	//TODO: zahlen richtig anpassen (0,1,2)
 	Listener* uniTex1 = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",1,"uniformTexture1",HeightfieldScene::ground1->getTextureHandle());
@@ -69,6 +70,7 @@ void configRendering(){
 
 	myApp->attachListenerOnProgramInitialization(new SetCurrentShaderListener(hfShader));
 
+	//render textures
 	myApp->attachListenerOnRenderManagerFrameLoop(new SetCurrentShaderListener(hfShader));
 	myApp->attachListenerOnRenderManagerFrameLoop(uniTex1);
 	myApp->attachListenerOnRenderManagerFrameLoop(uniTex2);
@@ -82,6 +84,11 @@ void configRendering(){
 
 	TerrainRenderPass* renderTerrain = new TerrainRenderPass(HeightfieldScene::fboGround);
 	myApp->attachListenerOnRenderManagerFrameLoop(renderTerrain);
+
+	//final compositing
+	myApp->attachListenerOnRenderManagerFrameLoop(new SetCurrentShaderListener(fcShader));
+	RenderGraphicsComponentListener* renderComp = new RenderScreenFillingTriangleListener();
+	myApp->attachListenerOnRenderManagerFrameLoop(renderComp);
 }
 void configureMyApp(){
 	/*	customize application a little bit*/

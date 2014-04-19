@@ -10,7 +10,9 @@ layout(location = 3) in vec4 specularIn;
 //uniform sampler2D normalMap;
 //uniform sampler2D specularMap;
 
-out vec4 fragmentColor;
+//phong mit allen maps
+
+out vec4 fragmentColor = ;
 
 
 void main{

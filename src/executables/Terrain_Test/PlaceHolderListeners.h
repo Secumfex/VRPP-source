@@ -265,7 +265,7 @@ public:
 	Shader* currentShader;
 	vector<GraphicsComponent* > currentGCs;
 
-	/*außerdem*/
+	/*ausserdem*/
 	FrameBufferObject* fbo;
 
 	TerrainRenderPass(FrameBufferObject* fbo);
