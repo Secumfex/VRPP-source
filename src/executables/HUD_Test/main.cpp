@@ -138,6 +138,8 @@ void configureRendering(){
 	Listener* uniTime2 		= new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", IOManager::getInstance()->getWindowTimePointer(), "uniformTime");
 	Listener* uniTime3 		= new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", IOManager::getInstance()->getWindowTimePointer(), "uniformTime");
 
+	Listener* uniTime4 		= new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", IOManager::getInstance()->getWindowTimePointer(), "uniformTime");
+
 	Listener* uniSinusWave  = new UploadUniformSinusWaveListener("UNIFORMUPLOADLISTENER", IOManager::getInstance()->getWindowTimePointer(), 0.5f, 0.0f, "uniformSinus");
 
 	Listener* setClearColor 	= new SetClearColorListener 		( &UnderwaterScene::fog_color, 1.0);
@@ -225,6 +227,7 @@ void configureRendering(){
 	testingApp->attachListenerOnRenderManagerFrameLoop( uniPartText);
 	testingApp->attachListenerOnRenderManagerFrameLoop( uniSinusWave);
 	ParticlesRenderPass* renderHUD = new ParticlesRenderPass(UnderwaterScene::framebuffer_water_particles, UnderwaterScene::water_particles, vaoID[0]);
+	testingApp->attachListenerOnRenderManagerFrameLoop( uniTime4 );
 	testingApp->attachListenerOnRenderManagerFrameLoop(( renderHUD));
 
 	// 7: Compositing

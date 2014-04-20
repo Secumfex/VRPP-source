@@ -11,6 +11,8 @@ namespace HUD{
 
 	Texture* HUD_texture;
 
+	int air = 100;
+
 	void createHUD(ApplicationState* target){
 	//----framebuffer object----//
 		framebuffer_HUD = new FrameBufferObject(800, 600);
