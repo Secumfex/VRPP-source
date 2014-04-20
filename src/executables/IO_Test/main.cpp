@@ -22,6 +22,7 @@ VRState* 		testingState;
 IOHandler*   	testingInputHandler;
 VirtualObject*  cowObject;
 PlayerCamera*   playercam;
+PlayerCamera playercam2;
 
 
 
@@ -126,13 +127,13 @@ void configureApplication(){
 
 int main() {
 	kinectp=&kinect;
-	PlayerCamera playercam2;
 	playercam=&playercam2;
 
 
+	/*
 	btRigidBody* rigid=playercam->getRigidBody();
 	rigid->setGravity(btVector3(0,0,0));  
-//	playercam->getRigidBody->setMass
+	*/
 
 
 	configureApplication();	// 1 do some customization

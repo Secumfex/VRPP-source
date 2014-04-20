@@ -14,7 +14,7 @@ PhysicWorld::PhysicWorld() {
 	dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher,broadphase,solver,collisionConfiguration);
 
 	// changed for Kinect. original= (btVector3(0,-10,0)
-	dynamicsWorld->setGravity(btVector3(0,-0.5,0));
+	dynamicsWorld->setGravity(btVector3(0,-0.25,0));
 
 //	cout<<dynamicsWorld<<endl;
 

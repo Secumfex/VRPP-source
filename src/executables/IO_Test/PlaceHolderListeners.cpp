@@ -88,39 +88,33 @@ void TurnCameraListener::update(){
 
  void ApplyForceOnCameraListener::update(){
 	 float temp=0;
-	float strength=0;
+	 float strength=0;
 
-	temp= kinect->getKinectData(kinect->data);
-	
+	temp = kinect->getKinectData(kinect->data);
 	
 	if(temp!=0 && !(kinect->isnew))
 	{
-	//	std::cout<<temp<<endl;
- kinect->forceOld=kinect->forceNew;
- kinect->forceNew=temp;
+		//update values
+	 kinect->forceOld=kinect->forceNew;
+	kinect->forceNew=temp;
  
- kinect->isnew=true;
-
- if(kinect->forceNew-1.6f>kinect->forceOld){ strength=0.5;}
- else if(kinect->forceNew<kinect->forceOld-2.0f){strength=-0.22222222;} 
- else strength=0.0f; 
+	// Switch flag - slower updates
+	 kinect->isnew=true;
+	
+	 //calculate which direction
+	 if(kinect->forceNew-1.3f>kinect->forceOld){ strength=0.40;}
+   // else if(kinect->forceNew+2.0f<kinect->forceOld){strength=-0.5;} 
+	else strength=0.0f; 
 
 
 
 	std::cout<<strength<<endl;
 	}
 
-
+	//switch flag
 	kinect->isnew=false;
 
-	
-	/*
-	 temp=kinect->forceOld-kinect->forceNew;
-	 if((kinect->forceNew-2)>kinect->forceOld) temp=5;
-	 else if((kinect->forceOld-2)>kinect->forceNew) temp=-5;
-	 else temp=0;
-	std::cout<<temp<<"FOOOOOOOORCE"<<endl;
-	*/
+	//apply strength on cameraview
  btRigidBody* rigidBody = cam->getRigidBody();
  glm::vec3 force = cam->getViewDirection() * strength;
 			rigidBody->applyCentralImpulse(btVector3(force.x,force.y,force.z));	
