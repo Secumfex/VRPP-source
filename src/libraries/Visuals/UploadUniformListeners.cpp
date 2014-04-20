@@ -8,6 +8,7 @@
 #include "Visuals/UploadUniformListeners.h"
 
 #include "Visuals/RenderManager.h"
+#include "IO/IOManager.h"
 
 UploadUniformModelMatrixListener::UploadUniformModelMatrixListener(std::string name){
 	setName(name);
@@ -297,6 +298,17 @@ void UploadUniformResolutionYListener::update(){
 	Shader* shader = RenderManager::getInstance()->getCurrentShader();
 	FrameBufferObject* fbo = RenderManager::getInstance()->getCurrentFBO();
 	shader->uploadUniform(fbo->getHeight(), "resY");
+}
+
+UploadUniformWindowTimeListener::UploadUniformWindowTimeListener(std::string name)
+{
+	setName(name);
+}
+
+void UploadUniformWindowTimeListener::update(){
+	Shader* shader = RenderManager::getInstance()->getCurrentShader();
+	float time = IOManager::getInstance()->getWindowTime();
+	shader->uploadUniform(time, "uniformTime");
 }
 
 UploadUniformVec3Listener::UploadUniformVec3Listener(std::string name, glm::vec3 vector, std::string uniform_name){

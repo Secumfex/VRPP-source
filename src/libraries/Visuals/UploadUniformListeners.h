@@ -221,7 +221,14 @@ public:
   	 ///
 	 void update();
   };
-	
+ class UploadUniformWindowTimeListener : public Listener{
+ public:
+	 //constructor @param name
+	 UploadUniformWindowTimeListener(std::string name);
+	 ///upload current window time to "uniformTime"
+	 void update();
+
+ };
 
 
 /******************** CUSTOM UNIFORM UPLOAD LISTENERS ***********************/	

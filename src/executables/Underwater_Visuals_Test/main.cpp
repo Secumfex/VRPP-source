@@ -104,8 +104,8 @@ void configureRendering(){
 	Listener* uniFogColorInv= new UploadUniformVec3Listener 	("UNIFORMUPLOADLISTENER", &UnderwaterScene::fog_color_inverse, 					"uniformFogColor");
 	Listener* uniLightPos 	= new UploadUniformVec3Listener 	("UNIFORMUPLOADLISTENER", &UnderwaterScene::lightPosition, 						"uniformLightPosition");
 
-	Listener* uniPreCompMap	= new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 9, "uniformPreCompositionMap",preCompositingScene->getPositionTextureHandle());
-	Listener* uniGodRayMap	= new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 8, "uniformGodRayMap", 		UnderwaterScene::framebuffer_water_god_rays->getPositionTextureHandle());
+//	Listener* uniPreCompMap	= new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 9, "uniformPreCompositionMap",preCompositingScene->getPositionTextureHandle());
+//	Listener* uniGodRayMap	= new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 8, "uniformGodRayMap", 		UnderwaterScene::framebuffer_water_god_rays->getPositionTextureHandle());
 	Listener* uniRefrText   = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 10, "uniformRefractionMap", 	UnderwaterScene::framebuffer_water_refraction->getPositionTextureHandle());
 	Listener* uniReflText   = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 11, "uniformReflectionMap", 	UnderwaterScene::framebuffer_water_reflection->getPositionTextureHandle());
 	Listener* uniCausticsTex= new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 12, "uniformCausticsTexture", UnderwaterScene::causticsTexture->getTextureHandle());
@@ -120,22 +120,12 @@ void configureRendering(){
 	Listener* uniFogBeginInv= new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", &UnderwaterScene::fog_begin_inverse, "uniformFogBegin");
 	Listener* uniFogEnd 	= new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", &UnderwaterScene::fog_end, "uniformFogEnd");
 	Listener* uniFogEndInv 	= new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", &UnderwaterScene::fog_end_inverse, "uniformFogEnd");
-	Listener* uniTime 		= new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", IOManager::getInstance()->getWindowTimePointer(), "uniformTime");
-	Listener* uniTime2 		= new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", IOManager::getInstance()->getWindowTimePointer(), "uniformTime");
-	Listener* uniTime3 		= new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", IOManager::getInstance()->getWindowTimePointer(), "uniformTime");
 
 	Listener* uniSinusWave  = new UploadUniformSinusWaveListener("UNIFORMUPLOADLISTENER", IOManager::getInstance()->getWindowTimePointer(), 0.5f, 0.0f, "uniformSinus");
 
 	Listener* setClearColor 	= new SetClearColorListener 		( &UnderwaterScene::fog_color, 1.0);
 	Listener* setClearColor2 	= new SetClearColorListener 		( &UnderwaterScene::fog_color, 1.0);
 	Listener* setClearColorInv 	= new SetClearColorListener 		( &UnderwaterScene::fog_color_inverse, 1.0);
-
-	Listener* bindWaterRefrFBO	= new SetFrameBufferObjectListener ( UnderwaterScene::framebuffer_water_refraction );
-	Listener* bindWaterReflFBO	= new SetFrameBufferObjectListener ( UnderwaterScene::framebuffer_water_reflection );
-	Listener* bindWaterGodRayFBO= new SetFrameBufferObjectListener ( UnderwaterScene::framebuffer_water_god_rays );
-	Listener* bindPreCompFBO	= new SetFrameBufferObjectListener ( preCompositingScene );
-
-	Listener* unbindCurrentFBO	= new UnbindFrameBufferObjectListener ();
 
 	testingApp->attachListenerOnProgramInitialization(	new SetCurrentShaderListener( reflection_shader ));
 
@@ -181,7 +171,6 @@ void configureRendering(){
 	// dont add any renderqueuerequest flags since all scene objects shall be rendered
 	godraysRenderPass->attachListenerOnPostUniformUpload( uniCausticsTex2);	// upload caustics texture used for god ray sampling
 	godraysRenderPass->attachListenerOnPostUniformUpload( uniSunVPersp );		// upload sun view perspective matrix
-	godraysRenderPass->attachListenerOnPostUniformUpload( uniTime3 );			// upload current time
 	godraysRenderPass->attachListenerOnPostUniformUpload( uniCamPos );			// upload cam world position
 
 	testingState->getRenderLoop()->addRenderPass( godraysRenderPass );			//add God Rays Render Pass
@@ -199,7 +188,6 @@ void configureRendering(){
 	regularSceneRenderPass->attachListenerOnPostUniformUpload( uniFogEnd );  	  // upload fog end distance
 	regularSceneRenderPass->attachListenerOnPostUniformUpload( uniCausticsTex ); // upload caustics texture
 	regularSceneRenderPass->attachListenerOnPostUniformUpload( uniSunVPersp );   // upload sun view perspecitve matrix
-	regularSceneRenderPass->attachListenerOnPostUniformUpload( uniTime2 );	      // upload current time
 
 	testingState->getRenderLoop()->addRenderPass( regularSceneRenderPass );		//add regular Scene Render pass
 	
@@ -214,7 +202,6 @@ void configureRendering(){
 	waterRenderPass->attachListenerOnPostUniformUpload( uniFogColor );	// upload fog color
 	waterRenderPass->attachListenerOnPostUniformUpload( uniFogBegin );	// upload fog begin distancce
 	waterRenderPass->attachListenerOnPostUniformUpload( uniFogEnd );	// upload fog end distance
-	waterRenderPass->attachListenerOnPostUniformUpload( uniTime );		// upload current time
 	waterRenderPass->attachListenerOnPostUniformUpload( uniReflText ); // upload reflection map
 	waterRenderPass->attachListenerOnPostUniformUpload( uniRefrText ); // upload refraction map
 
@@ -229,7 +216,7 @@ void configureRendering(){
 	particlesRenderPass->setClearColorBufferBit(true); // clear color buffer bit on every frame
 	particlesRenderPass->attachListenerOnActivation(new SetClearColorListener(0.0f,0.0f,0.0f,0.0f));	// set clear color to transparent
 	particlesRenderPass->attachListenerOnPostUniformUpload( uniPartText);	// upload Particles Texture
-	particlesRenderPass->attachListenerOnPostUniformUpload( uniSinusWave); // upload Sinus Wave value
+	particlesRenderPass->attachListenerOnPostUniformUpload( uniSinusWave);  // upload Sinus Wave value
 
 	testingState->getRenderLoop()->addRenderPass(particlesRenderPass);			//add particles render pass
 

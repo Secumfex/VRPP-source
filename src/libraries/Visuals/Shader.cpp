@@ -247,6 +247,8 @@ void Shader::attachUniformListener(std::string uniform){
 		attach(new UploadUniformResolutionXListener("UNIFORMUPLOADLISTENER"));}
 	else if(uniform == "resY"){
 		attach(new UploadUniformResolutionYListener("UNIFORMUPLOADLISTENER"));}
+	else if(uniform == "uniformTime"){
+		attach(new UploadUniformWindowTimeListener("UNIFORMUPLOADLISTENER"));}
 	else {
 		std::cout << "ERROR: Uniform \"" << uniform << "\" is not a valid uniform name." << std:: endl;
 	}
