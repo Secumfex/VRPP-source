@@ -1,7 +1,6 @@
 #include "HUDSystem.h"
 
 HUDSystem::HUDSystem(){
-
 }
 
 HUDSystem::HUDSystem(std::vector<HUDElement*> hudElements){
@@ -18,4 +17,16 @@ void HUDSystem::addHUDElement(HUDElement* hudElement){
 
 std::vector<HUDElement*> HUDSystem::getHUDElements(){
 	return HUDElements;
+}
+
+void HUDSystem::removeHUDElement(HUDElement* element){
+	std::vector< HUDElement* > elementsTemp;
+	for ( unsigned int i = 0; i < HUDElements.size(); i++ ){
+		if (HUDElements[i] == element){
+			continue;
+		}else{
+			elementsTemp.push_back( HUDElements[i] );
+		}
+	}
+	HUDElements = elementsTemp;
 }

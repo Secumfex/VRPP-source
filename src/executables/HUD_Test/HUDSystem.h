@@ -2,9 +2,12 @@
 #define HUDSYSTEM_H
 
 #include <vector>
+#include <glm/glm.hpp>
+#include <Patterns/Subject.h>
+
 #include "HUDElement.h"
 
-class HUDSystem {
+class HUDSystem : public Subject{
 private:
 	std::vector<HUDElement*> HUDElements;
 
