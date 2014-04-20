@@ -21,7 +21,9 @@ void main() {
 	
 	passDistance = viewPos.z;
 
-	gl_Position = uniformPerspective * viewPos;
+	gl_Position = vec4( positionAttribute.x, positionAttribute.y, 0.0, 1.0);
+//	gl_Position.xy *= 0.5;															//scaling the panel/texture
+//	gl_Position = uniformPerspective * viewPos;
 //	gl_Position = uniformPerspective * ( ( uniformModel * positionAttribute )  + vec4( uniformView[3].xyz, 0.0) );
 //	gl_Position = uniformPerspective * uniformView * uniformModel * positionAttribute;   
 // 	gl_Position =  uniformPerspective * ( positionAttribute + vec4 ( uniformView[3].xyz, 0.0));
