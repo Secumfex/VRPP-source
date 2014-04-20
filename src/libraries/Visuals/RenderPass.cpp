@@ -1,15 +1,20 @@
-/*
- * RenderPass.cpp
- *
- *  Created on: 11.02.2014
- *      Author: Dirk Diggler
- */
 #include <IO/IOManager.h>
 #include <Visuals/RenderManager.h>
 #include <Visuals/RenderPass.h>
 
 RenderPass::RenderPass() {
+	mFBO = 0;
+	mShader = 0;
 
+	clearColorBufferBit = false;
+	clearDepthBufferBit = true;
+	useDepthTest = true;
+	useAlphaBlending = false;
+
+	mViewPort_x = 0;
+	mViewPort_y = 0;
+	mViewPort_width  = IOManager::getInstance()->getWidth();
+	mViewPort_height = IOManager::getInstance()->getHeight();
 }
 
 //Variante statt addRenderPass:
@@ -22,20 +27,21 @@ RenderPass::RenderPass(Shader* shader, FrameBufferObject* fbo){
 	useDepthTest = true;
 	useAlphaBlending = false;
 
-	viewPort_x = 0;
-	viewPort_y = 0;
+	mViewPort_x = 0;
+	mViewPort_y = 0;
 	if (mFBO)
 	{
-		viewPort_width  = mFBO->getWidth();
-		viewPort_height = mFBO->getHeight();
+		mViewPort_width  = mFBO->getWidth();
+		mViewPort_height = mFBO->getHeight();
 	}else{
-		viewPort_width = IOManager::getInstance()->getWidth();
-		viewPort_height = IOManager::getInstance()->getHeight();
+		mViewPort_width = IOManager::getInstance()->getWidth();
+		mViewPort_height = IOManager::getInstance()->getHeight();
 	}
 }
 
 void RenderPass::activate()
 {
+
 	RenderManager *rm = RenderManager::getInstance();
 	rm->setCurrentShader(mShader);
 	rm->setCurrentFBO(mFBO);	
@@ -44,25 +50,15 @@ void RenderPass::activate()
 	if (mFBO)
 	{
 		mFBO->bindFBO();
-		viewPort_width = mFBO->getWidth();
-		viewPort_height =mFBO->getHeight();
+		mViewPort_width = mFBO->getWidth();
+		mViewPort_height =mFBO->getHeight();
 	}
 	else{
-		viewPort_width  = IOManager::getInstance()->getWidth();
-		viewPort_height = IOManager::getInstance()->getHeight();
+		mViewPort_width  = IOManager::getInstance()->getWidth();
+		mViewPort_height = IOManager::getInstance()->getHeight();
 	}
 
-	glViewport(viewPort_x, viewPort_y, viewPort_width, viewPort_height);
-
-	if (clearColorBufferBit)
-	{
- 		glClear(GL_COLOR_BUFFER_BIT);
-	}
-
-	if (clearDepthBufferBit) 
-	{
-		glClear(GL_DEPTH_BUFFER_BIT);
-	}
+	glViewport(mViewPort_x, mViewPort_y, mViewPort_width, mViewPort_height);
 
 	if (useDepthTest) 
 	{
@@ -115,9 +111,18 @@ void RenderPass::uploadUniforms()
 }
 
 void RenderPass::render(){
+	if (clearColorBufferBit)
+	{
+ 		glClear(GL_COLOR_BUFFER_BIT);
+	}
+
+	if (clearDepthBufferBit) 
+	{
+		glClear(GL_DEPTH_BUFFER_BIT);
+	}
+
 	RenderManager *rm = RenderManager::getInstance();
 	std::list<GraphicsComponent*> renderables = extractGCsFromRenderQueue();
-
 	notify("PRERENDER");
 
 	for(list<GraphicsComponent*>::iterator gc_it = renderables.begin(); gc_it != renderables.end(); ++gc_it){
@@ -140,6 +145,7 @@ void RenderPass::addRenderQueueRequestFlag(RenderQueueRequestFlag* renderQueueRe
 	mRenderQueueRequestFlags.push_back(renderQueueRequestFlag);
 }
 
+
 std::list< GraphicsComponent* > RenderPass::extractGCsFromRenderQueue()
 {
 	RenderQueue* rq = RenderManager::getInstance()->getRenderQueue();
@@ -151,20 +157,34 @@ std::list< GraphicsComponent* > RenderPass::extractGCsFromRenderQueue()
 	return result;
 }
 
+
 void RenderPass::setShader(Shader* shader)
 {
 	mShader = shader;
 }
+
 
 Shader* RenderPass::getShader()
 {
 	return mShader;
 }
 
+
 void RenderPass::setFrameBufferObject(FrameBufferObject* fbo)
 {
 	mFBO = fbo;
+	if (mFBO)
+	{
+		mViewPort_width  = mFBO->getWidth();
+		mViewPort_height = mFBO->getHeight();
+	}
+	else
+	{
+		mViewPort_width  = IOManager::getInstance()->getWidth();
+		mViewPort_height = IOManager::getInstance()->getHeight();
+	}
 }
+
 
 FrameBufferObject* RenderPass::getFrameBufferObject()
 {
@@ -193,40 +213,40 @@ void RenderPass::setUseDepthTest(bool use)
 
 void RenderPass::setViewPortX(float x)
 {
-	viewPort_x = x;
+	mViewPort_x = x;
 }
 
 void RenderPass::setViewPortY(float y)
 {
-	viewPort_y = y;
+	mViewPort_y = y;
 }
 
 void RenderPass::setViewPortWidth(float width)
 {
-	viewPort_width = width;
+	mViewPort_width = width;
 }
 
 void RenderPass::setViewPortHeight(float height)
 {
-	viewPort_height = height;
+	mViewPort_height = height;
 }
 
 float RenderPass::getViewPortWidth()
 {
-	return viewPort_width;
+	return mViewPort_width;
 }
 
 float RenderPass::getViewPortHeight()
 {
-	return viewPort_height;
+	return mViewPort_height;
 }
 float RenderPass::getViewPortX()
 {
-	return viewPort_x;
+	return mViewPort_x;
 }
 float RenderPass::getViewPortY()
 {
-	return viewPort_y;
+	return mViewPort_y;
 }
 
 std::list < GraphicsComponent* > * RenderPass::getInitialGraphicsComponentListPointer()
@@ -242,6 +262,35 @@ std::list < GraphicsComponent* > RenderPass::getInitialGraphicsComponentList()
 void RenderPass::setInitialGraphicsComponentList(std::list<GraphicsComponent*> initialGraphicsComponentList)
 {
 	mInitialGraphicsComponentList = initialGraphicsComponentList;
+}
+
+void RenderPass::setInitialGraphicsComponentList(std::vector < GraphicsComponent*> initialGraphicsComponentVector)
+{
+	mInitialGraphicsComponentList.clear();
+	for (unsigned int i = 0; i < initialGraphicsComponentVector.size(); i++)
+	{
+		mInitialGraphicsComponentList.push_back(initialGraphicsComponentVector[i]);
+	}
+}
+
+void RenderPass::addInitialGraphicsComponent(GraphicsComponent* gc)
+{
+	mInitialGraphicsComponentList.push_back(gc);
+}
+
+void RenderPass::addInitialGraphicsComponent(VirtualObject* vo)
+{
+	std::vector < GraphicsComponent* > gcs = vo->getGraphicsComponent();
+
+	addInitialGraphicsComponent(gcs);
+}
+
+void RenderPass::addInitialGraphicsComponent(std::vector <GraphicsComponent* > gcs)
+{
+	for (unsigned int i = 0; i < gcs.size(); i++)
+	{
+		addInitialGraphicsComponent(gcs[i]);
+	}
 }
 
 void RenderPass::attachListenerOnPreUniformUpload(Listener* listener)
@@ -293,7 +342,6 @@ void CompositingPass::uploadUniforms()
 	colorMapUploader.update();
 	positionMapUploader.update();
 	normalMapUploader.update();
-	//TODO bind position, normal and color map
 }
 
 CompositingPass::CompositingPass(){
@@ -333,4 +381,51 @@ void CompositingPass::setNormalMap(GLuint normalMap)
 {
 	this->normalMap = normalMap;
 	normalMapUploader.setTextureHandle(normalMap);
+}
+
+MixTexturesRenderPass::MixTexturesRenderPass( Shader* mixShader, FrameBufferObject* fbo, GLuint baseTexture, GLuint mixTexture )
+{
+	mShader = mixShader;
+	mFBO = fbo;
+	setBaseTexture(baseTexture);
+	setMixTexture(mixTexture);
+
+	mTriangle = VirtualObjectFactory::getInstance()->getTriangle();
+
+	useDepthTest = false;
+
+	mInitialGraphicsComponentList.push_back( mTriangle );
+
+	mBaseTextureUploader.setTextureUnit(7);
+	mBaseTextureUploader.setUniformName("uniformBaseTexture");
+	
+	mMixTextureUploader.setTextureUnit(8);
+	mMixTextureUploader.setUniformName("uniformMixTexture");
+}
+
+void MixTexturesRenderPass::uploadUniforms()
+{
+	RenderPass::uploadUniforms();
+	mBaseTextureUploader.update();
+	mMixTextureUploader.update();
+}
+
+void MixTexturesRenderPass::setBaseTexture(GLuint baseTexture){
+	mBaseTexture = baseTexture;
+	mBaseTextureUploader.setTextureHandle(baseTexture);
+}
+
+void MixTexturesRenderPass::setMixTexture(GLuint mixTexture){
+	mMixTexture = mixTexture;
+	mMixTextureUploader.setTextureHandle(mixTexture);
+}
+
+void MixTexturesRenderPass::setBaseTextureUniformName( std::string name)
+{
+	mBaseTextureUploader.setUniformName(name);
+}
+
+void MixTexturesRenderPass::setMixTextureUniformName(std::string name)
+{
+	mMixTextureUploader.setUniformName(name);
 }

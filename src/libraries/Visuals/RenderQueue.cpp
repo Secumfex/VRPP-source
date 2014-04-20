@@ -425,6 +425,10 @@ list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagShadowCaster
 				hasElement = true;
 			}
 		}
+		if (flag->getInvertCondition())	//invert condition if necessary
+		{
+			hasElement = !hasElement;
+		}
 		if(hasElement == false){
 			temp.erase(l_it);
 		}
@@ -454,6 +458,10 @@ list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagTransparency
 				hasElement = true;
 			}
 		}
+		if (flag->getInvertCondition())	//invert condition if necessary
+		{
+			hasElement = !hasElement;
+		}
 		if(hasElement == false){
 			temp.erase(l_it);
 		}
@@ -462,14 +470,49 @@ list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagTransparency
 	return temp;
 }
 
-list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagUsesObjectModel* flag, list<GraphicsComponent* > temp){
+list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagUsesMesh* flag, list<GraphicsComponent* > temp){
+	// TODO
+	return temp;
+}
+
+list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagPartOfVirtualObject* flag, list<GraphicsComponent* > temp){
+	list<GraphicsComponent* >::iterator l_it = temp.begin();
+	vector<GraphicsComponent* > vo_gcs = flag->getVirtualObject()->getGraphicsComponent();
+	
+	l_it = temp.begin();
+	while(l_it != temp.end()){
+		bool isPartOfVO = false;
+		for (unsigned int i = 0; i < vo_gcs.size(); i++)	// test for condition
+		{
+			if (*l_it == vo_gcs[i])	// if gc of vo == current gc
+			{
+				isPartOfVO = true;
+			}
+		}
+		bool conditionHolds = isPartOfVO;	//condition holds == false --> GC not Part of VO, condition holds == true --> GC part of VO
+		if (flag->getInvertCondition())		//condition holds == false --> GC     Part of VO, condition holds == false --> GC not part of VO
+		{
+			conditionHolds = !conditionHolds;
+		}
+		if (conditionHolds)
+		{	// if condition holds, keep GC and proceed to next GC
+			++l_it;
+		}
+		else
+		{	// if condition does not hold, erase GC from temporary list
+			l_it = temp.erase(l_it);
+		}
+	}
+
 	return temp;
 }
 
 list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagScreenFillingPolygon* flag, list<GraphicsComponent* > temp){
+	//TODO
 	return temp;
 }
 
 list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagInViewFrustum* flag, list<GraphicsComponent* > temp){
+	//TODO
 	return temp;
 }

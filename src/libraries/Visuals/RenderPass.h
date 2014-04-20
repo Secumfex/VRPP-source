@@ -24,9 +24,8 @@ public:
 
 	/** \brief constructor
 	 *
-	 * @param shader
-	 * @param fbo
-	 * @param gcVector
+	 * @param shader to be used in this render pass
+	 * @param fbo to be used as render target in this renderpass ( optional: set 0 or leave out to render to screen )
 	 */
 	RenderPass(Shader* shader, FrameBufferObject* fbo = 0);
 
@@ -35,16 +34,26 @@ public:
 	 */
 	virtual ~RenderPass();
 
-	/** \brief perform a renderPass */
+	/** \brief perform a renderPass with a dynamic set of graphics components and a frame buffer object
+	* extracts graphics components from render queue beginning with initial Graphics Component list,
+	* then calls the PreRender Listeners, then iterates over all Graphics Components to render
+	* per Graphics Component, it is set in RenderManager, then PreUniformUpload Listeners are called,
+	* then Shader-Uniforms are uploaded and then PostUniformUpload Listeners are called. 
+	* Then the Graphics Component will be rendered by the Shader. 
+	* After rendering of all graphics components is complete, PostRender Listeners are called*/
 	virtual void render();
 
 	/** \brief upload Uniforms */
 	virtual void uploadUniforms();
 
-	/** \brief activate this renderpass */
+	/** \brief activate this renderpass 
+	* enables the Shader, binds the FBO, sets the Viewport and OpenGL functionality: blending, clearing buffers
+	* also sets the Shader and FBO pointers in RenderManager and calls Activation Listeners at the end*/
 	virtual void activate();
 
-	/** \brief deactivate this renderpass */
+	/** \brief deactivate this renderpass 
+	* disables the FBO, sets the RenderManager FBO and Shader to 0 and reenables / disables gl functions to default
+	* also calls Deactivation Listeners at the end */
 	virtual void deactivate();
 
 	/** \brief add a Request Flag to narrow down the list of objects to render */
@@ -192,6 +201,26 @@ public:
 	 */
 	void setInitialGraphicsComponentList(std::list < GraphicsComponent* > initialGraphicsComponentList);
 
+	/** \brief setter
+	 *
+	 * @param initialGraphicsComponentVector vector of graphics component which will be set as initial Graphics Components list
+	 */
+	void setInitialGraphicsComponentList(std::vector < GraphicsComponent*> initialGraphicsComponentVector );
+
+	/** \brief add a graphics component as rendering candidate
+	 * @param gc graphics component to be added to the initial graphics component list
+	 */
+	void addInitialGraphicsComponent(GraphicsComponent* gc);
+
+	/** \brief add a Virtual Object as rendering canditate
+	 * @param vo virtual object whose graphics components will be added to the initial graphics components list
+	 */
+	void addInitialGraphicsComponent(VirtualObject* vo);
+
+	/** \brief add a bunch of graphics components as rendering canditates
+	 * @param gcs vector of graphics components to be added to the initial graphics component list
+	 */
+	void addInitialGraphicsComponent(std::vector<GraphicsComponent* > gcs);
 
 	/** \brief getter
 	 *
@@ -206,7 +235,7 @@ public:
 	 */
 	std::list<GraphicsComponent*>   getInitialGraphicsComponentList();
 protected:
-	float viewPort_x, viewPort_y, viewPort_width, viewPort_height;
+	float mViewPort_x, mViewPort_y, mViewPort_width, mViewPort_height;
 
 	FrameBufferObject *mFBO;				/**< FrameBufferObject which will be set as render target */
 	vector<RenderQueueRequestFlag* > mRenderQueueRequestFlags;	/**< RenderQueueRequestFlags which will be evaluated in order */
@@ -218,10 +247,10 @@ protected:
 	bool clearColorBufferBit;	/**< boolean whether Color Buffer Bit will be cleared at the beginning of a rendering iteration*/
 	bool clearDepthBufferBit;	/**< boolean whether Color Buffer Bit will be cleared at the beginning of a rendering iteration*/
 	bool useDepthTest;			/**< boolean whether GL_DEPTH_TEST will be enabled */
-	bool useAlphaBlending;		/**> boolean whether GL_BLEND will be enabled */
+	bool useAlphaBlending;		/**< boolean whether GL_BLEND will be enabled */
 };
 
-
+//TODO
 class ShadowPass : public RenderPass {
 public:
 	/** \brief constructor
@@ -236,7 +265,7 @@ public:
 
 };
 
-
+/// a Renderpass which will perform a screen filling polygon render pass and attempts to upload three textures to uniforms named colorMap, positionMap and normalMap and is suitable for G-Buffer style compositing
 class CompositingPass : public RenderPass {
 public:
 	/** \brief constructor
@@ -251,19 +280,48 @@ public:
 
 	virtual void uploadUniforms();	/**< upload all maps (color, normal, position) as uniforms */
 
-	GLuint colorMap; 
-	GLuint positionMap; 
-	GLuint normalMap;
+	GLuint colorMap; 	/**< color map texture handle */
+	GLuint positionMap; /**< position map texture handle */
+	GLuint normalMap;	/**< normal map texture handle */
 
-	void setColorMap(GLuint colorMap);
-	void setPositionMap(GLuint positionMap);
-	void setNormalMap(GLuint normalMap);
+	void setColorMap(GLuint colorMap);	/**< set color map handle */
+	void setPositionMap(GLuint positionMap); /**< set position map handle */
+	void setNormalMap(GLuint normalMap); /**< set normal map handle */
 
-	UploadUniformTextureListener colorMapUploader;
-	UploadUniformTextureListener positionMapUploader;
-	UploadUniformTextureListener normalMapUploader;
+	UploadUniformTextureListener colorMapUploader;	/**< Listener to upload color map */
+	UploadUniformTextureListener positionMapUploader; /**< Listener to upload position map */
+	UploadUniformTextureListener normalMapUploader; /**< Listener to upload normal map */
 
 	GraphicsComponent* mTriangle;	/**< Screen Filling Triangle to be rendered */
-
 };
+
+/// a Renderpass which will perform a screen filling polygon render pass and upload two textures and is suitable for compositing of two textures, i.e. frames
+class MixTexturesRenderPass : public RenderPass {
+protected:
+	GLuint mBaseTexture;	/**< base texture handle */
+	GLuint mMixTexture;     /**< mix texture handle */
+
+	UploadUniformTextureListener mBaseTextureUploader; /**< Listener to upload base texture */
+	UploadUniformTextureListener mMixTextureUploader;  /**< Listener to upload mix texture */
+
+	GraphicsComponent* mTriangle; /**< screen filling polygon graphics component */
+public:
+	virtual void uploadUniforms(); /**< upload all textures ( base, mix ) as uniforms */
+
+	/** \brief constructor
+	 *
+	 * @param mixShader shader to be used in this render pass, should be of a compositing / post processing / mixing nature of textures
+	 * @param fbo to be used as render target in this renderpass ( optional: set 0 or leave out to render to screen )
+	 * @param baseTexture handle of one texture
+	 * @param mixTexture handle of the other texture
+	 */
+	MixTexturesRenderPass( Shader* mixShader, FrameBufferObject* fbo = 0, GLuint baseTexture = 0, GLuint mixTexture = 0);
+
+	void setBaseTexture(GLuint baseTexture); /**< set base texture handle*/
+	void setMixTexture(GLuint mixTexture); /**< set mix texture handle*/
+
+	void setBaseTextureUniformName(std::string name);	/**< set uniform target name of base texture uploader ( uniform to which base texture will attempt to upload )*/
+	void setMixTextureUniformName(std::string name);    /**< set uniform target name of mix texture uploader ( uniform to which mix texture will attempt to upload )*/
+};
+
 #endif /* RENDERPASS_H_ */

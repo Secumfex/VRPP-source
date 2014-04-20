@@ -102,3 +102,60 @@ int ParticleSystem::getParticleAmount(){
 	int size = particles.size(); 
 	return size;
 }
+
+#include "Visuals/RenderManager.h"
+#include "IO/IOManager.h"
+ParticlesRenderPass::ParticlesRenderPass(Shader* particles_shader, FrameBufferObject* fbo, ParticleSystem* particleSystem, GLint vao)
+{
+	mFBO = fbo;
+	mShader = particles_shader;
+	mParticleSystem = particleSystem;
+	mVAO = vao;
+
+	clearColorBufferBit = true;
+	clearDepthBufferBit = true;
+	useDepthTest = false;
+	useAlphaBlending = true;
+
+	if (mFBO)
+	{
+		mViewPort_width  = mFBO->getWidth();
+		mViewPort_height = mFBO->getHeight();
+	}else{
+		mViewPort_width = IOManager::getInstance()->getWidth();
+		mViewPort_height = IOManager::getInstance()->getHeight();
+	}
+}
+
+void ParticlesRenderPass::render()
+{
+	if (clearColorBufferBit)
+	{
+ 		glClear(GL_COLOR_BUFFER_BIT);
+	}
+
+	if (clearDepthBufferBit) 
+	{
+		glClear(GL_DEPTH_BUFFER_BIT);
+	}
+
+	RenderManager* rm = RenderManager::getInstance();
+
+	notify("PRERENDER");
+	std::vector <Particle* > particles = mParticleSystem->getParticles();
+	for (unsigned int i = 0; i < particles.size(); i++) {
+
+		notify("PREUNIFORMUPLOAD");
+		mShader->uploadUniform(glm::translate(  glm::mat4(1.0f), particles[i]->getPosition()),	"uniformModel");
+		mShader->uploadUniform(rm->getCamera()->getViewMatrix(), 	"uniformView");;
+		mShader->uploadUniform(rm->getPerspectiveMatrix(), 		"uniformPerspective");
+		mShader->uploadUniform(1.0f, "uniformScale");
+		mShader->uploadUniform(particles[i]->getPosition(), "uniformParticlePosition");
+		notify("POSTUNIFORMUPLOAD");
+
+		glBindVertexArray(mVAO); // Bind our Vertex Array Object
+		glDrawArrays(GL_TRIANGLES, 0, 6); // Draw our square
+		glBindVertexArray(0); // Unbind our Vertex Array Object
+	}
+	notify("POSTRENDER");
+}

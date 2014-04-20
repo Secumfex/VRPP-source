@@ -14,7 +14,7 @@ Application* 	testingApp;
 VRState* 		testingState;
 IOHandler*   	testingInputHandler;
 
-/**SOME OTHER SHIT**/
+/** Static Vertex Array Object : Quad, since VirtualObjectFactory functionality is buggy**/
 unsigned int vaoID[1];
 
 unsigned int vboID[1];
@@ -140,79 +140,114 @@ void configureRendering(){
 	testingApp->attachListenerOnProgramInitialization(	new SetCurrentShaderListener( reflection_shader ));
 
 	// 1: render Reflection Map
-	testingApp->attachListenerOnRenderManagerFrameLoop(	new SetCurrentShaderListener( reflection_shader ));
-	testingApp->attachListenerOnRenderManagerFrameLoop(	setClearColor );
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniLightPos );	
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniFogColor );	
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniFogBegin );	
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniFogEnd );		
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniClipPoint );		
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniClipNorm );		
-	testingApp->attachListenerOnRenderManagerFrameLoop(	new ReflectionMapRenderPass(UnderwaterScene::framebuffer_water_reflection, UnderwaterScene::reflectedCamera, UnderwaterScene::scene_waterPlaneObject));
+	// use reflection_shader, render into framebuffer_water_reflection framebuffer object
+	RenderPass* reflectionMapRenderPass = new RenderPass(reflection_shader, UnderwaterScene::framebuffer_water_reflection);
+	reflectionMapRenderPass->setClearColorBufferBit(true);	// clear color buffer on every frame
+	reflectionMapRenderPass->setInitialGraphicsComponentList ( ( testingState->getRenderQueue() )->getGraphicsComponentList());			// start with all scene objects as render candidates
+	reflectionMapRenderPass->addRenderQueueRequestFlag( new FlagPartOfVirtualObject(UnderwaterScene::scene_waterPlaneObject, true));	// render if not part of waterplaneobject
+	reflectionMapRenderPass->attachListenerOnActivation( setClearColor );// set clear color on activation, before bits are cleared
+	reflectionMapRenderPass->attachListenerOnPostUniformUpload( uniLightPos );	 // Upload custom uniforms already on activation, since they cannot not be automatically overridden
+	reflectionMapRenderPass->attachListenerOnPostUniformUpload( uniFogColor );	 // upload fog color
+	reflectionMapRenderPass->attachListenerOnPostUniformUpload( uniFogBegin );  // upload fog begin distance
+	reflectionMapRenderPass->attachListenerOnPostUniformUpload( uniFogEnd );    // upload fog end distance
+	reflectionMapRenderPass->attachListenerOnPostUniformUpload( uniClipPoint ); // upload clipping plane support point
+	reflectionMapRenderPass->attachListenerOnPostUniformUpload( uniClipNorm );  // upload clipping plane normal
+	reflectionMapRenderPass->attachListenerOnActivation( new SetCameraListener( UnderwaterScene::reflectedCamera )); // set camera to reflected camera before rendering
+	reflectionMapRenderPass->attachListenerOnDeactivation( new SetCameraListener( testingState->getCamera() ));		 // set camera to regular camera after rendering (undo above)
+
+	testingState->getRenderLoop()->addRenderPass(	reflectionMapRenderPass );	//add ReflectionMap RenderPass
 	
 	// 2: render Refraction Map
-	testingApp->attachListenerOnRenderManagerFrameLoop( new SetCurrentShaderListener( refraction_shader ));
-	testingApp->attachListenerOnRenderManagerFrameLoop(	setClearColorInv );
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniLightPos  );		
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniFogColorInv  );	
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniFogBeginInv  );	
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniFogEndInv    );	
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniClipPoint );		
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniClipNormInv  );	
-	RefractionMapRenderPass* renderRefraction = new RefractionMapRenderPass(UnderwaterScene::framebuffer_water_refraction, UnderwaterScene::scene_waterPlaneObject);
-	testingApp->attachListenerOnRenderManagerFrameLoop(	renderRefraction );
+	// use refraction_shader, render into framebuffer_water_refraction
+	RenderPass* refractionMapRenderPass = new RenderPass(refraction_shader, UnderwaterScene::framebuffer_water_refraction);
+	refractionMapRenderPass->setClearColorBufferBit(true); // clear color buffer on every frame
+	refractionMapRenderPass->setInitialGraphicsComponentList ( (testingState->getRenderQueue() )->getGraphicsComponentList()); 			// start with all scene objects as render candidates
+	refractionMapRenderPass->addRenderQueueRequestFlag( new FlagPartOfVirtualObject(UnderwaterScene::scene_waterPlaneObject, true));	// render if not part of waterplaneobject
+	refractionMapRenderPass->attachListenerOnActivation( setClearColorInv );//set clear color on activation, before bits are cleared
+	refractionMapRenderPass->attachListenerOnPostUniformUpload( uniLightPos  );	//upload custom uniforms
+	refractionMapRenderPass->attachListenerOnPostUniformUpload( uniFogColorInv  );	//upload fog color
+	refractionMapRenderPass->attachListenerOnPostUniformUpload( uniFogBeginInv  );	//upload fog begin distance
+	refractionMapRenderPass->attachListenerOnPostUniformUpload( uniFogEndInv    );	//upload fog end distance
+	refractionMapRenderPass->attachListenerOnPostUniformUpload( uniClipPoint );	//upload clipping plane support point
+	refractionMapRenderPass->attachListenerOnPostUniformUpload( uniClipNormInv  );	//upload clipping plane normal
+	
+	testingState->getRenderLoop()->addRenderPass (refractionMapRenderPass);		//add RefractionMap RenderPass
 	
 	// 3: render Godrays into FBO
-	testingApp->attachListenerOnRenderManagerFrameLoop(	new SetCurrentShaderListener( godRay_shader ));
-	testingApp->attachListenerOnRenderManagerFrameLoop(uniCausticsTex2);
-	testingApp->attachListenerOnRenderManagerFrameLoop(uniSunVPersp);
-	testingApp->attachListenerOnRenderManagerFrameLoop(uniTime3);
-	testingApp->attachListenerOnRenderManagerFrameLoop(uniCamPos);
-	GodRaysRenderPass* renderGodRays = new GodRaysRenderPass(UnderwaterScene::framebuffer_water_god_rays);
-	testingApp->attachListenerOnRenderManagerFrameLoop(	renderGodRays );
+	// use godRay_Shader, render into framebuffer_water_god_rays Framebuffer Object
+	RenderPass* godraysRenderPass = new RenderPass( godRay_shader, UnderwaterScene::framebuffer_water_god_rays );
+	godraysRenderPass->setClearColorBufferBit(true);
+	godraysRenderPass->setInitialGraphicsComponentList( testingState->getRenderQueue()->getGraphicsComponentList()); // start with all scene objects as render candidates
+	// dont add any renderqueuerequest flags since all scene objects shall be rendered
+	godraysRenderPass->attachListenerOnPostUniformUpload( uniCausticsTex2);	// upload caustics texture used for god ray sampling
+	godraysRenderPass->attachListenerOnPostUniformUpload( uniSunVPersp );		// upload sun view perspective matrix
+	godraysRenderPass->attachListenerOnPostUniformUpload( uniTime3 );			// upload current time
+	godraysRenderPass->attachListenerOnPostUniformUpload( uniCamPos );			// upload cam world position
+
+	testingState->getRenderLoop()->addRenderPass( godraysRenderPass );			//add God Rays Render Pass
 
 	// 4: render regular Scene
-	testingApp->attachListenerOnRenderManagerFrameLoop(bindPreCompFBO);
-	testingApp->attachListenerOnRenderManagerFrameLoop(	new SetCurrentShaderListener( underwater_shader ));
-	testingApp->attachListenerOnRenderManagerFrameLoop(	setClearColor2 );
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniLightPos );	
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniFogColor );	
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniFogBegin );	
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniFogEnd );		
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniCausticsTex );
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniSunVPersp );
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniTime2 );
-	RenderloopPlaceHolderListener* renderloop = new RenderloopPlaceHolderListener(UnderwaterScene::scene_waterPlaneObject);	// Render Everything except waterPlaneObject
-	testingApp->attachListenerOnRenderManagerFrameLoop(	renderloop );
+	// use underwater_shader, render into preCompositingScene Framebuffer Object
+	RenderPass* regularSceneRenderPass = new RenderPass( underwater_shader, preCompositingScene );
+	regularSceneRenderPass->setClearColorBufferBit(true);	//clear color buffer on every frame
+	regularSceneRenderPass->setInitialGraphicsComponentList ( ( testingState->getRenderQueue() )->getGraphicsComponentList()); // start with all scene objects as render candidates
+	regularSceneRenderPass->addRenderQueueRequestFlag( new FlagPartOfVirtualObject(UnderwaterScene::scene_waterPlaneObject, true));	//render if not part of waterplaneobject
+	regularSceneRenderPass->attachListenerOnActivation( setClearColor2 ); // set clear color on activation, before bits are cleared
+	regularSceneRenderPass->attachListenerOnPostUniformUpload( uniLightPos );	  // upload light position
+	regularSceneRenderPass->attachListenerOnPostUniformUpload( uniFogColor );	  // upload fog color
+	regularSceneRenderPass->attachListenerOnPostUniformUpload( uniFogBegin );	  // upload fog begin distance
+	regularSceneRenderPass->attachListenerOnPostUniformUpload( uniFogEnd );  	  // upload fog end distance
+	regularSceneRenderPass->attachListenerOnPostUniformUpload( uniCausticsTex ); // upload caustics texture
+	regularSceneRenderPass->attachListenerOnPostUniformUpload( uniSunVPersp );   // upload sun view perspecitve matrix
+	regularSceneRenderPass->attachListenerOnPostUniformUpload( uniTime2 );	      // upload current time
 
+	testingState->getRenderLoop()->addRenderPass( regularSceneRenderPass );		//add regular Scene Render pass
+	
 	// 5: render Water Surface with Reflection Map and RefractionMap
-	testingApp->attachListenerOnRenderManagerFrameLoop(	new SetCurrentShaderListener( water_shader ));
-	testingApp->attachListenerOnRenderManagerFrameLoop(uniLightPos);	
-	testingApp->attachListenerOnRenderManagerFrameLoop(uniReflMatr);	
-	testingApp->attachListenerOnRenderManagerFrameLoop(uniFogColor);	
-	testingApp->attachListenerOnRenderManagerFrameLoop(uniFogBegin);	
-	testingApp->attachListenerOnRenderManagerFrameLoop(uniFogEnd);		
-	testingApp->attachListenerOnRenderManagerFrameLoop(uniTime);		
-	testingApp->attachListenerOnRenderManagerFrameLoop(uniReflText);
-	testingApp->attachListenerOnRenderManagerFrameLoop(uniRefrText);
-	RenderVirtualObjectListener* renderwater = new RenderVirtualObjectListener(UnderwaterScene::scene_waterPlaneObject);
-	testingApp->attachListenerOnRenderManagerFrameLoop(	renderwater);
-	testingApp->attachListenerOnRenderManagerFrameLoop( unbindCurrentFBO );
+	// use water_shader, render into preCompositingScene Framebuffer Object
+	RenderPass* waterRenderPass = new RenderPass( water_shader, preCompositingScene );
+	waterRenderPass->setClearColorBufferBit(false);	// do NOT clear Color buffer bit, since it has already been partially filled by the preceding render pass
+	waterRenderPass->setClearDepthBufferBit(false); // do NOT clear Depth buffer bit, since it has already been filled by the preceding render pass
+	waterRenderPass->addInitialGraphicsComponent ( UnderwaterScene::scene_waterPlaneObject );	// set only the water plane object as render candidate
+	waterRenderPass->attachListenerOnPostUniformUpload( uniLightPos );	// upload light position
+	waterRenderPass->attachListenerOnPostUniformUpload( uniReflMatr );	// upload reflective view matrix
+	waterRenderPass->attachListenerOnPostUniformUpload( uniFogColor );	// upload fog color
+	waterRenderPass->attachListenerOnPostUniformUpload( uniFogBegin );	// upload fog begin distancce
+	waterRenderPass->attachListenerOnPostUniformUpload( uniFogEnd );	// upload fog end distance
+	waterRenderPass->attachListenerOnPostUniformUpload( uniTime );		// upload current time
+	waterRenderPass->attachListenerOnPostUniformUpload( uniReflText ); // upload reflection map
+	waterRenderPass->attachListenerOnPostUniformUpload( uniRefrText ); // upload refraction map
+
+	testingState->getRenderLoop()->addRenderPass( waterRenderPass);				//add Water Render Pass
 
 	// 6: render Particles in the water
-	testingApp->attachListenerOnRenderManagerFrameLoop( new SetCurrentShaderListener( particles_shader ));
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniPartText);
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniSinusWave);
-	ParticlesRenderPass* renderParticles = new ParticlesRenderPass(UnderwaterScene::framebuffer_water_particles, UnderwaterScene::water_particles, vaoID[0]);
-	testingApp->attachListenerOnRenderManagerFrameLoop(( renderParticles));
+	// use particles_shader, use framebuffer_water_particles Framebuffer object as render target, use water_particles as particle system, use quad as vao
+	ParticlesRenderPass* particlesRenderPass = new ParticlesRenderPass(particles_shader, UnderwaterScene::framebuffer_water_particles, UnderwaterScene::water_particles, vaoID[0]);
+	// do not use any graphics components or render flags, since this is a custom render pass for particle systems which doesn't use either
+	particlesRenderPass->setUseAlphaBlending(true);	// enable alpha blending
+	particlesRenderPass->setUseDepthTest(false);	// disable depth testing
+	particlesRenderPass->setClearColorBufferBit(true); // clear color buffer bit on every frame
+	particlesRenderPass->attachListenerOnActivation(new SetClearColorListener(0.0f,0.0f,0.0f,0.0f));	// set clear color to transparent
+	particlesRenderPass->attachListenerOnPostUniformUpload( uniPartText);	// upload Particles Texture
+	particlesRenderPass->attachListenerOnPostUniformUpload( uniSinusWave); // upload Sinus Wave value
+
+	testingState->getRenderLoop()->addRenderPass(particlesRenderPass);			//add particles render pass
 
 	// 7: Compositing
-	testingApp->attachListenerOnRenderManagerFrameLoop( new SetCurrentShaderListener( composition_shader ));
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniPreCompMap );
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniGodRayMap );
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniPartMap );
-	RenderGraphicsComponentListener* renderCompositing = new RenderScreenFillingTriangleListener();
-	testingApp->attachListenerOnRenderManagerFrameLoop( renderCompositing );
+	// use a MixTexturesRenderPass to perform a compositing pass of three frame buffer textures, keep in mind that MixTexturesRenderPass is designed for two textures, therefore another custom uniform texture upload is necessary
+	// use composition_shader, render to window (fbo = 0), use preCompositingScene-Texture as base texture, use framebuffer_water_god_rays as texture to mix with
+	MixTexturesRenderPass* compositingRenderPass = new MixTexturesRenderPass(composition_shader, 0, preCompositingScene->getPositionTextureHandle(), UnderwaterScene::framebuffer_water_god_rays->getPositionTextureHandle());
+	// MixTexturesRenderPasses do not need any RenderQueueRequestFlags or GraphicsComponent, since only a ScreenFillingTriangle will be rendered by default
+	compositingRenderPass->setBaseTextureUniformName( "uniformPreCompositionMap" );	// set custom uniform name for base texture
+	compositingRenderPass->setMixTextureUniformName(  "uniformGodRayMap" );			// set custom uniform name for mix texture
+//		// // alternatively : ignore hard coded texture upload functionality and use listeners instead
+//		 compositingRenderPass->attachListenerOnPostUniformUpload( uniPreCompMap );
+//		 compositingRenderPass->attachListenerOnPostUniformUpload( uniGodRayMap );
+		
+		// add a third texture as a listener
+		compositingRenderPass->attachListenerOnPostUniformUpload(uniPartMap);
+
+	testingState->getRenderLoop()->addRenderPass( compositingRenderPass );		// add compositing render Pass
 }
 
 void configureOtherStuff(){

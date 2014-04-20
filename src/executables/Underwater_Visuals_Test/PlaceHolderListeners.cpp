@@ -155,62 +155,62 @@ void GodRaysRenderPass::update(){
 	}
 
 
-ParticlesRenderPass::ParticlesRenderPass(FrameBufferObject* fbo, ParticleSystem* particleSystem, GLint vao){
-		rm = RenderManager::getInstance();
-		this->fbo = fbo;
-		this->particleSystem = particleSystem;
-	//	this->particleGC = particleGC;
-		this->vao = vao;
-}
+// ParticlesRenderPass::ParticlesRenderPass(FrameBufferObject* fbo, ParticleSystem* particleSystem, GLint vao){
+// 		rm = RenderManager::getInstance();
+// 		this->fbo = fbo;
+// 		this->particleSystem = particleSystem;
+// 	//	this->particleGC = particleGC;
+// 		this->vao = vao;
+// }
 
-void ParticlesRenderPass::update(){
+// void ParticlesRenderPass::update(){
 
-	/***************** save old state ******************/
-		FrameBufferObject* tempFBO = rm->getCurrentFBO();
+// 	/***************** save old state ******************/
+// 		FrameBufferObject* tempFBO = rm->getCurrentFBO();
 
-		fbo->bindFBO();
-		rm->setCurrentFBO(fbo);
-		Shader* currentShader;
-        glDisable(GL_DEPTH_TEST);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    	glViewport(0, 0, fbo->getWidth(), fbo->getHeight());
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		currentShader = rm->getCurrentShader();
+// 		fbo->bindFBO();
+// 		rm->setCurrentFBO(fbo);
+// 		Shader* currentShader;
+//         glDisable(GL_DEPTH_TEST);
+//         glEnable(GL_BLEND);
+//         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+//     	glViewport(0, 0, fbo->getWidth(), fbo->getHeight());
+//         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+// 		currentShader = rm->getCurrentShader();
 
-   /*****************render object************************/
-		rm->setCurrentGC(particleGC);
-		vector <Particle* > particles = particleSystem->getParticles();
-		for (unsigned int i = 0; i < particles.size(); i++) {
-//			std::cout << "particle " << i << " position : " << particles[i]->getPosition().x << ", " << particles[i]->getPosition().y << ", " << particles[i]->getPosition().z << std::endl;
-//			currentShader->uploadAllUniforms();
-			currentShader->uploadUniform(glm::translate(  glm::mat4(1.0f), particles[i]->getPosition()),	"uniformModel");
-			currentShader->uploadUniform(rm->getCamera()->getViewMatrix(), 	"uniformView");;
-			currentShader->uploadUniform(rm->getPerspectiveMatrix(), 		"uniformPerspective");
-			currentShader->uploadUniform(1.0f, "uniformScale");
+//    /*****************render object************************/
+// 		rm->setCurrentGC(particleGC);
+// 		vector <Particle* > particles = particleSystem->getParticles();
+// 		for (unsigned int i = 0; i < particles.size(); i++) {
+// //			std::cout << "particle " << i << " position : " << particles[i]->getPosition().x << ", " << particles[i]->getPosition().y << ", " << particles[i]->getPosition().z << std::endl;
+// //			currentShader->uploadAllUniforms();
+// 			currentShader->uploadUniform(glm::translate(  glm::mat4(1.0f), particles[i]->getPosition()),	"uniformModel");
+// 			currentShader->uploadUniform(rm->getCamera()->getViewMatrix(), 	"uniformView");;
+// 			currentShader->uploadUniform(rm->getPerspectiveMatrix(), 		"uniformPerspective");
+// 			currentShader->uploadUniform(1.0f, "uniformScale");
 
-			currentShader->uploadUniform(particles[i]->getPosition(), "uniformParticlePosition");
+// 			currentShader->uploadUniform(particles[i]->getPosition(), "uniformParticlePosition");
 
-			glBindVertexArray(vao); // Bind our Vertex Array Object
+// 			glBindVertexArray(vao); // Bind our Vertex Array Object
 
-			glDrawArrays(GL_TRIANGLES, 0, 6); // Draw our square
+// 			glDrawArrays(GL_TRIANGLES, 0, 6); // Draw our square
 
-			glBindVertexArray(0); // Unbind our Vertex Array Object
+// 			glBindVertexArray(0); // Unbind our Vertex Array Object
 
-//			currentShader->render(particleGC);
-		}
+// //			currentShader->render(particleGC);
+// 		}
 
 
-	/****************** back to old state *****************/
-		glDisable(GL_BLEND);
-		glEnable(GL_DEPTH_TEST);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+	// /****************** back to old state *****************/
+	// 	glDisable(GL_BLEND);
+	// 	glEnable(GL_DEPTH_TEST);
+	// 	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
-		fbo->unbindFBO();
-		rm->setCurrentFBO(tempFBO);
-		glViewport(0,0, 800, 600);
-	}
+	// 	fbo->unbindFBO();
+	// 	rm->setCurrentFBO(tempFBO);
+	// 	glViewport(0,0, 800, 600);
+	// }
 
 
 RenderloopPlaceHolderListener::RenderloopPlaceHolderListener(VirtualObject* water_object){ 
@@ -429,6 +429,14 @@ void SetFrameBufferObjectListener::update(){
 		RenderManager::getInstance()->setCurrentFBO( fbo );
 		fbo->bindFBO();
 	}
+}
+
+SetCameraListener::SetCameraListener(Camera* cam){
+	this->cam = cam;
+}
+
+void SetCameraListener::update(){
+	RenderManager::getInstance()->setCamera(cam);
 }
 
 UnbindFrameBufferObjectListener::UnbindFrameBufferObjectListener(){
