@@ -91,6 +91,13 @@ public:
 
 	/** \brief getter
 	 *
+	 * return list of all graphicscomponents in this queue
+	 *
+	 */
+	 list<GraphicsComponent* > getGraphicsComponentList();
+
+	/** \brief getter
+	 *
 	 * @return gcFlagStorage
 	 */
 	map<string, vector<GraphicsComponent* > > getGcFlagStorage();
@@ -170,7 +177,14 @@ public:
 	 *
 	 * overloaded method for any possible flag object. will extract a GC list depending on that object
 	 */
-	list<GraphicsComponent* > extrudeGCsForRequestFlag(FlagUsesObjectModel* flag, list<GraphicsComponent* > temp);
+	list<GraphicsComponent* > extrudeGCsForRequestFlag(FlagUsesMesh* flag, list<GraphicsComponent* > temp);
+
+	/** \brief overloaded. returns GC-list depending on flag
+	 *
+	 * overloaded method for any possible flag object. will extract a GC list depending on that object
+	 */
+	list<GraphicsComponent* > extrudeGCsForRequestFlag(FlagPartOfVirtualObject* flag, list<GraphicsComponent* > temp);
+
 
 	/** \brief overloaded. returns GC-list depending on flag
 	 *

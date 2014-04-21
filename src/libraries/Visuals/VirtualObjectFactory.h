@@ -79,7 +79,10 @@ VirtualObject* createVirtualObject();
  */
 VirtualObject* createVirtualObject(std::string filename, BodyType bodyType = OTHER, float mass = 0.0f, int collisionFlag = 1, bool blenderAxes = false);
 
-
+/** \brief create VO
+ *
+ * @param graphcomps vector of graphic component
+ */
 VirtualObject* createVirtualObject(vector<GraphicsComponent*> graphcomps);
 
 /** \brief !docu pls!

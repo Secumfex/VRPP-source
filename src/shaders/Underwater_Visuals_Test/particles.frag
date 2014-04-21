@@ -7,9 +7,16 @@ uniform sampler2D uniformParticleTexture;
 in vec2 passUVCoords;
 in float passDistance;
 
+in vec3 passWorldPosition;
+
 out vec4 fragmentColor;
 
 void main() {
+	if( passWorldPosition.y > 10.0 )
+	{
+		discard;
+	}
+
 	fragmentColor  = texture2D(uniformParticleTexture, passUVCoords);
 	float distance = - passDistance;
 	float maxDistance = 3.0;

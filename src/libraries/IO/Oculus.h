@@ -1,10 +1,14 @@
 #ifndef OCULUS_H
 #define OCULUS_H
 
-#include "OVR.h"
+#include <OVR.h>
 #include "Tools/ShaderTools.h"
 #include "Oculus_Shaders.h"
 #include "Visuals/FrameBufferObject.h"
+#include "Visuals/VirtualObjectFactory.h"
+#include "Visuals/Shader.h"
+
+#include <iostream>
 
 struct RiftDistortionParams
 {
@@ -53,6 +57,9 @@ protected:
 
     GLuint progRiftDistortion;
     GLuint progPresFbo;
+
+    Shader* RiftDistortion;
+    Shader* PresFbo;
 	
 	int windowWidth, windowHeight;
 
@@ -74,7 +81,7 @@ public:
 
 	Oculus();
 	~Oculus();
-	int InitOculus();
+	void InitOculus();
 
     bool       SensorActive() const { return ovrSensor != NULL; }
     OVR::Quatf GetOrientation() const { return sensorFusion.GetOrientation(); }
@@ -95,7 +102,7 @@ public:
     void PresentFbo_PostProcessDistortion(
         const OVR::Util::Render::StereoEyeParams& eyeParams,
         const RiftDistortionParams& distParams);
-    bool getSensorOrientation(float mult);
+    bool getSensorOrientation(float mult = 1.0f);
 
     enum DisplayMode
     {
@@ -126,6 +133,11 @@ public:
 		hmdInfo.ChromaAbCorrection[2] = 1.01400f;
 		hmdInfo.ChromaAbCorrection[3] = 0;
 	}	
+
+	/*Getter*/
+	float getEyeYaw();
+	float getEyePitch();
+	float getEyeRoll();
 };
 
 #endif

@@ -71,7 +71,7 @@ int main() {
     
     GLuint modelHandle = glGetUniformLocation(gBufferProgramHandle, "uniformModel");
     GLuint viewHandle = glGetUniformLocation(gBufferProgramHandle, "uniformView");
-    GLuint projectionHandle = glGetUniformLocation(gBufferProgramHandle, "uniformProjection");
+    GLuint projectionHandle = glGetUniformLocation(gBufferProgramHandle, "uniformPerspective");
     
     
     
