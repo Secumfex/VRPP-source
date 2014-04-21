@@ -213,11 +213,10 @@ void ParticlesRenderPass::update(){
 	}
 
 HUDRenderPass::HUDRenderPass(FrameBufferObject* fbo, HUDSystem* hudSystem, GLint vao){
-		rm = RenderManager::getInstance();
-		this->fbo = fbo;
-		this->hudSystem = hudSystem;
-	//	this->particleGC = particleGC;
-		this->vao = vao;
+	rm = RenderManager::getInstance();
+	this->fbo = fbo;
+	this->hudSystem = hudSystem;
+	this->vao = vao;
 }
 
 void HUDRenderPass::update(){
@@ -237,14 +236,17 @@ void HUDRenderPass::update(){
 		currentShader = rm->getCurrentShader();
 
    /*****************render object************************/
-		vector <HUDElement* > HUDs = hudSystem->getHUDElements();
-		for (unsigned int i = 0; i < HUDs.size(); i++) {
-			currentShader->uploadUniform(glm::translate(  glm::mat4(1.0f), HUDs[i]->getPosition()),	"uniformModel");
+		rm->setCurrentGC(airGC);
+		vector <HUDElement* > elements = hudSystem->getHUDElements();
+		for (unsigned int i = 0; i < elements.size(); i++) {
+//			std::cout << "particle " << i << " position : " << particles[i]->getPosition().x << ", " << particles[i]->getPosition().y << ", " << particles[i]->getPosition().z << std::endl;
+//			currentShader->uploadAllUniforms();
+			currentShader->uploadUniform(glm::translate(  glm::mat4(1.0f), elements[i]->getPosition()),	"uniformModel");
 			currentShader->uploadUniform(rm->getCamera()->getViewMatrix(), 	"uniformView");;
 			currentShader->uploadUniform(rm->getPerspectiveMatrix(), 		"uniformPerspective");
 			currentShader->uploadUniform(1.0f, "uniformScale");
-//
-			currentShader->uploadUniform(HUDs[i]->getPosition(), "uniformParticlePosition");
+
+			currentShader->uploadUniform(elements[i]->getPosition(), "uniformHUDPosition");
 
 			glBindVertexArray(vao); // Bind our Vertex Array Object
 

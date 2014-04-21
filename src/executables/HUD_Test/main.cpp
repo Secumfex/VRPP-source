@@ -153,6 +153,8 @@ void configureRendering(){
 
 	Listener* unbindCurrentFBO	= new UnbindFrameBufferObjectListener ();
 
+	Listener* uniAirText	= new UploadUniformTextureListener 	("UNIFORMUPLOADLISTENER", 20, "uniformAirTexture", HUD::HUD_texture->getTextureHandle());
+
 	testingApp->attachListenerOnProgramInitialization(	new SetCurrentShaderListener( reflection_shader ));
 
 	// 1: render Reflection Map
@@ -224,10 +226,10 @@ void configureRendering(){
 
 	// 8: render HUD
 	testingApp->attachListenerOnRenderManagerFrameLoop( new SetCurrentShaderListener( HUDShader ));
-	//testingApp->attachListenerOnRenderManagerFrameLoop( uniPartText);
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniSinusWave);
-	ParticlesRenderPass* renderHUD = new ParticlesRenderPass(UnderwaterScene::framebuffer_water_particles, UnderwaterScene::water_particles, vaoID[0]);
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniTime4 );
+	testingApp->attachListenerOnRenderManagerFrameLoop( uniAirText);
+	//testingApp->attachListenerOnRenderManagerFrameLoop( uniSinusWave);
+	HUDRenderPass* renderHUD = new HUDRenderPass(HUD::framebuffer_HUD, HUD::hudSys, vaoID[0]);
+	//testingApp->attachListenerOnRenderManagerFrameLoop( uniTime4 );
 	testingApp->attachListenerOnRenderManagerFrameLoop(( renderHUD));
 
 	// 7: Compositing

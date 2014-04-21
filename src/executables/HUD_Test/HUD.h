@@ -29,7 +29,7 @@ namespace HUD{
 
 
 	//----textures----//
-		HUD_texture = new Texture(RESOURCES_PATH "bubbles.png");
+		HUD_texture = new Texture(RESOURCES_PATH "/bubbles.png");
 	}
 
 }

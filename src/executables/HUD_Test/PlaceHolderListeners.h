@@ -87,6 +87,7 @@ public:
 
 	FrameBufferObject* fbo;
 	HUDSystem* hudSystem;
+	GraphicsComponent* airGC;
 	GLint vao;
 
 	HUDRenderPass(FrameBufferObject* fbo, HUDSystem* hudSystem, GLint vao);
