@@ -267,5 +267,14 @@ public:
 	void update();
 };
 
+class UpdateHUDSystemListener : public Listener {
+private:
+	HUDSystem* hudSystem;
+	float* t;
+public:
+	UpdateHUDSystemListener(HUDSystem* hudSystem, float* t);
+	void update();
+};
+
 static void createSquare();
 

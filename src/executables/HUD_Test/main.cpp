@@ -224,7 +224,7 @@ void configureRendering(){
 
 	// 8: render HUD
 	testingApp->attachListenerOnRenderManagerFrameLoop( new SetCurrentShaderListener( HUDShader ));
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniPartText);
+	//testingApp->attachListenerOnRenderManagerFrameLoop( uniPartText);
 	testingApp->attachListenerOnRenderManagerFrameLoop( uniSinusWave);
 	ParticlesRenderPass* renderHUD = new ParticlesRenderPass(UnderwaterScene::framebuffer_water_particles, UnderwaterScene::water_particles, vaoID[0]);
 	testingApp->attachListenerOnRenderManagerFrameLoop( uniTime4 );

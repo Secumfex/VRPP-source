@@ -543,4 +543,13 @@ void UpdateParticleSystemListener::update(){
 	particleSystem->update(*t);
 }
 
+UpdateHUDSystemListener::UpdateHUDSystemListener(HUDSystem* hudSystem, float* t){
+	this->hudSystem = hudSystem;
+	this->t = t;
+}
+
+void UpdateHUDSystemListener::update(){
+
+}
+
 
