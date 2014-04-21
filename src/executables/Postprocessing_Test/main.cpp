@@ -30,6 +30,19 @@ void configureTestingApplication(){
 
 void configureVirtualObjects(){
 	//setInitialGraphicsComponentList
+	VirtualObjectFactory *voFactory = VirtualObjectFactory::getInstance();
+
+	VirtualObject *object03 = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj", VirtualObjectFactory::OTHER);
+	VirtualObject *object02 = voFactory->createVirtualObject(RESOURCES_PATH "/cow.obj", VirtualObjectFactory::OTHER);
+	VirtualObject *object01 = voFactory->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE);
+
+	GraphicsComponent* triangle = voFactory->getTriangle();
+
+	MaterialManager::getInstance()->makeMaterial("polished_chrome", object02->getGraphicsComponent());
+
+	testingState->getRenderQueue()->addVirtualObject(object01);
+	testingState->getRenderQueue()->addVirtualObject(object02);
+	testingState->getRenderQueue()->addVirtualObject(object03);
 
 }
 
