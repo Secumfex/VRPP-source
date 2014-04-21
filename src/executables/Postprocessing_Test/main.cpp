@@ -4,6 +4,12 @@
 #include "Tools/UtilityListeners.h"
 #include "PlaceHolderListeners.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/constants.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_inverse.hpp>
+
 /*
 *	A basic executable to use as starting point with our libraries
 *	see Demo-Application to see exemplary usage of listener interfaces, virtual object, input configuration and more
@@ -40,19 +46,55 @@ void configureInputHandler(){
 }
 
 void configureRendering(){
+	/* creating shaders */
+	Shader *simpleTexShader = new Shader(SHADERS_PATH "/Postprocessing/screenFill.vert",
+			SHADERS_PATH "/Postprocessing/simpleTexture.frag");
+
+	Shader *finalCompShader = new Shader(	SHADERS_PATH "/Postprocessing/screenFill.vert",
+			SHADERS_PATH "/Postprocessing/finalCompositing.frag");
+
+	Shader *gbufferShader = new Shader(		SHADERS_PATH "/Postprocessing/GBuffer.vert",
+			SHADERS_PATH "/Postprocessing/GBuffer.frag");
+
+	Shader *gbuffer_normalMap_Shader = new Shader(		SHADERS_PATH "/Postprocessing/GBuffer.vert",
+			SHADERS_PATH "/Postprocessing/GBuffer_normalTexture.frag");
 
 	Shader *postprocessShader = new Shader( 	SHADERS_PATH "/Postprocessing/screenFill.vert",
 			SHADERS_PATH "/Postprocessing/glow.frag");
 
+	/* creating and seting up fbos */
 	FrameBufferObject *fbo = new FrameBufferObject(800, 600);
 	FrameBufferObject *fbo2 = new FrameBufferObject(800, 600);
 
-	Listener* setClearColor 	= new SetClearColorListener 		( 1.0, 1.0, 1.0, 1.0);
+	fbo->bindFBO();
+	fbo->createPositionTexture();
+	fbo->createNormalTexture();
+	fbo->createColorTexture();
+	fbo->createSpecularTexture();
+	fbo->createShadowMap();
+	fbo->makeDrawBuffers();	// draw color to color attachment 0
+	fbo->unbindFBO();
 
+	fbo2->bindFBO();
+	fbo2->createColorTexture();
+	fbo2->createPositionTexture();
+	fbo2->makeDrawBuffers();
+	fbo2->unbindFBO();
+
+	/* gbuffer renderpass */
+	RenderPass* gBufferRenderPass = new RenderPass(gbufferShader, fbo);
+	gBufferRenderPass->setCustomClearColor( glm::vec4(1.0, 1.0, 1.0, 1.0) );
+	gBufferRenderPass->setClearColorBufferBit(true);	// clear color buffer on every frame
+
+	testingState->getRenderLoop()->addRenderPass(	gBufferRenderPass );
+
+	/* postprocessing renderpass */
+	Listener* uniPreGlowTexture = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 10, "preGlowTexture", 	fbo2->getPositionTextureHandle());
+	
 	RenderPass* glowRenderPass = new RenderPass(postprocessShader, fbo2);
+	glowRenderPass->setCustomClearColor( glm::vec4(1.0, 1.0, 1.0, 1.0) );
 	glowRenderPass->setClearColorBufferBit(true);	// clear color buffer on every frame
-	glowRenderPass->attachListenerOnActivation( setClearColor );// set clear color on activation, before bits are cleared
-	//glowRenderPass->attachListenerOnPostUniformUpload( uniLightPos );	 // Upload custom uniforms already on activation, since they cannot not be automatically overridden
+	glowRenderPass->attachListenerOnPostUniformUpload( uniPreGlowTexture );	 // Upload custom uniforms already on activation, since they cannot not be automatically overridden
 
 
 	testingState->getRenderLoop()->addRenderPass(	glowRenderPass );
