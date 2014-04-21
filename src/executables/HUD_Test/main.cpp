@@ -224,13 +224,13 @@ void configureRendering(){
 	ParticlesRenderPass* renderParticles = new ParticlesRenderPass(UnderwaterScene::framebuffer_water_particles, UnderwaterScene::water_particles, vaoID[0]);
 	testingApp->attachListenerOnRenderManagerFrameLoop(( renderParticles));
 
-//	// 8: render HUD
-//	testingApp->attachListenerOnRenderManagerFrameLoop( new SetCurrentShaderListener( HUDShader ));
-//	testingApp->attachListenerOnRenderManagerFrameLoop( uniAirText);
-//	//testingApp->attachListenerOnRenderManagerFrameLoop( uniSinusWave);
-//	HUDRenderPass* renderHUD = new HUDRenderPass(HUD::framebuffer_HUD, HUD::hudSys, vaoID[0]);
-//	//testingApp->attachListenerOnRenderManagerFrameLoop( uniTime4 );
-//	testingApp->attachListenerOnRenderManagerFrameLoop(( renderHUD));
+	// 8: render HUD
+	testingApp->attachListenerOnRenderManagerFrameLoop( new SetCurrentShaderListener( HUDShader ));
+	testingApp->attachListenerOnRenderManagerFrameLoop( uniAirText);
+	//testingApp->attachListenerOnRenderManagerFrameLoop( uniSinusWave);
+	HUDRenderPass* renderHUD = new HUDRenderPass(HUD::framebuffer_HUD, HUD::hudSys, vaoID[0]);
+	//testingApp->attachListenerOnRenderManagerFrameLoop( uniTime4 );
+	testingApp->attachListenerOnRenderManagerFrameLoop(( renderHUD));
 
 	// 7: Compositing
 	testingApp->attachListenerOnRenderManagerFrameLoop( new SetCurrentShaderListener( composition_shader ));
