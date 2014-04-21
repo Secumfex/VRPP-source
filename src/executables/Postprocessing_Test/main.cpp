@@ -51,7 +51,7 @@ void configureRendering(){
 			SHADERS_PATH "/Postprocessing/simpleTexture.frag");
 
 	Shader *finalCompShader = new Shader(	SHADERS_PATH "/Postprocessing/screenFill.vert",
-			SHADERS_PATH "/Postprocessing/finalCompositing.frag");
+			SHADERS_PATH "/Postprocessing/finalCompositingAlt.frag");
 
 	Shader *gbufferShader = new Shader(		SHADERS_PATH "/Postprocessing/GBuffer.vert",
 			SHADERS_PATH "/Postprocessing/GBuffer.frag");
@@ -88,16 +88,21 @@ void configureRendering(){
 
 	testingState->getRenderLoop()->addRenderPass(	gBufferRenderPass );
 
-	/* postprocessing renderpass */
+	/* compositing renderpass */
 	Listener* uniPreGlowTexture = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 10, "preGlowTexture", 	fbo2->getPositionTextureHandle());
 	
-	RenderPass* glowRenderPass = new RenderPass(postprocessShader, fbo2);
-	glowRenderPass->setCustomClearColor( glm::vec4(1.0, 1.0, 1.0, 1.0) );
-	glowRenderPass->setClearColorBufferBit(true);	// clear color buffer on every frame
-	glowRenderPass->attachListenerOnPostUniformUpload( uniPreGlowTexture );	 // Upload custom uniforms already on activation, since they cannot not be automatically overridden
+	RenderPass* compositingRenderPass = new RenderPass(finalCompShader, fbo2);
+	compositingRenderPass->setCustomClearColor( glm::vec4(1.0, 1.0, 1.0, 1.0) );
+	compositingRenderPass->setClearColorBufferBit(true);	// clear color buffer on every frame
+	//compositingRenderPass->attachListenerOnPostUniformUpload( uniPreGlowTexture );	 // Upload custom uniforms already on activation, since they cannot not be automatically overridden
 
 
-	testingState->getRenderLoop()->addRenderPass(	glowRenderPass );
+	testingState->getRenderLoop()->addRenderPass(	compositingRenderPass );
+
+	/* postprocessing renderpass */
+	MixTexturesRenderPass* glowRenderPass = new MixTexturesRenderPass( postprocessShader, 0, fbo->getColorTextureHandle(), fbo2->getPositionTextureHandle() );
+	glowRenderPass->setBaseTextureUniformName( "colorMap" );	// set custom uniform name for base texture
+	glowRenderPass->setMixTextureUniformName(  "preGlowTexture" );
 	
 
 }
