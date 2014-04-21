@@ -89,7 +89,7 @@ void configureRendering(){
 	Shader* water_shader 		= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/water.vert"		, SHADERS_PATH 	"/Underwater_Visuals_Test/water.frag");
 	Shader* particles_shader	= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/particles.vert"	, SHADERS_PATH  "/Underwater_Visuals_Test/particles.frag");
 	Shader *composition_shader  = new Shader( SHADERS_PATH "/Underwater_Visuals_Test/screenFill.vert"	, SHADERS_PATH  "/Underwater_Visuals_Test/finalCompositing.frag");
-
+	Shader *simpleTex			= new Shader( SHADERS_PATH "/Underwater_visuals_Test/screenFill.vert"   , SHADERS_PATH  "/GBuffer/simpleTexture.frag");
 	FrameBufferObject* preCompositingScene = new FrameBufferObject(800, 600);
 	preCompositingScene->bindFBO();
 	preCompositingScene->createPositionTexture();
@@ -235,6 +235,23 @@ void configureRendering(){
 		compositingRenderPass->attachListenerOnPostUniformUpload(uniPartMap);
 
 	testingState->getRenderLoop()->addRenderPass( compositingRenderPass );		// add compositing render Pass
+
+	// tiny views
+	MixTexturesRenderPass* renderTinyView = new MixTexturesRenderPass(simpleTex, 0, preCompositingScene->getPositionTextureHandle());
+	renderTinyView->setBaseTextureUniformName("diffuseTexture");
+	renderTinyView->setViewPortY(500);
+	renderTinyView->setViewPortX(100);
+	renderTinyView->setViewPortWidth(100);
+	renderTinyView->setViewPortHeight(100);
+	testingState->getRenderLoop()->addRenderPass(renderTinyView);
+
+	MixTexturesRenderPass* renderTinyView2 = new MixTexturesRenderPass(simpleTex, 0, UnderwaterScene::framebuffer_water_reflection->getPositionTextureHandle());
+	renderTinyView2->setBaseTextureUniformName("diffuseTexture");
+	renderTinyView2->setViewPortY(500);
+	renderTinyView2->setViewPortX(200);
+	renderTinyView2->setViewPortWidth(100);
+	renderTinyView2->setViewPortHeight(100);
+	testingState->getRenderLoop()->addRenderPass(renderTinyView2);
 }
 
 void configureOtherStuff(){
