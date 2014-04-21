@@ -117,11 +117,13 @@ namespace HeightfieldScene{
 		ground2 = new Texture(RESOURCES_PATH"/Heightfield/seamlessStonesTest.jpg");
 		mask = new Texture(RESOURCES_PATH"/Heightfield/terrainTest.png");
 
+		/*
 		normals1 = new Texture(RESOURCES_PATH"/Heightfield/seamlessSandTestNormal.jpg");	//normalmaps
 		normals2 = new Texture(RESOURCES_PATH"/Heightfield/seamlessStonesTestNormal.jpg");
 
 		specular1 = new Texture(RESOURCES_PATH"/Heightfield/seamlessSandTestSpecular.jpg");	//glossmaps
 		specular2 = new Texture(RESOURCES_PATH"/Heightfield/seamlessStonesTestSpecular.jpg");
+		*/
 
 		//Camera
 

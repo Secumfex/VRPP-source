@@ -68,7 +68,7 @@ PhysicsComponent::PhysicsComponent(float x, float y, float z, glm::vec3 normal, 
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
 
-PhysicsComponent::PhysicsComponent(char* filename, float x, float y, float z){
+PhysicsComponent::PhysicsComponent(string filename, float x, float y, float z){
 
 	hit = false;
 	rigidBody = addHeightfield(filename,x,y,z);
@@ -209,27 +209,34 @@ btRigidBody* PhysicsComponent::addHeightfield(string filename, float x, float y,
 
 	cout << "addHeightfield called" << endl;	//zum test
 	FILE* heightfieldFile;
+	char* filenameCHAR = RESOURCES_PATH"/Heightfield/heightfield128x128.raw";
+	int width,length = 128;
 	//BYTE* heightfieldData;
-	//unsigned char* heightfieldData = new unsigned char[width*length];		//for 1. load methode
+	unsigned char* heightfieldData = new unsigned char[width*length];		//for 1. load methode
+
+	/* for 2. load methode
 	int width, length, bytesPerPixel;
 	unsigned char* heightfieldData = stbi_load(filename.c_str(), &width, &length, &bytesPerPixel, 0);
 	if(heightfieldData == NULL){
 		cout << "ERROR: Unable to open image "  << filename << endl;
 	}
-	/* for 1. load methode
+	cout << "width: " << width << " length: " << length<< " bytesPerPixel: " << bytesPerPixel << endl;
+	*/
+
+	// for 1. load methode
 	for(int i=0; i<width*length; i++){
 		heightfieldData[i] = 0;
 	}
 
 
-	heightfieldFile = fopen(filename,"r");
+	heightfieldFile = fopen(filenameCHAR,"r");
 	if(heightfieldFile){
 		int numBytes = fread(heightfieldData,1,width*length,heightfieldFile);
 		if(!numBytes){
 			cout << "couldn't read heightfieldData at " << filename << endl;
 		}
 	}
-	*/
+
 	//fread(heightfieldData,1,width*height,heightfieldFile);	//for use of preferred constructor
 	//fclose(heightfieldFile);		//for 1. load methode
 

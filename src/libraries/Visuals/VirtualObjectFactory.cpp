@@ -567,8 +567,9 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 //	std::cout << "min: " << physics_min.x << " , "<< physics_min.y << " , "<< physics_min.z << std::endl;
 
 	//feste heightmap werte zum testen
-	char MapFilename[] = RESOURCES_PATH"/Heightfield/terrainTest128.jpg";	//terrainTest.raw	heightfield128x128.raw
-	char* heightMapFilename = MapFilename;
+	//char MapFilename[] = RESOURCES_PATH"/Heightfield/terrainTest128.jpg";	//terrainTest.raw	heightfield128x128.raw
+	//char* heightMapFilename = MapFilename;
+	string heightMapFilename = RESOURCES_PATH"/Heightfield/terrainTest128.jpg";
 	//int mapWidth = 128;															//2018
 	//int mapHeight = 128;														//2048
 	//

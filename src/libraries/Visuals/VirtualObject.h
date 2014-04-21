@@ -6,6 +6,8 @@
 #include <glm/glm.hpp>
 #include <vector>
 
+using namespace std;
+
 class RenderQueue;
 
 /// represents a 3D-Model in the scene 
@@ -73,7 +75,7 @@ public:
 	 * @param x,y,z start position in the world
 	 * no mass param because floor has to be a static object
 	 */
-	VirtualObject(char* filename, float x, float y, float z);
+	VirtualObject(string filename, float x, float y, float z);
 
 	/** \brief destructor
 	 *
@@ -187,7 +189,7 @@ public:
 	 * no mass param because floor has to be a static object
 	 * @return void
 	 */
-	void setPhysicsComponent(char* filename, float x, float y, float z);
+	void setPhysicsComponent(string filename, float x, float y, float z);
 
 	/** \brief getter
 	 *

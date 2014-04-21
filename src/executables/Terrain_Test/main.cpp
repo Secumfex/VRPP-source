@@ -53,23 +53,27 @@ void configIOHandler(){
 void configRendering(){
 
 	Shader* hfShader = new Shader(SHADERS_PATH"/HeightField/heightField.vert",SHADERS_PATH"/HeightField/heightField.frag");
-	Shader* fcShader = new Shader(SHADERS_PATH"/Underwater_Visuals_Test/screenFill.vert",SHADERS_PATH"/HeightField/finalComp.frag");
+	//Shader* fcShader = new Shader(SHADERS_PATH"/Underwater_Visuals_Test/screenFill.vert",SHADERS_PATH"/HeightField/finalComp.frag");
 
 	//TODO: zahlen richtig anpassen (0,1,2)
 	Listener* uniTex1 = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",1,"uniformTexture1",HeightfieldScene::ground1->getTextureHandle());
 	Listener* uniTex2 = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",2,"uniformTexture2",HeightfieldScene::ground2->getTextureHandle());
 	Listener* uniMask = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",3,"uniformTextureMask",HeightfieldScene::mask->getTextureHandle());
 
+	/*
 	Listener* uniNorm1 = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",4,"uniformNormals1",HeightfieldScene::normals1->getTextureHandle());		//normalmaps
 	Listener* uniNorm2 = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",5,"uniformNormals2",HeightfieldScene::normals2->getTextureHandle());
 
 	Listener* uniSpec1 = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",6,"uniformSpecular1",HeightfieldScene::specular1->getTextureHandle());	//glossmaps
 	Listener* uniSpec2 = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",7,"uniformSpecular2",HeightfieldScene::specular2->getTextureHandle());
+	*/
 
+	/*
 	Listener* uniFCposition = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",8,"positionOut",HeightfieldScene::fboTexture);
 	Listener* uniFCcolor = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",9,"colorOut",HeightfieldScene::fboColor);
 	Listener* uniFCnormals = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",10,"normalsOut",HeightfieldScene::fboNormals);
 	Listener* uniFCspecular = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",11,"specularOut",HeightfieldScene::fboSpecular);
+	*/
 
 	Listener* unbindCurrentFBO = new UnbindFrameBufferObjectListener();
 
@@ -81,21 +85,25 @@ void configRendering(){
 	myApp->attachListenerOnRenderManagerFrameLoop(uniTex2);
 	myApp->attachListenerOnRenderManagerFrameLoop(uniMask);
 
+	/*
 	myApp->attachListenerOnRenderManagerFrameLoop(uniNorm1);	//normalmaps
 	myApp->attachListenerOnRenderManagerFrameLoop(uniNorm2);
 
 	myApp->attachListenerOnRenderManagerFrameLoop(uniSpec1);	//glossmaps
 	myApp->attachListenerOnRenderManagerFrameLoop(uniSpec2);
+	*/
 
 	TerrainRenderPass* renderTerrain = new TerrainRenderPass(HeightfieldScene::fboGround);
-	HeightfieldScene::fboGround->bindFBO();
+	//HeightfieldScene::fboGround->bindFBO();
 	myApp->attachListenerOnRenderManagerFrameLoop(renderTerrain);
-	HeightfieldScene::fboGround->unbindFBO();
+	//HeightfieldScene::fboGround->unbindFBO();
 
 	//final compositing
+	/*
 	myApp->attachListenerOnRenderManagerFrameLoop(new SetCurrentShaderListener(fcShader));
 	RenderGraphicsComponentListener* renderComp = new RenderScreenFillingTriangleListener();
 	myApp->attachListenerOnRenderManagerFrameLoop(renderComp);
+	*/
 }
 void configureMyApp(){
 	/*	customize application a little bit*/

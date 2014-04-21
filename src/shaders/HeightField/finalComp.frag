@@ -14,7 +14,7 @@ uniform sampler2D specularOut;
 
 //phong mit allen maps
 
-out vec4 fragmentColor = ;
+out vec4 fragmentColor;
 
 
 void main{

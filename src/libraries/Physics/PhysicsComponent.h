@@ -81,7 +81,7 @@ public:
 	 * @param filename filename of the heightfield picture
 	 * @param x,y,z start position in the world
 	 */
-	PhysicsComponent(char* filename, float x, float y, float z);
+	PhysicsComponent(string filename, float x, float y, float z);
 
 	/** \brief destructor
 	*
