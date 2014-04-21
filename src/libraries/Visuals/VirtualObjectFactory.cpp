@@ -198,6 +198,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 			aiMatrix4x4 mesh_transform = pScene->mRootNode->FindNode(mesh->mName)->mTransformation;
 				aiNode* mesh_node = pScene->mRootNode->FindNode(mesh->mName);
 
+				if(!pScene->HasAnimations())
 				while(mesh_node->mParent){
 					mesh_node = mesh_node->mParent;
 					mesh_transform = mesh_node->mTransformation * mesh_transform;
@@ -206,16 +207,12 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 				for (j = 0; j < mesh->mNumVertices; ++j) {
 					//todo: fix mesh_transform
-					glm::mat4 blamatrix = glm::transpose(glm::make_mat4(&(pScene->mRootNode->FindNode(mesh->mName)->mTransformation.a1)));
 
-					if(!pScene->HasAnimations())
 					mesh->mVertices[j] = mesh_transform * mesh->mVertices[j];
 					if (mesh->HasNormals()){
-						if(!pScene->HasAnimations())
 						mesh->mNormals[j] = mesh_transform.Inverse().Transpose() * mesh->mNormals[j];
 					}
 					if (mesh->HasTangentsAndBitangents()){
-						if(!pScene->HasAnimations())
 						mesh->mTangents[j] = mesh_transform.Inverse().Transpose() * mesh->mTangents[j];
 					}
 				}}
@@ -612,7 +609,6 @@ AnimationLoop* VirtualObjectFactory::makeAnimation(map<std::string, Bone*> bones
 	//todo:solve problem, lol
 	myAnimation->addNode(myRootNode);
 	myAnimation->setDuration(pScene->mAnimations[0]->mDuration);
-//	myAnimation->setStartTransformation(armaturematrix);
 
 	myAnimation->updateNodes(0.0f);
 
@@ -646,8 +642,16 @@ void VirtualObjectFactory::setNodeTransform(Node* node, aiNodeAnim* nodeanim, bo
 			glm::vec3 position = glm::vec3(nodeanim->mPositionKeys[i].mValue.x, nodeanim->mPositionKeys[i].mValue.y, nodeanim->mPositionKeys[i].mValue.z);
 			glm::vec3 scale = glm::vec3(nodeanim->mScalingKeys[i].mValue.x, nodeanim->mScalingKeys[i].mValue.y, nodeanim->mScalingKeys[i].mValue.z);
 			glm::quat rotation = glm::quat(nodeanim->mRotationKeys[i].mValue.w, nodeanim->mRotationKeys[i].mValue.x, nodeanim->mRotationKeys[i].mValue.y, nodeanim->mRotationKeys[i].mValue.z);
+//			glm::quat rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
 
-			glm::mat4 transform = glm::mat4_cast(rotation) * glm::translate(glm::mat4(1.0f), position)  * glm::scale(glm::mat4(1.0f), scale);
+			aiQuaternion quat = nodeanim->mRotationKeys[i].mValue;
+
+//			glm::vec3 axis = glm::vec3(glm::asin(quat.x), glm::asin(quat.y), glm::asin(quat.z));
+//			float angle = glm::acos(quat.w);
+//
+//			glm::mat4 rot = glm::rotate(glm::mat4(), glm::degrees(angle), axis);
+
+//			rotation = glm::quat_cast(rot);
 
 			node->addTransformation(position, scale, glm::normalize(rotation), time);
 		}

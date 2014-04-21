@@ -54,6 +54,8 @@ void Node::updateBone(float t, glm::mat4 parent_mat){
 		parent_mat = parent_mat * mNodeTransform;
 	}
 
+	std::cout << mTimes.size() << std::endl;
+
 	if(mTimes.size()<2){
 		unsigned int i;
 		for (i = 0; i < mChildren.size(); ++i) {

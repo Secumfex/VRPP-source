@@ -26,8 +26,13 @@ GraphicsComponent::GraphicsComponent(GraphicsComponent* gc){
 
 	this->setMesh(new Mesh(gc->getMesh()));
 	this->setMaterial(new Material(gc->getMaterial()));
-	cout << "banane" << endl;
+
+	unsigned int i;
+	for (i = 0; i < gc->getBones().size(); ++i) {
+	this->addBone(gc->getBones()[i]);
 	}
+
+}
 
 GraphicsComponent::GraphicsComponent(Mesh* mesh, Material* material){
 	mMesh = mesh;
