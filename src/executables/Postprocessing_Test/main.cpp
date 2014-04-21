@@ -81,6 +81,8 @@ void configureRendering(){
 	fbo2->makeDrawBuffers();
 	fbo2->unbindFBO();
 
+	testingApp->attachListenerOnProgramInitialization( new SetDefaultShaderListener( new Shader (SHADERS_PATH "/Phong_Test/phong.vert", SHADERS_PATH "/Phong_Test/phong.frag")));
+
 	/* gbuffer renderpass */
 	RenderPass* gBufferRenderPass = new RenderPass(gbufferShader, fbo);
 	gBufferRenderPass->setCustomClearColor( glm::vec4(1.0, 1.0, 1.0, 1.0) );
@@ -105,6 +107,7 @@ void configureRendering(){
 	glowRenderPass->setMixTextureUniformName(  "preGlowTexture" );
 
 	testingState->getRenderLoop()->addRenderPass( glowRenderPass );
+
 	
 
 }
