@@ -19,66 +19,10 @@
 #include "Visuals/RenderManager.h"
 #include "Application/Application.h"
 #include "Application/ApplicationStates.h"
-#include "Tools/ShaderFactory.h"
 
 Application *myApp;
 
 int main() {
-
-	std::string vertexShader ="\
-			#version 330 core\n\
- \n\
-layout(location = 0) in vec4 positionAttribute;\n\
-layout(location = 1) in vec2 uvCoordAttribute;\n\
-layout(location = 2) in vec4 normalAttribute;\n\
-layout(location = 3) in vec4 tangentAttribute;\n\
-\n\
-uniform mat4 uniformModel;\n\
-uniform mat4 uniformView;\n\
-uniform mat4 uniformPerspective;\n\
-\n\
-out vec4 passPosition;\n\
-out vec2 passUVCoord;\n\
-out vec3 passNormal;\n\
-out vec3 passTangent;\n\
-\n\
-void main(){\n\
-    passUVCoord = uvCoordAttribute;\n\
-\n\
-    passPosition = uniformView * uniformModel * positionAttribute;\n\
-    gl_Position =  uniformPerspective * uniformView * uniformModel * positionAttribute;\n\
-    passNormal = vec3(transpose(inverse(uniformView * uniformModel)) * normalAttribute);\n\
-    passTangent = vec3(transpose(inverse(uniformView * uniformModel)) * tangentAttribute);\n\
-}";
-	        std::string fragmentShader ="\
-	    			#version 330 core\n\
-	    	\
-	    	//incoming data for the single textures\n\
-	    	in vec4 passPosition;\n\
-	    	in vec2 passUVCoord;\n\
-	    	in vec3 passNormal;\n\
-	    	\n\
-	    	uniform float shininess;\n\
-	    	\n\
-	    	uniform sampler2D diffuseTexture;\n\
-	    	\n\
-	    	//writable textures for deferred screen space calculations\n\
-	    	layout(location = 0) out vec4 positionOutput;\n\
-	    	layout(location = 1) out vec4 normalOutput;\n\
-	    	layout(location = 2) out vec4 colorOutput;\n\
-	    	layout(location = 3) out vec4 materialOutput;\n\
-	    	 \n\
-	    	void main(){  \n\
-	    	    positionOutput = passPosition;\n\
-	    	    normalOutput = vec4(normalize(passNormal), 0);\n\
-	    	    colorOutput = texture(diffuseTexture, passUVCoord);\n\
-	    	    materialOutput = vec4(shininess, 0.0, 0.0, 0.0);\n\
-	    	}";
-
-
-	        vector<const char*> shaders;
-	        shaders.push_back(vertexShader.c_str());
-	        shaders.push_back(fragmentShader.c_str());
 
 	// render window
 	myApp = Application::getInstance();
@@ -100,6 +44,30 @@ void main(){\n\
 	Camera* cam = myVRState->getCamera();
 	Frustum* frustum = myVRState->getFrustum();
 
+	//load, compile and link simple texture rendering program for a screen filling plane 
+
+	Shader *simpleTexShader = new Shader(SHADERS_PATH "/Postprocessing/screenFill.vert",
+			SHADERS_PATH "/Postprocessing/simpleTexture.frag");
+
+	Shader *finalCompShader = new Shader(	SHADERS_PATH "/Postprocessing/screenFill.vert",
+			SHADERS_PATH "/Postprocessing/finalCompositing.frag");
+
+	Shader *gbufferShader = new Shader(		SHADERS_PATH "/Postprocessing/GBuffer.vert",
+			SHADERS_PATH "/Postprocessing/GBuffer.frag");
+
+	Shader *gbuffer_normalMap_Shader = new Shader(		SHADERS_PATH "/Postprocessing/GBuffer.vert",
+			SHADERS_PATH "/Postprocessing/GBuffer_normalTexture.frag");
+
+	Shader *postprocessShader = new Shader( 	SHADERS_PATH "/Postprocessing/screenFill.vert",
+			SHADERS_PATH "/Postprocessing/glow.frag");
+
+	rq->addShader(gbufferShader);
+	rq->addShader(gbuffer_normalMap_Shader);
+	rq->addCompositingShader(simpleTexShader);
+	rq->addCompositingShader(finalCompShader);
+
+
+
 	//--------------------------------------------//
 	//        Create a Vertex Array Object        //
 	//         containing several buffers         //
@@ -116,32 +84,21 @@ void main(){\n\
 
 	MaterialManager::getInstance()->makeMaterial("polished_chrome", object02->getGraphicsComponent());
 
-	//----------------------------//
-	//        SHADERS BABY        //
-	//----------------------------//
-
-	Shader *simpleTexShader = new Shader(SHADERS_PATH "/GBuffer_clone/screenFill.vert",
-			SHADERS_PATH "/GBuffer_clone/simpleTexture.frag");
-
-	Shader *finalCompShader = new Shader(	SHADERS_PATH "/GBuffer_clone/screenFill.vert",
-			SHADERS_PATH "/GBuffer_clone/finalCompositing.frag");
-
-	Shader *gbufferShader = ShaderFactory::getInstance()->createGBuffer(object02->getGraphicsComponent()[0]);
-
-	Shader *gbuffer_normalMap_Shader = ShaderFactory::getInstance()->createGBuffer(object01->getGraphicsComponent()[0]);
-
-
-	rq->addShader(gbufferShader);
-	rq->addShader(gbuffer_normalMap_Shader);
-	rq->addCompositingShader(simpleTexShader);
-	rq->addCompositingShader(finalCompShader);
-
-
-
-
 	//--------------------------------------------//
 	//         Create a Framebuffer Object        //
 	//--------------------------------------------//
+
+	//GLuint fbo_texture;
+	  /*/* Texture */
+	  /*glActiveTexture(GL_TEXTURE0);
+	  glGenTextures(1, &fbo_texture);
+	  glBindTexture(GL_TEXTURE_2D, fbo_texture);
+	  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	  glBindTexture(GL_TEXTURE_2D, 0);*/
 
 	FrameBufferObject *fbo = new FrameBufferObject(width, height);
 
@@ -155,6 +112,23 @@ void main(){\n\
 
 	//set the list of draw buffers.
 	fbo->makeDrawBuffers();
+
+	FrameBufferObject *fbo2 = new FrameBufferObject(width, height);
+
+	fbo2->bindFBO();
+
+	fbo2->createPositionTexture();
+	fbo2->createNormalTexture();
+	fbo2->createColorTexture();
+	fbo2->createSpecularTexture();
+	fbo2->createShadowMap();
+
+	//set the list of draw buffers.
+	fbo2->makeDrawBuffers();
+
+	fbo2->unbindFBO();
+
+	//Listener* postprocess= new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 12, "postprocessTexture", fbo_texture);
 
 	//rotation of the cube
 	float angle = 0.0f;
@@ -180,6 +154,9 @@ void main(){\n\
 
 	frustum->updateModelMatrix();
 
+	rq->sortByAttributes();
+
+	//system("cls");
 
 	while(!glfwWindowShouldClose(window)) {
 
@@ -209,7 +186,7 @@ void main(){\n\
 		//nice rotation of a small cube
 		mat4 modelMatrix02 = scale(translate(rotate(mat4(1.0f), degrees(angle), vec3(1.0f, 1.0f, 0.0f)), vec3(0.0f, 0.5f, -0.5f)), vec3(0.9f, 0.9f, 0.9f));
 
-		mat4 modelMatrix03 = scale(translate(rotate(rotate(mat4(1.0f), 90.0f, vec3(0.0f, 0.0f, 1.0f)), 90.0f, vec3(0.0f, 1.0f, 0.0f)), vec3(0.0, 0.0, 0.5)), vec3(0.5f, 0.5f, 0.5f));
+		mat4 modelMatrix03 = scale(translate(rotate(mat4(1.0f), degrees(angle), vec3(0.0f, 1.0f, 1.0f)), vec3(0.0f, 0.5f, -0.5f)), vec3(0.3f, 0.3f, 0.3f));
 
 		object01->setModelMatrix(modelMatrix01);
 		object02->setModelMatrix(modelMatrix02);
@@ -263,6 +240,7 @@ void main(){\n\
 
 
 		fbo->unbindFBO();
+
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glDisable(GL_DEPTH_TEST);
 
@@ -271,6 +249,8 @@ void main(){\n\
 		//       Take the textures from the FBO       //
 		//      to compose them on an image plane     //
 		//--------------------------------------------//
+
+		fbo2->bindFBO();
 
 		//      Hier findet das Compositing statt :) ist schon einiges k�rzer, nicht wahr?
 
@@ -289,6 +269,25 @@ void main(){\n\
 		//      show all the components of the FBO    //
 		//--------------------------------------------//
 
+		fbo2->unbindFBO();
+
+				glDisable(GL_DEPTH_TEST);
+
+				glBindVertexArray(triangle->getMesh()->getVAO());
+		        postprocessShader->useProgram();
+		        rm->setCurrentShader(postprocessShader);
+		        postprocessShader->uploadAllUniforms();
+
+		        glViewport(0,0, width, height);
+
+		        glActiveTexture(GL_TEXTURE30);
+		        glBindTexture(GL_TEXTURE_2D, fbo2->getNormalTextureHandle());
+		        glUniform1i(glGetUniformLocation( postprocessShader->getProgramHandle(), "preGlowTexure" ), 30);
+
+		        glDrawArrays(GL_TRIANGLES, 0, 3);
+
+
+		        glActiveTexture(GL_TEXTURE0);
 		        glBindVertexArray(triangle->getMesh()->getVAO());
 		        simpleTexShader->useProgram();
 		        rm->setCurrentShader(simpleTexShader);
