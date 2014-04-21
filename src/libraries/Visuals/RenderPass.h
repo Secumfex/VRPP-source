@@ -179,6 +179,18 @@ public:
 
 	/** \brief setter
 	 *
+	 * @param customClearColor vec4 color rgba
+	 */
+	void setCustomClearColor(glm::vec4 customClearColor);
+
+	/** \brief setter
+	 *
+	 * @param customClearColor vec4 color rgba
+	 */
+	void setCustomClearColor(glm::vec4* customClearColor);
+
+	/** \brief setter
+	 *
 	 * @param clear depth buffer bit boolean
 	 */
 	void setClearDepthBufferBit(bool clear);
@@ -248,6 +260,10 @@ protected:
 	bool clearDepthBufferBit;	/**< boolean whether Color Buffer Bit will be cleared at the beginning of a rendering iteration*/
 	bool useDepthTest;			/**< boolean whether GL_DEPTH_TEST will be enabled */
 	bool useAlphaBlending;		/**< boolean whether GL_BLEND will be enabled */
+
+
+	bool mHasCustomClearColor;		/**< boolean whether this renderpass has a custom clear color or uses the active clear color before */
+	glm::vec4* mCustomClearColor;		/**< custom clear color */
 };
 
 //TODO
@@ -262,6 +278,16 @@ public:
 	 *
 	 */
 	~ShadowPass();
+
+};
+/// a Renderpass which is suitable to render into three draw buffers of a FrameBufferObject. Missing DrawBuffers will be created, cannot render into window 
+class GBufferRenderPass : public RenderPass{
+public:
+	/** \brief constructor
+	 * @param gbuffer_shader Shader to use for rendering, preferably rendering into draw buffers 
+	 * @param gbuffer_fbo FrameBuffer Object to be used as target, missing draw buffers will be created
+	 */
+	GBufferRenderPass(Shader* gbuffer_shader, FrameBufferObject* gbuffer_fbo);
 
 };
 

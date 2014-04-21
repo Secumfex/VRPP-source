@@ -15,6 +15,9 @@ RenderPass::RenderPass() {
 	mViewPort_y = 0;
 	mViewPort_width  = IOManager::getInstance()->getWidth();
 	mViewPort_height = IOManager::getInstance()->getHeight();
+
+	mCustomClearColor = 0;
+	mHasCustomClearColor = false;
 }
 
 //Variante statt addRenderPass:
@@ -37,6 +40,22 @@ RenderPass::RenderPass(Shader* shader, FrameBufferObject* fbo){
 		mViewPort_width = IOManager::getInstance()->getWidth();
 		mViewPort_height = IOManager::getInstance()->getHeight();
 	}
+
+	mCustomClearColor = 0;
+	mHasCustomClearColor = false;
+}
+
+void RenderPass::setCustomClearColor(glm::vec4* customClearColor)
+{
+	mHasCustomClearColor = true;
+	mCustomClearColor = customClearColor;
+}
+
+
+void RenderPass::setCustomClearColor(glm::vec4 customClearColor)
+{
+	mHasCustomClearColor = true;
+	mCustomClearColor = new glm::vec4( customClearColor );
 }
 
 void RenderPass::activate()
@@ -77,6 +96,10 @@ void RenderPass::activate()
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 	}
 
+	if ( mHasCustomClearColor )
+	{
+		glClearColor( (*mCustomClearColor).r, (*mCustomClearColor).g, (*mCustomClearColor).b, (*mCustomClearColor).a);
+	}
 	notify("ACTIVATION");
 }
 
@@ -335,6 +358,45 @@ RenderPass::~RenderPass() {
 
 ShadowPass::ShadowPass(){}
 ShadowPass::~ShadowPass(){}
+
+GBufferRenderPass::GBufferRenderPass(Shader* gbuffer_shader, FrameBufferObject* gbuffer_fbo)
+{
+	mFBO = gbuffer_fbo;
+	mShader = gbuffer_shader;
+
+	clearColorBufferBit = false;
+	clearDepthBufferBit = true;
+	useDepthTest = true;
+	useAlphaBlending = false;
+
+	mViewPort_x = 0;
+	mViewPort_y = 0;
+	if (mFBO)
+	{
+		mViewPort_width  = mFBO->getWidth();
+		mViewPort_height = mFBO->getHeight();
+	
+		// create missing draw buffers
+		if (mFBO->getPositionTextureHandle() == -1)
+		{
+			mFBO->createPositionTexture();
+			mFBO->makeDrawBuffers();
+		}
+		if (mFBO->getNormalTextureHandle() == -1)
+		{
+			mFBO->createNormalTexture();
+			mFBO->makeDrawBuffers();
+		}
+		if (mFBO->getColorTextureHandle() == -1)
+		{
+			mFBO->createColorTexture();
+			mFBO->makeDrawBuffers();
+		}
+	}
+
+	mCustomClearColor = 0;
+	mHasCustomClearColor = false;
+}
 
 void CompositingPass::uploadUniforms()
 {
