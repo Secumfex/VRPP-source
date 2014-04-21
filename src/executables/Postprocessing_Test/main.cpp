@@ -44,6 +44,28 @@ void configureVirtualObjects(){
 	testingState->getRenderQueue()->addVirtualObject(object02);
 	testingState->getRenderQueue()->addVirtualObject(object03);
 
+	using namespace glm;
+	float angle = 0.0f;
+	float rotationSpeed = 1.0f;
+
+		glEnable(GL_DEPTH_TEST);
+
+		//rotation angle
+		angle = fmod((float)(angle+rotationSpeed*glfwGetTime()), (float)(pi<float>()*2.0f));
+		glfwSetTime(0.0);
+
+		//scale a cube into a flat plane
+		mat4 modelMatrix01 = scale(translate(mat4(1.0f), vec3(0.0f, -1.0f, 0.0f)), vec3(2.5f, 0.2f, 2.5f));
+
+		//nice rotation of a small cube
+		mat4 modelMatrix02 = scale(translate(rotate(mat4(1.0f), degrees(angle), vec3(1.0f, 1.0f, 0.0f)), vec3(0.0f, 0.5f, -0.5f)), vec3(0.9f, 0.9f, 0.9f));
+
+		mat4 modelMatrix03 = scale(translate(rotate(mat4(1.0f), degrees(angle), vec3(0.0f, 1.0f, 1.0f)), vec3(0.0f, 0.5f, -0.5f)), vec3(0.3f, 0.3f, 0.3f));
+
+		object01->setModelMatrix(modelMatrix01);
+		object02->setModelMatrix(modelMatrix02);
+		object03->setModelMatrix(modelMatrix03);
+
 }
 
 void configurePhysics(){
@@ -105,11 +127,11 @@ void configureRendering(){
 	Listener* uniPositionMap1 = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 10, "positionMap", 	fbo->getPositionTextureHandle());
 	Listener* uniColorMap1 = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 10, "colorMap", 	fbo->getColorTextureHandle());
 	Listener* uniNormalMap1 = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 10, "normalMap", 	fbo->getNormalTextureHandle()); 
-	Listener* uniPositionMap2 = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 10, "positionMap", 	fbo2->getPositionTextureHandle());
-	Listener* uniColorMap2 = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 10, "colorMap", 	fbo2->getColorTextureHandle());
-	Listener* uniNormalMap2 = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 10, "normalMap", 	fbo2->getNormalTextureHandle()); 
+	Listener* uniPositionMap2 = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 11, "positionMap", 	fbo2->getPositionTextureHandle());
+	Listener* uniColorMap2 = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 11, "colorMap", 	fbo2->getColorTextureHandle());
+	Listener* uniNormalMap2 = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 11, "normalMap", 	fbo2->getNormalTextureHandle()); 
 
-	testingApp->attachListenerOnProgramInitialization( new SetDefaultShaderListener( new Shader (SHADERS_PATH "/Postprocessing/GBuffer.vert", SHADERS_PATH "/Postprocessing/GBuffer.frag")));
+	//testingApp->attachListenerOnProgramInitialization( new SetDefaultShaderListener( new Shader (SHADERS_PATH "/Postprocessing/GBuffer.vert", SHADERS_PATH "/Postprocessing/GBuffer.frag")));
 
 	/* gbuffer renderpass */
 	RenderPass* gBufferRenderPass = new RenderPass(gbufferShader, fbo);
