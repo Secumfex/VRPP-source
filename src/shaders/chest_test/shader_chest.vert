@@ -10,7 +10,7 @@ uniform mat4 uniformView;
 uniform mat4 uniformPerspective;
 
 out vec3 passNormal;
-out vec3 vVaryingLightDir;
+//out vec3 vVaryingLightDir;
 out vec4 passPosition;
 out vec2 passUVCoord;
 
@@ -30,7 +30,7 @@ vec3 vLightPosition = vec3(50,2,-2);
     vec3 vPosition3 = passPosition.xyz / passPosition.w;
     
     // Get vector to light source
-    vVaryingLightDir = normalize(vLightPosition - vPosition3);
+   // vVaryingLightDir = normalize(vLightPosition - vPosition3);
     passUVCoord = uvCoordAttribute;
     
     

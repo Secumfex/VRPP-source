@@ -276,6 +276,17 @@ public:
 		void update();	
 	};
 
+    /// listener to upload a custom Uniform boolean
+    class UploadUniformBooleanListener : public Listener {
+    private:
+        bool* value;
+        std::string uniform_name;
+    public:
+        UploadUniformBooleanListener(std::string name = std::string("UNIFORMUPLOADLISTENER"), bool value = false, std::string uniform_name = "custom_uniform");
+        UploadUniformBooleanListener(std::string name, bool* value, std::string uniform_name);
+    void update();
+    };
+
 
 
 #endif /* UPLOADUNIFORMLISTENERS_H_ */

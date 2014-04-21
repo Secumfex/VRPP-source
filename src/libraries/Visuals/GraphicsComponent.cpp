@@ -10,6 +10,7 @@ GraphicsComponent::GraphicsComponent(){
 	mEmission = false;
 	mShadow = false;
 	mGhostObject = new btGhostObject();
+    mHasNormalMap = false;
 }
 
 GraphicsComponent::GraphicsComponent(Mesh* mesh, Material* material){
@@ -19,6 +20,7 @@ GraphicsComponent::GraphicsComponent(Mesh* mesh, Material* material){
 	mEmission = false;
 	mShadow = false;
 	mGhostObject = new btGhostObject();
+    mHasNormalMap = false;
 }
 void GraphicsComponent::setMesh(Mesh* mesh){
 	mMesh = mesh;
@@ -70,6 +72,14 @@ bool GraphicsComponent:: hasShadow(){
 }
 bool GraphicsComponent:: hasTransparency(){
 	return mTranparency;
+}
+
+void GraphicsComponent::setNormalMap(bool value){
+    mHasNormalMap = value;
+}
+
+bool GraphicsComponent::hasNormalMap(){
+    return mHasNormalMap;
 }
 
 void GraphicsComponent:: setGhostObject(glm::vec3 min, glm::vec3 max){

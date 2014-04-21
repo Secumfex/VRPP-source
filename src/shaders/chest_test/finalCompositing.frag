@@ -20,7 +20,7 @@ void main() {
     vec4 normal = texture(normalMap, passUV);
     vec4 color = texture(colorMap, passUV);
     vec4 specularColor = texture(specularMap, passUV);
-	float shininess = texture(specularMap, passUV).a;
+	float shininess = texture(specularMap, passUV).w;
     
     //lightPosition from camera system
     vec4 lightPos = vec4(5,2,-2,1);
@@ -44,9 +44,9 @@ void main() {
     
 	vec4 lightColor = vec4(1.0, 1.0, 1.0, 1.0);
     
-    vec3  reflection = normalize(reflect(-nPosToLight,normal.xyz));
+   vec3  reflection = normalize(reflect(-nPosToLight,normal.xyz));
     float ambient = 0.1;
-    float diffuse = max(dot(normal.xyz, nPosToLight), 0) * visibility;
+   float diffuse = max(dot(normal.xyz, nPosToLight), 0) * visibility;
     float specular = pow(max(dot(reflection, -normalize(position.xyz)),0), shininess * 1000.0);
     
     
@@ -68,4 +68,5 @@ void main() {
 
     fragmentColor = color * ambient + (color * diffuse  + specularColor * specular) * lightColor;
     fragmentColor += glow;
+    //fragmentColor = normal;
 }

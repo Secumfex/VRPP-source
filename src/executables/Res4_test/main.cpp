@@ -54,12 +54,17 @@ void configureScene(ApplicationState* target){
     /* to animate the VirtualObject */
     // Listener* new_lesten = new AnimateRotatingModelMatrixListener(scene_chest_Object);
     // myApp->attachListenerOnRenderManagerFrameLoop(new_lesten);
+    
+
 
     Shader* phong_shader 		= new Shader( SHADERS_PATH "/chest_test/shader_chest.vert"	, SHADERS_PATH 	"/chest_test/shader_chest.frag");
+    
+
     
    // Shader* depth_shader 		= new Shader( SHADERS_PATH "/chest_test/Depthwrite.vert"	, SHADERS_PATH 	"/chest_test/Depthwrite.frag");
     
 	Shader *composition_shader  = new Shader( SHADERS_PATH "/chest_test/screenFill.vert", SHADERS_PATH "/chest_test/finalCompositing.frag");
+    
 
    // rq->addShader(phong_shader);
    // rq->addCompositingShader(composition_shader);
@@ -69,6 +74,8 @@ void configureScene(ApplicationState* target){
     
     FrameBufferObject* framebuffer_render = new FrameBufferObject(800, 600);
     myState->attachListenerOnActivation(new SetFrameBufferObjectListener(framebuffer_render)); //bindFBO;
+    
+
 
     framebuffer_render->createPositionTexture();
     framebuffer_render->createNormalTexture();
@@ -76,12 +83,13 @@ void configureScene(ApplicationState* target){
 	framebuffer_render->createSpecularTexture();
     framebuffer_render->makeDrawBuffers();
 
-
+//glEnable(GL_DEPTH_TEST);
     
     /* render regular Scene */
     // bindFBO
     myApp->attachListenerOnRenderManagerFrameLoop(new SetFrameBufferObjectListener(framebuffer_render));
 	myApp->attachListenerOnRenderManagerFrameLoop(new SetCurrentShaderListener(phong_shader));
+
 	myApp->attachListenerOnRenderManagerFrameLoop(new AlternativeRenderloopListener());
     // unbindFBO
     myApp->attachListenerOnRenderManagerFrameLoop(new UnbindFrameBufferObjectListener());
@@ -107,6 +115,8 @@ void configureScene(ApplicationState* target){
     /* compositing */
 	myApp->attachListenerOnRenderManagerFrameLoop(new SetCurrentShaderListener(composition_shader));
 	myApp->attachListenerOnRenderManagerFrameLoop(new RenderScreenFillingTriangleListener());
+    
+    framebuffer_render->unbindAllTextures();
     
     IOHandler* myVRStateIOHandler = myState-> getIOHandler();
     myVRStateIOHandler->attachListenerOnKeyPress(new TerminateApplicationListener(myApp), 	GLFW_KEY_ESCAPE);	// Terminate Application by pressing Escape

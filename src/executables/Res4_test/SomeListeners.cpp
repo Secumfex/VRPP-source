@@ -42,9 +42,19 @@ void AlternativeRenderloopListener::update(){
 					//for every GC
 					for (unsigned int j = 0; j < currentGCs.size(); j++){
 						rm->setCurrentGC(currentGCs[j]);
+                        
+                        /* request for NormalMap */
+                        bool normalMap = currentGCs[j]->hasNormalMap();
+                        glm::vec3 colorcheck = glm::vec3(1.0,0.0,0.0);
+                        
+                        Listener* normalMapCheck 	= new UploadUniformBooleanListener	("UNIFORMUPLOADLISTENER", normalMap, "uniformNormalMap");
+                        Listener* colorCheck        = new UploadUniformVec3Listener     ("UNIFORMUPLOADLISTENER", colorcheck, "uniformColorCheck");
 						rm->getCurrentVO();
-						
 
+                        currentShader->attach(normalMapCheck);
+                        currentShader->attach(colorCheck);
+                        
+                        
 						//tell Shader to upload all Uniforms
 						currentShader->uploadAllUniforms();
 						//render the GC
@@ -319,6 +329,7 @@ void RenderGraphicsComponentListener::update(){
 		RenderManager::getInstance()->setCurrentGC(gc);
 		RenderManager::getInstance()->getCurrentShader()->uploadAllUniforms();
 		RenderManager::getInstance()->getCurrentShader()->render(gc);
+        RenderManager::getInstance()->getCurrentFBO()->unbindAllTextures();
 	}
 }
 

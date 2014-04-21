@@ -13,6 +13,8 @@ uniform vec3 specularColor;
 
 uniform float shininess;
 
+uniform bool uniformNormalMap;
+
 //writable textures for deferred screen space calculations
 layout(location = 0) out vec4 positionOutput;
 layout(location = 1) out vec4 normalOutput;
@@ -33,7 +35,12 @@ void main(){
     
     
     positionOutput = passPosition;
-    normalOutput = normalize(vec4((tangentSpace * (texture(normalTexture, passUVCoord).rgb - 0.5 ) * 2.0), 0.0));
+    if (uniformNormalMap == true){
+    	normalOutput = normalize(vec4((tangentSpace * (texture(normalTexture, passUVCoord).rgb * 2.0f - 1.0f )), 0.0));
+    	}
+    	else if (uniformNormalMap == false){
+    	normalOutput = texture(diffuseTexture, passUVCoord);
+    	}
     colorOutput = texture(diffuseTexture, passUVCoord);
     specularOutput = vec4(specularColor, shininess);
 }
