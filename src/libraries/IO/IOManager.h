@@ -187,6 +187,9 @@ public:
 	 * @param key
 	 */
 	void attachListenerOnKeyPress(Listener* listener, int key);
+
+	int getWidth();
+	int getHeight();
 };
 
 #endif

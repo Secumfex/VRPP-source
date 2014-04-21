@@ -1,14 +1,7 @@
-/*
- * RenderLoop.h
- *
- *  Created on: 11.02.2014
- *      Author: Dirk Diggler
- */
-
 #ifndef RENDERLOOP_H_
 #define RENDERLOOP_H_
 
-#include "Visuals/RenderManager.h"
+#include "Visuals/RenderPass.h"
 
 class RenderLoop {
 public:
@@ -22,13 +15,16 @@ public:
 	 */
 	virtual ~RenderLoop();
 
-	/** \brief !docu pls!
+	/** \brief render a loop iteration
 	 *
 	 */
-	void fillLoop();
+	virtual	void render();
+
+	void addRenderPass( RenderPass* renderPass);
+
+	std::vector<RenderPass* > getRenderPasses();
 private:
-	RenderQueue* mRenderQueue;		/**< !docu pls! */
-	RenderManager* mRenderManager;	/**< !docu pls! */
+	std::vector<RenderPass* > mRenderPasses;
 };
 
-#endif /* RENDERLOOP_H_ */
+#endif

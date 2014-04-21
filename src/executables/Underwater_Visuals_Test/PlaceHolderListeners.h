@@ -65,18 +65,19 @@ public:
 };
 
 
-/// Listener which uses an FBO as Render Target and renders volumetric godrays
-class ParticlesRenderPass : public Listener{
-public:
-	RenderManager* rm;
+// /// Listener which uses an FBO as Render Target and renders volumetric godrays
+// class ParticlesRenderPass : public Listener{
+// public:
+// 	RenderManager* rm;
 
-	FrameBufferObject* fbo; // particles target
-	ParticleSystem* particleSystem;
-	GraphicsComponent* particleGC;
+// 	FrameBufferObject* fbo; // particles target
+// 	ParticleSystem* particleSystem;
+// 	GraphicsComponent* particleGC;
+// 	GLint vao;
 
-	ParticlesRenderPass(FrameBufferObject* fbo, ParticleSystem* particleSystem, GraphicsComponent* particleGC);
-	void update();
-};
+// 	ParticlesRenderPass(FrameBufferObject* fbo, ParticleSystem* particleSystem, GLint vao);
+// 	void update();
+// };
 
 
 /// Listener which uses an FBO as Render Target and ignores the water_object
@@ -186,6 +187,14 @@ public:
 	void update();
 };
 
+/// Listener which sets the given Camera Object in RenderManager and IO Manager
+class SetCameraListener : public Listener {
+private:
+	Camera* 	cam;
+public:
+	SetCameraListener(Camera* cam);
+	void update();
+};
 
 /// Compiles a shader and sets it as the current Shader
 class RecompileAndSetShaderListener : public Listener{
@@ -214,13 +223,13 @@ public:
 /// Uploads a sinus value
 class UploadUniformSinusWaveListener : public Listener{
 private:
-	float phase;
 	float* t;
 	float frequency;
+	float phase;
 	std::string uniform_name;
 public:
-	UploadUniformSinusWaveListener(std::string name, float* t, float frequency, std::string uniform_name);
-	UploadUniformSinusWaveListener(std::string name, float t, float frequency, std::string uniform_name);
+	UploadUniformSinusWaveListener(std::string name, float* t, float frequency, float phase, std::string uniform_name);
+	UploadUniformSinusWaveListener(std::string name, float t, float frequency, float phase, std::string uniform_name);
 	void update();
 };
 
@@ -251,3 +260,6 @@ public:
 	UpdateParticleSystemListener(ParticleSystem* particleSystem, float* t);
 	void update();
 };
+
+static void createSquare();
+
