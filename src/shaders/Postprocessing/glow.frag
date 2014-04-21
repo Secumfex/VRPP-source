@@ -11,7 +11,7 @@ uniform float resY;
 out vec4 fragmentColor;
 
 void main() {
-	int strength = 15;
+	int strength = 8;
 
 	float resX_temp = 1.0/resX;
     float resY_temp = 1.0/resY;
@@ -19,7 +19,7 @@ void main() {
 	vec4 glow = vec4(0,0,0,1);
     for(int i = -strength; i < strength; i++) {
         for(int j = -strength; j < strength; j++) {
-            vec4 c = texture(colorMap, passUV + vec2(resX_temp * i * 3, resY_temp * j * 1));
+            vec4 c = texture(colorMap, passUV + vec2(resX_temp * i * 1, resY_temp * j * 1));
             if(c.r + c.g + c.b > 1.5) {                
                 glow += c;
             }
