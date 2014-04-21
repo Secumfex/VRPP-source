@@ -254,7 +254,7 @@ void HUDRenderPass::update(){
 
 			glBindVertexArray(0); // Unbind our Vertex Array Object
 
-//			currentShader->render(particleGC);
+//			currentShader->render(airGC);
 		}
 
 

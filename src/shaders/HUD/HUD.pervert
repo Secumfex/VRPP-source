@@ -12,6 +12,7 @@ uniform float uniformScale;
 uniform float uniformSinus;
 
 out vec2 passUVCoords;
+
 out float passDistance;
 
 void main() {

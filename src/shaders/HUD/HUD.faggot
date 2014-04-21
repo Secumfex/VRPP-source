@@ -1,6 +1,6 @@
 #version 330 
 
-uniform sampler2D uniformParticleTexture;
+uniform sampler2D uniformAirTexture;
 
 // uniform float uniformParticleDistanceMax;
 
@@ -10,7 +10,7 @@ in float passDistance;
 out vec4 fragmentColor;
 
 void main() {
-	fragmentColor  = texture2D(uniformParticleTexture, passUVCoords);
+	fragmentColor  = texture2D(uniformAirTexture, passUVCoords);
 	float distance = - passDistance;
 	float maxDistance = 3.0;
 
