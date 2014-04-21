@@ -48,7 +48,7 @@ PhysicsComponent::PhysicsComponent(float x, float y, float z, Mesh* mesh, btTria
 
 	hit = false;
 
-	rigidBody = addTriangleMesh(x,y,z, mesh, btMesh, mGraphComponent, mass);
+	rigidBody = addTriangleMesh(x,y,z, mesh, btMesh, mGraphComponent, 0.0f);
 	rigidBody->setUserPointer(this);	// use bullet's user pointer to refer to this Object
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 
@@ -256,18 +256,37 @@ btRigidBody* PhysicsComponent::addHeightfield(char* filename, float x, float y, 
 
 btRigidBody* PhysicsComponent::addTriangleMesh(float x, float y, float z, Mesh* mesh, btTriangleMesh btMesh, vector<GraphicsComponent*> mGraphComponent, float mass){
 
+
+
+
 	btTriangleMesh triangleMesh = btMesh;
+	btTriangleMesh triangleMeshVieGC = new btTriangleMesh();
 	//btTriangleIndexVertexArray* tiva = new btTriangleIndexVertexArray();
 	btBvhTriangleMeshShape* triangleShape;
+	btBvhTriangleMeshShape* triangleShapeViaGC;
 	//btIndexedMesh* indexedMesh = new btIndexedMesh();
 
-	/*
+	cout << "btMesh numTriangles" <<  triangleMesh.getNumTriangles() << endl;
+	//triangleMesh.getIndexedMeshArray();
+
+
+
 	for (unsigned int n = 0; n < mGraphComponent.size(); n++)
 	{
+		cout << "GC size " << mGraphComponent.size() << endl;
 
 
-		int num = mesh->getNumIndices();
+		int numInd = mesh->getNumIndices();
+		cout << "GC num indizes " << numInd << endl;
+		int numVert = mesh->getNumVertices();
+		cout << "GC num vertizes " << numVert << endl;
+		int vao = mesh->getVAO();
+		cout << "GC vao " << vao << endl;
+
+
 		std::vector<glm::vec3> vertizes = mesh->getVertices();
+
+		/*
 		indexedMesh.m_numVertices= mesh->getNumVertices();
 		indexedMesh.m_numTriangles = mesh->getNumFaces();
 		tiva->addIndexedMesh(indexedMesh);
@@ -282,28 +301,29 @@ btRigidBody* PhysicsComponent::addTriangleMesh(float x, float y, float z, Mesh* 
 				tetraMesh.addTriangle(vec0,vec1,vec2,false);
 
 		}
+		*/
 
 	}
-*/
-	triangleShape = new btBvhTriangleMeshShape(&triangleMesh, false);
 
-	btVector3 inertia;
-	triangleShape->calculateLocalInertia(mass, inertia);
+
+	triangleShape = new btBvhTriangleMeshShape(&triangleMesh, true);
 
 	btTransform trans;
 	trans.setIdentity();
 	trans.setOrigin(btVector3(x, y, z));
 	btDefaultMotionState* motionState = new btDefaultMotionState(trans);
-	btRigidBody::btRigidBodyConstructionInfo info(mass,motionState,triangleShape, inertia);
+	btRigidBody::btRigidBodyConstructionInfo info(mass,motionState,triangleShape);
 	btRigidBody* body = new btRigidBody(info);
 	return body;
 
+
+	/***** cube default zeug *********/
 	/*
 	btTransform t;
 	t.setIdentity();
 	t.setOrigin(btVector3(x,y,z));
 
-	btBoxShape* box = new btBoxShape(btVector3(2.0f,2.0f,2.0f));
+	btBoxShape* box = new btBoxShape(btVector3(40.0f,2.0f,40.0f));
 	btVector3 inertia;
 	if(mass != 0.0) {
 		box->calculateLocalInertia(mass,inertia);

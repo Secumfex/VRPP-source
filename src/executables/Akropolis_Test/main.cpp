@@ -41,9 +41,11 @@ void configureTestingApplication(){
 void configureVirtualObjects(){
 
 	/*	load model of akropolis as virtual object*/
-	VirtualObject* 	akropolis = myState->createVirtualObject(RESOURCES_PATH "/AkropolTest.obj", VirtualObjectFactory::MESH);
-	akropolis->translate(glm::vec3(0.0, -60.0, 0.0));
-	//myState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(akropolis));
+	//VirtualObject* 	akropolis = myState->createVirtualObject(RESOURCES_PATH "/AkropolTest.obj", VirtualObjectFactory::MESH);
+	VirtualObject* 	akropolis = myState->createVirtualObject(RESOURCES_PATH "/Akropol_woGarbage.obj", VirtualObjectFactory::MESH, 0.0, 1);
+
+	akropolis->translate(glm::vec3(10.0, -100.0, 0.0));
+	myState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(akropolis));
 
 	//VirtualObject* cube = myState->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 1.0, 8);
 	//myState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube));
@@ -88,7 +90,6 @@ void configureRendering(){
 	/*customize Rendermanager, Renderloop, etc. via framelisteners and such*/
 	myApp->attachListenerOnProgramInitialization(	new SetDefaultShaderListener( new Shader (SHADERS_PATH "/Phong_Test_Textures/phong.vert", SHADERS_PATH "/Phong_Test_Textures/phong.frag")));
 	myApp->attachListenerOnRenderManagerFrameLoop(	new RenderloopPlaceHolderListener());
-
 	myApp->attachListenerOnProgramInitialization(	new SetClearColorListener(1.0f,1.0f,1.0f));	// white background
 }
 

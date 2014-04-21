@@ -243,41 +243,56 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 	Mesh* physMesh = new Mesh();
 	btTriangleMesh btMesh = new btTriangleMesh();
 
+	cout << "pScene->mNumMeshes " << pScene->mNumMeshes << endl;
+
+
+
+
 	// For each mesh
 
 	for (unsigned int n = 0; n < pScene->mNumMeshes; ++n) {
 		const aiMesh* mesh = pScene->mMeshes[n];
 
+		cout << "mesh->mNumFaces " << mesh->mNumFaces << endl;
+
+
 		if (bodyType == MESH) {
 			btVector3 btVertex0;
 			btVector3 btVertex1;
 			btVector3 btVertex2;
-			//float *vertexArray;
-			//int numVerts;
 
-			//numVerts = mesh->mNumFaces * 3;
-			//vertexArray = new float[mesh->mNumFaces * 3 * 3];
-			for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
+			//numFaces is 101794 error at 101722 btVertex2
+			for (unsigned int i = 0; i < mesh->mNumFaces-100; i++) {
+
 				const aiFace& face = mesh->mFaces[i];
 				aiVector3D vec0 = mesh->mVertices[face.mIndices[0]];
 				btVertex0 = btVector3(vec0.x, vec0.y, vec0.z);
+				/*
+				cout << "facenr: " << i << "; vec0.x " << vec0.x << endl;
+				cout << "facenr: " << i << "; vec0.y " << vec0.y << endl;
+				cout << "facenr: " << i << "; vec0.z " << vec0.z << endl;
+				*/
+
 				aiVector3D vec1 = mesh->mVertices[face.mIndices[1]];
 				btVertex1 = btVector3(vec1.x, vec1.y, vec1.z);
+				/*
+				cout << "facenr: " << i << "; vec1.x " << vec1.x << endl;
+				cout << "facenr: " << i << "; vec1.y " << vec1.y << endl;
+				cout << "facenr: " << i << "; vec1.z " << vec1.z << endl;
+				*/
+
 				aiVector3D vec2 = mesh->mVertices[face.mIndices[2]];
-				btVertex0 = btVector3(vec2.x, vec2.y, vec2.z);
+				btVertex2 = btVector3(vec2.x, vec2.y, vec2.z);
+				/*
+				cout << "facenr: " << i << "; vec2.x " << vec2.x << endl;
+				cout << "facenr: " << i << "; vec2.y " << vec2.y << endl;
+				cout << "facenr: " << i << "; vec2.z " << vec2.z << endl;
+				*/
 				btMesh.addTriangle(btVertex0, btVertex1, btVertex2 ,false);
 
-				/*
-				for (int j = 0; j < 3; j++) {
-					aiVector3D pos = mesh->mVertices[face.mIndices[j]];
-					memcpy(vertexArray, &pos, sizeof(float) * 3);
-					vertexArray += 3;
-				}
-				*/
 			}
-
-			//vertexArray -= mesh->mNumFaces * 3 * 3;
 		}
+
 
 		//Our Material and Mash to be filled
 		Mesh* aMesh = new Mesh();
