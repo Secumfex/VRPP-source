@@ -89,7 +89,11 @@ void UploadUniformPositionMapListener::update(){
 
 	glActiveTexture(GL_TEXTURE4);
 	glEnable(GL_TEXTURE_2D);
-	fbo->bindPositionTexture();
+	if (fbo){
+		if (fbo->getPositionTextureHandle() != -1){
+			fbo->bindPositionTexture();
+		}
+	}
 	shader->uploadUniform(4,"positionMap");
 }
 
@@ -105,8 +109,11 @@ void UploadUniformNormalMapListener::update(){
 	}Shader* shader = RenderManager::getInstance()->getCurrentShader();
 
 	glActiveTexture(GL_TEXTURE5);
-	glEnable(GL_TEXTURE_2D);
-	fbo->bindNormalTexture();
+	glEnable(GL_TEXTURE_2D);if (fbo){
+		if (fbo->getNormalTextureHandle() != -1){
+			fbo->bindNormalTexture();
+		}
+	}
 	shader->uploadUniform(5,"normalMap");
 }
 
@@ -124,7 +131,11 @@ void UploadUniformColorMapListener::update(){
 
 	glActiveTexture(GL_TEXTURE6);
 	glEnable(GL_TEXTURE_2D);
-	fbo->bindColorTexture();
+	if (fbo){
+			if (fbo->getColorTextureHandle() != -1){
+				fbo->bindColorTexture();
+			}
+		}
 	shader->uploadUniform(6,"colorMap");
 }
 UploadUniformShadowMapListener::UploadUniformShadowMapListener(std::string name, FrameBufferObject* source_fbo){
@@ -140,7 +151,11 @@ void UploadUniformShadowMapListener::update(){
 
 	glActiveTexture(GL_TEXTURE8);
 	glEnable(GL_TEXTURE_2D);
-	fbo->bindShadowMap();
+	if (fbo){
+			if (fbo->getShadowMapHandle() != -1){
+				fbo->bindShadowMap();
+			}
+		}
 	shader->uploadUniform(8,"shadowMap");
 }
 UploadUniformSpecularMapListener::UploadUniformSpecularMapListener(std::string name, FrameBufferObject* source_fbo){
@@ -158,7 +173,11 @@ void UploadUniformSpecularMapListener::update(){
 
 	glActiveTexture(GL_TEXTURE7);
 	glEnable(GL_TEXTURE_2D);
-	fbo->bindSpecularTexture();
+	if (fbo){
+			if (fbo->getSpecularTextureHandle() != -1){
+				fbo->bindSpecularTexture();
+			}
+		}
 	shader->uploadUniform(7,"specularMap");
 }
 
@@ -288,7 +307,13 @@ UploadUniformResolutionXListener::UploadUniformResolutionXListener(std::string n
 void UploadUniformResolutionXListener::update(){
 	Shader* shader = RenderManager::getInstance()->getCurrentShader();
 	FrameBufferObject* fbo = RenderManager::getInstance()->getCurrentFBO();
-	shader->uploadUniform(fbo->getWidth(), "resX");
+	if(!fbo)	//window is active
+	{
+		shader->uploadUniform(IOManager::getInstance()->getWidth(), "resX");
+	}
+	else{
+		shader->uploadUniform(fbo->getWidth(), "resX");
+	}
 }
 UploadUniformResolutionYListener::UploadUniformResolutionYListener(std::string name){
 	setName(name);
@@ -297,7 +322,13 @@ UploadUniformResolutionYListener::UploadUniformResolutionYListener(std::string n
 void UploadUniformResolutionYListener::update(){
 	Shader* shader = RenderManager::getInstance()->getCurrentShader();
 	FrameBufferObject* fbo = RenderManager::getInstance()->getCurrentFBO();
-	shader->uploadUniform(fbo->getHeight(), "resY");
+	if(!fbo)	//window is active
+	{
+		shader->uploadUniform(IOManager::getInstance()->getHeight(), "resY");
+	}
+	else{
+		shader->uploadUniform(fbo->getWidth(), "resY");
+	}
 }
 
 UploadUniformWindowTimeListener::UploadUniformWindowTimeListener(std::string name)
