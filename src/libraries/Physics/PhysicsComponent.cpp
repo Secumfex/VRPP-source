@@ -50,6 +50,7 @@ PhysicsComponent::PhysicsComponent(float x, float y, float z, Mesh* mesh, btTria
 
 	rigidBody = addTriangleMesh(x,y,z, mesh, btMesh, mGraphComponent, 0.0f);
 	rigidBody->setUserPointer(this);	// use bullet's user pointer to refer to this Object
+	setCollisionFlag(1);
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 
 }
@@ -259,62 +260,25 @@ btRigidBody* PhysicsComponent::addTriangleMesh(float x, float y, float z, Mesh* 
 
 
 
-	btTriangleMesh triangleMesh = btMesh;
-	btTriangleMesh triangleMeshVieGC = new btTriangleMesh();
-	//btTriangleIndexVertexArray* tiva = new btTriangleIndexVertexArray();
-	btBvhTriangleMeshShape* triangleShape;
-	btBvhTriangleMeshShape* triangleShapeViaGC;
-	//btIndexedMesh* indexedMesh = new btIndexedMesh();
-
-	cout << "btMesh numTriangles" <<  triangleMesh.getNumTriangles() << endl;
-	//triangleMesh.getIndexedMeshArray();
+	static btTriangleMesh triangleMesh = btMesh;
+	static btBvhTriangleMeshShape* triangleShape = 0;
+	static btRigidBody* staticBody = 0;
 
 
+	cout << "triangleMesh.getNumTriangles() " << triangleMesh.getNumTriangles() << endl;
+	triangleShape = new btBvhTriangleMeshShape(&btMesh, true, true);
 
-	for (unsigned int n = 0; n < mGraphComponent.size(); n++)
-	{
-		cout << "GC size " << mGraphComponent.size() << endl;
-
-
-		int numInd = mesh->getNumIndices();
-		cout << "GC num indizes " << numInd << endl;
-		int numVert = mesh->getNumVertices();
-		cout << "GC num vertizes " << numVert << endl;
-		int vao = mesh->getVAO();
-		cout << "GC vao " << vao << endl;
-
-
-		std::vector<glm::vec3> vertizes = mesh->getVertices();
-
-		/*
-		indexedMesh.m_numVertices= mesh->getNumVertices();
-		indexedMesh.m_numTriangles = mesh->getNumFaces();
-		tiva->addIndexedMesh(indexedMesh);
-		//tiva->addIndexedMesh(mesh);
-
-		for (unsigned int i = 0; i < 3; i++)
-		{
-
-				btVector3 vec0 = btVector3(vertizes[i].x,vertizes[i].y,vertizes[i].z);
-				btVector3 vec1 = btVector3(vertizes[i+1].x,vertizes[i+1].y,vertizes[i+1].z);
-				btVector3 vec2 = btVector3(vertizes[i+2].x,vertizes[i+2].y,vertizes[i+2].z);
-				tetraMesh.addTriangle(vec0,vec1,vec2,false);
-
-		}
-		*/
-
-	}
-
-
-	triangleShape = new btBvhTriangleMeshShape(&triangleMesh, true);
 
 	btTransform trans;
 	trans.setIdentity();
 	trans.setOrigin(btVector3(x, y, z));
 	btDefaultMotionState* motionState = new btDefaultMotionState(trans);
-	btRigidBody::btRigidBodyConstructionInfo info(mass,motionState,triangleShape);
-	btRigidBody* body = new btRigidBody(info);
-	return body;
+	btRigidBody::btRigidBodyConstructionInfo info(0.0f,motionState,triangleShape);
+	staticBody = new btRigidBody(info);
+
+	cout << "static rigidbody added" << endl;
+
+	return staticBody;
 
 
 	/***** cube default zeug *********/
@@ -340,6 +304,7 @@ btRigidBody* PhysicsComponent::addTriangleMesh(float x, float y, float z, Mesh* 
 
 	return body;
 	*/
+
 }
 
 btRigidBody* PhysicsComponent::getRigidBody(){

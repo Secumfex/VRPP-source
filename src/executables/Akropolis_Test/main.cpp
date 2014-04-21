@@ -45,7 +45,7 @@ void configureVirtualObjects(){
 	VirtualObject* 	akropolis = myState->createVirtualObject(RESOURCES_PATH "/Akropol_woGarbage.obj", VirtualObjectFactory::MESH, 0.0, 1);
 
 	akropolis->translate(glm::vec3(10.0, -100.0, 0.0));
-	myState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(akropolis));
+	//myState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(akropolis));
 
 	//VirtualObject* cube = myState->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 1.0, 8);
 	//myState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube));
@@ -99,7 +99,7 @@ void configureOtherStuff(){
 void configureApplication(){
 	/* create  minimal Application with one state */
 	myApp  			= 	Application::getInstance();
-	myApp 			->	setLabel("PROJEKT PRAKTIKUM");
+	myApp 			->	setLabel("Feature akropolis under water");
 	myState 		= 	new VRState("TESTING FRAMEWORK");
 	myApp 			->	addState(myState);
 	myInputHandler 	= myState->getIOHandler();

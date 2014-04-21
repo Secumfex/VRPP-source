@@ -240,9 +240,10 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 
 	glm::vec3 physics_min = glm::vec3(FLT_MAX, FLT_MAX, FLT_MAX);
 	glm::vec3 physics_max = glm::vec3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+
 	Mesh* physMesh = new Mesh();
 	btTriangleMesh btMesh = new btTriangleMesh();
-
+	btTriangleIndexVertexArray btIVA = new btTriangleIndexVertexArray();
 	cout << "pScene->mNumMeshes " << pScene->mNumMeshes << endl;
 
 
@@ -257,9 +258,30 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 
 
 		if (bodyType == MESH) {
+
+
 			btVector3 btVertex0;
 			btVector3 btVertex1;
 			btVector3 btVertex2;
+
+			btIndexedMesh btIMesh;
+			/*
+			btIMesh.m_numTriangles = numTriangles;
+			btIMesh.m_triangleIndexBase = (const unsigned char *)triangleIndexBase;
+			btIMesh.m_triangleIndexStride = triangleIndexStride;
+			btIMesh.m_numVertices = numVertices;
+			btIMesh.m_vertexBase = (const unsigned char *)vertexBase;
+			btIMesh.m_vertexStride = vertexStride;
+			*/
+			btIMesh.m_numTriangles = mesh->mNumFaces;
+			btIMesh.m_numVertices = mesh->mNumVertices;
+
+			const unsigned char * triangleIndexBase;
+			int triangleIndexStride;
+			const unsigned char * vertexBase;
+			int vertexStride;
+
+
 
 			//numFaces is 101794 error at 101722 btVertex2
 			for (unsigned int i = 0; i < mesh->mNumFaces-100; i++) {
@@ -288,9 +310,19 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 				cout << "facenr: " << i << "; vec2.y " << vec2.y << endl;
 				cout << "facenr: " << i << "; vec2.z " << vec2.z << endl;
 				*/
-				btMesh.addTriangle(btVertex0, btVertex1, btVertex2 ,false);
+				btMesh.addTriangle(btVertex0, btVertex1, btVertex2, false);
 
+
+				//Var2 with IndexedMesh
+				/*
+				triangleIndexBase = (const unsigned char *)triangleIndexBase;
+				triangleIndexStride = triangleIndexStride;
+				vertexBase = (const unsigned char *)mesh->mVertices[];
+				vertexStride = vertexStride;
+				*/
 			}
+
+			btIVA.addIndexedMesh(btIMesh);
 		}
 
 
