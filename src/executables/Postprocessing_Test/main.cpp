@@ -34,7 +34,7 @@ int main() {
 
 	VRState *myVRState = new VRState("LET IT SNOW");
 
-	glClearColor(1,1,1,0);
+	glClearColor(1,1,1,1);
 
 
 	int width, height;
