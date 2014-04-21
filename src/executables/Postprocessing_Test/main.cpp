@@ -62,9 +62,9 @@ void configureRendering(){
 	Shader *postprocessShader = new Shader( 	SHADERS_PATH "/Postprocessing/screenFill.vert",
 			SHADERS_PATH "/Postprocessing/glow.frag");
 
+
 	/* creating and seting up fbos */
 	FrameBufferObject *fbo = new FrameBufferObject(800, 600);
-	FrameBufferObject *fbo2 = new FrameBufferObject(800, 600);
 
 	fbo->bindFBO();
 	fbo->createPositionTexture();
@@ -74,29 +74,54 @@ void configureRendering(){
 	fbo->createShadowMap();
 	fbo->makeDrawBuffers();	// draw color to color attachment 0
 	fbo->unbindFBO();
+	
+	FrameBufferObject *fbo2 = new FrameBufferObject(800, 600);
 
 	fbo2->bindFBO();
-	fbo2->createColorTexture();
-	fbo2->createPositionTexture();
+	fbo->createPositionTexture();
+	fbo->createNormalTexture();
+	fbo->createColorTexture();
+	fbo->createSpecularTexture();
+	fbo->createShadowMap();
 	fbo2->makeDrawBuffers();
 	fbo2->unbindFBO();
 
-	testingApp->attachListenerOnProgramInitialization( new SetDefaultShaderListener( new Shader (SHADERS_PATH "/Phong_Test/phong.vert", SHADERS_PATH "/Phong_Test/phong.frag")));
+	/* creating listeners */
+	Listener* uniResX = new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", 800, "resX");
+	Listener* uniResY = new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", 600, "resY");
+	Listener* uniPositionMap1 = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 10, "positionMap", 	fbo->getPositionTextureHandle());
+	Listener* uniColorMap1 = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 10, "colorMap", 	fbo->getColorTextureHandle());
+	Listener* uniNormalMap1 = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 10, "normalMap", 	fbo->getNormalTextureHandle()); 
+	Listener* uniPositionMap2 = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 10, "positionMap", 	fbo2->getPositionTextureHandle());
+	Listener* uniColorMap2 = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 10, "colorMap", 	fbo2->getColorTextureHandle());
+	Listener* uniNormalMap2 = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 10, "normalMap", 	fbo2->getNormalTextureHandle()); 
+
+	testingApp->attachListenerOnProgramInitialization( new SetDefaultShaderListener( new Shader (SHADERS_PATH "/Postprocessing/GBuffer.vert", SHADERS_PATH "/Postprocessing/GBuffer.frag")));
 
 	/* gbuffer renderpass */
 	RenderPass* gBufferRenderPass = new RenderPass(gbufferShader, fbo);
 	gBufferRenderPass->setCustomClearColor( glm::vec4(1.0, 1.0, 1.0, 1.0) );
 	gBufferRenderPass->setClearColorBufferBit(true);	// clear color buffer on every frame
+	gBufferRenderPass->attachListenerOnPostUniformUpload( uniResX );
+	gBufferRenderPass->attachListenerOnPostUniformUpload( uniResY );
+	gBufferRenderPass->attachListenerOnPostUniformUpload( uniPositionMap1 );	 // Upload custom uniforms already on activation, since they cannot not be automatically overridden
+	gBufferRenderPass->attachListenerOnPostUniformUpload( uniColorMap1 );	 // Upload custom uniforms already on activation, since they cannot not be automatically overridden
+	gBufferRenderPass->attachListenerOnPostUniformUpload( uniNormalMap1 );	 // Upload custom uniforms already on activation, since they cannot not be automatically overridden
+
 
 	testingState->getRenderLoop()->addRenderPass(	gBufferRenderPass );
 
 	/* compositing renderpass */
-	Listener* uniPreGlowTexture = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 10, "preGlowTexture", 	fbo2->getPositionTextureHandle());
 	
 	RenderPass* compositingRenderPass = new RenderPass(finalCompShader, fbo2);
 	compositingRenderPass->setCustomClearColor( glm::vec4(1.0, 1.0, 1.0, 1.0) );
 	compositingRenderPass->setClearColorBufferBit(true);	// clear color buffer on every frame
-	//compositingRenderPass->attachListenerOnPostUniformUpload( uniPreGlowTexture );	 // Upload custom uniforms already on activation, since they cannot not be automatically overridden
+	compositingRenderPass->attachListenerOnPostUniformUpload( uniResX );
+	compositingRenderPass->attachListenerOnPostUniformUpload( uniResY );
+	compositingRenderPass->attachListenerOnPostUniformUpload( uniPositionMap2 );	 // Upload custom uniforms already on activation, since they cannot not be automatically overridden
+	compositingRenderPass->attachListenerOnPostUniformUpload( uniColorMap2 );	 // Upload custom uniforms already on activation, since they cannot not be automatically overridden
+	compositingRenderPass->attachListenerOnPostUniformUpload( uniNormalMap2 );	 // Upload custom uniforms already on activation, since they cannot not be automatically overridden
+
 
 
 	testingState->getRenderLoop()->addRenderPass(	compositingRenderPass );
@@ -105,6 +130,10 @@ void configureRendering(){
 	MixTexturesRenderPass* glowRenderPass = new MixTexturesRenderPass( postprocessShader, 0, fbo->getColorTextureHandle(), fbo2->getPositionTextureHandle() );
 	glowRenderPass->setBaseTextureUniformName( "colorMap" );	// set custom uniform name for base texture
 	glowRenderPass->setMixTextureUniformName(  "preGlowTexture" );
+	glowRenderPass->attachListenerOnPostUniformUpload( uniResX );
+	glowRenderPass->attachListenerOnPostUniformUpload( uniResY );
+
+
 
 	testingState->getRenderLoop()->addRenderPass( glowRenderPass );
 
