@@ -60,7 +60,7 @@ int main() {
 	VirtualObject *object01 = voFactory->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE);
 
 
-	VirtualObject *object10 = voFactory->createVirtualObject(RESOURCES_PATH "/animation_test/fish.dae", VirtualObjectFactory::OTHER);
+	VirtualObject *object10 = voFactory->createVirtualObject(RESOURCES_PATH "/animation_test/fishb.dae", VirtualObjectFactory::OTHER);
 
 
 	GraphicsComponent* triangle = voFactory->getTriangle();
@@ -170,10 +170,10 @@ int main() {
 //		myFlock->setPlaceToGo(glm::vec3(0.0f, 0.0f, 0.0f));
 
 
-//		cam->setPosition(glm::vec3(0.0f, 2.0f, -5.0f));
-//		cam->setCenter(glm::vec3(0.0f, 0.0f, 0.0f));
-		cam->setPosition(myBoid->getPosition() + glm::vec3(0.0f, 2.0f, -10.0f));
-		cam->setCenter(myBoid->getPosition());
+		cam->setPosition(glm::vec3(0.0f, 2.0f, -5.0f));
+		cam->setCenter(glm::vec3(0.0f, 0.0f, 0.0f));
+//		cam->setPosition(myBoid->getPosition() + glm::vec3(0.0f, 2.0f, -10.0f));
+//		cam->setCenter(myBoid->getPosition());
 
 		glfwSetTime(0.0);
 
