@@ -20,10 +20,11 @@ out vec4 fragmentColor = ;
 void main{
 
 	
+	
 	//daten aus maps
 	float diffuse = ;
-	float specular = ;
-	float ambient = ;
+	float specular = texture2D();
+	float ambient = 0.3;
 
 	fragmentColor = vec4(diffuse*vec3(1,0,0)+specular*vec3(1,1,1)+ambient*vec3(1,0.5,0.5),1);
 }

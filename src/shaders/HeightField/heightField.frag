@@ -19,10 +19,13 @@ layout(location = 1) out vec4 colorOut;
 layout(location = 2) out vec4 normalOut;
 layout(location = 3) out vec4 specularOut;
 
+out vec2 uvCoords;
+
 
 void main() { 
 
 positionOut = positionPass;
+uvCoords = uvCoordPass;
 
 vec4 color1 = texture2D(uniformTexture1,uvCoordPass);
 vec4 color2 = texture2D(uniformTexture2,uvCoordPass);
@@ -41,9 +44,4 @@ vec4 specular2 = texture2D(uniformSpecular2,uvCoordPass);
 
 specularOut = mix(specular1,specular2,mask.r);
 
-//normals mit maske und in fbo
-//normals normalisieren
-//phong mit normals
-
-//selbe mit glossmaps
 }

@@ -66,6 +66,11 @@ void configRendering(){
 	Listener* uniSpec1 = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",6,"uniformSpecular1",HeightfieldScene::specular1->getTextureHandle());	//glossmaps
 	Listener* uniSpec2 = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",7,"uniformSpecular2",HeightfieldScene::specular2->getTextureHandle());
 
+	Listener* uniFCposition = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",8,"positionOut",HeightfieldScene::fboTexture);
+	Listener* uniFCcolor = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",9,"colorOut",HeightfieldScene::fboColor);
+	Listener* uniFCnormals = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",10,"normalsOut",HeightfieldScene::fboNormals);
+	Listener* uniFCspecular = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",11,"specularOut",HeightfieldScene::fboSpecular);
+
 	Listener* unbindCurrentFBO = new UnbindFrameBufferObjectListener();
 
 	myApp->attachListenerOnProgramInitialization(new SetCurrentShaderListener(hfShader));
