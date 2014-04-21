@@ -56,6 +56,9 @@ void main() {
 
     int strength = 5;
 
+    //GLOW ENTFERNT, COMPOSITING SOLL DEN EFFEKT NICHT MEHR ÜBERNEHMEN, SONDERN VIA POSTPROCESSING AUF DIE FBO-GENERIERTE...
+    //...TEXTUR DRAUFGERECHNET WERDEN
+    
     /*vec4 glow = vec4(0,0,0,1);
     for(int i = -strength; i < strength; i++) {
         for(int j = -strength; j < strength; j++) {
