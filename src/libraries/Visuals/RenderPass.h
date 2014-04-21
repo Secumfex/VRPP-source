@@ -247,7 +247,7 @@ public:
 	 */
 	std::list<GraphicsComponent*>   getInitialGraphicsComponentList();
 protected:
-	float mViewPort_x, mViewPort_y, mViewPort_width, mViewPort_height;
+	float mViewPort_x, mViewPort_y, mViewPort_width, mViewPort_height, customViewPortHeight, customViewPortWidth;
 
 	FrameBufferObject *mFBO;				/**< FrameBufferObject which will be set as render target */
 	vector<RenderQueueRequestFlag* > mRenderQueueRequestFlags;	/**< RenderQueueRequestFlags which will be evaluated in order */
