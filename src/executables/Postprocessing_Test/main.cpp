@@ -19,6 +19,8 @@
 #include "Visuals/RenderManager.h"
 #include "Application/Application.h"
 #include "Application/ApplicationStates.h"
+#include "Tools/UtilityListeners.h"
+#include "Application/ApplicationListeners.h"
 
 Application *myApp;
 
@@ -32,7 +34,9 @@ int main() {
 
 	GLFWwindow* window = RenderManager::getInstance()->getWindow();
 
-	VRState *myVRState = new VRState("LET IT SNOW");
+	VRState *myVRState = new VRState("EFFECTS AND LASERS AND SHIT");
+	IOHandler*   	inputHandler;
+	inputHandler->attachListenerOnKeyPress(		new TerminateApplicationListener(myApp), GLFW_KEY_ESCAPE);
 
 	glClearColor(1,1,1,1);
 
