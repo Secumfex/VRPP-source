@@ -51,7 +51,7 @@ void configureRendering(){
 			SHADERS_PATH "/Postprocessing/simpleTexture.frag");
 
 	Shader *finalCompShader = new Shader(	SHADERS_PATH "/Postprocessing/screenFill.vert",
-			SHADERS_PATH "/Postprocessing/finalCompositingAlt.frag");
+			SHADERS_PATH "/Postprocessing/finalCompositing.frag");
 
 	Shader *gbufferShader = new Shader(		SHADERS_PATH "/Postprocessing/GBuffer.vert",
 			SHADERS_PATH "/Postprocessing/GBuffer.frag");
@@ -103,6 +103,8 @@ void configureRendering(){
 	MixTexturesRenderPass* glowRenderPass = new MixTexturesRenderPass( postprocessShader, 0, fbo->getColorTextureHandle(), fbo2->getPositionTextureHandle() );
 	glowRenderPass->setBaseTextureUniformName( "colorMap" );	// set custom uniform name for base texture
 	glowRenderPass->setMixTextureUniformName(  "preGlowTexture" );
+
+	testingState->getRenderLoop()->addRenderPass( glowRenderPass );
 	
 
 }
