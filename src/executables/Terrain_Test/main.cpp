@@ -52,13 +52,16 @@ void configIOHandler(){
 
 void configRendering(){
 
-	Shader* hfShader = new Shader(SHADERS_PATH"/HeightField/heightField.vert",SHADERS_PATH"/HeightField/heightField.frag");
+	//Shader* hfShader = new Shader(SHADERS_PATH"/HeightField/heightField.vert",SHADERS_PATH"/HeightField/heightField.frag");
+	//Shader* hfShader = new Shader(SHADERS_PATH "/Underwater_Visuals_Test/phong.vert", SHADERS_PATH"/Underwater_Visuals_Test/phong.frag");
 	//Shader* fcShader = new Shader(SHADERS_PATH"/Underwater_Visuals_Test/screenFill.vert",SHADERS_PATH"/HeightField/finalComp.frag");
 
 	//TODO: zahlen richtig anpassen (0,1,2,..)
+	/*
 	Listener* uniTex1 = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",1,"uniformTexture1",HeightfieldScene::ground1->getTextureHandle());
 	Listener* uniTex2 = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",2,"uniformTexture2",HeightfieldScene::ground2->getTextureHandle());
 	Listener* uniMask = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",3,"uniformTextureMask",HeightfieldScene::mask->getTextureHandle());
+	*/
 
 	/*
 	Listener* uniNorm1 = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",4,"uniformNormals1",HeightfieldScene::normals1->getTextureHandle());		//normalmaps
@@ -77,13 +80,15 @@ void configRendering(){
 
 	Listener* unbindCurrentFBO = new UnbindFrameBufferObjectListener();
 
-	myApp->attachListenerOnProgramInitialization(new SetCurrentShaderListener(hfShader));
+	//myApp->attachListenerOnProgramInitialization(new SetCurrentShaderListener(hfShader));
 
 	//render textures
-	myApp->attachListenerOnRenderManagerFrameLoop(new SetCurrentShaderListener(hfShader));
+	//myApp->attachListenerOnRenderManagerFrameLoop(new SetCurrentShaderListener(hfShader));
+	/*
 	myApp->attachListenerOnRenderManagerFrameLoop(uniTex1);
 	myApp->attachListenerOnRenderManagerFrameLoop(uniTex2);
 	myApp->attachListenerOnRenderManagerFrameLoop(uniMask);
+	*/
 
 	/*
 	myApp->attachListenerOnRenderManagerFrameLoop(uniNorm1);	//normalmaps

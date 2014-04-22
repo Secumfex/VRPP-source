@@ -44,8 +44,8 @@ namespace HeightfieldScene{
 	static void createScene(ApplicationState* state){
 
 		//VOs
-		//terrain = state->createVirtualObject(RESOURCES_PATH"/Heightfield/terrainTest.obj",VirtualObjectFactory::TERRAIN);
-		test = state->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_ground.dae", VirtualObjectFactory::OTHER, 0.0f, 1, true);
+		terrain = state->createVirtualObject(RESOURCES_PATH"/Heightfield/terrainTest.obj",VirtualObjectFactory::TERRAIN);
+		//test = state->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_ground.dae", VirtualObjectFactory::OTHER, 0.0f, 1, true);
 
 		//FBOs
 		fboGround = new FrameBufferObject(800,600);
