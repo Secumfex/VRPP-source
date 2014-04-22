@@ -90,7 +90,25 @@ void configureRendering(){
 	Shader* particles_shader	= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/particles.vert"	, SHADERS_PATH  "/Underwater_Visuals_Test/particles.frag");
 	Shader *composition_shader  = new Shader( SHADERS_PATH "/Underwater_Visuals_Test/screenFill.vert"	, SHADERS_PATH  "/Underwater_Visuals_Test/finalCompositing.frag");
 	Shader *simpleTex			= new Shader( SHADERS_PATH "/Underwater_visuals_Test/screenFill.vert"   , SHADERS_PATH  "/GBuffer/simpleTexture.frag");
+	Shader* gbuffer_shader		= new Shader( SHADERS_PATH "/Underwater_visuals_Test/GBuffer.vert"      , SHADERS_PATH  "/Underwater_visuals_Test/GBuffer_normalTexture.frag");
+	Shader* gbuffer_compositing_shader= new Shader( SHADERS_PATH "/Underwater_visuals_Test/screenFill.vert"      , SHADERS_PATH  "/Underwater_visuals_Test/gbuffer_compositing.frag");
+
+	FrameBufferObject* gbuffer_fbo = new FrameBufferObject(800,600);
+	gbuffer_fbo->bindFBO();
+	gbuffer_fbo->createPositionTexture();
+	gbuffer_fbo->createNormalTexture();
+	gbuffer_fbo->createColorTexture();
+	gbuffer_fbo->makeDrawBuffers();
+	gbuffer_fbo->unbindFBO();
+
+	FrameBufferObject* gbuffer_compositing_fbo = new FrameBufferObject(800,600);
+	gbuffer_compositing_fbo->bindFBO();
+	gbuffer_compositing_fbo->createPositionTexture();
+	gbuffer_compositing_fbo->makeDrawBuffers();
+	gbuffer_compositing_fbo->unbindFBO();
+
 	FrameBufferObject* preCompositingScene = new FrameBufferObject(800, 600);
+
 	preCompositingScene->bindFBO();
 	preCompositingScene->createPositionTexture();
 	preCompositingScene->makeDrawBuffers();	// draw color to color attachment 0
@@ -128,6 +146,21 @@ void configureRendering(){
 	Listener* setClearColorInv 	= new SetClearColorListener 		( &UnderwaterScene::fog_color_inverse, 1.0);
 
 	testingApp->attachListenerOnProgramInitialization(	new SetCurrentShaderListener( reflection_shader ));
+
+	// -1: render into GBuffer
+	GBufferRenderPass* gbufferRenderPass = new GBufferRenderPass(gbuffer_shader, gbuffer_fbo);
+	gbufferRenderPass->setClearColorBufferBit(true);
+	gbufferRenderPass->setInitialGraphicsComponentList ( (testingState->getRenderQueue() )->getGraphicsComponentList());
+	gbufferRenderPass->addRenderQueueRequestFlag(new FlagPartOfVirtualObject(UnderwaterScene::scene_waterPlaneObject, true));
+
+	testingState->getRenderLoop()->addRenderPass( gbufferRenderPass);
+
+	//-0.5 : render GBuffer compositing for fun
+	CompositingPass* gbufferCompositingRenderPass = new CompositingPass(gbuffer_compositing_shader, gbuffer_compositing_fbo);
+	gbufferCompositingRenderPass->setColorMap(gbuffer_fbo->getColorTextureHandle());
+	gbufferCompositingRenderPass->setPositionMap(gbuffer_fbo->getPositionTextureHandle());
+	gbufferCompositingRenderPass->setNormalMap(gbuffer_fbo->getNormalTextureHandle());
+	testingState->getRenderLoop()->addRenderPass( gbufferCompositingRenderPass );
 
 	// 1: render Reflection Map
 	// use reflection_shader, render into framebuffer_water_reflection framebuffer object
@@ -285,6 +318,22 @@ void configureRendering(){
 	renderTinyView6->setViewPortWidth(100);
 	renderTinyView6->setViewPortHeight(100);
 	testingState->getRenderLoop()->addRenderPass(renderTinyView6);
+
+	MixTexturesRenderPass* renderTinyView7 = new MixTexturesRenderPass(simpleTex, 0, gbuffer_fbo->getNormalTextureHandle());
+	renderTinyView7->setBaseTextureUniformName("diffuseTexture");
+	renderTinyView7->setViewPortY(500);
+	renderTinyView7->setViewPortX(600);
+	renderTinyView7->setViewPortWidth(100);
+	renderTinyView7->setViewPortHeight(100);
+	testingState->getRenderLoop()->addRenderPass(renderTinyView7);
+
+	MixTexturesRenderPass* renderTinyView8 = new MixTexturesRenderPass(simpleTex, 0, gbuffer_compositing_fbo->getPositionTextureHandle());
+	renderTinyView8->setBaseTextureUniformName("diffuseTexture");
+	renderTinyView8->setViewPortY(500);
+	renderTinyView8->setViewPortX(700);
+	renderTinyView8->setViewPortWidth(100);
+	renderTinyView8->setViewPortHeight(100);
+	testingState->getRenderLoop()->addRenderPass(renderTinyView8);
 }
 
 void configureOtherStuff(){

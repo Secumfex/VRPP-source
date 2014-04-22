@@ -412,6 +412,9 @@ GBufferRenderPass::GBufferRenderPass(Shader* gbuffer_shader, FrameBufferObject* 
 
 	mCustomClearColor = 0;
 	mHasCustomClearColor = false;
+
+	mCustomViewPortHeight = 0.0f;
+	mCustomViewPortWidth = 0.0f;
 }
 
 void CompositingPass::uploadUniforms()
@@ -422,13 +425,20 @@ void CompositingPass::uploadUniforms()
 	normalMapUploader.update();
 }
 
-CompositingPass::CompositingPass(){
+CompositingPass::CompositingPass(Shader* gbuffer_compositing_shader, FrameBufferObject* fbo){
 	mTriangle =	VirtualObjectFactory::getInstance()->getTriangle();
 
 	clearDepthBufferBit = true;
 	clearColorBufferBit = true;
 
+	mShader = gbuffer_compositing_shader;
+	mFBO = fbo;
+
 	useDepthTest = false;
+
+	positionMap = 0;
+	colorMap = 0;
+	normalMap = 0;
 
 	mInitialGraphicsComponentList.push_back( mTriangle );
 
