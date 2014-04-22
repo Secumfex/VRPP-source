@@ -101,6 +101,8 @@ void configureRendering(){
 	Shader* water_shader 		= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/water.vert"		, SHADERS_PATH 	"/Underwater_Visuals_Test/water.frag");
 	Shader* particles_shader	= new Shader( SHADERS_PATH "/HUD/Copy of particles.vert"	, SHADERS_PATH  "/HUD/Copy of particles.frag");
 	Shader* composition_shader  = new Shader( SHADERS_PATH "/Underwater_Visuals_Test/screenFill.vert"	, SHADERS_PATH  "/Underwater_Visuals_Test/finalCompositing.frag");
+
+	//HUD-Shaders
 	Shader* HUDAirShader		= new Shader( SHADERS_PATH "/HUD/StaticHUDElement.vert"					, SHADERS_PATH  "/HUD/HUDAir.faggot");
 	Shader* StaticHUDShader		= new Shader( SHADERS_PATH "/HUD/StaticHUDElement.vert"					, SHADERS_PATH  "/HUD/StaticHUDElement.frag");
 	Shader* MarkerShader		= new Shader( SHADERS_PATH "/HUD/Marker.vert"					, SHADERS_PATH 	"/HUD/StaticHUDElement.frag");
@@ -140,7 +142,6 @@ void configureRendering(){
 	Listener* uniTime2 		= new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", IOManager::getInstance()->getWindowTimePointer(), "uniformTime");
 	Listener* uniTime3 		= new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", IOManager::getInstance()->getWindowTimePointer(), "uniformTime");
 
-
 	Listener* uniSinusWave  = new UploadUniformSinusWaveListener("UNIFORMUPLOADLISTENER", IOManager::getInstance()->getWindowTimePointer(), 0.5f, 0.0f, "uniformSinus");
 
 	Listener* setClearColor 	= new SetClearColorListener 		( &UnderwaterScene::fog_color, 1.0);
@@ -154,6 +155,7 @@ void configureRendering(){
 
 	Listener* unbindCurrentFBO	= new UnbindFrameBufferObjectListener ();
 
+	//HUD-Listeners
 	Listener* uniHUDMap		= new UploadUniformTextureListener	( "UNIFORMUPLOADLISTENER", 21, "uniformHUD", HUD::framebuffer_HUD->getPositionTextureHandle());
 	Listener* uniAirLeft	= new UploadUniformAirListener		( "UNIFORMUPLOADLISTENER", "uniformAirLeft", HUD::maxAir);
 	Listener* depthListener = new UploadUniformDepthListener	( testingState->getCamera()->getPositionPointer(), "UNIFORMUPLOADLISTENER",  "uniformDepth");
@@ -227,6 +229,8 @@ void configureRendering(){
 	ParticlesRenderPass* renderParticles = new ParticlesRenderPass(UnderwaterScene::framebuffer_water_particles, UnderwaterScene::water_particles, vaoID[0]);
 	testingApp->attachListenerOnRenderManagerFrameLoop(( renderParticles));
 
+	//HUD-Render-Passes
+	//---------------------
 	// 7: render HUD (air bar)
 	testingApp->attachListenerOnRenderManagerFrameLoop( new SetCurrentShaderListener( HUDAirShader ));
 	HUDAirRenderPass* renderHUDAir = new HUDAirRenderPass(HUD::framebuffer_HUD, HUD::hudSys, vaoID[0]);
@@ -243,8 +247,9 @@ void configureRendering(){
 	HUDMarkerRenderPass* renderMarker = new HUDMarkerRenderPass(HUD::framebuffer_HUD, HUD::hudSys, vaoID[0]);
 	testingApp->attachListenerOnRenderManagerFrameLoop( depthListener );
 	testingApp->attachListenerOnRenderManagerFrameLoop( renderMarker );
+	//---------------------
 
-	// 9: Compositing
+	// 10: Compositing
 	testingApp->attachListenerOnRenderManagerFrameLoop( new SetCurrentShaderListener( composition_shader ));
 	testingApp->attachListenerOnRenderManagerFrameLoop( uniPreCompMap );
 	testingApp->attachListenerOnRenderManagerFrameLoop( uniGodRayMap );
