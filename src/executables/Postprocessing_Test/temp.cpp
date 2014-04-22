@@ -113,7 +113,7 @@ int mainTemp() {
 	fbo->createNormalTexture();
 	fbo->createColorTexture();
 	fbo->createSpecularTexture();
-	fbo->createShadowMap();
+	//fbo->createShadowMap();
 
 	//set the list of draw buffers.
 	fbo->makeDrawBuffers();
