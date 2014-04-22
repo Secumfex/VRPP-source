@@ -172,10 +172,10 @@ void configureRendering(){
 	MixTexturesRenderPass* glowRenderPass = new MixTexturesRenderPass( postprocessShader, 0, fbo->getColorTextureHandle(), fbo2->getPositionTextureHandle() );
 	glowRenderPass->setBaseTextureUniformName( "colorMap" );	// set custom uniform name for base texture
 	glowRenderPass->setMixTextureUniformName(  "preGlowTexture" );
-	/*glowRenderPass->attachListenerOnPostUniformUpload( uniResX );
+	glowRenderPass->attachListenerOnPostUniformUpload( uniResX );
 	glowRenderPass->attachListenerOnPostUniformUpload( uniResY );
-	glowRenderPass->attachListenerOnPostUniformUpload( uniPositionMap2 );
-	glowRenderPass->attachListenerOnPostUniformUpload( uniColorMap2 );*/
+	//glowRenderPass->attachListenerOnPostUniformUpload( uniPositionMap2 );
+	//glowRenderPass->attachListenerOnPostUniformUpload( uniColorMap2 );
 	//glowRenderPass->attachListenerOnPostUniformUpload( uniNormalMap2 );
 
 	testingState->getRenderLoop()->addRenderPass( glowRenderPass );
