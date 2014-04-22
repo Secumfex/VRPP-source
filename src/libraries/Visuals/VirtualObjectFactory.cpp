@@ -13,8 +13,7 @@
 #define PI  3.14159265359
 #endif
 
-
-VirtualObjectFactory::VirtualObjectFactory(){
+VirtualObjectFactory::VirtualObjectFactory() {
 	mCube = 0;
 	mScreenFillTriangle = 0;
 	mQuad = 0;
@@ -37,9 +36,8 @@ void VirtualObjectFactory::color4_to_float4(const aiColor4D *c, float f[4]) {
 	f[3] = c->a;
 }
 
-
-GraphicsComponent* VirtualObjectFactory::getTriangle(){
-	if(mScreenFillTriangle == 0){
+GraphicsComponent* VirtualObjectFactory::getTriangle() {
+	if (mScreenFillTriangle == 0) {
 
 		Mesh *triangle = new Mesh;
 		Material *mat = new Material();
@@ -55,7 +53,7 @@ GraphicsComponent* VirtualObjectFactory::getTriangle(){
 
 		GLint indices[] = { 0, 1, 2 };
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices,
-				GL_STATIC_DRAW);
+		GL_STATIC_DRAW);
 
 		GLuint vertexBufferHandle;
 		glGenBuffers(1, &vertexBufferHandle);
@@ -63,7 +61,7 @@ GraphicsComponent* VirtualObjectFactory::getTriangle(){
 
 		GLfloat vertices[] = { -1, -1, 3, -1, -1, 3 };
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices,
-				GL_STATIC_DRAW);
+		GL_STATIC_DRAW);
 
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
@@ -80,11 +78,11 @@ GraphicsComponent* VirtualObjectFactory::getTriangle(){
 	return mScreenFillTriangle;
 }
 
+GraphicsComponent* VirtualObjectFactory::getQuad() {
+	if (mQuad == 0) {
 
-GraphicsComponent* VirtualObjectFactory::getQuad(){
-	if (mQuad == 0){
-
-		std::cout << " VirutalObjectFactory : creating QuadObject..." << std::endl;
+		std::cout << " VirutalObjectFactory : creating QuadObject..."
+				<< std::endl;
 
 		Mesh* quadMesh = new Mesh();
 		Material* quadMat = new Material();
@@ -99,46 +97,35 @@ GraphicsComponent* VirtualObjectFactory::getQuad(){
 		GLuint vertexBufferHandles[5];
 		glGenBuffers(4, vertexBufferHandles);
 
-
-		int indices[] = {0, 1, 2, 3, 4, 5};
-
+		int indices[] = { 0, 1, 2, 3, 4, 5 };
 
 		float size = 0.5;
 
+		GLfloat positions[] = { -size, -size, 0.0f, size, -size, 0.0f, size,
+				size, 0.0f, size, size, 0.0f, -size, size, 0.0f, -size, -size,
+				0.0f };
 
+		GLfloat normals[] = { 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0,
+				0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0 };
 
-	    GLfloat positions[] = {
-	    	-size,-size,0.0f, size,-size,0.0f, size,size,0.0f,
-        	size,size,0.0f, -size,size,0.0f, -size,-size,0.0f
-	    };
+		GLfloat tangents[] = { 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0,
+				0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0 };
 
-	    GLfloat normals[] = {
-	        0.0,  0.0,  1.0,    0.0,  0.0,  1.0,    0.0,  0.0,  1.0,
-        	0.0,  0.0,  1.0,    0.0,  0.0,  1.0,    0.0,  0.0,  1.0
-	    };
+		GLfloat uvCoordinates[] = { 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0 };
 
-	    GLfloat tangents[] = {
-	        0.0, -1.0,  0.0,    0.0, -1.0,  0.0,    0.0, -1.0,  0.0,
-        	0.0, -1.0,  0.0,    0.0, -1.0,  0.0,    0.0, -1.0,  0.0
-	    };
-
-	    GLfloat uvCoordinates[] = {
-	        0,0, 1,0, 1,1,
-        	1,1, 0,1, 0,0
-	    };
-
-
-		std::cout << " VirutalObjectFactory : creating QuadObject... VertexArrayObject..." << std::endl;
+		std::cout
+				<< " VirutalObjectFactory : creating QuadObject... VertexArrayObject..."
+				<< std::endl;
 
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandles[0]);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions,
-				GL_STATIC_DRAW);
+		GL_STATIC_DRAW);
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandles[1]);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(uvCoordinates), uvCoordinates,
-				GL_STATIC_DRAW);
+		GL_STATIC_DRAW);
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
@@ -149,22 +136,25 @@ GraphicsComponent* VirtualObjectFactory::getQuad(){
 
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandles[4]);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(tangents), tangents,
-				GL_STATIC_DRAW);
+		GL_STATIC_DRAW);
 		glEnableVertexAttribArray(3);
 		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertexBufferHandles[3]);
 
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-		
-		std::cout << " VirutalObjectFactory : creating QuadObject... releasing buffers..." << std::endl;
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices,
+				GL_STATIC_DRAW);
+
+		std::cout
+				<< " VirutalObjectFactory : creating QuadObject... releasing buffers..."
+				<< std::endl;
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
 
-
-		std::cout << " VirutalObjectFactory : creating QuadObject... GraphicsComponent..." << std::endl;
-
+		std::cout
+				<< " VirutalObjectFactory : creating QuadObject... GraphicsComponent..."
+				<< std::endl;
 
 		quadMesh->setVAO(quadVertexArrayHandle);
 		quadMesh->setNumIndices(6);
@@ -172,18 +162,20 @@ GraphicsComponent* VirtualObjectFactory::getQuad(){
 		quadMesh->setNumFaces(2);
 
 		mQuad = new GraphicsComponent(quadMesh, quadMat);
-		std::cout << " VirutalObjectFactory : creating QuadObject... # " << mQuad << std::endl;
+		std::cout << " VirutalObjectFactory : creating QuadObject... # "
+				<< mQuad << std::endl;
 
 	}
-		std::cout << " VirutalObjectFactory : returning QuadObject... # " << mQuad << std::endl;
+	std::cout << " VirutalObjectFactory : returning QuadObject... # " << mQuad
+			<< std::endl;
 	return mQuad;
 }
 
 VirtualObject* VirtualObjectFactory::createNonAssimpVO(float mass) {
 
-
-	if(mCube == 0){
-		NoAssimpVirtualObjectFactory *voFactory = new NoAssimpVirtualObjectFactory();
+	if (mCube == 0) {
+		NoAssimpVirtualObjectFactory *voFactory =
+				new NoAssimpVirtualObjectFactory();
 
 		mCube = voFactory->createCubeObject(mass);
 	}
@@ -243,11 +235,8 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 
 	Mesh* physMesh = new Mesh();
 	btTriangleMesh btMesh = new btTriangleMesh();
-	btTriangleIndexVertexArray btIVA = new btTriangleIndexVertexArray();
+	btTriangleIndexVertexArray* btIVA = new btTriangleIndexVertexArray();
 	cout << "pScene->mNumMeshes " << pScene->mNumMeshes << endl;
-
-
-
 
 	// For each mesh
 
@@ -256,9 +245,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 
 		cout << "mesh->mNumFaces " << mesh->mNumFaces << endl;
 
-
 		if (bodyType == MESH) {
-
 
 			btVector3 btVertex0;
 			btVector3 btVertex1;
@@ -266,13 +253,13 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 
 			btIndexedMesh btIMesh;
 			/*
-			btIMesh.m_numTriangles = numTriangles;
-			btIMesh.m_triangleIndexBase = (const unsigned char *)triangleIndexBase;
-			btIMesh.m_triangleIndexStride = triangleIndexStride;
-			btIMesh.m_numVertices = numVertices;
-			btIMesh.m_vertexBase = (const unsigned char *)vertexBase;
-			btIMesh.m_vertexStride = vertexStride;
-			*/
+			 btIMesh.m_numTriangles = numTriangles;
+			 btIMesh.m_triangleIndexBase = (const unsigned char *)triangleIndexBase;
+			 btIMesh.m_triangleIndexStride = triangleIndexStride;
+			 btIMesh.m_numVertices = numVertices;
+			 btIMesh.m_vertexBase = (const unsigned char *)vertexBase;
+			 btIMesh.m_vertexStride = vertexStride;
+			 */
 			btIMesh.m_numTriangles = mesh->mNumFaces;
 			btIMesh.m_numVertices = mesh->mNumVertices;
 
@@ -282,49 +269,51 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 			int vertexStride;
 
 
-
-			//numFaces is 101794 error at 101722 btVertex2
-			for (unsigned int i = 0; i < mesh->mNumFaces-100; i++) {
+			for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
 
 				const aiFace& face = mesh->mFaces[i];
-				aiVector3D vec0 = mesh->mVertices[face.mIndices[0]];
-				btVertex0 = btVector3(vec0.x, vec0.y, vec0.z);
-				/*
-				cout << "facenr: " << i << "; vec0.x " << vec0.x << endl;
-				cout << "facenr: " << i << "; vec0.y " << vec0.y << endl;
-				cout << "facenr: " << i << "; vec0.z " << vec0.z << endl;
-				*/
 
-				aiVector3D vec1 = mesh->mVertices[face.mIndices[1]];
-				btVertex1 = btVector3(vec1.x, vec1.y, vec1.z);
 				/*
-				cout << "facenr: " << i << "; vec1.x " << vec1.x << endl;
-				cout << "facenr: " << i << "; vec1.y " << vec1.y << endl;
-				cout << "facenr: " << i << "; vec1.z " << vec1.z << endl;
+				*only add triangles and skip points and lines
+				*assimp triangulate only breaks higher polygons into triangles
 				*/
+				if (face.mNumIndices == 3) {
+					aiVector3D vec0 = mesh->mVertices[face.mIndices[0]];
+					btVertex0 = btVector3(vec0.x, vec0.y, vec0.z);
+					/*
+					 cout << "facenr: " << i << "; vec0.x " << vec0.x << endl;
+					 cout << "facenr: " << i << "; vec0.y " << vec0.y << endl;
+					 cout << "facenr: " << i << "; vec0.z " << vec0.z << endl;
+					 */
 
-				aiVector3D vec2 = mesh->mVertices[face.mIndices[2]];
-				btVertex2 = btVector3(vec2.x, vec2.y, vec2.z);
-				/*
-				cout << "facenr: " << i << "; vec2.x " << vec2.x << endl;
-				cout << "facenr: " << i << "; vec2.y " << vec2.y << endl;
-				cout << "facenr: " << i << "; vec2.z " << vec2.z << endl;
-				*/
-				btMesh.addTriangle(btVertex0, btVertex1, btVertex2, false);
+					aiVector3D vec1 = mesh->mVertices[face.mIndices[1]];
+					btVertex1 = btVector3(vec1.x, vec1.y, vec1.z);
+					/*
+					 cout << "facenr: " << i << "; vec1.x " << vec1.x << endl;
+					 cout << "facenr: " << i << "; vec1.y " << vec1.y << endl;
+					 cout << "facenr: " << i << "; vec1.z " << vec1.z << endl;
+					 */
 
+					aiVector3D vec2 = mesh->mVertices[face.mIndices[2]];
+					btVertex2 = btVector3(vec2.x, vec2.y, vec2.z);
+					/*
+					 cout << "facenr: " << i << "; vec2.x " << vec2.x << endl;
+					 cout << "facenr: " << i << "; vec2.y " << vec2.y << endl;
+					 cout << "facenr: " << i << "; vec2.z " << vec2.z << endl;
+					 */
+					btMesh.addTriangle(btVertex0, btVertex1, btVertex2, false);
 
-				//Var2 with IndexedMesh
-				/*
-				triangleIndexBase = (const unsigned char *)triangleIndexBase;
-				triangleIndexStride = triangleIndexStride;
-				vertexBase = (const unsigned char *)mesh->mVertices[];
-				vertexStride = vertexStride;
-				*/
+					//Var2 with IndexedMesh
+					/*
+					 triangleIndexBase = (const unsigned char *)triangleIndexBase;
+					 triangleIndexStride = triangleIndexStride;
+					 vertexBase = (const unsigned char *)mesh->mVertices[];
+					 vertexStride = vertexStride;
+					 */
+				}
 			}
-
-			btIVA.addIndexedMesh(btIMesh);
+			//btIVA.addIndexedMesh(btIMesh);
 		}
-
 
 		//Our Material and Mash to be filled
 		Mesh* aMesh = new Mesh();

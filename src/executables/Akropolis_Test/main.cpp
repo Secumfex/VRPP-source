@@ -42,7 +42,7 @@ void configureVirtualObjects(){
 
 	/*	load model of akropolis as virtual object*/
 	//VirtualObject* 	akropolis = myState->createVirtualObject(RESOURCES_PATH "/AkropolTest.obj", VirtualObjectFactory::MESH);
-	VirtualObject* 	akropolis = myState->createVirtualObject(RESOURCES_PATH "/Akropol_woGarbage.obj", VirtualObjectFactory::MESH, 0.0, 1);
+	VirtualObject* 	akropolis = myState->createVirtualObject(RESOURCES_PATH "/SciFi.obj", VirtualObjectFactory::MESH, 0.0, 1);
 
 	akropolis->translate(glm::vec3(10.0, -100.0, 0.0));
 	//myState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(akropolis));
