@@ -69,11 +69,11 @@ PhysicsComponent::PhysicsComponent(float x, float y, float z, glm::vec3 normal, 
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
 
-PhysicsComponent::PhysicsComponent(string filename, float x, float y, float z, VirtualObject* vo){
+PhysicsComponent::PhysicsComponent(char* filename, float x, float y, float z, VirtualObject* vo){
 
 	hit = false;
-	//rigidBody = addHeightfield(filename,x,y,z);
-	rigidBody = addHeightfield2(x,y,z,vo);
+	rigidBody = addHeightfield(filename,x,y,z);
+	//rigidBody = addHeightfield2(x,y,z,vo);
 	addCollisionFlag(1);	//static object
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
@@ -206,20 +206,20 @@ btRigidBody* PhysicsComponent::addPlane(float x, float y, float z, glm::vec3 nor
 }
 
 //btRigidBody* PhysicsComponent::addHeightfield(char* filename, int width, int height, float x, float y, float z){	//for use of preferred constructor
-//btRigidBody* PhysicsComponent::addHeightfield(char* filename, int width, int length, float x, float y, float z){	//for use of legacy constructor
-btRigidBody* PhysicsComponent::addHeightfield(string filename, float x, float y, float z){
+btRigidBody* PhysicsComponent::addHeightfield(char* filename, float x, float y, float z){	//for use of legacy constructor
+//btRigidBody* PhysicsComponent::addHeightfield(string filename, float x, float y, float z){
 
 	cout << "addHeightfield called" << endl;	//zum test
 	FILE* heightfieldFile;
-	char* filenameCHAR = RESOURCES_PATH"/Heightfield/heightfield128x128.raw";
+	//char* filenameCHAR = RESOURCES_PATH"/Heightfield/heightfield128x128.raw";
 	int width,length = 128;
 	//BYTE* heightfieldData;
-	//unsigned char* heightfieldData = new unsigned char[width*length];		//for 1. load methode
-	float* heightfieldData = new float[width*length];
+	unsigned char* heightfieldData = new unsigned char[width*length];		//for 1. load methode
+	//float* heightfieldData = new float[width*length];
 
 	/* for 2. load methode
 	int width, length, bytesPerPixel;
-	unsigned char* heightfieldData = stbi_load(filename.c_str(), &width, &length, &bytesPerPixel, 0);
+	unsigned char* heightfieldData = stbi_load(filename.c_str(), &width, &length, &bytesPerPixel, 1);
 	if(heightfieldData == NULL){
 		cout << "ERROR: Unable to open image "  << filename << endl;
 	}
@@ -232,13 +232,14 @@ btRigidBody* PhysicsComponent::addHeightfield(string filename, float x, float y,
 	}
 
 
-	heightfieldFile = fopen(filenameCHAR,"r");
+	heightfieldFile = fopen(filename,"r");
 	if(heightfieldFile){
 		int numBytes = fread(heightfieldData,1,width*length,heightfieldFile);
 		if(!numBytes){
 			cout << "couldn't read heightfieldData at " << filename << endl;
 		}
 	}
+
 
 	//fread(heightfieldData,1,width*height,heightfieldFile);	//for use of preferred constructor
 	fclose(heightfieldFile);		//for 1. load methode
@@ -249,15 +250,15 @@ btRigidBody* PhysicsComponent::addHeightfield(string filename, float x, float y,
 	//int upAxis = 1;			//y-axis as "up"				//for use of preferred constructor
 	int upIndex = 1;	//y-axis as "up"						//for use of legacy constructor
 	//PHY_ScalarType heightDataType = PHY_FLOAT;				//for use of preferred constructor
-	bool useFloatData = true;									//for use of legacy constructor
+	bool useFloatData = false;									//for use of legacy constructor
 	bool flipQuadEdges = false;
 
 	//btHeightfieldTerrainShape* groundShape = new btHeightfieldTerrainShape(width, length, heightfieldData, heightScale, minHeight, maxHeight, upAxis, heightDataType, flipQuadEdges);	//for use of preferred constructor
-	btHeightfieldTerrainShape* groundShape = new btHeightfieldTerrainShape(width, length, heightfieldData, maxHeight, upIndex, useFloatData, flipQuadEdges);	//for use of legacy constructor
+	btHeightfieldTerrainShape* groundShape = new btHeightfieldTerrainShape(width, length, &heightfieldData, maxHeight, upIndex, useFloatData, flipQuadEdges);	//for use of legacy constructor
 
 	groundShape->setUseDiamondSubdivision(true);
 
-	btVector3 localScaling(10,10,10);
+	btVector3 localScaling(100,1,100);
 	localScaling[upIndex]=1.f;						//for use of legacy constructor
 	//localScaling[upAxis]=1.f;						//for use of preferred constructor
 	groundShape->setLocalScaling(localScaling);

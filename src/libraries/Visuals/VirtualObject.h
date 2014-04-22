@@ -75,7 +75,7 @@ public:
 	 * @param x,y,z start position in the world
 	 * no mass param because floor has to be a static object
 	 */
-	VirtualObject(string filename, float x, float y, float z);
+	VirtualObject(char* filename, float x, float y, float z);
 
 	/** \brief destructor
 	 *
@@ -189,7 +189,7 @@ public:
 	 * no mass param because floor has to be a static object
 	 * @return void
 	 */
-	void setPhysicsComponent(string filename, float x, float y, float z);
+	void setPhysicsComponent(char* filename, float x, float y, float z);
 
 	/** \brief getter
 	 *
