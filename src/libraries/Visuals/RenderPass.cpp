@@ -16,13 +16,8 @@ RenderPass::RenderPass() {
 	mViewPort_width  = IOManager::getInstance()->getWidth();
 	mViewPort_height = IOManager::getInstance()->getHeight();
 
-<<<<<<< HEAD
-	customViewPortHeight = 0;
-	customViewPortWidth = 0;
-=======
 	mCustomViewPortHeight = 0.0f;
 	mCustomViewPortWidth = 0.0f;
->>>>>>> origin/master
 
 	mCustomClearColor = 0;
 	mHasCustomClearColor = false;
@@ -52,13 +47,9 @@ RenderPass::RenderPass(Shader* shader, FrameBufferObject* fbo){
 	mCustomClearColor = 0;
 	mHasCustomClearColor = false;
 
-<<<<<<< HEAD
-	customViewPortHeight = 0;
-	customViewPortWidth = 0;
-=======
+
 	mCustomViewPortHeight = 0.0f;
 	mCustomViewPortWidth = 0.0f;
->>>>>>> origin/master
 }
 
 void RenderPass::setCustomClearColor(glm::vec4* customClearColor)
@@ -92,15 +83,7 @@ void RenderPass::activate()
 		mViewPort_width  = IOManager::getInstance()->getWidth();
 		mViewPort_height = IOManager::getInstance()->getHeight();
 	}
-<<<<<<< HEAD
-	if (customViewPortHeight != 0)
-	{
-		mViewPort_height = customViewPortHeight;
-	}
-	if (customViewPortWidth != 0)
-	{
-		mViewPort_width = customViewPortWidth;
-=======
+
 	if (mCustomViewPortHeight != 0.0f)
 	{
 		mViewPort_height = mCustomViewPortHeight;
@@ -108,7 +91,6 @@ void RenderPass::activate()
 	if (mCustomViewPortWidth != 0.0f)
 	{
 		mViewPort_width = mCustomViewPortWidth;
->>>>>>> origin/master
 	}
 
 	glViewport(mViewPort_x, mViewPort_y, mViewPort_width, mViewPort_height);
@@ -280,21 +262,16 @@ void RenderPass::setViewPortY(float y)
 
 void RenderPass::setViewPortWidth(float width)
 {
-<<<<<<< HEAD
-	customViewPortWidth = width;
-=======
+
 	mCustomViewPortWidth = width;
->>>>>>> origin/master
+
 	mViewPort_width = width;
 }
 
 void RenderPass::setViewPortHeight(float height)
 {
-<<<<<<< HEAD
-	customViewPortHeight = height;
-=======
 	mCustomViewPortHeight = height;
->>>>>>> origin/master
+
 	mViewPort_height = height;
 }
 

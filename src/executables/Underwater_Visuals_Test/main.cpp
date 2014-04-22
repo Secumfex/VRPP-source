@@ -90,8 +90,7 @@ void configureRendering(){
 	Shader* particles_shader	= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/particles.vert"	, SHADERS_PATH  "/Underwater_Visuals_Test/particles.frag");
 	Shader *composition_shader  = new Shader( SHADERS_PATH "/Underwater_Visuals_Test/screenFill.vert"	, SHADERS_PATH  "/Underwater_Visuals_Test/finalCompositing.frag");
 	Shader *simpleTex			= new Shader( SHADERS_PATH "/Underwater_visuals_Test/screenFill.vert"   , SHADERS_PATH  "/GBuffer/simpleTexture.frag");
-<<<<<<< HEAD
-=======
+
 	Shader* gbuffer_shader		= new Shader( SHADERS_PATH "/Underwater_visuals_Test/GBuffer.vert"      , SHADERS_PATH  "/Underwater_visuals_Test/GBuffer_normalTexture.frag");
 	Shader* gbuffer_compositing_shader= new Shader( SHADERS_PATH "/Underwater_visuals_Test/screenFill.vert"      , SHADERS_PATH  "/Underwater_visuals_Test/gbuffer_compositing.frag");
 
@@ -109,7 +108,6 @@ void configureRendering(){
 	gbuffer_compositing_fbo->makeDrawBuffers();
 	gbuffer_compositing_fbo->unbindFBO();
 
->>>>>>> origin/master
 	FrameBufferObject* preCompositingScene = new FrameBufferObject(800, 600);
 
 	preCompositingScene->bindFBO();
@@ -273,17 +271,11 @@ void configureRendering(){
 	testingState->getRenderLoop()->addRenderPass( compositingRenderPass );		// add compositing render Pass
 
 	// tiny views
-<<<<<<< HEAD
-	MixTexturesRenderPass* renderTinyView = new MixTexturesRenderPass(simpleTex, 0, preCompositingScene->getPositionTextureHandle());
-	renderTinyView->setBaseTextureUniformName("diffuseTexture");
-	renderTinyView->setViewPortY(500);
-	renderTinyView->setViewPortX(100);
-=======
 	MixTexturesRenderPass* renderTinyView = new MixTexturesRenderPass(simpleTex, 0, UnderwaterScene::framebuffer_water_refraction->getPositionTextureHandle());
 	renderTinyView->setBaseTextureUniformName("diffuseTexture");
 	renderTinyView->setViewPortY(500);
 	renderTinyView->setViewPortX(0);
->>>>>>> origin/master
+
 	renderTinyView->setViewPortWidth(100);
 	renderTinyView->setViewPortHeight(100);
 	testingState->getRenderLoop()->addRenderPass(renderTinyView);
@@ -291,12 +283,7 @@ void configureRendering(){
 	MixTexturesRenderPass* renderTinyView2 = new MixTexturesRenderPass(simpleTex, 0, UnderwaterScene::framebuffer_water_reflection->getPositionTextureHandle());
 	renderTinyView2->setBaseTextureUniformName("diffuseTexture");
 	renderTinyView2->setViewPortY(500);
-<<<<<<< HEAD
-	renderTinyView2->setViewPortX(200);
-	renderTinyView2->setViewPortWidth(100);
-	renderTinyView2->setViewPortHeight(100);
-	testingState->getRenderLoop()->addRenderPass(renderTinyView2);
-=======
+
 	renderTinyView2->setViewPortX(100);
 	renderTinyView2->setViewPortWidth(100);
 	renderTinyView2->setViewPortHeight(100);
@@ -350,7 +337,6 @@ void configureRendering(){
 	renderTinyView8->setViewPortWidth(100);
 	renderTinyView8->setViewPortHeight(100);
 	testingState->getRenderLoop()->addRenderPass(renderTinyView8);
->>>>>>> origin/master
 }
 
 void configureOtherStuff(){
