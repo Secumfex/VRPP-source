@@ -181,6 +181,7 @@ glm::quat Flock::getRotation(Boid* boid){
 		return glm::quat (-1.0f, 0.0f, 0.0f, 0.0f);
 
 	glm::vec3 axis = glm::cross(start, velocity);
+	axis = glm::vec3(0.0f, axis.y, axis.z);
 	axis /= glm::length(axis);
 
 	float angle = glm::dot(velocity, start);

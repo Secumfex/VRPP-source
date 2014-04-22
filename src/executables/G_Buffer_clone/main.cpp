@@ -68,8 +68,6 @@ int main() {
 
 	glm::mat4 trans = glm::rotate(glm::mat4(), 90.0f, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::rotate(glm::mat4(), 90.0f, glm::vec3(1.0f, 0.0f, 0.0f)) * glm::scale(glm::mat4(), glm::vec3(0.25f));
 
-	cout << glm::to_string(glm::vec3(0.25f)) << endl;
-
 	myFlock->addBoid(object02, trans);
 
 	unsigned int i;
