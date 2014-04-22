@@ -254,3 +254,14 @@ ApplyLinearImpulseOnRigidBody::ApplyLinearImpulseOnRigidBody(btRigidBody* rigidB
 void ApplyLinearImpulseOnRigidBody::update(){
 	rigidBody->applyCentralImpulse(btVector3(force));
 }
+
+UploadUniformVOListener::UploadUniformVOListener(std::string name, VirtualObject* vo, std::string uniform_name){
+	setName(name);
+	this->vo 	=  vo;
+	this->uniform_name 	= uniform_name;
+}
+
+void UploadUniformVOListener::update(){
+	Shader* shader = RenderManager::getInstance()->getCurrentShader();
+	shader->uploadUniform( vo->getPhysicsComponent()->getPosition(), uniform_name);
+}

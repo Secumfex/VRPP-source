@@ -199,6 +199,7 @@ public:
 	*/
 	glm::vec3 getPosition();
 
+
 	/** \brief getter
 	 *
 	 * @return current hit state
