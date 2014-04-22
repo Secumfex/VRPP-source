@@ -41,7 +41,7 @@ void configureTestingApplication(){
 void configureVirtualObjects(){
 
 	/*	load model of akropolis as virtual object*/
-	VirtualObject* 	akropolis = myState->createVirtualObject(RESOURCES_PATH "/Akropol_woGarbage.obj", VirtualObjectFactory::MESH);
+	VirtualObject* 	akropolis = myState->createVirtualObject(RESOURCES_PATH "/Akropolis/Akropol_woGarbage.obj", VirtualObjectFactory::MESH);
 	akropolis->translate(glm::vec3(-20.0, -50.0, 0.0));
 }
 
