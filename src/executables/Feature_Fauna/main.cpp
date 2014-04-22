@@ -56,11 +56,12 @@ void createFloor() {
 	glm::mat4 myModelMatrix1 = glm::scale(	glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.0f, 0.0f)),	glm::vec3(5.0f, 0.2f, 5.0f));	//floor
 	floor->setModelMatrix(myModelMatrix1); 	// override default Model Matrix
 	floor->setPhysicsComponent(10.0f, 0.4f, 10.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1);
+	cout<<"1"<<endl;
 
 }
 
 void createVirtualObject(int height) {
-
+	//Erstelle erstes Objekt unten
 	vo_tmp = testingState->createVirtualObject( RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE, 0.0, 8);
 	testingState->attachListenerOnBeginningProgramCycle(	new UpdateVirtualObjectModelMatrixListener(vo_tmp));
 	testingState->attachListenerOnBeginningProgramCycle(	new UpdatePhysicsComponentListener(vo_tmp));
@@ -71,35 +72,38 @@ void createVirtualObject(int height) {
 	transform_tmp = btTransform::getIdentity();
 	transform_tmp.setOrigin(	btVector3(btScalar(0.), btScalar(0.), btScalar(0.)));
 	transformsVec.push_back(transform_tmp);
-
+	//Erstelle folgende Objekte nach oben hin
 	float yPosPerVO = 0;
 	float xPosPerVO = 0;
 	float zPosPerVO = 0;
 
 	for (int i = 1; i < height; i++) {
-		yPosPerVO += 10;
-		if ( (i%2)==0){
-			xPosPerVO = 0;
-			zPosPerVO = 0;
-		}
-		else if ( (i%3) ==1){
-			xPosPerVO = 10;
-			zPosPerVO = 10;
-		}
-		else {
-			xPosPerVO =-10;
-			zPosPerVO =-10;
-		}
+			xPosPerVO += 5;
+			yPosPerVO += 5;
+			zPosPerVO += 5;
+//		if ( (i%2)==0){
+//			xPosPerVO = 0;
+//			zPosPerVO = 0;
+//		}
+//		else if ( (i%3) ==1){
+//			xPosPerVO = 5;
+//			zPosPerVO = 5;
+//		}
+//		else {
+//			xPosPerVO =-5;
+//			zPosPerVO =-5;
+//		}
 
 		vo_tmp = testingState->createVirtualObject(	RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE, 1.0, 8);
 		vo_tmp->translate(glm::vec3(xPosPerVO, yPosPerVO, zPosPerVO));
 		voVec.push_back(vo_tmp);
 		testingState->attachListenerOnBeginningProgramCycle(	new UpdateVirtualObjectModelMatrixListener(voVec[i]));
 		rb_tmp = vo_tmp->getPhysicsComponent()->getRigidBody();
-		rb_tmp->applyForce(btVector3(10, 30, 0), btVector3(0, 0, 0));
-		rb_tmp->setDamping(.1, .1);
-		rb_tmp->setGravity((rb_tmp->getGravity()) + btVector3(0, 0, 0));
-		rb_tmp->setFriction(btScalar(250));
+		rb_tmp->applyForce(btVector3(0.,100.,0), btVector3(0,0,0));
+		//rb_tmp->setDamping(.1, .1);
+		//Negative Gravity um Erdanziehungskraft zu simulieren
+		rb_tmp->setGravity(rb_tmp->getGravity() - rb_tmp->getGravity()+ btVector3(0.,0.,0.));
+		//rb_tmp->setFriction(btScalar(250.));
 		rb_tmp->setActivationState(DISABLE_DEACTIVATION);
 		rigidBodyVec.push_back(rb_tmp);
 
@@ -108,17 +112,18 @@ void createVirtualObject(int height) {
 		transformsVec.push_back(transform_tmp);
 
 		constraint_tmp = new btGeneric6DofSpringConstraint( *rigidBodyVec[i - 1], *rigidBodyVec[i], transformsVec[i - 1], transformsVec[i], true);
-		constraint_tmp->setLinearUpperLimit(btVector3(0., 10., 0.));
-		constraint_tmp->setLinearLowerLimit(btVector3(0., 10., 0.));
+		constraint_tmp->setLinearUpperLimit(btVector3(0., 20., 0.));
+		constraint_tmp->setLinearLowerLimit(btVector3(0., 16., 0.));
 		constraint_tmp->setDamping(.1, .1);
 		constraintsVec.push_back(constraint_tmp);
-		//constraints[i-1]->internalSetAppliedImpulse(btScalar(50));
-		//constraints[i-1]->enableSpring(0, false);
-		//constraints[i-1]->setStiffness(0,50);
-		//constraints[i-1]->setEquilibriumPoint();
+			//constraints[i-1]->internalSetAppliedImpulse(btScalar(50));
+					//constraints[i-1]->enableSpring(0, false);
+					//constraints[i-1]->setStiffness(0,50);
+					//constraints[i-1]->setEquilibriumPoint();
 
-		//	constraint23->setLinearLowerLimit(btVector3(springRestLen - springRange, 0., 0.));
+				//	constraint23->setLinearLowerLimit(btVector3(springRestLen - springRange, 0., 0.));
 		PhysicWorld::getInstance()->dynamicsWorld->addConstraint( constraintsVec[i-1], true);
+
 	}
 }
 
@@ -206,19 +211,23 @@ void catMullRomeSpline(){
  */
 
 void listenersEtc(){
+	cout<<"2"<<endl;
 	testingState->attachListenerOnBeginningProgramCycle(	new PhysicWorldSimulationListener(	IOManager::getInstance()->getDeltaTimePointer()));// updates physics simulation
-
+	cout<<"3"<<endl;
 	testingInputHandler = testingState->getIOHandler();
+	cout<<"31"<<endl;
 	testingInputHandler->attachListenerOnKeyPress(			new TerminateApplicationListener(testingApp), GLFW_KEY_ESCAPE);
+	cout<<"32"<<endl;
 	testingInputHandler->attachListenerOnKeyPress(			new SetCameraPositionListener(testingState->getCamera(), glm::vec3(0.0f, 0.1f, 0.0)), GLFW_KEY_SPACE);
-	testingInputHandler->attachListenerOnKeyPress( 			new ApplyLinearImpulseOnRigidBody(rigidBodyVec[3], btVector3(50, 0, 0)), GLFW_KEY_1);
-
+	cout<<"33"<<endl;
+	//testingInputHandler->attachListenerOnKeyPress( 			new ApplyLinearImpulseOnRigidBody(rigidBodyVec[3], btVector3(50, 0, 0)), GLFW_KEY_1);
+	cout<<"4"<<endl;
 	testingApp->attachListenerOnProgramInitialization( 		new PrintMessageListener(string("Application is booting")));
 	testingApp->attachListenerOnProgramTermination(			new PrintMessageListener(string("Application is terminating")));
 	testingApp->attachListenerOnBeginningProgramCycle(		new PhysicWorldSimulationListener(	IOManager::getInstance()->getDeltaTimePointer()));
 	testingApp->attachListenerOnProgramInitialization(		new SetDefaultShaderListener(	new Shader(SHADERS_PATH "/Phong/phong.vert", SHADERS_PATH "/Phong/phong.frag")));
 	testingApp->attachListenerOnRenderManagerFrameLoop(		new RenderloopPlaceHolderListener());
-
+	cout<<"5"<<endl;
 	std::cout << PhysicWorld::getInstance()->dynamicsWorld->getNumCollisionObjects() << endl;
 
 	testingApp->addState(testingState);
@@ -228,7 +237,7 @@ int main() {
 	configureApplication();	// 1 do some customization
 	createFloor();
 	createVirtualObject(5);
-	catMullRomeSpline();
+	//catMullRomeSpline();
 	listenersEtc();
 	testingApp->run();	// 2 run application
 	return 0;	// 3 end :)
