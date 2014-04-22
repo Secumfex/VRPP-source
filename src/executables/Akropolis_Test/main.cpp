@@ -41,16 +41,8 @@ void configureTestingApplication(){
 void configureVirtualObjects(){
 
 	/*	load model of akropolis as virtual object*/
-	//VirtualObject* 	akropolis = myState->createVirtualObject(RESOURCES_PATH "/AkropolTest.obj", VirtualObjectFactory::MESH);
-	VirtualObject* 	akropolis = myState->createVirtualObject(RESOURCES_PATH "/Akropol_woGarbage.obj", VirtualObjectFactory::MESH, 0.0, 1);
-
-	akropolis->translate(glm::vec3(10.0, -50.0, 0.0));
-	//myState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(akropolis));
-
-	//VirtualObject* cube = myState->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 1.0, 8);
-	//myState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube));
-
-
+	VirtualObject* 	akropolis = myState->createVirtualObject(RESOURCES_PATH "/Akropol_woGarbage.obj", VirtualObjectFactory::MESH);
+	akropolis->translate(glm::vec3(-20.0, -50.0, 0.0));
 }
 
 void configurePhysics(){
