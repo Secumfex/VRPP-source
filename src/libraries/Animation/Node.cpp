@@ -54,8 +54,6 @@ void Node::updateBone(float t, glm::mat4 parent_mat){
 		parent_mat = parent_mat * mNodeTransform;
 	}
 
-	std::cout << mTimes.size() << std::endl;
-
 	if(mTimes.size()<2){
 		unsigned int i;
 		for (i = 0; i < mChildren.size(); ++i) {
@@ -81,7 +79,6 @@ void Node::updateBone(float t, glm::mat4 parent_mat){
 
 
 	glm::mat4 transform = glm::scale(glm::mat4(1.0f), scale) * glm::translate(glm::mat4(1.0f), pos) * glm::mat4_cast(rotate);
-//	glm::mat4 transform = glm::mat4_cast(rotate) * glm::translate(glm::mat4(1.0f), pos)  * glm::scale(glm::mat4(1.0f), scale);
 
 		mBone->setAnimationMatrix(parent_mat * transform);
 

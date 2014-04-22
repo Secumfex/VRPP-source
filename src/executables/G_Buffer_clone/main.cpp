@@ -56,7 +56,7 @@ int main() {
 	VirtualObjectFactory *voFactory = VirtualObjectFactory::getInstance();
 
 	VirtualObject *object02 = voFactory->createVirtualObject(RESOURCES_PATH "/animation_test/Fish_bones.dae", VirtualObjectFactory::OTHER);
-	VirtualObject *object03 = voFactory->createVirtualObject(RESOURCES_PATH "/animation_test/fish.dae", VirtualObjectFactory::OTHER);
+	VirtualObject *object03 = voFactory->createVirtualObject(RESOURCES_PATH "/animation_test/piranha.dae", VirtualObjectFactory::OTHER);
 	VirtualObject *object01 = voFactory->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE);
 
 
@@ -65,7 +65,7 @@ int main() {
 
 	GraphicsComponent* triangle = voFactory->getTriangle();
 
-	AnimationLoop* animation = object02->getAnimation();
+	AnimationLoop* animation = object03->getAnimation();
 
 	Flock* myFlock = new Flock();
 
@@ -74,6 +74,7 @@ int main() {
 	unsigned int i;
 	for (i = 0; i < 50; ++i) {
 		VirtualObject *object13 = new VirtualObject(object10);
+//		VirtualObject *object13 = new VirtualObject(object03);
 		myFlock->addBoid(object13, trans);
 		rq->addVirtualObject(object13);
 	}
@@ -143,6 +144,8 @@ int main() {
 
 	frustum->updateModelMatrix();
 
+	float animation_time = 0.0f;
+
 	while(!glfwWindowShouldClose(window)) {
 
 		glfwMakeContextCurrent(window);
@@ -164,16 +167,18 @@ int main() {
 		//rotation angle
 		angle = fmod((float)(angle+rotationSpeed*glfwGetTime()), (float)(pi<float>()*2.0f));
 
-		animation->updateNodes(angle);
-		myFlock->update(angle);
+		animation_time += glfwGetTime();
+		animation->updateNodes(animation_time);
+
+		myFlock->update(animation_time);
 		myFlock->setPlaceToGo(vec3(sin(angle) * 10.0f, sin(angle) * 2.0f, cos(angle) * 5.0f));
 //		myFlock->setPlaceToGo(glm::vec3(0.0f, 0.0f, 0.0f));
 
 
 		cam->setPosition(glm::vec3(0.0f, 2.0f, -8.0f));
-//		cam->setCenter(glm::vec3(0.0f, 0.0f, 0.0f));
+		cam->setCenter(glm::vec3(0.0f, 0.0f, 0.0f));
 //		cam->setPosition(myBoid->getPosition() + glm::vec3(0.0f, 2.0f, -10.0f));
-		cam->setCenter(myBoid->getPosition());
+//		cam->setCenter(myBoid->getPosition());
 
 		glfwSetTime(0.0);
 

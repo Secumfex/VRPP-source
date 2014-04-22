@@ -202,7 +202,9 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 					mesh_node = mesh_node->mParent;
 					mesh_transform = mesh_node->mTransformation * mesh_transform;
 				}
-
+				inversesceneMatrix = glm::make_mat4(&mesh_transform.a1);
+				inversesceneMatrix = glm::transpose(inversesceneMatrix);
+				inversesceneMatrix = glm::inverse(inversesceneMatrix);
 
 				if(!pScene->HasAnimations())
 				for (j = 0; j < mesh->mNumVertices; ++j) {
@@ -293,15 +295,6 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 			//TODO: boners
 					aiMatrix4x4 mesh_transform = bone->mOffsetMatrix;
-						aiNode* mesh_node = pScene->mRootNode->FindNode(bone->mName);
-
-//						while(mesh_node->mParent){
-//							mesh_node = mesh_node->mParent;
-//							mesh_transform = mesh_node->mTransformation * mesh_transform;
-//						}
-
-
-					glm::mat4 modelmatrix = glm::transpose(glm::make_mat4(&(pScene->mRootNode->FindNode(mesh->mName)->mTransformation.a1)));
 
 						myBone->setInverseSceneMatrix(inversesceneMatrix );
 
