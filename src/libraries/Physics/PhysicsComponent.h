@@ -6,6 +6,9 @@
 #include <iostream>
 #include "Tools/stb_image.h"
 
+#include "Visuals/GraphicsComponent.h"
+#include <vector>
+
 using namespace std;
 
 class VirtualObject;
@@ -35,6 +38,13 @@ public:
 	* @param modelMatrix 4x4Matrix
 	*/
 	PhysicsComponent(glm::mat4 modelMatrix);
+
+	/** \brief constructor
+	*
+	* creates a physics component with a given model matrix. does not define any rigid body.
+	* @param modelMatrix 4x4Matrix
+	*/
+	PhysicsComponent(float x, float y, float z, btTriangleMesh btMesh, vector<GraphicsComponent*> mGraphComponent, btTriangleIndexVertexArray* btTIVA);
 
 	/** \brief constructor
 	*
@@ -82,6 +92,8 @@ public:
 	 * @param x,y,z start position in the world
 	 */
 	PhysicsComponent(char* filename, float x, float y, float z);
+
+
 
 	/** \brief destructor
 	*
@@ -182,6 +194,14 @@ public:
 	 * @return a bullet rigid body
 	 */
 	btRigidBody* addHeightfield2(float x ,float y, float z);
+
+	/** \brief defines the rigid body as mesh
+	 *
+	 * creates a collisionshape by meshes
+	 * @param mGraphComponent graphic components of vo
+	 * @return a bullet rigid body
+	 */
+	btRigidBody* addTriangleMesh(float x, float y, float z, btTriangleMesh btMesh,vector<GraphicsComponent*> mGraphComponent, btTriangleIndexVertexArray* btTIVA);
 
 	/** \brief getter
 	 *

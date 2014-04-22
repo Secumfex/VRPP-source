@@ -39,7 +39,7 @@ GraphicsComponent* mQuad;				/**< a Quad GraphicsComponent */
 //---------------MEMBER FUNCTIONS--------------------
 public:
 
-enum BodyType {CUBE, SPHERE, PLANE, TERRAIN, OTHER};	/**< possible body types of a virtual object */
+enum BodyType {CUBE, SPHERE, PLANE, TERRAIN, MESH, OTHER};	/**< possible body types of a virtual object */
 
 /** \brief
  *
