@@ -218,44 +218,45 @@ HUDAirRenderPass::HUDAirRenderPass(FrameBufferObject* fbo, HUDSystem* hudSystem,
 
 void HUDAirRenderPass::update(){
 
-	/***************** save old state ******************/
-		FrameBufferObject* tempFBO = rm->getCurrentFBO();
+	//save state
+		FrameBufferObject* FBOtemp = rm->getCurrentFBO();
 
+	//create own state
 		fbo->bindFBO();
 		rm->setCurrentFBO(fbo);
-		Shader* currentShader;
+		Shader* ownShader;
+
         glDisable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     	glViewport(0, 0, fbo->getWidth(), fbo->getHeight());
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		currentShader = rm->getCurrentShader();
 
-   /*****************render object************************/
-		vector <HUDElement* > elements = hudSystem->getHUDElements();
-			currentShader->uploadUniform(elements[0]->getPosition(),	"uniformModelPosition");
+		ownShader = rm->getCurrentShader();
 
-			glActiveTexture(GL_TEXTURE0 + 20);			// set active texture as target to load texture to
-			glBindTexture(GL_TEXTURE_2D, elements[0]->getTexture()->getTextureHandle());	// load texture to active texture unit
+   //render pass
+		    vector <HUDElement* > elements = hudSystem->getHUDElements();
+			ownShader->uploadUniform(elements[0]->getPosition(),	"uniformModelPosition");
+
+			glActiveTexture(GL_TEXTURE0 + 20);
+			glBindTexture(GL_TEXTURE_2D, elements[0]->getTexture()->getTextureHandle());	// get texture directly from HUDElement
 
 			GLint u = 20;
-			currentShader->uploadUniform( u, "uniformAirTexture");		// upload texture unit to shader uniform sampler2d variable
+			ownShader->uploadUniform( u, "uniformAirTexture");		// upload texture
 
-			glBindVertexArray(vao); // Bind our Vertex Array Object
-
-			glDrawArrays(GL_TRIANGLES, 0, 6); // Draw our square
-
-			glBindVertexArray(0); // Unbind our Vertex Array Object
+			glBindVertexArray(vao);
+			glDrawArrays(GL_TRIANGLES, 0, 6);
+			glBindVertexArray(0);
 
 
-	/****************** back to old state *****************/
+	//restore old state
 		glDisable(GL_BLEND);
 		glEnable(GL_DEPTH_TEST);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
 		fbo->unbindFBO();
-		rm->setCurrentFBO(tempFBO);
+		rm->setCurrentFBO(FBOtemp);
 		glViewport(0,0, 800, 600);
 	}
 
@@ -268,44 +269,44 @@ StaticHUDElementRenderPass::StaticHUDElementRenderPass(FrameBufferObject* fbo, H
 
 void StaticHUDElementRenderPass::update(){
 
-	/***************** save old state ******************/
-		FrameBufferObject* tempFBO = rm->getCurrentFBO();
+	//save state
+		FrameBufferObject* FBOtemp = rm->getCurrentFBO();
 
+	//create own state
 		fbo->bindFBO();
 		rm->setCurrentFBO(fbo);
-		Shader* currentShader;
+		Shader* ownShader;
+
         glDisable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     	glViewport(0, 0, fbo->getWidth(), fbo->getHeight());
     		//dont clear color while still drawing other HUDElements into FBO
-		currentShader = rm->getCurrentShader();
+		ownShader = rm->getCurrentShader();
 
-   /*****************render object************************/
-		vector <HUDElement* > elements = hudSystem->getHUDElements();
-			currentShader->uploadUniform(elements[1]->getPosition(),	"uniformModelPosition");
+   //render pass
+		    vector <HUDElement* > elements = hudSystem->getHUDElements();
+			ownShader->uploadUniform(elements[1]->getPosition(),	"uniformModelPosition");
 
-			glActiveTexture(GL_TEXTURE0 + 21);			// set active texture as target to load texture to
-			glBindTexture(GL_TEXTURE_2D, elements[1]->getTexture()->getTextureHandle());	// load texture to active texture unit
+			glActiveTexture(GL_TEXTURE0 + 21);
+			glBindTexture(GL_TEXTURE_2D, elements[1]->getTexture()->getTextureHandle());	// get texture directly from HUDElement
 
 			GLint u = 21;
-			currentShader->uploadUniform( u, "uniformAirTexture");		// upload texture unit to shader uniform sampler2d variable
+			ownShader->uploadUniform( u, "uniformAirTexture");		// upload texture
 
-			glBindVertexArray(vao); // Bind our Vertex Array Object
-
-			glDrawArrays(GL_TRIANGLES, 0, 6); // Draw our square
-
-			glBindVertexArray(0); // Unbind our Vertex Array Object
+			glBindVertexArray(vao);
+			glDrawArrays(GL_TRIANGLES, 0, 6);
+			glBindVertexArray(0);
 
 
-	/****************** back to old state *****************/
+	//restore old state
 		glDisable(GL_BLEND);
 		glEnable(GL_DEPTH_TEST);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
 		fbo->unbindFBO();
-		rm->setCurrentFBO(tempFBO);
+		rm->setCurrentFBO(FBOtemp);
 		glViewport(0,0, 800, 600);
 	}
 
@@ -318,38 +319,38 @@ HUDMarkerRenderPass::HUDMarkerRenderPass(FrameBufferObject* fbo, HUDSystem* hudS
 
 void HUDMarkerRenderPass::update(){
 
-	/***************** save old state ******************/
+	// save state
 		FrameBufferObject* tempFBO = rm->getCurrentFBO();
 
+	//own state
 		fbo->bindFBO();
 		rm->setCurrentFBO(fbo);
-		Shader* currentShader;
+
+		Shader* ownShader;
         glDisable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     	glViewport(0, 0, fbo->getWidth(), fbo->getHeight());
     		//dont clear color while still drawing other HUDElements into FBO
-		currentShader = rm->getCurrentShader();
+		ownShader = rm->getCurrentShader();
 
-   /*****************render object************************/
-		vector <HUDElement* > elements = hudSystem->getHUDElements();
-			currentShader->uploadUniform(elements[2]->getPosition(),	"uniformModelPosition");
+   //render pass
+			vector <HUDElement* > elements = hudSystem->getHUDElements();
+			ownShader->uploadUniform(elements[2]->getPosition(),	"uniformModelPosition");
 
-			glActiveTexture(GL_TEXTURE0 + 22);			// set active texture as target to load texture to
-			glBindTexture(GL_TEXTURE_2D, elements[2]->getTexture()->getTextureHandle());	// load texture to active texture unit
+			glActiveTexture(GL_TEXTURE0 + 22);
+			glBindTexture(GL_TEXTURE_2D, elements[2]->getTexture()->getTextureHandle());	// get texture directly from HUDElement
 
 			GLint u = 22;
-			currentShader->uploadUniform( u, "uniformAirTexture");		// upload texture unit to shader uniform sampler2d variable
+			ownShader->uploadUniform( u, "uniformAirTexture");		// upload texture
 
-			glBindVertexArray(vao); // Bind our Vertex Array Object
-
-			glDrawArrays(GL_TRIANGLES, 0, 6); // Draw our square
-
-			glBindVertexArray(0); // Unbind our Vertex Array Object
+			glBindVertexArray(vao);
+			glDrawArrays(GL_TRIANGLES, 0, 6);
+			glBindVertexArray(0);
 
 
-	/****************** back to old state *****************/
+	//restore old state
 		glDisable(GL_BLEND);
 		glEnable(GL_DEPTH_TEST);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -650,44 +651,44 @@ UploadUniformAirListener::UploadUniformAirListener(std::string name, std::string
 	this->maxAir = maxAir;
 	airLeft = 1.0f;
 	this->uniform_name = uniform_name;
-	this->windowTime = NULL;
-	startTime = NULL;
-	this->camPosition = NULL;
+	this->windowTime = NULL;			//no window time before application is running
+	startTime = 0;
+	this->camPosition = NULL;			//same same here
 	timeUnderWater = 1.0f;
 }
 
 void UploadUniformAirListener::update(){
-	if ( windowTime == NULL)
+	if ( windowTime == NULL)																//initialise after application boot
 		this->windowTime =  IOManager::getInstance()->getWindowTimePointer();
-	if ( startTime == NULL)
-		startTime = IOManager::getInstance()->getWindowTime();
+	if ( startTime == 0)
+		startTime = IOManager::getInstance()->getWindowTime();								//same same
 	if ( camPosition == NULL)
-		camPosition = RenderManager::getInstance()->getCamera()->getPositionPointer();
+		camPosition = RenderManager::getInstance()->getCamera()->getPositionPointer();		//same same
 
-	if ( camPosition->y < 10.0){
-		if ( timeUnderWater != 0.0){
-			timeUnderWater = *windowTime - startTime;
+	if ( camPosition->y < 10.0){						//test if under or above water surface
+		if ( timeUnderWater != 0.0){					//test if already underwater or just diving in
+			timeUnderWater = *windowTime - startTime;	//update time (under water)
 		}
 		else {
 			timeUnderWater = 1.0;
-			startTime = *windowTime;
+			startTime = *windowTime;					//when diving in, start counting the time (under water)
 		}
 
 	}
 	else
-		timeUnderWater = 0.0;
+		timeUnderWater = 0.0;							//restore air when above water surface (while being under water before)
 
-	airLeft = (maxAir - timeUnderWater) / maxAir;
+	airLeft = (maxAir - timeUnderWater) / maxAir;		//noralize
 
 	//-------------------------------------
 
 	Shader* shader = RenderManager::getInstance()->getCurrentShader();
-	shader->uploadUniform( airLeft, uniform_name);
+	shader->uploadUniform( airLeft, uniform_name);		//upload uniform
 
 }
 
 UploadUniformDepthListener::UploadUniformDepthListener(glm::vec3* camPosition, std::string name, std::string uniform_name){
-	uniformDepth = NULL;
+	uniformDepth = 0;
 	this->camPosition = NULL;
 	this->uniform_name = uniform_name;
 }
@@ -695,21 +696,19 @@ UploadUniformDepthListener::UploadUniformDepthListener(glm::vec3* camPosition, s
 void UploadUniformDepthListener::update(){
 
 	if (camPosition == NULL)
-		camPosition = RenderManager::getInstance()->getCamera()->getPositionPointer();
+		camPosition = RenderManager::getInstance()->getCamera()->getPositionPointer();	//initialise after application boot
 
-	float camPositionY = camPosition->y;
+	float camPositionY = camPosition->y;		//get y-coordinate of player
 
-	if (camPositionY < 0.0f)
+	if (camPositionY < 0.0f)					//clamp to 0 when under ground
 		uniformDepth = 0.0f;
-	else if (camPositionY > 10.0f)
+	else if (camPositionY > 10.0f)				//clamp to 10 when above water surface
 		uniformDepth = 10.0f;
-	else uniformDepth = camPositionY;
-
-	std::cout<<"depth:"<<uniformDepth<<std::endl;
+	else uniformDepth = camPositionY;			//use y-value of player in all other cases
 
 	//-------------------------------------
 
 	Shader* shader = RenderManager::getInstance()->getCurrentShader();
-	shader->uploadUniform( uniformDepth, uniform_name);
+	shader->uploadUniform( uniformDepth, uniform_name);		//upload uniform
 
 }

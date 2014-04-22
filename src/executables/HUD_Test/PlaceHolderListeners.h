@@ -80,11 +80,10 @@ public:
 	void update();
 };
 
-/// Listener for rendering HUD elements
+/// Listener for rendering an airBar on the left side of the screen
 class HUDAirRenderPass : public Listener{
 public:
 	RenderManager* rm;
-
 	FrameBufferObject* fbo;
 	HUDSystem* hudSystem;
 	GLint vao;
@@ -93,11 +92,10 @@ public:
 	void update();
 };
 
-/// Listener for rendering HUD elements
+/// Listener for rendering static 2d HUD elements
 class StaticHUDElementRenderPass : public Listener{
 public:
 	RenderManager* rm;
-
 	FrameBufferObject* fbo;
 	HUDSystem* hudSystem;
 	GLint vao;
@@ -106,11 +104,10 @@ public:
 	void update();
 };
 
-/// Listener for rendering HUD elements
+/// Listener for rendering a marker to mark the HUD-altitude on the right side of the screen
 class HUDMarkerRenderPass : public Listener{
 public:
 	RenderManager* rm;
-
 	FrameBufferObject* fbo;
 	HUDSystem* hudSystem;
 	GLint vao;
@@ -304,7 +301,7 @@ public:
 static void createSquare();
 
 
-/// listener to upload a Float to keep the air left in sight
+/// listener to upload a uniform-float to keep in sight how much air is left on the player
 #include "IO/IOManager.h"
 #include "Visuals/RenderManager.h"
 class UploadUniformAirListener : public Listener {
@@ -313,13 +310,13 @@ private:
 	glm::vec3* camPosition;
 	float* windowTime;
 	std::string uniform_name;
-	float timeUnderWater, startTime, timeElapsed;
+	float timeUnderWater, startTime;
 public:
 	UploadUniformAirListener(std::string name = std::string("UNIFORMUPLOADLISTENER"), std::string uniform_name = "custom_uniform", float maxAir = 120.0);
 	void update();
 };
 
-/// listener to upload a Float to keep the depth left in sight
+/// listener to upload a uniform-float to measure the depth of the player according to the watersurface
 #include "IO/IOManager.h"
 #include "Visuals/RenderManager.h"
 class UploadUniformDepthListener : public Listener {
