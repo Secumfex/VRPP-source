@@ -2,31 +2,14 @@
 
 layout (location = 0) in vec4 positionAttribute;
 
-uniform mat4 uniformModel;
-uniform mat4 uniformView;
-uniform mat4 uniformPerspective;
-
-uniform float uniformScale;
-
-uniform float uniformSinus;
+uniform vec3 uniformModelPosition;
 
 out vec2 passUVCoords;
 
-out float passDistance;
-
 void main() {
-   
-	vec4 modelPos = ( uniformModel * vec4( 1.0, 0.0, 1.0, 1.0 ) ); 		//eigentliche Sinusbewegung
-	vec4 viewPos  = ( uniformView  * modelPos) - vec4( positionAttribute.x, positionAttribute.y, 0.0, 0.0 );		
-	
-	passDistance = viewPos.z;
 
-	gl_Position = vec4( positionAttribute.x, positionAttribute.y, 0.0, 1.0);
-	gl_Position.x -= 0.5;															//scaling the panel/texture
-//	gl_Position = uniformPerspective * viewPos;
-//	gl_Position = uniformPerspective * ( ( uniformModel * positionAttribute )  + vec4( uniformView[3].xyz, 0.0) );
-//	gl_Position = uniformPerspective * uniformView * uniformModel * positionAttribute;   
-// 	gl_Position =  uniformPerspective * ( positionAttribute + vec4 ( uniformView[3].xyz, 0.0));
+	gl_Position = vec4( positionAttribute.x + uniformModelPosition.x, positionAttribute.y + uniformModelPosition.y, 0.0, 1.0);
+//	gl_Position.x -= 0.5;															
    
 	passUVCoords = vec2( positionAttribute.x + 0.5, positionAttribute.y + 0.5);
 

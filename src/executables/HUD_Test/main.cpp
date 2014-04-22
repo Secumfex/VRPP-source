@@ -154,9 +154,7 @@ void configureRendering(){
 
 	Listener* uniAirText	= new UploadUniformTextureListener 	("UNIFORMUPLOADLISTENER", 20, "uniformAirTexture", HUD::HUD_texture->getTextureHandle());
 	Listener* uniHUDMap		= new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 21, "uniformHUD", HUD::framebuffer_HUD->getPositionTextureHandle());
-	Listener* uniTime4 		= new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", IOManager::getInstance()->getWindowTimePointer(), "uniformTime");
-//	Listener* uniCamPos2	= new UploadUniformVec3Listener		("UNIFORMUPLOADLISTENER", testingState->getCamera()->getPositionPointer(), 	"uniformCameraWorldPos");
-	Listener* uniAirLeft	= new UploadUniformAirListener	("UNIFORMUPLOADLISTENER", "uniformAirLeft");
+	Listener* uniAirLeft	= new UploadUniformAirListener	("UNIFORMUPLOADLISTENER", "uniformAirLeft", HUD::maxAir);
 
 	testingApp->attachListenerOnProgramInitialization(	new SetCurrentShaderListener( reflection_shader ));
 
@@ -231,9 +229,8 @@ void configureRendering(){
 	testingApp->attachListenerOnRenderManagerFrameLoop( new SetCurrentShaderListener( HUDShader ));
 	testingApp->attachListenerOnRenderManagerFrameLoop( uniAirText);
 	HUDRenderPass* renderHUD = new HUDRenderPass(HUD::framebuffer_HUD, HUD::hudSys, vaoID[0]);
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniTime4 );
-	//testingApp->attachListenerOnRenderManagerFrameLoop( uniAirLeft );
-	testingApp->attachListenerOnRenderManagerFrameLoop(( renderHUD));
+	testingApp->attachListenerOnRenderManagerFrameLoop( uniAirLeft );
+	testingApp->attachListenerOnRenderManagerFrameLoop( renderHUD );
 
 	// 8: Compositing
 	testingApp->attachListenerOnRenderManagerFrameLoop( new SetCurrentShaderListener( composition_shader ));

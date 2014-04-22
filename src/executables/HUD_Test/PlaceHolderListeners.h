@@ -285,13 +285,13 @@ static void createSquare();
 #include "Visuals/RenderManager.h"
 class UploadUniformAirListener : public Listener {
 private:
-	float airLeft;
+	float airLeft, maxAir;
 	glm::vec3* camPosition;
 	float* windowTime;
 	std::string uniform_name;
 	float timeUnderWater, startTime, timeElapsed;
 public:
-	UploadUniformAirListener(std::string name = std::string("UNIFORMUPLOADLISTENER"), std::string uniform_name = "custom_uniform");
+	UploadUniformAirListener(std::string name = std::string("UNIFORMUPLOADLISTENER"), std::string uniform_name = "custom_uniform", float maxAir = 120.0);
 	void update();
 };
 

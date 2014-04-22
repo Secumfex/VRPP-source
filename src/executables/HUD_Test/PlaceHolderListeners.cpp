@@ -238,14 +238,7 @@ void HUDRenderPass::update(){
 		rm->setCurrentGC(airGC);
 		vector <HUDElement* > elements = hudSystem->getHUDElements();
 		for (unsigned int i = 0; i < elements.size(); i++) {
-//			std::cout << "particle " << i << " position : " << particles[i]->getPosition().x << ", " << particles[i]->getPosition().y << ", " << particles[i]->getPosition().z << std::endl;
-//			currentShader->uploadAllUniforms();
-			currentShader->uploadUniform(glm::translate(  glm::mat4(1.0f), elements[i]->getPosition()),	"uniformModel");
-			currentShader->uploadUniform(rm->getCamera()->getViewMatrix(), 	"uniformView");;
-			currentShader->uploadUniform(rm->getPerspectiveMatrix(), 		"uniformPerspective");
-			currentShader->uploadUniform(1.0f, "uniformScale");
-
-			currentShader->uploadUniform(elements[i]->getPosition(), "uniformHUDPosition");
+			currentShader->uploadUniform(elements[i]->getPosition(),	"uniformModelPosition");
 
 			glBindVertexArray(vao); // Bind our Vertex Array Object
 
@@ -253,7 +246,6 @@ void HUDRenderPass::update(){
 
 			glBindVertexArray(0); // Unbind our Vertex Array Object
 
-//			currentShader->render(airGC);
 		}
 
 
@@ -553,29 +545,38 @@ void UpdateHUDSystemListener::update(){
 
 }
 
-UploadUniformAirListener::UploadUniformAirListener(std::string name, std::string uniform_name){
+UploadUniformAirListener::UploadUniformAirListener(std::string name, std::string uniform_name, float maxAir){
+	this->maxAir = maxAir;
 	airLeft = 1.0f;
 	this->uniform_name = uniform_name;
-	this->windowTime = IOManager::getInstance()->getWindowTimePointer();
-	startTime = IOManager::getInstance()->getWindowTime();
-	this->camPosition = RenderManager::getInstance()->getCamera()->getPositionPointer();
+	this->windowTime = NULL;
+	startTime = NULL;
+	this->camPosition = NULL;
+	timeUnderWater = 1.0f;
 }
 
 void UploadUniformAirListener::update(){
+	if ( windowTime == NULL)
+		this->windowTime =  IOManager::getInstance()->getWindowTimePointer();
+	if ( startTime == NULL)
+		startTime = IOManager::getInstance()->getWindowTime();
+	if ( camPosition == NULL)
+		camPosition = RenderManager::getInstance()->getCamera()->getPositionPointer();
+
 	if ( camPosition->y < 10.0){
 		if ( timeUnderWater != 0.0){
-			timeUnderWater += *windowTime - startTime;
+			timeUnderWater = *windowTime - startTime;
 		}
 		else {
 			timeUnderWater = 1.0;
 			startTime = *windowTime;
 		}
-		timeUnderWater = 0.0;
+
 	}
+	else
+		timeUnderWater = 0.0;
 
-	airLeft = (120.0f - timeUnderWater) / 120.0f;
-
-	std::cout<<"airleft: "<< airLeft << std::endl;
+	airLeft = (maxAir - timeUnderWater) / maxAir;
 
 	//-------------------------------------
 
