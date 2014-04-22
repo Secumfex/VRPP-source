@@ -81,7 +81,7 @@ public:
 	 * @param filename filename of the heightfield picture
 	 * @param x,y,z start position in the world
 	 */
-	PhysicsComponent(string filename, float x, float y, float z);
+	PhysicsComponent(string filename, float x, float y, float z, VirtualObject* vo);
 
 	/** \brief destructor
 	*
@@ -173,6 +173,8 @@ public:
 	 * @return a bullet rigid body
 	 */
 	btRigidBody* addHeightfield(string filename, float x, float y, float z);
+
+	btRigidBody* addHeightfield2(float x, float y, float z, VirtualObject* vo);
 
 
 	/** \brief getter

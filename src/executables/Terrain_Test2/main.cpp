@@ -40,14 +40,14 @@ void configureMyApp(){
 	//VirtualObject* groundObject = myVRState->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_ground.dae", VirtualObjectFactory::PLANE);
 
 	VirtualObject* 	terrain = 	myVRState->	createVirtualObject(RESOURCES_PATH "/Heightfield/terrainTest.obj", VirtualObjectFactory::TERRAIN);
-	glm::mat4 myModelMatrix1 = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -50.0f, 0.0f)), glm::vec3(10.0f, 10.0f, 10.0f));	//floor
+	glm::mat4 myModelMatrix1 = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f)), glm::vec3(10.0f, 10.0f, 10.0f));	//floor
 	terrain->setModelMatrix(myModelMatrix1); 	// override default Model Matrix
 	//terrain->setPhysicsComponent(RESOURCES_PATH"/terrainTest.png", 2048, 2048, 0.0f, 0.0f, 1);
 	//myVRState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(terrain));
 
 
 	btRigidBody* camBody = playercam->getRigidBody();
-	playercam->setPosition(0.0f,0.0f,0.0f);
+	playercam->setPosition(0.0f,50.0f,0.0f);
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(camBody);
 
 

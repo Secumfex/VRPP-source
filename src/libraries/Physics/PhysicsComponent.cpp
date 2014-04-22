@@ -9,6 +9,7 @@
 #include "Application/ApplicationStates.h"
 
 #include "Visuals/VirtualObject.h"
+#include "Visuals/GraphicsComponent.h"
 
 #include "BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h"
 #include "Tools/stb_image.h"
@@ -68,10 +69,11 @@ PhysicsComponent::PhysicsComponent(float x, float y, float z, glm::vec3 normal, 
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
 
-PhysicsComponent::PhysicsComponent(string filename, float x, float y, float z){
+PhysicsComponent::PhysicsComponent(string filename, float x, float y, float z, VirtualObject* vo){
 
 	hit = false;
-	rigidBody = addHeightfield(filename,x,y,z);
+	//rigidBody = addHeightfield(filename,x,y,z);
+	rigidBody = addHeightfield2(x,y,z,vo);
 	addCollisionFlag(1);	//static object
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
@@ -212,7 +214,8 @@ btRigidBody* PhysicsComponent::addHeightfield(string filename, float x, float y,
 	char* filenameCHAR = RESOURCES_PATH"/Heightfield/heightfield128x128.raw";
 	int width,length = 128;
 	//BYTE* heightfieldData;
-	unsigned char* heightfieldData = new unsigned char[width*length];		//for 1. load methode
+	//unsigned char* heightfieldData = new unsigned char[width*length];		//for 1. load methode
+	float* heightfieldData = new float[width*length];
 
 	/* for 2. load methode
 	int width, length, bytesPerPixel;
@@ -238,7 +241,7 @@ btRigidBody* PhysicsComponent::addHeightfield(string filename, float x, float y,
 	}
 
 	//fread(heightfieldData,1,width*height,heightfieldFile);	//for use of preferred constructor
-	//fclose(heightfieldFile);		//for 1. load methode
+	fclose(heightfieldFile);		//for 1. load methode
 
 	//float heightScale = 0.2;									//for use of preferred constructor
 	//btScalar minHeight = 0;		//min hoehe						//for use of preferred constructor
@@ -246,7 +249,7 @@ btRigidBody* PhysicsComponent::addHeightfield(string filename, float x, float y,
 	//int upAxis = 1;			//y-axis as "up"				//for use of preferred constructor
 	int upIndex = 1;	//y-axis as "up"						//for use of legacy constructor
 	//PHY_ScalarType heightDataType = PHY_FLOAT;				//for use of preferred constructor
-	bool useFloatData = false;									//for use of legacy constructor
+	bool useFloatData = true;									//for use of legacy constructor
 	bool flipQuadEdges = false;
 
 	//btHeightfieldTerrainShape* groundShape = new btHeightfieldTerrainShape(width, length, heightfieldData, heightScale, minHeight, maxHeight, upAxis, heightDataType, flipQuadEdges);	//for use of preferred constructor
@@ -254,10 +257,10 @@ btRigidBody* PhysicsComponent::addHeightfield(string filename, float x, float y,
 
 	groundShape->setUseDiamondSubdivision(true);
 
-	//btVector3 localScaling(10,10,10);
-	//localScaling[upIndex]=1.f;						//for use of legacy constructor
+	btVector3 localScaling(10,10,10);
+	localScaling[upIndex]=1.f;						//for use of legacy constructor
 	//localScaling[upAxis]=1.f;						//for use of preferred constructor
-	//groundShape->setLocalScaling(localScaling);
+	groundShape->setLocalScaling(localScaling);
 
 	x,y,z = 0;	//zum test
 
@@ -276,7 +279,42 @@ btRigidBody* PhysicsComponent::addHeightfield(string filename, float x, float y,
 	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,groundShape);
 	btRigidBody* body = new btRigidBody(info);
 	cout << "heightMap phComp erstellt" << endl;	//zum test
-	stbi_image_free(heightfieldData);
+	//stbi_image_free(heightfieldData);
+	return body;
+}
+
+btRigidBody* PhysicsComponent::addHeightfield2(float x, float y, float z, VirtualObject* vo){
+
+	vector<GraphicsComponent*> GCs = vo->getGraphicsComponent();
+	int numTriangles = GCs[0]->getMesh()->getNumFaces();
+	int triangleBase;
+	int triangleStride = 3;
+	int numVertex = GCs[0]->getMesh()->getNumVertices();
+	vector<glm::vec3> temp2 = GCs[0]->getMesh()->getVertices();
+	btScalar vertexBase;
+	int vertexStride = 3*sizeof(int);
+
+	btTriangleIndexVertexArray* TIVA = new btTriangleIndexVertexArray(numTriangles,&triangleBase,triangleStride,numVertex,&vertexBase,vertexStride);
+
+	bool	useQuantizedAabbCompression = true;
+	btBvhTriangleMeshShape* groundShape = new btBvhTriangleMeshShape(TIVA,useQuantizedAabbCompression);
+
+	btVector3 localScaling(10,10,10);
+	groundShape->setLocalScaling(localScaling);
+
+	btTransform t;
+	t.setIdentity();
+	t.setOrigin(btVector3(x,y,z));
+
+	float mass = 0.0;	//damit dann static
+
+	btVector3 inertia;
+	if(mass != 0.0){
+		groundShape->calculateLocalInertia(mass, inertia);
+	}
+	btDefaultMotionState* motion = new btDefaultMotionState(t);
+	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,groundShape);
+	btRigidBody* body = new btRigidBody(info);
 	return body;
 }
 

@@ -55,7 +55,7 @@ void configRendering(){
 	Shader* hfShader = new Shader(SHADERS_PATH"/HeightField/heightField.vert",SHADERS_PATH"/HeightField/heightField.frag");
 	//Shader* fcShader = new Shader(SHADERS_PATH"/Underwater_Visuals_Test/screenFill.vert",SHADERS_PATH"/HeightField/finalComp.frag");
 
-	//TODO: zahlen richtig anpassen (0,1,2)
+	//TODO: zahlen richtig anpassen (0,1,2,..)
 	Listener* uniTex1 = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",1,"uniformTexture1",HeightfieldScene::ground1->getTextureHandle());
 	Listener* uniTex2 = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",2,"uniformTexture2",HeightfieldScene::ground2->getTextureHandle());
 	Listener* uniMask = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",3,"uniformTextureMask",HeightfieldScene::mask->getTextureHandle());
