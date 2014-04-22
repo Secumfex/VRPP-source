@@ -2,14 +2,16 @@
 
 #include "Application/Application.h"
 #include "Application/ApplicationStates.h"
+#include "Application/ApplicationListeners.h"
+
 #include "Visuals/VirtualObjectFactory.h"
 
-#include "Application/ApplicationListeners.h"
 #include "Tools/UtilityListeners.h"
+
 #include "Physics/UpdatePhysicsComponentListener.h"
 #include "Physics/PhysicWorldSimulationListener.h"
-
 #include "Physics/PhysicWorld.h"
+
 #include "IO/IOManager.h"
 #include "IO/PlayerCamera.h"
 
@@ -37,9 +39,9 @@ void configureMyApp(){
 	/*	customize virtual objects*/
 	//VirtualObject* groundObject = myVRState->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_ground.dae", VirtualObjectFactory::PLANE);
 
-	VirtualObject* 	terrain = 	myVRState->	createVirtualObject(RESOURCES_PATH "/Heightfield/terrainTest.obj", VirtualObjectFactory::TERRAIN);
-	glm::mat4 myModelMatrix1 = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -50.0f, 0.0f)), glm::vec3(10.0f, 10.0f, 10.0f));	//floor
-	terrain->setModelMatrix(myModelMatrix1); 	// override default Model Matrix
+	VirtualObject* 	terrain = 	myVRState->	createVirtualObject(RESOURCES_PATH "/Heightfield/terrainTest.obj", VirtualObjectFactory::MESH);	//TERRAIN
+	//glm::mat4 myModelMatrix1 = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -50.0f, 0.0f)), glm::vec3(10.0f, 10.0f, 10.0f));	//floor
+	//terrain->setModelMatrix(myModelMatrix1); 	// override default Model Matrix
 	//terrain->setPhysicsComponent(RESOURCES_PATH"/terrainTest.png", 2048, 2048, 0.0f, 0.0f, 1);
 	//myVRState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(terrain));
 
