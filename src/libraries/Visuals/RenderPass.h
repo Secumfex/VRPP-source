@@ -247,7 +247,11 @@ public:
 	 */
 	std::list<GraphicsComponent*>   getInitialGraphicsComponentList();
 protected:
+<<<<<<< HEAD
 	float mViewPort_x, mViewPort_y, mViewPort_width, mViewPort_height, customViewPortHeight, customViewPortWidth;
+=======
+	float mViewPort_x, mViewPort_y, mViewPort_width, mViewPort_height, mCustomViewPortHeight, mCustomViewPortWidth;
+>>>>>>> origin/master
 
 	FrameBufferObject *mFBO;				/**< FrameBufferObject which will be set as render target */
 	vector<RenderQueueRequestFlag* > mRenderQueueRequestFlags;	/**< RenderQueueRequestFlags which will be evaluated in order */
@@ -295,9 +299,10 @@ public:
 class CompositingPass : public RenderPass {
 public:
 	/** \brief constructor
-	 *
+	 * @param gbuffer_compositing_shader a g buffer compositing style shader, i.e. a shader with sampler2d uniforms for positionMap, colorMap and normalMap
+	 * @param fbo FrameBufferObject
 	 */
-	CompositingPass();
+	CompositingPass(Shader* gbuffer_compositing_shader, FrameBufferObject* fbo = 0);
 
 	/** \brief destructor
 	 *

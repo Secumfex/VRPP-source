@@ -140,14 +140,21 @@ void configureRendering(){
 	gBufferRenderPass->attachListenerOnPostUniformUpload( uniResX );
 	gBufferRenderPass->attachListenerOnPostUniformUpload( uniResY );
 
+<<<<<<< HEAD
 	gBufferRenderPass->setInitialGraphicsComponentList ( ( testingState->getRenderQueue()->getGraphicsComponentList() ));
 
+=======
+>>>>>>> origin/master
 	testingState->getRenderLoop()->addRenderPass(	gBufferRenderPass );
 
 	/* compositing renderpass */
 	
+<<<<<<< HEAD
 	//RenderPass* compositingRenderPass = new CompositingPass(finalCompShader, fbo2);
 	CompositingPass* compositingRenderPass = new CompositingPass(finalCompShader, fbo2);
+=======
+	RenderPass* compositingRenderPass = new RenderPass(finalCompShader, fbo2);
+>>>>>>> origin/master
 	compositingRenderPass->setCustomClearColor( glm::vec4(1.0, 1.0, 1.0, 1.0) );
 	compositingRenderPass->setClearColorBufferBit(true);	// clear color buffer on every frame
 	compositingRenderPass->attachListenerOnPostUniformUpload( uniResX );
@@ -156,8 +163,11 @@ void configureRendering(){
 	compositingRenderPass->attachListenerOnPostUniformUpload( uniColorMap1 );
 	compositingRenderPass->attachListenerOnPostUniformUpload( uniNormalMap1 );
 
+<<<<<<< HEAD
 	//compositingRenderPass->addInitialGraphicsComponent( VirtualObjectFactory::getInstance()->getTriangle() );
 
+=======
+>>>>>>> origin/master
 	testingState->getRenderLoop()->addRenderPass( compositingRenderPass );
 
 	/* postprocessing renderpass */
