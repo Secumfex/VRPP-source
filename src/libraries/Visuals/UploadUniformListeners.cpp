@@ -92,9 +92,9 @@ void UploadUniformPositionMapListener::update(){
 	if (fbo){
 		if (fbo->getPositionTextureHandle() != -1){
 			fbo->bindPositionTexture();
+			shader->uploadUniform(4,"positionMap");	//upload only if texture exists
 		}
 	}
-	shader->uploadUniform(4,"positionMap");
 }
 
 UploadUniformNormalMapListener::UploadUniformNormalMapListener(std::string name, FrameBufferObject* source_fbo){
@@ -112,9 +112,9 @@ void UploadUniformNormalMapListener::update(){
 	glEnable(GL_TEXTURE_2D);if (fbo){
 		if (fbo->getNormalTextureHandle() != -1){
 			fbo->bindNormalTexture();
+			shader->uploadUniform(5,"normalMap"); //upload only if texture exists
 		}
 	}
-	shader->uploadUniform(5,"normalMap");
 }
 
 UploadUniformColorMapListener::UploadUniformColorMapListener(std::string name, FrameBufferObject* source_fbo){
@@ -132,11 +132,11 @@ void UploadUniformColorMapListener::update(){
 	glActiveTexture(GL_TEXTURE6);
 	glEnable(GL_TEXTURE_2D);
 	if (fbo){
-			if (fbo->getColorTextureHandle() != -1){
-				fbo->bindColorTexture();
-			}
+		if (fbo->getColorTextureHandle() != -1){
+			fbo->bindColorTexture();
+			shader->uploadUniform(6,"colorMap"); //upload only if texture exists
 		}
-	shader->uploadUniform(6,"colorMap");
+	}
 }
 UploadUniformShadowMapListener::UploadUniformShadowMapListener(std::string name, FrameBufferObject* source_fbo){
 	setName(name);
@@ -152,11 +152,11 @@ void UploadUniformShadowMapListener::update(){
 	glActiveTexture(GL_TEXTURE8);
 	glEnable(GL_TEXTURE_2D);
 	if (fbo){
-			if (fbo->getShadowMapHandle() != -1){
-				fbo->bindShadowMap();
-			}
+		if (fbo->getShadowMapHandle() != -1){
+			fbo->bindShadowMap();
+			shader->uploadUniform(8,"shadowMap"); //upload only if texture exists
 		}
-	shader->uploadUniform(8,"shadowMap");
+	}
 }
 UploadUniformSpecularMapListener::UploadUniformSpecularMapListener(std::string name, FrameBufferObject* source_fbo){
 	setName(name);
@@ -174,11 +174,11 @@ void UploadUniformSpecularMapListener::update(){
 	glActiveTexture(GL_TEXTURE7);
 	glEnable(GL_TEXTURE_2D);
 	if (fbo){
-			if (fbo->getSpecularTextureHandle() != -1){
-				fbo->bindSpecularTexture();
-			}
+		if (fbo->getSpecularTextureHandle() != -1){
+			fbo->bindSpecularTexture();
+			shader->uploadUniform(7,"specularMap"); //upload only if texture exists
 		}
-	shader->uploadUniform(7,"specularMap");
+	}
 }
 
 UploadUniformDepthMapListener::UploadUniformDepthMapListener(std::string name,FrameBufferObject* source_fbo){
