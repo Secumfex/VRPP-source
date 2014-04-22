@@ -41,6 +41,12 @@ class GrapicsComponent;
  *
  *
  */
+class VirtualObject;
+
+/*! @brief Proxyclass for forward including
+ *
+ *
+ */
 class Shader;
 
 /*! @brief Parent flag-class
@@ -49,12 +55,25 @@ class Shader;
  */
 class RenderQueueRequestFlag{
 private:
+	bool mInvertCondition;
 public:
+	RenderQueueRequestFlag();
+
+	/*! @brief setter
+	 * @param to boolean whether condition should be inverted to be true
+	 */
+	void setInvertCondition(bool to);
+	
+	/*! @brief getter
+	 * @return boolean whether condition should be inverted to be true 
+	 */
+	bool getInvertCondition();
+
 	/*! @brief Send flag-objects to the RenderQueue
 	 *
 	 * Abstract method, sends Flag objects to overloaded metods ín the RenderQueue
 	 */
-	virtual list<GraphicsComponent* > extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* > temp);
+	virtual list<GraphicsComponent* > extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* > temp) = 0;
 };
 
 /*! @brief flag-child 
@@ -64,7 +83,7 @@ public:
 class FlagShadowCaster : public RenderQueueRequestFlag{
 private:
 public:
-	FlagShadowCaster();
+	FlagShadowCaster(bool invertedCondition = false);
 
 	/*! @brief flag visits the render queue
 	 *
@@ -81,7 +100,7 @@ class FlagUsesShader : public RenderQueueRequestFlag{
 private:
 	Shader* mShader;
 public:
-	FlagUsesShader(Shader* shader);
+	FlagUsesShader(Shader* shader, bool invertedCondition = false);
 
 	/*! @brief flag visits the render queue
 	 *
@@ -90,16 +109,36 @@ public:
 	list<GraphicsComponent* > extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* > temp);
 };
 
-/*! @brief flag-child
+/*! @brief flag : graphics component uses mesh object
  *
- * A flag for using a certain object model
+ * A flag for using a certain object model, true for a graphics component
+ * if its Mesh is equal to the provided reference mesh
  */
-class FlagUsesObjectModel : public RenderQueueRequestFlag{
+class FlagUsesMesh : public RenderQueueRequestFlag{
 private:
 	Mesh* mMesh;
 public:
-	FlagUsesObjectModel(Mesh* mesh);
+	FlagUsesMesh(Mesh* mesh, bool invertedCondition = false);
 
+	/*! @brief flag visits the render queue
+	 *
+	 * flag sends itself to the render queue, which will trigger the overloaded method
+	 */
+	list<GraphicsComponent* > extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* > temp);
+};
+
+/*! @brief flag : graphics component uses mesh object
+ *
+ * A flag for using a certain object model, true for a graphics component
+ * if its Mesh is equal to the provided reference mesh
+ */
+class FlagPartOfVirtualObject : public RenderQueueRequestFlag{
+private:
+	VirtualObject* mVO;
+public:
+	FlagPartOfVirtualObject(VirtualObject* vo, bool invertedCondition = false);
+
+	VirtualObject* getVirtualObject();
 	/*! @brief flag visits the render queue
 	 *
 	 * flag sends itself to the render queue, which will trigger the overloaded method
@@ -114,7 +153,7 @@ public:
 class FlagInViewFrustum : public RenderQueueRequestFlag{
 private:
 public:
-	FlagInViewFrustum();
+	FlagInViewFrustum(bool invertedCondition = false);
 
 	/*! @brief flag visits the render queue
 	 *
@@ -130,7 +169,7 @@ public:
 class FlagTransparency : public RenderQueueRequestFlag{
 private:
 public:
-	FlagTransparency();
+	FlagTransparency(bool invertedCondition = false);
 
 	/*! @brief flag visits the render queue
 	 *
@@ -146,7 +185,7 @@ public:
 class FlagScreenFillingPolygon : public RenderQueueRequestFlag{
 private:
 public:
-	FlagScreenFillingPolygon();
+	FlagScreenFillingPolygon(bool invertedCondition = false);
 
 	/*! @brief flag visits the render queue
 	 *

@@ -4,25 +4,7 @@
  *  Created on: 11.02.2014
  *      Author: Dirk Diggler
  */
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
 
-#include <iostream>
-#include <string.h>
-
-#include <glm/glm.hpp>
-#include <glm/gtc/constants.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtc/matrix_inverse.hpp>
-
-#include "Tools/ShaderTools.h"
-#include "Tools/TextureTools.h"
-
-#include "Visuals/Shader.h"
-#include "Visuals/RenderQueue.h"
-#include "Visuals/FrameBufferObject.h"
-#include "Visuals/VirtualObjectFactory.h"
 #include "Visuals/RenderLoop.h"
 
 /*RenderLoop:
@@ -114,22 +96,24 @@ sodass klar definiert ist, in welchen Schritten das Bild gerendert wird.
 		listCG 3eck
  */
 
-vector<GraphicsComponent*> gcVector;
-
-void RenderLoop::fillLoop(){
-
-	//soll den Vektor der Objekte erhalten, die im 1. Pass gerendert werden
-	map<string, vector<GraphicsComponent*> > gcShaderStorage = mRenderQueue->getGcShaderStorage();
-	vector<GraphicsComponent*> gcVector = gcShaderStorage["pass1"];
-	/*for(unsigned int i = 0; i < gcVector.size(); i++){
-		//gc.render(); <--- ? wie soll'n das aussehen? Funktion in RenderLoop? Oder in GC? Or wut?
-	}*/ //delete soon
-
+void RenderLoop::render()
+{
+	for (unsigned int i = 0; i < mRenderPasses.size(); i++)
+	{
+		mRenderPasses[i]->activate();
+		mRenderPasses[i]->render();
+		mRenderPasses[i]->deactivate();
+	}
 }
+
+void RenderLoop::addRenderPass(RenderPass* renderPass)
+{
+	mRenderPasses.push_back(renderPass);
+}
+
 
 RenderLoop::RenderLoop() {
 	// TODO Auto-generated constructor stub
-
 }
 
 RenderLoop::~RenderLoop() {

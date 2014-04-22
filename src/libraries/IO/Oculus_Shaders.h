@@ -1,45 +1,10 @@
 // Oculus_Shaders.h
 
 // From OculusSDK-0.2.2
-static const char* PostProcessVertexShaderSrc =
-    "uniform mat4 View;\n"
-    "uniform mat4 Texm;\n"
-    "attribute vec4 Position;\n"
-    "attribute vec2 TexCoord;\n"
-    "varying  vec2 oTexCoord;\n"
-    "void main()\n"
-    "{\n"
-    "   gl_Position = View * Position;\n"
-    "   oTexCoord = vec2(Texm * vec4(TexCoord,0,1));\n"
-    "   oTexCoord.y = 1.0-oTexCoord.y;\n"
-    "}\n";
+static const char* PostProcessVertexShaderSrc = SHADERS_PATH "/Oculus_Shaders/PostProcessVert.vert";
 
 // From OculusSDK-0.2.2
-static const char* PostProcessFragShaderSrc =
-    "uniform vec2 LensCenter;\n"
-    "uniform vec2 ScreenCenter;\n"
-    "uniform vec2 Scale;\n"
-    "uniform vec2 ScaleIn;\n"
-    "uniform vec4 HmdWarpParam;\n"
-    "uniform sampler2D Texture0;\n"
-    "varying vec2 oTexCoord;\n"
-    "\n"
-    "vec2 HmdWarp(vec2 in01)\n"
-    "{\n"
-    "   vec2  theta = (in01 - LensCenter) * ScaleIn;\n" // Scales to [-1, 1]
-    "   float rSq = theta.x * theta.x + theta.y * theta.y;\n"
-    "   vec2  theta1 = theta * (HmdWarpParam.x + HmdWarpParam.y * rSq + "
-    "                           HmdWarpParam.z * rSq * rSq + HmdWarpParam.w * rSq * rSq * rSq);\n"
-    "   return LensCenter + Scale * theta1;\n"
-    "}\n"
-    "void main()\n"
-    "{\n"
-    "   vec2 tc = HmdWarp(oTexCoord);\n"
-    "   if (!all(equal(clamp(tc, ScreenCenter-vec2(0.25,0.5), ScreenCenter+vec2(0.25,0.5)), tc)))\n"
-    "       gl_FragColor = vec4(0);\n"
-    "   else\n"
-    "       gl_FragColor = texture2D(Texture0, tc);\n"
-    "}\n";
+static const char* PostProcessFragShaderSrc = SHADERS_PATH "/Oculus_Shaders/PostProcessFrag.frag";
 
 // Shader with lens distortion and chromatic aberration correction.
 // From OculusSDK-0.2.2
@@ -87,21 +52,10 @@ static const char* PostProcessFullFragShaderSrc =
     "   gl_FragColor = vec4(red, center.g, blue, 1);\n"
     "}\n";
 
-static const char* PresentFboVertSrc =
-    "attribute vec2 vPosition;\n"
-    "attribute vec2 vTex;\n"
-    "varying vec2 vfTex;\n"
-    "uniform mat4 prmtx;\n"
-    "void main()\n"
-    "{\n"
-    "    vfTex = vTex;\n"
-    "    gl_Position = prmtx * vec4(vPosition, 0.0, 1.0);\n"
-    "}\n";
+// static const char* PresentFboVertSrc = SHADERS_PATH "/Oculus_Shaders/PresentFboVert.vert";
 
-static const char* PresentFboFragSrc =
-    "varying vec2 vfTex;\n"
-    "uniform sampler2D fboTex;\n"
-    "void main()\n"
-    "{\n"
-    "    gl_FragColor = texture2D(fboTex, vfTex);\n"
-    "}\n";
+// static const char* PresentFboFragSrc = SHADERS_PATH "/Oculus_Shaders/PresentFboFrag.frag";
+
+ static const char* PresentFboVertSrc = SHADERS_PATH "/GBuffer/screenFill.vert";
+
+ static const char* PresentFboFragSrc = SHADERS_PATH "/GBuffer/simpleTexture.frag";
