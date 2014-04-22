@@ -252,27 +252,29 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 			btVector3 btVertex2;
 
 			btIndexedMesh btIMesh;
-			/*
-			 btIMesh.m_numTriangles = numTriangles;
-			 btIMesh.m_triangleIndexBase = (const unsigned char *)triangleIndexBase;
-			 btIMesh.m_triangleIndexStride = triangleIndexStride;
-			 btIMesh.m_numVertices = numVertices;
-			 btIMesh.m_vertexBase = (const unsigned char *)vertexBase;
-			 btIMesh.m_vertexStride = vertexStride;
-			 */
-			btIMesh.m_numTriangles = mesh->mNumFaces;
-			btIMesh.m_numVertices = mesh->mNumVertices;
 
-			const unsigned char * triangleIndexBase;
-			int triangleIndexStride;
-			const unsigned char * vertexBase;
-			int vertexStride;
+			int numTriangles = 0;
+			int numVertices = 0;
+			vector<unsigned char> * triangleIndexBase;
+			vector<unsigned char> * vertexBase;
+			/*
+			 * vertexStride = the number of bytes to skip in the vertex position array to
+			 * 	go from the start of one vertex to the start of the next vertex.
+			 * 	If the vertex position is composed of 3 floats for example, then this
+			 * 	would be 3*sizeof(float).
+			 * 	*/
+			btIMesh.m_vertexStride = sizeof(aiVector3D) * 3;
+			/*
+			 * triangleIndexStride = the number of bytes to skip in the vertex indices array to go
+			 * 	from the start of one triangle to the start of the next triangle.
+			 * 	Typically this is 3 times the sizeof the vertex index type.
+			 */
+			btIMesh.m_triangleIndexStride = sizeof(unsigned int) *3;
 
 
 			for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
 
 				const aiFace& face = mesh->mFaces[i];
-
 				/*
 				*only add triangles and skip points and lines
 				*assimp triangulate only breaks higher polygons into triangles
@@ -304,18 +306,31 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 					btMesh.addTriangle(btVertex0, btVertex1, btVertex2, false);
 
 					//Var2 with IndexedMesh
+
 					/*
-					 triangleIndexBase = (const unsigned char *)triangleIndexBase;
-					 triangleIndexStride = triangleIndexStride;
-					 vertexBase = (const unsigned char *)mesh->mVertices[];
-					 vertexStride = vertexStride;
+					 * numVertices = number of vertices
+					 * numTriangles = number of triangles
+					 * vertexBase = the array of vertex positions
+					 * triangleIndexBase = the array of vertex indices that makes up the triangles
 					 */
+					vertexBase->push_back(face.mIndices[0]);
+					vertexBase->push_back(face.mIndices[1]);
+					vertexBase->push_back(face.mIndices[2]);
+					numVertices+=3;
+
+					triangleIndexBase->push_back(i);
+					numTriangles++;
 				}
+
 			}
-			//btIVA.addIndexedMesh(btIMesh);
+			btIMesh.m_vertexBase = vertexBase;
+			btIMesh.m_triangleIndexBase = triangleIndexBase;
+			btIMesh.m_numVertices = numVertices;
+			btIMesh.m_numTriangles = numTriangles;
+			btIVA->addIndexedMesh(btIMesh);
 		}
 
-		//Our Material and Mash to be filled
+		//Our Material and Mesh to be filled
 		Mesh* aMesh = new Mesh();
 		Material* aMat = new Material();
 
@@ -447,6 +462,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 
 		// unbind buffers
 		glBindVertexArray(0);
+
 
 		// create material uniform buffer
 		aiMaterial *mtl = pScene->mMaterials[mesh->mMaterialIndex];

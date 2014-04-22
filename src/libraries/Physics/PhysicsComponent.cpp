@@ -261,12 +261,13 @@ btRigidBody* PhysicsComponent::addTriangleMesh(float x, float y, float z, Mesh* 
 
 
 	static btTriangleMesh triangleMesh = btMesh;
-	static btBvhTriangleMeshShape* triangleShape = 0;
 	static btRigidBody* staticBody = 0;
 
 
 	cout << "triangleMesh.getNumTriangles() " << triangleMesh.getNumTriangles() << endl;
-	triangleShape = new btBvhTriangleMeshShape(&btMesh, true, true);
+
+	bool useQuantizedAabbCompression = true;
+	btBvhTriangleMeshShape* triangleShape = new btBvhTriangleMeshShape(&btMesh, useQuantizedAabbCompression);
 
 
 	btTransform trans;
