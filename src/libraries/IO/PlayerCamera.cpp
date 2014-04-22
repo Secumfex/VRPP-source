@@ -46,6 +46,7 @@ void PlayerCamera::createRigidBody(){
 		btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(1.0,motionState,collisionShape,btVector3(0,0,0)); 
 	    rigidBody = new btRigidBody(rigidBodyCI);	// create a rigid body from the information provided
     	rigidBody->setActivationState(DISABLE_DEACTIVATION);	// so disable getting "stuck" after some time
+		rigidBody->setDamping(0.5,0.5);
     }
 }
 

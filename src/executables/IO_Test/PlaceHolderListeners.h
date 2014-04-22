@@ -114,3 +114,9 @@ public:
 	ApplyLinearImpulseOnRigidBody(btRigidBody* rigidBody, glm::vec3 force);
 	void update();
 };
+
+class SwimCam : public PlayerCamera
+{
+public:
+	void updatePosition(float deltaTime);
+};

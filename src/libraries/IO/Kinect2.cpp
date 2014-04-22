@@ -4,7 +4,8 @@
 
 
 
-
+//  http://www.cs.princeton.edu/~edwardz/tutorials/kinect/kinect2.html  
+//initKinect & getKinectData are taken from the tutorial  but are edited by me
 bool Kinect::initKinect() {
     // Get a working kinect sensor
     int numSensors;
@@ -50,6 +51,8 @@ float Kinect::getKinectData(GLubyte* dest) {
     }
     texture->UnlockRect(0);
     sensor->NuiImageStreamReleaseFrame(depthStream, &imageFrame);
+
+	//this is from me from here on
 	float temp=0;
 	for(int i=0; i<640*480*4; i+=16){
 	temp+=data[i];
@@ -60,31 +63,8 @@ float Kinect::getKinectData(GLubyte* dest) {
 
 
 
-
-void Kinect::drawKinectData() {
-   // glBindTexture(GL_TEXTURE_2D, textureId);
-   
-	
-//	getKinectData(data);
-  /* 
-	forceOld = forceNew;
-	forceNew = getKinectData(data);
-	direction = forceNew-forceOld;
-	*/
-	//return direction;  fürs auslagern später. obere zeilen auch
-/*	if(forceNew>forceOld) direction=temp;
-	else direction=forceNew;
-
-	//std::cout<<forceOld<<" " <<forceNew<< endl;
-	std::cout<<direction<<endl;
-
-	*/
-}
-
-
-
 Kinect::Kinect(void)
-{	//datap[640*480*4]=&data[640*480*4];
+{
 	force=&forceDirection;
 	forceOldp=&forceOld;
 	forceNewp=&forceNew;

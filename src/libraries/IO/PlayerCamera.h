@@ -13,7 +13,7 @@ using namespace std;
  * thus, a PlayerCamera cann collide with other Virtual Objects, and is influenced by gravity
  */
 class PlayerCamera : public Camera{
-private:
+protected:
 	btCollisionShape* collisionShape; 	/**< bullet Collision Shape associated with this Player Camera (cylinder shape by default) */
 	
 	bool isRigid;						/**< true, if rigid body functionality is wanted in this Camera */

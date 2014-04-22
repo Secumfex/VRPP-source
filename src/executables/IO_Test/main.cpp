@@ -31,7 +31,7 @@ void configureTestingApplication(){
 	testingApp->attachListenerOnProgramTermination(		new PrintMessageListener(		string("Application is terminating")));
 	
 	testingApp->attachListenerOnBeginningProgramCycle( 	new PhysicWorldSimulationListener(IOManager::getInstance()->getDeltaTimePointer()));
-	playercam = new PlayerCamera();
+	playercam = new SwimCam();
 	testingState->setCamera(playercam);
 }
 
@@ -95,7 +95,6 @@ void configureRendering(){
 	testingApp->attachListenerOnRenderManagerFrameLoop(	new RenderloopPlaceHolderListener());
 	/*
 	*Listener for Kinect gets attached
-	*
 	*/
 	testingApp->attachListenerOnRenderManagerFrameLoop(new ApplyForceOnCameraListener(playercam ,kinectp, kinectp->force) );
 	testingApp->attachListenerOnProgramInitialization(	new SetClearColorListener(1.0f,1.0f,1.0f));	// white background
@@ -128,13 +127,6 @@ void configureApplication(){
 int main() {
 	kinectp=&kinect;
 	playercam=&playercam2;
-
-
-	/*
-	btRigidBody* rigid=playercam->getRigidBody();
-	rigid->setGravity(btVector3(0,0,0));  
-	*/
-
 
 	configureApplication();	// 1 do some customization
 	testingApp->run();		// 2 run application

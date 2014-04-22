@@ -101,12 +101,14 @@ void TurnCameraListener::update(){
 	// Switch flag - slower updates
 	 kinect->isnew=true;
 	
-	 //calculate which direction
-	 if(kinect->forceNew-1.3f>kinect->forceOld){ strength=0.40;}
-   // else if(kinect->forceNew+2.0f<kinect->forceOld){strength=-0.5;} 
+	 /*calculate which direction
+	 * threshhold depend on how fast you "swim"
+	 *
+	 *
+	 */
+	 if(kinect->forceNew-1.7f>kinect->forceOld){ strength=0.3;}
+    else if(kinect->forceNew+2.8f<kinect->forceOld){strength=-1.85;} 
 	else strength=0.0f; 
-
-
 
 	std::cout<<strength<<endl;
 	}
@@ -117,7 +119,7 @@ void TurnCameraListener::update(){
 	//apply strength on cameraview
  btRigidBody* rigidBody = cam->getRigidBody();
  glm::vec3 force = cam->getViewDirection() * strength;
-			rigidBody->applyCentralImpulse(btVector3(force.x,force.y,force.z));	
+ rigidBody->applyCentralImpulse(btVector3(force.x,force.y,force.z));	
  }
 
 
@@ -166,4 +168,13 @@ SetCameraPositionListener::SetCameraPositionListener(Camera* cam, glm::vec3 posi
 
 void SetCameraPositionListener::update(){
 	cam->setPosition(position);
+}
+
+void SwimCam::updatePosition(float deltaTime)
+{
+		//overwrite current Position with current Rigid Body Position and Apply current Movementforces
+	if (rigidBody != 0){
+	    btVector3 rigidBody_pos = rigidBody->getWorldTransform().getOrigin();
+	    Camera::setPosition(glm::vec3(rigidBody_pos.getX(), rigidBody_pos.getY() + 0.25f, rigidBody_pos.getZ()));
+	}
 }

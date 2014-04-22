@@ -16,7 +16,6 @@
 
 
 
-//#ifdef USE_KINECT
 
 #include <Windows.h>
 #include <Ole2.h>
@@ -29,7 +28,6 @@
 #include <NuiImageCamera.h>
 #include <NuiSensor.h>
 
-//#endif
 
 
 class Kinect
@@ -58,8 +56,6 @@ float forceNew;
 	bool initKinect();
 
 	float getKinectData(GLubyte* dest);
-
-	void drawKinectData();
 
 	Kinect(void);
 	
