@@ -99,6 +99,9 @@ void configureRendering(){
 	Shader *postprocessShader = new Shader( 	SHADERS_PATH "/Postprocessing/screenFill.vert",
 			SHADERS_PATH "/Postprocessing/glow.frag");
 
+	/*Shader *ssaoShader = new Shader (	SHADERS_PATH "/Postprocessing/screenFill.vert",
+			SHADERS_PATH "/Postprocessing/ssao.frag");*/
+
 
 	/* creating and seting up fbos */
 	FrameBufferObject *fbo = new FrameBufferObject(800, 600);
@@ -139,8 +142,8 @@ void configureRendering(){
 	RenderPass* gBufferRenderPass = new RenderPass(gbufferShader, fbo);
 	gBufferRenderPass->setCustomClearColor( glm::vec4(1.0, 1.0, 1.0, 1.0) );
 	gBufferRenderPass->setClearColorBufferBit(true);	// clear color buffer on every frame
-	gBufferRenderPass->attachListenerOnPostUniformUpload( uniResX );
-	gBufferRenderPass->attachListenerOnPostUniformUpload( uniResY );
+	//gBufferRenderPass->attachListenerOnPostUniformUpload( uniResX );
+	//gBufferRenderPass->attachListenerOnPostUniformUpload( uniResY );
 
 
 	gBufferRenderPass->setInitialGraphicsComponentList ( ( testingState->getRenderQueue()->getGraphicsComponentList() ));
@@ -169,11 +172,11 @@ void configureRendering(){
 	MixTexturesRenderPass* glowRenderPass = new MixTexturesRenderPass( postprocessShader, 0, fbo->getColorTextureHandle(), fbo2->getPositionTextureHandle() );
 	glowRenderPass->setBaseTextureUniformName( "colorMap" );	// set custom uniform name for base texture
 	glowRenderPass->setMixTextureUniformName(  "preGlowTexture" );
-	glowRenderPass->attachListenerOnPostUniformUpload( uniResX );
+	/*glowRenderPass->attachListenerOnPostUniformUpload( uniResX );
 	glowRenderPass->attachListenerOnPostUniformUpload( uniResY );
 	glowRenderPass->attachListenerOnPostUniformUpload( uniPositionMap2 );
-	glowRenderPass->attachListenerOnPostUniformUpload( uniColorMap2 );
-	glowRenderPass->attachListenerOnPostUniformUpload( uniNormalMap2 );
+	glowRenderPass->attachListenerOnPostUniformUpload( uniColorMap2 );*/
+	//glowRenderPass->attachListenerOnPostUniformUpload( uniNormalMap2 );
 
 	testingState->getRenderLoop()->addRenderPass( glowRenderPass );
 

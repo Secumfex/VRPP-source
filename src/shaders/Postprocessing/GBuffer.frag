@@ -11,7 +11,7 @@ uniform vec3 specularColor;
 uniform float shininess;
 
 uniform sampler2D diffuseTexture;
-uniform sampler2D shadowMap;
+//uniform sampler2D shadowMap;
 
 //writable textures for deferred screen space calculations
 layout(location = 0) out vec4 positionOutput;
