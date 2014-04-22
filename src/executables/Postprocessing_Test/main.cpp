@@ -140,6 +140,8 @@ void configureRendering(){
 	gBufferRenderPass->attachListenerOnPostUniformUpload( uniResX );
 	gBufferRenderPass->attachListenerOnPostUniformUpload( uniResY );
 
+	gBufferRenderPass->setInitialGraphicsComponentList ( ( testingState->getRenderQueue()->getGraphicsComponentList() ));
+
 	testingState->getRenderLoop()->addRenderPass(	gBufferRenderPass );
 
 	/* compositing renderpass */
@@ -152,6 +154,8 @@ void configureRendering(){
 	compositingRenderPass->attachListenerOnPostUniformUpload( uniPositionMap1 );
 	compositingRenderPass->attachListenerOnPostUniformUpload( uniColorMap1 );
 	compositingRenderPass->attachListenerOnPostUniformUpload( uniNormalMap1 );
+
+	compositingRenderPass->addInitialGraphicsComponent( VirtualObjectFactory::getInstance()->getTriangle() );
 
 	testingState->getRenderLoop()->addRenderPass( compositingRenderPass );
 
