@@ -63,7 +63,7 @@ public:
     /** \brief setter
      *
      * sets/changes mRenderLoop
-     * @param renderloop
+     * @param renderLoop
      */
 	void setRenderLoop(RenderLoop* renderLoop);
 
