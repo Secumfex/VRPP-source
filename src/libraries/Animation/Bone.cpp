@@ -47,5 +47,5 @@ glm::mat4 Bone::getAnimationMatrix(){
 
 glm::mat4 Bone::getBoneMatrix(){
 
-	return mAnimationMatrix * mOffsetMatrix;
+	return mInverseMatrix * mAnimationMatrix * mOffsetMatrix;
 }

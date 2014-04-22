@@ -42,7 +42,7 @@ std::vector<Boid*> Flock::getNeighbors(Boid* boid){
 			temp_pos *= (1.0f / glm::length(temp_pos));
 
 			if(glm::dot(temp_pos, vo_vel) > 0.0f)
-			neighbors.push_back(mBoids[i]);}
+				neighbors.push_back(mBoids[i]);}
 	}
 
 	return neighbors;
@@ -67,6 +67,7 @@ void Flock::initializeStartPositions(float maxDistance, glm::vec3 startPosition)
 void Flock::update(float t){
 	unsigned int i;
 
+	updateAnimations(t);
 
 	std::vector<glm::vec3> next_velocities;
 	float delta_time = IOManager::getInstance()->getDeltaTime();
@@ -77,7 +78,7 @@ void Flock::update(float t){
 		std::vector<Boid*> neightbors = getNeighbors(boid_temp);
 
 		glm::vec3 v = getAllignment(neightbors, boid_temp) * 0.5f;
-//		glm::vec3 v = glm::vec3(0.0f, 0.0f, 0.0f);
+		//		glm::vec3 v = glm::vec3(0.0f, 0.0f, 0.0f);
 		v += getCohesion(neightbors, boid_temp) * -0.8f;
 		v += getSeparation(neightbors, boid_temp) * 1.5f;
 		v += getPlace(boid_temp) * 1.0f;
@@ -97,8 +98,8 @@ void Flock::update(float t){
 
 		glm::vec3 v_temp01 = v_temp * delta_time;
 
-				glm::quat rotation = getRotation(boid_temp);
-//				glm::quat rotation = glm::quat (1.0f, 0.0f, 0.0f, 0.0f);
+		glm::quat rotation = getRotation(boid_temp);
+		//				glm::quat rotation = glm::quat (1.0f, 0.0f, 0.0f, 0.0f);
 
 
 		v_temp01 += boid_temp->getPosition();
@@ -192,8 +193,13 @@ glm::quat Flock::getRotation(Boid* boid){
 
 void Flock::updateAnimations(float t){
 	unsigned int i;
+	AnimationLoop *ani;
 	for (i = 0; i < mBoids.size(); ++i) {
-		mBoids[i]->getVirtualObject()->getAnimation()->updateNodes(t);
+		if(ani != mBoids[i]->getVirtualObject()->getAnimation()){
+			ani = mBoids[i]->getVirtualObject()->getAnimation();
+			ani->updateNodes(t);
+		}
+
 	}
 }
 std::vector<Boid*> Flock::getBoids(){
