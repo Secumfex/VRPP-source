@@ -156,7 +156,7 @@ void configureRendering(){
 
 	Listener* uniHUDMap		= new UploadUniformTextureListener	( "UNIFORMUPLOADLISTENER", 21, "uniformHUD", HUD::framebuffer_HUD->getPositionTextureHandle());
 	Listener* uniAirLeft	= new UploadUniformAirListener		( "UNIFORMUPLOADLISTENER", "uniformAirLeft", HUD::maxAir);
-	Listener* depthListener = new UploadUniformFloatListener	( "UNIFORMUPLOADLISTENER", testingState->getCamera()->getPositionPointer()->y, "uniformDepth");
+	Listener* depthListener = new UploadUniformDepthListener	( testingState->getCamera()->getPositionPointer(), "UNIFORMUPLOADLISTENER",  "uniformDepth");
 
 	testingApp->attachListenerOnProgramInitialization(	new SetCurrentShaderListener( reflection_shader ));
 
@@ -240,7 +240,7 @@ void configureRendering(){
 
 	// 9: render HUD (marker for depth scala)
 	testingApp->attachListenerOnRenderManagerFrameLoop( new SetCurrentShaderListener( MarkerShader ));
-	StaticHUDElementRenderPass* renderMarker = new StaticHUDElementRenderPass(HUD::framebuffer_HUD, HUD::hudSys, vaoID[0]);
+	HUDMarkerRenderPass* renderMarker = new HUDMarkerRenderPass(HUD::framebuffer_HUD, HUD::hudSys, vaoID[0]);
 	testingApp->attachListenerOnRenderManagerFrameLoop( depthListener );
 	testingApp->attachListenerOnRenderManagerFrameLoop( renderMarker );
 

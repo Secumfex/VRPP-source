@@ -183,8 +183,6 @@ void ParticlesRenderPass::update(){
 		rm->setCurrentGC(particleGC);
 		vector <Particle* > particles = particleSystem->getParticles();
 		for (unsigned int i = 0; i < particles.size(); i++) {
-//			std::cout << "particle " << i << " position : " << particles[i]->getPosition().x << ", " << particles[i]->getPosition().y << ", " << particles[i]->getPosition().z << std::endl;
-//			currentShader->uploadAllUniforms();
 			currentShader->uploadUniform(glm::translate(  glm::mat4(1.0f), particles[i]->getPosition()),	"uniformModel");
 			currentShader->uploadUniform(rm->getCamera()->getViewMatrix(), 	"uniformView");;
 			currentShader->uploadUniform(rm->getPerspectiveMatrix(), 		"uniformPerspective");
@@ -235,7 +233,6 @@ void HUDAirRenderPass::update(){
 		currentShader = rm->getCurrentShader();
 
    /*****************render object************************/
-		rm->setCurrentGC(airGC);
 		vector <HUDElement* > elements = hudSystem->getHUDElements();
 			currentShader->uploadUniform(elements[0]->getPosition(),	"uniformModelPosition");
 
@@ -282,11 +279,10 @@ void StaticHUDElementRenderPass::update(){
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     	glViewport(0, 0, fbo->getWidth(), fbo->getHeight());
-        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	//dont clear color while still drawing other HUDElements into FBO
+    		//dont clear color while still drawing other HUDElements into FBO
 		currentShader = rm->getCurrentShader();
 
    /*****************render object************************/
-		rm->setCurrentGC(airGC);
 		vector <HUDElement* > elements = hudSystem->getHUDElements();
 			currentShader->uploadUniform(elements[1]->getPosition(),	"uniformModelPosition");
 
@@ -294,6 +290,56 @@ void StaticHUDElementRenderPass::update(){
 			glBindTexture(GL_TEXTURE_2D, elements[1]->getTexture()->getTextureHandle());	// load texture to active texture unit
 
 			GLint u = 21;
+			currentShader->uploadUniform( u, "uniformAirTexture");		// upload texture unit to shader uniform sampler2d variable
+
+			glBindVertexArray(vao); // Bind our Vertex Array Object
+
+			glDrawArrays(GL_TRIANGLES, 0, 6); // Draw our square
+
+			glBindVertexArray(0); // Unbind our Vertex Array Object
+
+
+	/****************** back to old state *****************/
+		glDisable(GL_BLEND);
+		glEnable(GL_DEPTH_TEST);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+
+		fbo->unbindFBO();
+		rm->setCurrentFBO(tempFBO);
+		glViewport(0,0, 800, 600);
+	}
+
+HUDMarkerRenderPass::HUDMarkerRenderPass(FrameBufferObject* fbo, HUDSystem* hudSystem, GLint vao){
+	rm = RenderManager::getInstance();
+	this->fbo = fbo;
+	this->hudSystem = hudSystem;
+	this->vao = vao;
+}
+
+void HUDMarkerRenderPass::update(){
+
+	/***************** save old state ******************/
+		FrameBufferObject* tempFBO = rm->getCurrentFBO();
+
+		fbo->bindFBO();
+		rm->setCurrentFBO(fbo);
+		Shader* currentShader;
+        glDisable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    	glViewport(0, 0, fbo->getWidth(), fbo->getHeight());
+    		//dont clear color while still drawing other HUDElements into FBO
+		currentShader = rm->getCurrentShader();
+
+   /*****************render object************************/
+		vector <HUDElement* > elements = hudSystem->getHUDElements();
+			currentShader->uploadUniform(elements[2]->getPosition(),	"uniformModelPosition");
+
+			glActiveTexture(GL_TEXTURE0 + 22);			// set active texture as target to load texture to
+			glBindTexture(GL_TEXTURE_2D, elements[2]->getTexture()->getTextureHandle());	// load texture to active texture unit
+
+			GLint u = 22;
 			currentShader->uploadUniform( u, "uniformAirTexture");		// upload texture unit to shader uniform sampler2d variable
 
 			glBindVertexArray(vao); // Bind our Vertex Array Object
@@ -638,6 +684,32 @@ void UploadUniformAirListener::update(){
 	Shader* shader = RenderManager::getInstance()->getCurrentShader();
 	shader->uploadUniform( airLeft, uniform_name);
 
+}
 
+UploadUniformDepthListener::UploadUniformDepthListener(glm::vec3* camPosition, std::string name, std::string uniform_name){
+	uniformDepth = NULL;
+	this->camPosition = NULL;
+	this->uniform_name = uniform_name;
+}
+
+void UploadUniformDepthListener::update(){
+
+	if (camPosition == NULL)
+		camPosition = RenderManager::getInstance()->getCamera()->getPositionPointer();
+
+	float camPositionY = camPosition->y;
+
+	if (camPositionY < 0.0f)
+		uniformDepth = 0.0f;
+	else if (camPositionY > 10.0f)
+		uniformDepth = 10.0f;
+	else uniformDepth = camPositionY;
+
+	std::cout<<"depth:"<<uniformDepth<<std::endl;
+
+	//-------------------------------------
+
+	Shader* shader = RenderManager::getInstance()->getCurrentShader();
+	shader->uploadUniform( uniformDepth, uniform_name);
 
 }

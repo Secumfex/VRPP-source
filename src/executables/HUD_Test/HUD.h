@@ -28,9 +28,9 @@ namespace HUD{
 		framebuffer_HUD->unbindFBO();
 
 	//textures
-		HUD_texture1 = new Texture(RESOURCES_PATH "/demo_scene/bubbles.png");
-		HUD_texture2 = new Texture(RESOURCES_PATH "/demo_scene/bubbles.png");
-		HUD_texture3 = new Texture(RESOURCES_PATH "/demo_scene/bubbles.png");
+		HUD_texture1 = new Texture(RESOURCES_PATH "/demo_scene/bubbles4.png");
+		HUD_texture2 = new Texture(RESOURCES_PATH "/demo_scene/scala.png");
+		HUD_texture3 = new Texture(RESOURCES_PATH "/demo_scene/marker.png");
 
 	//new HUDSystem - add some HUDElements
 	hudSys = new	HUDSystem();
@@ -46,7 +46,7 @@ namespace HUD{
 	hudSys->addHUDElement(depthM);
 
 			//Marker
-	marker = new HUDElement(glm::vec3(1.0, 0.0, 0.0));
+	marker = new HUDElement(glm::vec3(0.32, -0.96, 0.0));
 	marker->setTexture(HUD_texture3);
 	hudSys->addHUDElement(marker);
 

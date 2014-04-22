@@ -87,7 +87,6 @@ public:
 
 	FrameBufferObject* fbo;
 	HUDSystem* hudSystem;
-	GraphicsComponent* airGC;
 	GLint vao;
 
 	HUDAirRenderPass(FrameBufferObject* fbo, HUDSystem* hudSystem, GLint vao);
@@ -101,7 +100,6 @@ public:
 
 	FrameBufferObject* fbo;
 	HUDSystem* hudSystem;
-	GraphicsComponent* airGC;
 	GLint vao;
 
 	StaticHUDElementRenderPass(FrameBufferObject* fbo, HUDSystem* hudSystem, GLint vao);
@@ -115,7 +113,6 @@ public:
 
 	FrameBufferObject* fbo;
 	HUDSystem* hudSystem;
-	GraphicsComponent* airGC;
 	GLint vao;
 
 	HUDMarkerRenderPass(FrameBufferObject* fbo, HUDSystem* hudSystem, GLint vao);
@@ -319,6 +316,19 @@ private:
 	float timeUnderWater, startTime, timeElapsed;
 public:
 	UploadUniformAirListener(std::string name = std::string("UNIFORMUPLOADLISTENER"), std::string uniform_name = "custom_uniform", float maxAir = 120.0);
+	void update();
+};
+
+/// listener to upload a Float to keep the depth left in sight
+#include "IO/IOManager.h"
+#include "Visuals/RenderManager.h"
+class UploadUniformDepthListener : public Listener {
+private:
+	float uniformDepth;
+	glm::vec3 * camPosition;
+	std::string uniform_name;
+public:
+	UploadUniformDepthListener(glm::vec3* camPosition, std::string name = std::string("UNIFORMUPLOADLISTENER"), std::string uniform_name = "custom_uniform");
 	void update();
 };
 
