@@ -174,6 +174,18 @@ void configureRendering(){
 
 	testingState->getRenderLoop()->addRenderPass( glowRenderPass );
 
+	/* alternate postprocessing renderpss - ssao - not working */
+	/*MixTexturesRenderPass* ssaoRenderPass = new MixTexturesRenderPass( ssaoShader, 0, fbo->getColorTextureHandle(), fbo2->getPositionTextureHandle() );
+	ssaoRenderPass->setBaseTexture( "colorMap" );
+	ssaoRenderPass->setMixTextureUniformName(  "preGlowTexture" );
+	ssaoRenderPass->attachListenerOnPostUniformUpload( uniResX );
+	ssaoRenderPass->attachListenerOnPostUniformUpload( uniResY );
+	ssaoRenderPass->attachListenerOnPostUniformUpload( uniPositionMap2 );
+	ssaoRenderPass->attachListenerOnPostUniformUpload( uniColorMap2 );
+	ssaoRenderPass->attachListenerOnPostUniformUpload( uniNormalMap2 );
+
+	testingState->getRenderLoop()->addRenderPass( ssaoRenderPass );*/
+
 }
 
 void configureOtherStuff(){
