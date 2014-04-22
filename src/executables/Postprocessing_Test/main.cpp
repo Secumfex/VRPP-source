@@ -80,6 +80,9 @@ void configureInputHandler(){
 }
 
 void configureRendering(){
+	/* create Light sources so UploadUniformLightPerspectiveMatrixListener works */
+	RenderManager::getInstance()->createFourLightsources();
+
 	/* creating shaders */
 	Shader *simpleTexShader = new Shader(SHADERS_PATH "/Postprocessing/screenFill.vert",
 			SHADERS_PATH "/Postprocessing/simpleTexture.frag");

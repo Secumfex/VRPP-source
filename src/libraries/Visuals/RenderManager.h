@@ -189,13 +189,11 @@ public:
 	 */
 	void attachListenerOnWindowShouldClose(Listener* listener);
 
-
-private:
-
-	/** \brief !docu pls!
-	 *
+	/** \brief create four light sources
+	 *	create four Light sources for fun
 	 */
 	void createFourLightsources();
+private:
 
 	GLuint vbo;							/**< !docu pls! */
 	GLuint MVPHandle;					/**< !docu pls! */
