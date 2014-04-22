@@ -32,7 +32,7 @@ vec4 color1 = texture2D(uniformTexture1,uvCoordPass);
 vec4 color2 = texture2D(uniformTexture2,uvCoordPass);
 vec4 mask = texture2D(uniformTextureMask,uvCoordPass);
 
-gl_FragColor = mix(color1,color2,mask.r);
+gl_FragColor = mix(color1,color2,mask.r);	//zum test
 //colorOut = mix(color1,color2,mask.r);
 
 //vec4 normals1 = texture2D(uniformNormals1,uvCoordPass);

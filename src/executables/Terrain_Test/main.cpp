@@ -1,4 +1,5 @@
 //test class for shader
+//einiges auskommentiert fuer Fehlersuche da crasht
 
 #include "Application/Application.h"
 #include "Application/ApplicationStates.h"
@@ -44,19 +45,23 @@ void configIOHandler(){
 
 void configRendering(){
 
+	//Shader
 	Shader* hfShader = new Shader(SHADERS_PATH"/HeightField/heightField.vert",SHADERS_PATH"/HeightField/heightField.frag");
 	//Shader* fcShader = new Shader(SHADERS_PATH"/Underwater_Visuals_Test/screenFill.vert",SHADERS_PATH"/HeightField/finalComp.frag");
 
 	//uniform Listener
+	//textures and mask
 	Listener* uniTex1 = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",1,"uniformTexture1",HeightfieldScene::ground1->getTextureHandle());
 	Listener* uniTex2 = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",2,"uniformTexture2",HeightfieldScene::ground2->getTextureHandle());
 	Listener* uniMask = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",3,"uniformTextureMask",HeightfieldScene::mask->getTextureHandle());
 
 	/*
-	Listener* uniNorm1 = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",4,"uniformNormals1",HeightfieldScene::normals1->getTextureHandle());		//normalmaps
+	//normalmaps
+	Listener* uniNorm1 = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",4,"uniformNormals1",HeightfieldScene::normals1->getTextureHandle());
 	Listener* uniNorm2 = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",5,"uniformNormals2",HeightfieldScene::normals2->getTextureHandle());
 
-	Listener* uniSpec1 = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",6,"uniformSpecular1",HeightfieldScene::specular1->getTextureHandle());	//glossmaps
+	//glossmaps
+	Listener* uniSpec1 = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",6,"uniformSpecular1",HeightfieldScene::specular1->getTextureHandle());
 	Listener* uniSpec2 = new UploadUniformTextureListener("UNIFORMUPLOADLISTENER",7,"uniformSpecular2",HeightfieldScene::specular2->getTextureHandle());
 	*/
 

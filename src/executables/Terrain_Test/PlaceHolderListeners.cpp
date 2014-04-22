@@ -154,38 +154,6 @@ void GodRaysRenderPass::update(){
 		fbo->unbindFBO();	
 	}
 
-/*
-ParticlesRenderPass::ParticlesRenderPass(FrameBufferObject* fbo, ParticleSystem* particleSystem, GraphicsComponent* particleGC){
-		rm = RenderManager::getInstance();
-		this->fbo = fbo;
-		this->particleSystem = particleSystem;
-		this->particleGC = particleGC;
-	}
-
-void ParticlesRenderPass::update(){
-		fbo->bindFBO();
-		Shader* currentShader;
-        glDisable(GL_DEPTH_TEST);
-        glClearColor(0.0,0.0,0.0,1.0);
-    	glViewport(0, 0, fbo->getWidth(), fbo->getHeight());
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		currentShader = rm->getCurrentShader();
-
-		rm->setCurrentGC(particleGC);
-		vector <Particle* > particles = particleSystem->getParticles();
-		for (unsigned int i = 0; i < particles.size(); i++) {
-//			std::cout << "particle " << i << " position : " << particles[i]->getPosition().x << ", " << particles[i]->getPosition().y << ", " << particles[i]->getPosition().z << std::endl;
-//			currentShader->uploadAllUniforms();
-			currentShader->uploadUniform(glm::translate( glm::mat4(1.0f), particles[i]->getPosition()), 		"uniformModel");
-			currentShader->uploadUniform(rm->getCamera()->getViewMatrix(), 	"uniformView");;
-			currentShader->uploadUniform(rm->getPerspectiveMatrix(), 		"uniformPerspective");
-
-			currentShader->uploadUniform(particles[i]->getPosition(), "uniformParticlePosition");
-			currentShader->render(particleGC);
-		}
-		fbo->unbindFBO();
-	}
-*/
 
 RenderloopPlaceHolderListener::RenderloopPlaceHolderListener(VirtualObject* water_object){ 
 		rm = RenderManager::getInstance(); 
@@ -451,16 +419,6 @@ void UnbindFrameBufferObjectListener::update(){
 	RenderManager::getInstance()->setCurrentFBO( 0 );
 }
 
-/*
-UpdateParticleSystemListener::UpdateParticleSystemListener(ParticleSystem* particleSystem, float* t){
-	this->particleSystem = particleSystem;
-	this->t = t;
-}
-
-void UpdateParticleSystemListener::update(){
-	particleSystem->update(*t);
-}
-*/
 
 //eigener renderpass listener
 TerrainRenderPass::TerrainRenderPass(FrameBufferObject* fbo){

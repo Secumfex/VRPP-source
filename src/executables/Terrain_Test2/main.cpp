@@ -39,10 +39,13 @@ void configureMyApp(){
 	/*	customize virtual objects*/
 	//VirtualObject* groundObject = myVRState->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_ground.dae", VirtualObjectFactory::PLANE);
 
-	VirtualObject* 	terrain = 	myVRState->	createVirtualObject(RESOURCES_PATH "/Heightfield/terrainTest.obj", VirtualObjectFactory::MESH);	//TERRAIN
-	terrain->translate(glm::vec3(0.0, -50.0, 0.0));
-	//glm::mat4 myModelMatrix1 = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -50.0f, 0.0f)), glm::vec3(10.0f, 10.0f, 10.0f));	//floor
-	//terrain->setModelMatrix(myModelMatrix1); 	// override default Model Matrix
+	VirtualObject* 	terrain = 	myVRState->	createVirtualObject(RESOURCES_PATH "/Heightfield/terrainTest.obj", VirtualObjectFactory::TERRAIN);		//BodyType-> TERRAIN is flat, MESH crashes
+	//wirkt jedoch nicht ganz flach, irgwie nur falsch skaliert oder falsche/schlechte Bilddaten
+
+	//VirtualObject* 	terrain = 	myVRState->	createVirtualObject(RESOURCES_PATH "/Akropolis/Akropol_woGarbage.obj", VirtualObjectFactory::MESH);	//laeuft erst crasht aber dann mit Fehlermeldung
+	//terrain->translate(glm::vec3(0.0, -50.0, 0.0));	//for MESH
+	glm::mat4 myModelMatrix1 = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -50.0f, 0.0f)), glm::vec3(10.0f, 10.0f, 10.0f));	//for TERRAIN, floor
+	terrain->setModelMatrix(myModelMatrix1); 																								//for TERRAIN, override default Model Matrix
 	//terrain->setPhysicsComponent(RESOURCES_PATH"/terrainTest.png", 2048, 2048, 0.0f, 0.0f, 1);
 	//myVRState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(terrain));
 

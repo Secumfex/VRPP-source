@@ -65,21 +65,6 @@ public:
 };
 
 
-/// Listener which uses an FBO as Render Target and renders volumetric godrays
-/*
-class ParticlesRenderPass : public Listener{
-public:
-	RenderManager* rm;
-
-	FrameBufferObject* fbo; // particles target
-	ParticleSystem* particleSystem;
-	GraphicsComponent* particleGC;
-
-	ParticlesRenderPass(FrameBufferObject* fbo, ParticleSystem* particleSystem, GraphicsComponent* particleGC);
-	void update();
-};
-*/
-
 /// Listener which uses an FBO as Render Target and ignores the water_object
 class RefractionMapRenderPass : public Listener{
 public:
@@ -242,17 +227,6 @@ public:
 	UnbindFrameBufferObjectListener();
 	void update();
 };
-
-/*
-class UpdateParticleSystemListener : public Listener {
-private:
-	ParticleSystem* particleSystem;
-	float* t;
-public:
-	UpdateParticleSystemListener(ParticleSystem* particleSystem, float* t);
-	void update();
-};
-*/
 
 
 //eigener renderpass listener
