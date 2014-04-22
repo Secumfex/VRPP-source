@@ -196,7 +196,7 @@ public:
 	 * uses btTriangleIndexVertexArray
 	 * @return a bullet rigid body
 	 */
-	btRigidBody* addHeightfield2(float x ,float y, float z);
+	//btRigidBody* addHeightfield2(float x ,float y, float z);
 
 	/** \brief defines the rigid body as mesh
 	 *

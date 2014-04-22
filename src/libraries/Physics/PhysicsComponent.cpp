@@ -264,7 +264,7 @@ btRigidBody* PhysicsComponent::addHeightfield(char* filename, float x, float y, 
 
 	groundShape->setUseDiamondSubdivision(true);
 
-	btVector3 localScaling(0.4,10,0.4);
+	btVector3 localScaling(0.5,10,0.5);
 	localScaling[upIndex]=1.f;
 	groundShape->setLocalScaling(localScaling);
 
@@ -286,39 +286,6 @@ btRigidBody* PhysicsComponent::addHeightfield(char* filename, float x, float y, 
 	btRigidBody* body = new btRigidBody(info);
 	cout << "heightMap phComp erstellt" << endl;	//zum test
 
-	return body;
-}
-
-btRigidBody* PhysicsComponent::addHeightfield2(float x, float y, float z){
-
-	int numTriangles;
-	int triangleBase;
-	int triangleStride;
-	int numVertex;
-	btScalar vertexBase;
-	int vertexStride;
-
-	btTriangleIndexVertexArray* TIVA = new btTriangleIndexVertexArray(numTriangles,&triangleBase,triangleStride,numVertex,&vertexBase,vertexStride);
-
-	bool	useQuantizedAabbCompression = true;
-	btBvhTriangleMeshShape* groundShape = new btBvhTriangleMeshShape(TIVA,useQuantizedAabbCompression);
-
-	btVector3 localScaling(10,10,10);
-	groundShape->setLocalScaling(localScaling);
-
-	btTransform t;
-	t.setIdentity();
-	t.setOrigin(btVector3(x,y,z));
-
-	float mass = 0.0;	//damit dann static
-
-	btVector3 inertia;
-	if(mass != 0.0){
-		groundShape->calculateLocalInertia(mass, inertia);
-	}
-	btDefaultMotionState* motion = new btDefaultMotionState(t);
-	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,groundShape);
-	btRigidBody* body = new btRigidBody(info);
 	return body;
 }
 
