@@ -168,11 +168,20 @@ public:
 	/** \brief defines the rigid body as heightfield
 	 *
 	 * creates a heightfield rigid body with all necessary parts
+	 * uses btHeightfieldTerrainShape
 	 * @param filename name of the heightfield picture
 	 * @param x,y,z start position in the world
 	 * @return a bullet rigid body
 	 */
 	btRigidBody* addHeightfield(char* filename, float x, float y, float z);
+
+	/** \brief defines the rigid body as heightfield
+	 *
+	 * creates a heightfield rigid body with all necessary parts
+	 * uses btTriangleIndexVertexArray
+	 * @return a bullet rigid body
+	 */
+	btRigidBody* addHeightfield2(float x ,float y, float z);
 
 	/** \brief getter
 	 *
