@@ -158,8 +158,8 @@ void configureRendering(){
 
 	compositingRenderPass->setCustomClearColor( glm::vec4(1.0, 1.0, 1.0, 1.0) );
 	compositingRenderPass->setClearColorBufferBit(true);	// clear color buffer on every frame
-	compositingRenderPass->attachListenerOnPostUniformUpload( uniResX );
-	compositingRenderPass->attachListenerOnPostUniformUpload( uniResY );
+	//compositingRenderPass->attachListenerOnPostUniformUpload( uniResX );
+	//compositingRenderPass->attachListenerOnPostUniformUpload( uniResY );
 	compositingRenderPass->attachListenerOnPostUniformUpload( uniPositionMap1 );
 	compositingRenderPass->attachListenerOnPostUniformUpload( uniColorMap1 );
 	compositingRenderPass->attachListenerOnPostUniformUpload( uniNormalMap1 );

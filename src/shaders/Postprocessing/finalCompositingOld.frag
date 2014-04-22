@@ -6,12 +6,12 @@ uniform sampler2D positionMap;
 uniform sampler2D normalMap;
 uniform sampler2D colorMap;
 uniform sampler2D specularMap;
-//uniform sampler2D shadowMap;
+uniform sampler2D shadowMap;
 
 uniform mat4 uniformLightPerspective;
 
-//uniform float resX;
-//uniform float resY;
+uniform float resX;
+uniform float resY;
 
 //out vec4 fragmentColor;
 layout(location = 1) out vec4 colorOutput;
@@ -30,7 +30,7 @@ void main() {
 
 	lightPerspective = vec4(lightPerspective.xyz / lightPerspective.w, 0.0);
     lightPerspective = lightPerspective * 0.5 + 0.5;
-    //float lightDepth = texture(shadowMap, lightPerspective.xy).x;
+    float lightDepth = texture(shadowMap, lightPerspective.xy).x;
 
 	float visibility = 1.0;
 //    
@@ -51,10 +51,10 @@ void main() {
     float specular = pow(max(dot(reflection, -normalize(position.xyz)),0), shininess * 1000.0);
  
 
-    //float resX_temp = 1.0/resX;
-    //float resY_temp = 1.0/resY;
+    float resX_temp = 1.0/resX;
+    float resY_temp = 1.0/resY;
 
-    //int strength = 5;
+    int strength = 5;
 
     //GLOW ENTFERNT, COMPOSITING SOLL DEN EFFEKT NICHT MEHR ÜBERNEHMEN, SONDERN VIA POSTPROCESSING AUF DIE FBO-GENERIERTE...
     //...TEXTUR DRAUFGERECHNET WERDEN
