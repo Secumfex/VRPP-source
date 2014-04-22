@@ -101,7 +101,9 @@ void configureRendering(){
 	Shader* water_shader 		= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/water.vert"		, SHADERS_PATH 	"/Underwater_Visuals_Test/water.frag");
 	Shader* particles_shader	= new Shader( SHADERS_PATH "/HUD/Copy of particles.vert"	, SHADERS_PATH  "/HUD/Copy of particles.frag");
 	Shader* composition_shader  = new Shader( SHADERS_PATH "/Underwater_Visuals_Test/screenFill.vert"	, SHADERS_PATH  "/Underwater_Visuals_Test/finalCompositing.frag");
-	Shader* HUDShader			= new Shader( SHADERS_PATH "/HUD/HUD.pervert"								, SHADERS_PATH  "/HUD/HUD.faggot");
+	Shader* HUDAirShader		= new Shader( SHADERS_PATH "/HUD/StaticHUDElement.vert"					, SHADERS_PATH  "/HUD/HUDAir.faggot");
+	Shader* StaticHUDShader		= new Shader( SHADERS_PATH "/HUD/StaticHUDElement.vert"					, SHADERS_PATH  "/HUD/StaticHUDElement.frag");
+	Shader* MarkerShader		= new Shader( SHADERS_PATH "/HUD/Marker.vert"					, SHADERS_PATH 	"/HUD/StaticHUDElement.frag");
 
 	FrameBufferObject* preCompositingScene = new FrameBufferObject(800, 600);
 	preCompositingScene->bindFBO();
@@ -152,9 +154,9 @@ void configureRendering(){
 
 	Listener* unbindCurrentFBO	= new UnbindFrameBufferObjectListener ();
 
-	Listener* uniAirText	= new UploadUniformTextureListener 	("UNIFORMUPLOADLISTENER", 20, "uniformAirTexture", HUD::HUD_texture->getTextureHandle());
-	Listener* uniHUDMap		= new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 21, "uniformHUD", HUD::framebuffer_HUD->getPositionTextureHandle());
-	Listener* uniAirLeft	= new UploadUniformAirListener	("UNIFORMUPLOADLISTENER", "uniformAirLeft", HUD::maxAir);
+	Listener* uniHUDMap		= new UploadUniformTextureListener	( "UNIFORMUPLOADLISTENER", 21, "uniformHUD", HUD::framebuffer_HUD->getPositionTextureHandle());
+	Listener* uniAirLeft	= new UploadUniformAirListener		( "UNIFORMUPLOADLISTENER", "uniformAirLeft", HUD::maxAir);
+	Listener* depthListener = new UploadUniformFloatListener	( "UNIFORMUPLOADLISTENER", testingState->getCamera()->getPositionPointer()->y, "uniformDepth");
 
 	testingApp->attachListenerOnProgramInitialization(	new SetCurrentShaderListener( reflection_shader ));
 
@@ -225,14 +227,24 @@ void configureRendering(){
 	ParticlesRenderPass* renderParticles = new ParticlesRenderPass(UnderwaterScene::framebuffer_water_particles, UnderwaterScene::water_particles, vaoID[0]);
 	testingApp->attachListenerOnRenderManagerFrameLoop(( renderParticles));
 
-	// 7: render HUD
-	testingApp->attachListenerOnRenderManagerFrameLoop( new SetCurrentShaderListener( HUDShader ));
-	testingApp->attachListenerOnRenderManagerFrameLoop( uniAirText);
-	HUDRenderPass* renderHUD = new HUDRenderPass(HUD::framebuffer_HUD, HUD::hudSys, vaoID[0]);
+	// 7: render HUD (air bar)
+	testingApp->attachListenerOnRenderManagerFrameLoop( new SetCurrentShaderListener( HUDAirShader ));
+	HUDAirRenderPass* renderHUDAir = new HUDAirRenderPass(HUD::framebuffer_HUD, HUD::hudSys, vaoID[0]);
 	testingApp->attachListenerOnRenderManagerFrameLoop( uniAirLeft );
+	testingApp->attachListenerOnRenderManagerFrameLoop( renderHUDAir );
+
+	// 8: render HUD (depth meter scala)
+	testingApp->attachListenerOnRenderManagerFrameLoop( new SetCurrentShaderListener( StaticHUDShader ));
+	StaticHUDElementRenderPass* renderHUD = new StaticHUDElementRenderPass(HUD::framebuffer_HUD, HUD::hudSys, vaoID[0]);
 	testingApp->attachListenerOnRenderManagerFrameLoop( renderHUD );
 
-	// 8: Compositing
+	// 9: render HUD (marker for depth scala)
+	testingApp->attachListenerOnRenderManagerFrameLoop( new SetCurrentShaderListener( MarkerShader ));
+	StaticHUDElementRenderPass* renderMarker = new StaticHUDElementRenderPass(HUD::framebuffer_HUD, HUD::hudSys, vaoID[0]);
+	testingApp->attachListenerOnRenderManagerFrameLoop( depthListener );
+	testingApp->attachListenerOnRenderManagerFrameLoop( renderMarker );
+
+	// 9: Compositing
 	testingApp->attachListenerOnRenderManagerFrameLoop( new SetCurrentShaderListener( composition_shader ));
 	testingApp->attachListenerOnRenderManagerFrameLoop( uniPreCompMap );
 	testingApp->attachListenerOnRenderManagerFrameLoop( uniGodRayMap );

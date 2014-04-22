@@ -212,14 +212,14 @@ void ParticlesRenderPass::update(){
 		glViewport(0,0, 800, 600);
 	}
 
-HUDRenderPass::HUDRenderPass(FrameBufferObject* fbo, HUDSystem* hudSystem, GLint vao){
+StaticHUDElementRenderPass::StaticHUDElementRenderPass(FrameBufferObject* fbo, HUDSystem* hudSystem, GLint vao){
 	rm = RenderManager::getInstance();
 	this->fbo = fbo;
 	this->hudSystem = hudSystem;
 	this->vao = vao;
 }
 
-void HUDRenderPass::update(){
+void StaticHUDElementRenderPass::update(){
 
 	/***************** save old state ******************/
 		FrameBufferObject* tempFBO = rm->getCurrentFBO();

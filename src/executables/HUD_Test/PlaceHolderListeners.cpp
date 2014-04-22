@@ -211,14 +211,14 @@ void ParticlesRenderPass::update(){
 		glViewport(0,0, 800, 600);
 	}
 
-HUDRenderPass::HUDRenderPass(FrameBufferObject* fbo, HUDSystem* hudSystem, GLint vao){
+HUDAirRenderPass::HUDAirRenderPass(FrameBufferObject* fbo, HUDSystem* hudSystem, GLint vao){
 	rm = RenderManager::getInstance();
 	this->fbo = fbo;
 	this->hudSystem = hudSystem;
 	this->vao = vao;
 }
 
-void HUDRenderPass::update(){
+void HUDAirRenderPass::update(){
 
 	/***************** save old state ******************/
 		FrameBufferObject* tempFBO = rm->getCurrentFBO();
@@ -237,16 +237,19 @@ void HUDRenderPass::update(){
    /*****************render object************************/
 		rm->setCurrentGC(airGC);
 		vector <HUDElement* > elements = hudSystem->getHUDElements();
-		for (unsigned int i = 0; i < elements.size(); i++) {
-			currentShader->uploadUniform(elements[i]->getPosition(),	"uniformModelPosition");
+			currentShader->uploadUniform(elements[0]->getPosition(),	"uniformModelPosition");
+
+			glActiveTexture(GL_TEXTURE0 + 20);			// set active texture as target to load texture to
+			glBindTexture(GL_TEXTURE_2D, elements[0]->getTexture()->getTextureHandle());	// load texture to active texture unit
+
+			GLint u = 20;
+			currentShader->uploadUniform( u, "uniformAirTexture");		// upload texture unit to shader uniform sampler2d variable
 
 			glBindVertexArray(vao); // Bind our Vertex Array Object
 
 			glDrawArrays(GL_TRIANGLES, 0, 6); // Draw our square
 
 			glBindVertexArray(0); // Unbind our Vertex Array Object
-
-		}
 
 
 	/****************** back to old state *****************/
@@ -258,6 +261,58 @@ void HUDRenderPass::update(){
 		rm->setCurrentFBO(tempFBO);
 		glViewport(0,0, 800, 600);
 	}
+
+StaticHUDElementRenderPass::StaticHUDElementRenderPass(FrameBufferObject* fbo, HUDSystem* hudSystem, GLint vao){
+	rm = RenderManager::getInstance();
+	this->fbo = fbo;
+	this->hudSystem = hudSystem;
+	this->vao = vao;
+}
+
+void StaticHUDElementRenderPass::update(){
+
+	/***************** save old state ******************/
+		FrameBufferObject* tempFBO = rm->getCurrentFBO();
+
+		fbo->bindFBO();
+		rm->setCurrentFBO(fbo);
+		Shader* currentShader;
+        glDisable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    	glViewport(0, 0, fbo->getWidth(), fbo->getHeight());
+        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	//dont clear color while still drawing other HUDElements into FBO
+		currentShader = rm->getCurrentShader();
+
+   /*****************render object************************/
+		rm->setCurrentGC(airGC);
+		vector <HUDElement* > elements = hudSystem->getHUDElements();
+			currentShader->uploadUniform(elements[1]->getPosition(),	"uniformModelPosition");
+
+			glActiveTexture(GL_TEXTURE0 + 21);			// set active texture as target to load texture to
+			glBindTexture(GL_TEXTURE_2D, elements[1]->getTexture()->getTextureHandle());	// load texture to active texture unit
+
+			GLint u = 21;
+			currentShader->uploadUniform( u, "uniformAirTexture");		// upload texture unit to shader uniform sampler2d variable
+
+			glBindVertexArray(vao); // Bind our Vertex Array Object
+
+			glDrawArrays(GL_TRIANGLES, 0, 6); // Draw our square
+
+			glBindVertexArray(0); // Unbind our Vertex Array Object
+
+
+	/****************** back to old state *****************/
+		glDisable(GL_BLEND);
+		glEnable(GL_DEPTH_TEST);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+
+		fbo->unbindFBO();
+		rm->setCurrentFBO(tempFBO);
+		glViewport(0,0, 800, 600);
+	}
+
 
 
 RenderloopPlaceHolderListener::RenderloopPlaceHolderListener(VirtualObject* water_object){ 

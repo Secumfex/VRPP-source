@@ -6,9 +6,19 @@ using namespace std;
 		position = pos;
 		this->offset = offset;
 		this->scale = scale;
+
+		HUD_texture = NULL;
 	}
 
 	HUDElement::~HUDElement(){
+	}
+
+	void HUDElement::setTexture(Texture* texture){
+		HUD_texture = texture;
+	}
+
+	Texture* HUDElement::getTexture(){
+		return HUD_texture;
 	}
 
 	void HUDElement::setPosition(glm::vec3 pos){

@@ -81,7 +81,7 @@ public:
 };
 
 /// Listener for rendering HUD elements
-class HUDRenderPass : public Listener{
+class HUDAirRenderPass : public Listener{
 public:
 	RenderManager* rm;
 
@@ -90,10 +90,37 @@ public:
 	GraphicsComponent* airGC;
 	GLint vao;
 
-	HUDRenderPass(FrameBufferObject* fbo, HUDSystem* hudSystem, GLint vao);
+	HUDAirRenderPass(FrameBufferObject* fbo, HUDSystem* hudSystem, GLint vao);
 	void update();
 };
 
+/// Listener for rendering HUD elements
+class StaticHUDElementRenderPass : public Listener{
+public:
+	RenderManager* rm;
+
+	FrameBufferObject* fbo;
+	HUDSystem* hudSystem;
+	GraphicsComponent* airGC;
+	GLint vao;
+
+	StaticHUDElementRenderPass(FrameBufferObject* fbo, HUDSystem* hudSystem, GLint vao);
+	void update();
+};
+
+/// Listener for rendering HUD elements
+class HUDMarkerRenderPass : public Listener{
+public:
+	RenderManager* rm;
+
+	FrameBufferObject* fbo;
+	HUDSystem* hudSystem;
+	GraphicsComponent* airGC;
+	GLint vao;
+
+	HUDMarkerRenderPass(FrameBufferObject* fbo, HUDSystem* hudSystem, GLint vao);
+	void update();
+};
 
 /// Listener which uses an FBO as Render Target and ignores the water_object
 class RefractionMapRenderPass : public Listener{

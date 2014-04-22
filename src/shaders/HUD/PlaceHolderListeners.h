@@ -81,7 +81,7 @@ public:
 };
 
 /// Listener for rendering HUD elements
-class HUDRenderPass : public Listener{
+class StaticHUDElementRenderPass : public Listener{
 public:
 	RenderManager* rm;
 
@@ -90,7 +90,7 @@ public:
 	GraphicsComponent* airGC;
 	GLint vao;
 
-	HUDRenderPass(FrameBufferObject* fbo, HUDSystem* hudSystem, GLint vao);
+	StaticHUDElementRenderPass(FrameBufferObject* fbo, HUDSystem* hudSystem, GLint vao);
 	void update();
 };
 
