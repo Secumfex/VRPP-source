@@ -5,7 +5,7 @@ in vec2 passUV;
 uniform sampler2D positionMap;
 uniform sampler2D normalMap;
 uniform sampler2D colorMap;
-uniform sampler2D specularMap;
+//uniform sampler2D specularMap;
 //uniform sampler2D shadowMap;
 
 uniform mat4 uniformLightPerspective;
@@ -14,14 +14,15 @@ uniform float resX;
 uniform float resY;
 
 //out vec4 fragmentColor;
-layout(location = 1) out vec4 colorOutput;
+//layout(location = 1) out vec4 colorOutput;
+out vec4 colorOutput;
 
 void main() {
     vec4 position = texture(positionMap, passUV);
     vec4 normal = texture(normalMap, passUV);
     vec4 color = texture(colorMap, passUV);
-    vec4 specularColor = texture(specularMap, passUV);
-	float shininess = texture(specularMap, passUV).a;
+//    vec4 specularColor = texture(specularMap, passUV);
+//	float shininess = texture(specularMap, passUV).a;
 
     //lightPosition from camera system
     vec4 lightPos = vec4(5,2,-2,1);
@@ -48,7 +49,9 @@ void main() {
     vec3  reflection = normalize(reflect(-nPosToLight,normal.xyz));
     float ambient = 0.1;
     float diffuse = max(dot(normal.xyz, nPosToLight), 0) * visibility;
-    float specular = pow(max(dot(reflection, -normalize(position.xyz)),0), shininess * 1000.0);
+    float specular = pow(max(dot(reflection, -normalize(position.xyz)),0), 
+	//shininess * 1000.0
+	50.0);
  
 
     float resX_temp = 1.0/resX;
@@ -70,5 +73,7 @@ void main() {
     }
     glow /= strength * strength * 4;*/
 
-    colorOutput = color * ambient + (color * diffuse + specularColor * specular) * lightColor;
+    colorOutput = color * ambient + (color * diffuse 
+	//+ specularColor * specular
+	) * lightColor;
 }

@@ -129,6 +129,8 @@ void configureRendering(){
 	/* creating listeners */
 	Listener* uniResX = new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", 800, "resX");
 	Listener* uniResY = new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", 600, "resY");
+	Listener* uniResX2 = new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", 800, "resX");
+	Listener* uniResY2 = new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", 600, "resY");
 	Listener* uniPositionMap1 = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 4, "positionMap", 	fbo->getPositionTextureHandle());	// upload to texture unit 4 ( default position Map unit )
 	Listener* uniNormalMap1 = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 5, "normalMap", 	fbo->getNormalTextureHandle());// upload to texture unit 5 ( default normal Map unit )
 	Listener* uniColorMap1 = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 6, "colorMap", 	fbo->getColorTextureHandle()); // upload to texture unit 6 ( default color Map unit )
@@ -160,20 +162,20 @@ void configureRendering(){
 	compositingRenderPass->setClearColorBufferBit(true);	// clear color buffer on every frame
 	compositingRenderPass->attachListenerOnPostUniformUpload( uniResX );
 	compositingRenderPass->attachListenerOnPostUniformUpload( uniResY );
-	compositingRenderPass->attachListenerOnPostUniformUpload( uniPositionMap1 );
-	compositingRenderPass->attachListenerOnPostUniformUpload( uniColorMap1 );
-	compositingRenderPass->attachListenerOnPostUniformUpload( uniNormalMap1 );
+	compositingRenderPass->setPositionMap(fbo->getPositionTextureHandle());
+	compositingRenderPass->setColorMap(fbo->getColorTextureHandle());
+	compositingRenderPass->setNormalMap(fbo->getNormalTextureHandle());
 
 	//compositingRenderPass->addInitialGraphicsComponent( VirtualObjectFactory::getInstance()->getTriangle() );
 
 	testingState->getRenderLoop()->addRenderPass( compositingRenderPass );
 
 	/* postprocessing renderpass */
-	MixTexturesRenderPass* glowRenderPass = new MixTexturesRenderPass( postprocessShader, 0, fbo->getColorTextureHandle(), fbo2->getPositionTextureHandle() );
+	MixTexturesRenderPass* glowRenderPass = new MixTexturesRenderPass( postprocessShader, 0, fbo->getColorTextureHandle(), fbo2->getColorTextureHandle() );
 	glowRenderPass->setBaseTextureUniformName( "colorMap" );	// set custom uniform name for base texture
 	glowRenderPass->setMixTextureUniformName(  "preGlowTexture" );
-	glowRenderPass->attachListenerOnPostUniformUpload( uniResX );
-	glowRenderPass->attachListenerOnPostUniformUpload( uniResY );
+	glowRenderPass->attachListenerOnPostUniformUpload( uniResX2 );
+	glowRenderPass->attachListenerOnPostUniformUpload( uniResY2 );
 	//glowRenderPass->attachListenerOnPostUniformUpload( uniPositionMap2 );
 	//glowRenderPass->attachListenerOnPostUniformUpload( uniColorMap2 );
 	//glowRenderPass->attachListenerOnPostUniformUpload( uniNormalMap2 );
