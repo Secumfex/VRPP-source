@@ -175,6 +175,7 @@ void configureRendering(){
 	testingState->getRenderLoop()->addRenderPass( glowRenderPass );
 
 	/* alternate postprocessing renderpss - ssao - not working */
+	/* .... */
 	/*MixTexturesRenderPass* ssaoRenderPass = new MixTexturesRenderPass( ssaoShader, 0, fbo->getColorTextureHandle(), fbo2->getPositionTextureHandle() );
 	ssaoRenderPass->setBaseTexture( "colorMap" );
 	ssaoRenderPass->setMixTextureUniformName(  "preGlowTexture" );
