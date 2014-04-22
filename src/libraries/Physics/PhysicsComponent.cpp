@@ -245,7 +245,7 @@ btRigidBody* PhysicsComponent::addHeightfield(char* filename, float x, float y, 
 
 	groundShape->setUseDiamondSubdivision(true);
 
-	btVector3 localScaling(1,1,1);
+	btVector3 localScaling(0.4,1,0.4);
 	localScaling[upIndex]=1.f;
 	groundShape->setLocalScaling(localScaling);
 
