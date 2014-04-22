@@ -257,12 +257,10 @@ btRigidBody* PhysicsComponent::addHeightfield(char* filename, float x, float y, 
 
 btRigidBody* PhysicsComponent::addTriangleMesh(float x, float y, float z, btTriangleMesh btMesh, vector<GraphicsComponent*> mGraphComponent, btTriangleIndexVertexArray* btTIVA){
 
+	static btTriangleMesh triangleMesh = btMesh;	//Var A
+	static btTriangleIndexVertexArray* tIVA = btTIVA; //Var B
 
-	static btTriangleIndexVertexArray* tIVA = btTIVA; //Var A
-	static btTriangleMesh triangleMesh = btMesh;	//Var B
 	static btRigidBody* staticBody = 0;
-
-	cout << "triangleMesh.getNumTriangles() " << triangleMesh.getNumTriangles() << endl;
 
 	bool useQuantizedAabbCompression = true;
 	btBvhTriangleMeshShape* triangleShape = 0;
@@ -283,32 +281,6 @@ btRigidBody* PhysicsComponent::addTriangleMesh(float x, float y, float z, btTria
 	cout << "static rigidbody added" << endl;
 
 	return staticBody;
-
-
-	/***** cube default zeug *********/
-	/*
-	btTransform t;
-	t.setIdentity();
-	t.setOrigin(btVector3(x,y,z));
-
-	btBoxShape* box = new btBoxShape(btVector3(40.0f,2.0f,40.0f));
-	btVector3 inertia;
-	if(mass != 0.0) {
-		box->calculateLocalInertia(mass,inertia);
-	}
-	box->calculateLocalInertia(mass,inertia);
-
-
-
-	btMotionState* motion = new btDefaultMotionState(t);
-	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,box, inertia);
-
-	btRigidBody* body = new btRigidBody(info);
-	body->setLinearFactor(btVector3(1,1,1));
-
-	return body;
-	*/
-
 }
 
 btRigidBody* PhysicsComponent::getRigidBody(){

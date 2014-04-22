@@ -131,8 +131,9 @@ public:
 	/** \brief sets PhysicsComponent
 	 *
 	 * creates PhysicComponent of a mesh model
-	 * @param mass
-	 * @param collisionFlag sets collisiontype of the collisionshape
+	 * @param x,y,z position in world
+	 * @param btMesh btTriangleMesh of loaded model ->VarA
+	 * @param btTIVA btTriangleIndexVertexArray of loaded model ->VarB
 	 * @return void
 	 */
 	void setPhysicsComponent(float x, float y, float z, btTriangleMesh btMesh, btTriangleIndexVertexArray* btTIVA);

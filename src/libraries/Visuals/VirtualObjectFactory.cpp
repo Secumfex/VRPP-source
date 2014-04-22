@@ -254,16 +254,14 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 
 			//Var B TriangleIndexVertexarray, set Parameters
 			btIndexedMesh btIMesh; //Mesh, that gets added to TIVA
-			static glm::vec3*	gVertices=0;
-			static int*	gIndices=0;
-			gVertices = new glm::vec3[mesh->mNumVertices];
-			gIndices = new int[mesh->mNumFaces*3];
-			int y = 0;
-			int z = 0;
+			static glm::vec3* vertexBase = new glm::vec3[mesh->mNumVertices];
+			static int* triangleIndexBase = new int[mesh->mNumFaces*3];
+			int y = 0; 	//index for vertexBase
+			int z = 0;	//index for triangleIndexBase
 			int numTriangles = 0;	//count only faces, that are triangles
 			btIMesh.m_vertexStride = sizeof(float) * 3; //3*float per vertex
 			btIMesh.m_triangleIndexStride = sizeof(int) *3; //3*int(3 pointer to vertices) per triangle
-			btIMesh.m_numVertices = mesh->mNumVertices;
+			btIMesh.m_numVertices = mesh->mNumVertices; //total number of vertices
 			btIMesh.m_indexType = PHY_INTEGER;
 			btIMesh.m_vertexType = PHY_FLOAT;
 
@@ -285,22 +283,22 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 
 					btMesh.addTriangle(btVertex0, btVertex1, btVertex2, false);
 
-					//Var B with TriangleIndexVertexArray
-					gIndices[++z] = face.mIndices[0];
-					gIndices[++z] = face.mIndices[1];
-					gIndices[++z] = face.mIndices[2];
+					//Var B with TriangleIndexVertexArray, set array for triangleIndexBase
+					triangleIndexBase[++z] = face.mIndices[0];
+					triangleIndexBase[++z] = face.mIndices[1];
+					triangleIndexBase[++z] = face.mIndices[2];
 					numTriangles++;
 				}
 			}
 
-			//vertexBase = the array of vertex positions
+			//Var B, set array of vertex positions for vertexBase
 			for (unsigned int k=0; k < mesh->mNumVertices; ++k){
 				glm::vec3 vertex = glm::vec3(mesh->mVertices[k].x, mesh->mVertices[k].y, mesh->mVertices[k].z);
-				gVertices[++y] = vertex;
+				vertexBase[++y] = vertex;
 			}
 
-			btIMesh.m_triangleIndexBase = (const unsigned char *)&gIndices[0];
-			btIMesh.m_vertexBase = (const unsigned char *)&gVertices[0].x;
+			btIMesh.m_triangleIndexBase = (const unsigned char *)&triangleIndexBase[0];
+			btIMesh.m_vertexBase = (const unsigned char *)&vertexBase[0].x;
 			btIMesh.m_numTriangles = numTriangles;
 			btTIVA->addIndexedMesh(btIMesh, PHY_INTEGER);
 		}

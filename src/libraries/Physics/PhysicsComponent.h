@@ -39,8 +39,11 @@ public:
 
 	/** \brief constructor
 	*
-	* creates a physics component with a given model matrix. does not define any rigid body.
-	* @param modelMatrix 4x4Matrix
+	* constructor to create a static mesh shaped rigidbody.
+	* @param x,y,z position in world
+	* @param btMesh btTriangleMesh of loaded model ->VarA
+	* @param mGraphComponent not used yet, but maybe for optimization neccessary
+	* @param btTIVA TriangleIndexVertexArray of loaded model ->VarB
 	*/
 	PhysicsComponent(float x, float y, float z, btTriangleMesh btMesh, vector<GraphicsComponent*> mGraphComponent, btTriangleIndexVertexArray* btTIVA);
 
@@ -186,8 +189,11 @@ public:
 
 	/** \brief defines the rigid body as mesh
 	 *
-	 * creates a collisionshape by meshes
+	 * creates a static rigidbody from meshes
+	 * @param x,y,z position in world
+	 * @param btMesh btTriangleMesh of loaded model ->VarA
 	 * @param mGraphComponent graphic components of vo
+	 * @param btTIVA triangleIndexVertexArray of loaded model ->VarB
 	 * @return a bullet rigid body
 	 */
 	btRigidBody* addTriangleMesh(float x, float y, float z, btTriangleMesh btMesh,vector<GraphicsComponent*> mGraphComponent, btTriangleIndexVertexArray* btTIVA);
