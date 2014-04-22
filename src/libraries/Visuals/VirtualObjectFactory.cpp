@@ -247,31 +247,27 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 
 		if (bodyType == MESH) {
 
+			//Var A TriangleMesh; set Parameters
 			btVector3 btVertex0;
 			btVector3 btVertex1;
 			btVector3 btVertex2;
 
-			btIndexedMesh btIMesh;
+			//Var B TriangleIndexVertexarray, set Parameters
+			btIndexedMesh btIMesh; //Mesh, that gets added to TIVA
+			static glm::vec3*	gVertices=0;
+			static int*	gIndices=0;
+			gVertices = new glm::vec3[mesh->mNumVertices];
+			gIndices = new int[mesh->mNumFaces*3];
+			int y = 0;
+			int z = 0;
+			int numTriangles = 0;	//count only faces, that are triangles
+			btIMesh.m_vertexStride = sizeof(float) * 3; //3*float per vertex
+			btIMesh.m_triangleIndexStride = sizeof(int) *3; //3*int(3 pointer to vertices) per triangle
+			btIMesh.m_numVertices = mesh->mNumVertices;
+			btIMesh.m_indexType = PHY_INTEGER;
+			btIMesh.m_vertexType = PHY_FLOAT;
 
-			int numTriangles = 0;
-			int numVertices = 0;
-			std::vector<unsigned int> triangleIndexBase;
-			std::vector<glm::vec3> vertexBase;
-			/*
-			 * vertexStride = the number of bytes to skip in the vertex position array to
-			 * 	go from the start of one vertex to the start of the next vertex.
-			 * 	If the vertex position is composed of 3 floats for example, then this
-			 * 	would be 3*sizeof(float).
-			 * 	*/
-			btIMesh.m_vertexStride = sizeof(float) * 3;
-			/*
-			 * triangleIndexStride = the number of bytes to skip in the vertex indices array to go
-			 * 	from the start of one triangle to the start of the next triangle.
-			 * 	Typically this is 3 times the sizeof the vertex index type.
-			 */
-			btIMesh.m_triangleIndexStride = sizeof(unsigned int) *3;
-
-			for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
+			for (unsigned int i = 0; i < mesh->mNumFaces; ++i) {
 
 				const aiFace& face = mesh->mFaces[i];
 				/*
@@ -279,62 +275,34 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 				*assimp triangulate only breaks higher polygons into triangles
 				*/
 				if (face.mNumIndices == 3) {
+					//Var A with TriangleMesh
 					aiVector3D vec0 = mesh->mVertices[face.mIndices[0]];
 					btVertex0 = btVector3(vec0.x, vec0.y, vec0.z);
-
 					aiVector3D vec1 = mesh->mVertices[face.mIndices[1]];
 					btVertex1 = btVector3(vec1.x, vec1.y, vec1.z);
-
 					aiVector3D vec2 = mesh->mVertices[face.mIndices[2]];
 					btVertex2 = btVector3(vec2.x, vec2.y, vec2.z);
 
 					btMesh.addTriangle(btVertex0, btVertex1, btVertex2, false);
 
-					//Var2 with IndexedMesh
-
-					/*
-					 * numVertices = number of vertices
-					 * numTriangles = number of triangles
-
-					 * triangleIndexBase = the array of vertex indices that makes up the triangles
-					 */
-					triangleIndexBase.push_back(face.mIndices[0]);
-					triangleIndexBase.push_back(face.mIndices[1]);
-					triangleIndexBase.push_back(face.mIndices[2]);
+					//Var B with TriangleIndexVertexArray
+					gIndices[++z] = face.mIndices[0];
+					gIndices[++z] = face.mIndices[1];
+					gIndices[++z] = face.mIndices[2];
 					numTriangles++;
 				}
 			}
-			cout << "mNumVertices: " << mesh->mNumVertices << endl;
 
 			//vertexBase = the array of vertex positions
-			for (unsigned int k=0; k < mesh->mNumVertices; k++){
+			for (unsigned int k=0; k < mesh->mNumVertices; ++k){
 				glm::vec3 vertex = glm::vec3(mesh->mVertices[k].x, mesh->mVertices[k].y, mesh->mVertices[k].z);
-				vertexBase.push_back(vertex);
+				gVertices[++y] = vertex;
 			}
 
-			std::vector<unsigned char> tBase;
-			int size = triangleIndexBase.size();
-			for (int j=0; j<size; j++){
-				tBase.push_back((unsigned char)triangleIndexBase[j]);
-			}
-			unsigned char* tib = &tBase[0];
-			btIMesh.m_triangleIndexBase = tib;
-
-
-			std::vector<unsigned char> vBase;
-			int size2 = vertexBase.size();
-			for (int l=0; l<size2; l++){
-				vBase.push_back((unsigned char)(vertexBase[l].x));
-				vBase.push_back((unsigned char)(vertexBase[l].y));
-				vBase.push_back((unsigned char)(vertexBase[l].z));
-			}
-			unsigned char * vb = &vBase[0];
-
-			btIMesh.m_vertexBase = vb;
-
-			btIMesh.m_numVertices = mesh->mNumVertices;
+			btIMesh.m_triangleIndexBase = (const unsigned char *)&gIndices[0];
+			btIMesh.m_vertexBase = (const unsigned char *)&gVertices[0].x;
 			btIMesh.m_numTriangles = numTriangles;
-			btTIVA->addIndexedMesh(btIMesh);
+			btTIVA->addIndexedMesh(btIMesh, PHY_INTEGER);
 		}
 
 		//Our Material and Mesh to be filled

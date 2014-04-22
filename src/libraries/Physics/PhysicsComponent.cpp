@@ -258,20 +258,24 @@ btRigidBody* PhysicsComponent::addHeightfield(char* filename, float x, float y, 
 btRigidBody* PhysicsComponent::addTriangleMesh(float x, float y, float z, btTriangleMesh btMesh, vector<GraphicsComponent*> mGraphComponent, btTriangleIndexVertexArray* btTIVA){
 
 
-	static btTriangleIndexVertexArray* tIVA = btTIVA;
-	static btTriangleMesh triangleMesh = btMesh;
+	static btTriangleIndexVertexArray* tIVA = btTIVA; //Var A
+	static btTriangleMesh triangleMesh = btMesh;	//Var B
 	static btRigidBody* staticBody = 0;
-	float mass = 0.0f;
 
 	cout << "triangleMesh.getNumTriangles() " << triangleMesh.getNumTriangles() << endl;
 
 	bool useQuantizedAabbCompression = true;
-	btBvhTriangleMeshShape* triangleShape = new btBvhTriangleMeshShape(&triangleMesh, useQuantizedAabbCompression);
+	btBvhTriangleMeshShape* triangleShape = 0;
+	triangleShape = new btBvhTriangleMeshShape(tIVA, useQuantizedAabbCompression);
 
+	cout << "btBvhTriangleMeshShape created" << endl;
 
 	btTransform trans;
 	trans.setIdentity();
 	trans.setOrigin(btVector3(x, y, z));
+
+	float mass = 0.0f;
+
 	btDefaultMotionState* motionState = new btDefaultMotionState(trans);
 	btRigidBody::btRigidBodyConstructionInfo info(mass,motionState,triangleShape);
 	staticBody = new btRigidBody(info);
