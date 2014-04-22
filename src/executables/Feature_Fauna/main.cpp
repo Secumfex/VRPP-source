@@ -78,21 +78,19 @@ void createVirtualObject(int height) {
 	float zPosPerVO = 0;
 
 	for (int i = 1; i < height; i++) {
-			xPosPerVO += 5;
-			yPosPerVO += 5;
-			zPosPerVO += 5;
-//		if ( (i%2)==0){
-//			xPosPerVO = 0;
-//			zPosPerVO = 0;
-//		}
-//		else if ( (i%3) ==1){
-//			xPosPerVO = 5;
-//			zPosPerVO = 5;
-//		}
-//		else {
-//			xPosPerVO =-5;
-//			zPosPerVO =-5;
-//		}
+
+		if ( (i%2)==0){
+			xPosPerVO = 0;
+			zPosPerVO = 0;
+		}
+		else if ( (i%3) ==1){
+			xPosPerVO = 5;
+			zPosPerVO = 5;
+		}
+		else {
+			xPosPerVO =-5;
+			zPosPerVO =-5;
+		}
 
 		vo_tmp = testingState->createVirtualObject(	RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE, 1.0, 8);
 		vo_tmp->translate(glm::vec3(xPosPerVO, yPosPerVO, zPosPerVO));
@@ -179,11 +177,11 @@ void catMullRomeSpline(){
 				p2z = (vo3->getPhysicsComponent()->getPosition()).z;
 				p3z = (vo4->getPhysicsComponent()->getPosition()).z;
 
-				Catmullx =(T * ((2.0 * p1x) + ((p2x - p0x) * T) + (((2.0 * p0x) - (5.0 * p1x) + (4.0 * p2x) - p3x) * (T * T))
+				Catmullx =0.5*(T * ((2.0 * p1x) + ((p2x - p0x) * T) + (((2.0 * p0x) - (5.0 * p1x) + (4.0 * p2x) - p3x) * (T * T))
 						+ (((3.0 * p1x) - p0x - (3.0 * p2x) + p3x) * (T * T * T))));
-				Catmully = (T * ((2.0 * p1y) + ((p2y - p0y) * T) + ((2.0 * p0y - 5.0 * p1y + 4.0 * p2y - p3y) * (T * T))
+				Catmully =0.5* (T * ((2.0 * p1y) + ((p2y - p0y) * T) + ((2.0 * p0y - 5.0 * p1y + 4.0 * p2y - p3y) * (T * T))
 						+ ((3.0 * p1y - p0y - 3.0 * p2y + p3y) * (T * T * T))));
-				Catmullz = (T * ((2.0 * p1z) + ((p2z - p0z) * T) + ((2.0 * p0z - 5.0 * p1z + 4.0 * p2z - p3z) * (T * T))
+				Catmullz =0.5* (T * ((2.0 * p1z) + ((p2z - p0z) * T) + ((2.0 * p0z - 5.0 * p1z + 4.0 * p2z - p3z) * (T * T))
 						+ ((3.0 * p1z - p0z - 3.0 * p2z + p3z) * (T * T * T))));
 
 				cat_tmp = testingState->createVirtualObject( RESOURCES_PATH "/sphere.obj", VirtualObjectFactory::SPHERE, 0.0, 8);
@@ -237,7 +235,11 @@ int main() {
 	configureApplication();	// 1 do some customization
 	createFloor();
 	createVirtualObject(5);
-	//catMullRomeSpline();
+	catMullRomeSpline();
+	catMullRomeSpline();
+	catMullRomeSpline();
+	catMullRomeSpline();
+	catMullRomeSpline();
 	listenersEtc();
 	testingApp->run();	// 2 run application
 	return 0;	// 3 end :)
