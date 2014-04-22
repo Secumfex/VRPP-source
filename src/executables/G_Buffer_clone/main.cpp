@@ -59,31 +59,29 @@ int main() {
 	VirtualObject *object03 = voFactory->createVirtualObject(RESOURCES_PATH "/animation_test/piranha.dae", VirtualObjectFactory::OTHER);
 	VirtualObject *object01 = voFactory->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE);
 
-
 	VirtualObject *object10 = voFactory->createVirtualObject(RESOURCES_PATH "/animation_test/fish.dae", VirtualObjectFactory::OTHER);
 
 
 	GraphicsComponent* triangle = voFactory->getTriangle();
 
-	AnimationLoop* animation = object03->getAnimation();
-
 	Flock* myFlock = new Flock();
 
-	glm::mat4 trans = glm::rotate(glm::mat4(), 0.0f, glm::vec3(0.0f, 0.0f, 1.0f)) * glm::scale(glm::mat4(), glm::vec3(0.2f, 0.25f, 0.2f));
+	glm::mat4 trans = glm::rotate(glm::mat4(), 90.0f, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::rotate(glm::mat4(), 90.0f, glm::vec3(1.0f, 0.0f, 0.0f)) * glm::scale(glm::mat4(), glm::vec3(0.25f));
+
+	cout << glm::to_string(glm::vec3(0.25f)) << endl;
+
+	myFlock->addBoid(object02, trans);
 
 	unsigned int i;
 	for (i = 0; i < 50; ++i) {
 		VirtualObject *object13 = new VirtualObject(object10);
-//		VirtualObject *object13 = new VirtualObject(object03);
+		float size_difference = ((i % 8) * 0.01f) - 0.04f;
+		trans = glm::scale(glm::mat4(), glm::vec3(0.25f + size_difference));
 		myFlock->addBoid(object13, trans);
 		rq->addVirtualObject(object13);
 	}
 
-
 	myFlock->initializeStartPositions(5.0f, glm::vec3(0.0f, 0.0f, 0.0f));
-	myFlock->setPlaceToAvoid(glm::vec3(0.0f, 0.0f, 2.0f));
-
-	Boid* myBoid = myFlock->getBoids()[0];
 
 
 	//----------------------------//
@@ -147,6 +145,8 @@ int main() {
 	frustum->updateModelMatrix();
 
 	float animation_time = 0.0f;
+	glm::vec3 piranha_place = glm::vec3(0.0f, 0.0f, 2.0f);
+
 
 	while(!glfwWindowShouldClose(window)) {
 
@@ -170,17 +170,16 @@ int main() {
 		angle = fmod((float)(angle+rotationSpeed*glfwGetTime()), (float)(pi<float>()*2.0f));
 
 		animation_time += glfwGetTime();
-		animation->updateNodes(animation_time);
 
+		object03->getAnimation()->updateNodes(animation_time);
 		myFlock->update(animation_time);
 		myFlock->setPlaceToGo(vec3(sin(angle) * 10.0f, 0.0f, cos(angle) * 5.0f));
-//		myFlock->setPlaceToGo(glm::vec3(0.0f, 0.0f, 0.0f));
+		myFlock->setPlaceToAvoid(piranha_place);
 
 
 		cam->setPosition(glm::vec3(0.0f, 2.0f, -8.0f));
-//		cam->setCenter(glm::vec3(0.0f, 0.0f, 0.0f));
-//		cam->setPosition(myBoid->getPosition() + glm::vec3(0.0f, 2.0f, -10.0f));
-		cam->setCenter(myBoid->getPosition());
+				cam->setCenter(glm::vec3(0.0f, 0.0f, 0.0f));
+
 
 		glfwSetTime(0.0);
 
@@ -188,12 +187,10 @@ int main() {
 		mat4 modelMatrix01 = scale(translate(mat4(1.0f), vec3(0.0f, -1.0f, 0.0f)), vec3(2.5f, 0.2f, 2.5f));
 
 		//nice rotation of a small cube
-		mat4 modelMatrix02 = translate(rotate(scale(mat4(), vec3(0.25f, 0.25f, 0.25f)), degrees(angle), vec3(1.0f, 1.0f, 0.0f)), vec3(0.0f, 1.5f, -0.5f));
 
-		mat4 modelMatrix03 = scale(rotate(mat4(), 0.0f, vec3(0.0f, 1.0f, 0.0f)), vec3(0.25f, 0.25f, 0.25f));
+		mat4 modelMatrix03 = translate(mat4(), piranha_place) * rotate(mat4(), 90.0f + (45.0f * sin(2 * angle)), vec3(-0.2f, 1.0f, 0.0f)) * scale(mat4(), vec3(0.5f, 0.5f, 0.5f));
 
 		object01->setModelMatrix(modelMatrix01);
-		object02->setModelMatrix(modelMatrix02);
 		object03->setModelMatrix(modelMatrix03);
 
 		//--------------------------------------------//

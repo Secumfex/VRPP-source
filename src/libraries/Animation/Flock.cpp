@@ -166,7 +166,7 @@ glm::quat Flock::getRotation(Boid* boid){
 
 	glm::vec3 velocity = mPlaceToGo - boid->getPosition();
 
-	velocity = 0.1f * velocity + 0.9f * boid->getVelocity();
+	velocity = 0.25f * velocity + 0.75f * boid->getVelocity();
 
 	if(glm::length(velocity) == 0.0f)
 		return rotation;
@@ -223,13 +223,10 @@ glm::vec3 Flock::getPlaceToAvoidVector(Boid* boid){
 	glm::vec3 vec = glm::vec3(boid->getPosition() - mPlaceToAvoid);
 	float length = glm::length(vec);
 
-	cout << "pferdinant " << length << endl;
-	if(length > 2.0f)
+	if(length > 2.0f || length <= 0.0f)
 		return glm::vec3(0.0f, 0.0f, 0.0f);
 
 	vec = vec * (1.0f / (length));
-
-	cout << length << endl;
 
 	return vec * 0.05f;
 }
