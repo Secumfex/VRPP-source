@@ -1,6 +1,8 @@
 #ifndef HUD_H
 #define HUD_H
 
+#include "HUDElement.h"
+
 namespace HUD{
 
 	FrameBufferObject* framebuffer_HUD;
@@ -22,14 +24,14 @@ namespace HUD{
 
 
 	hudSys = new	HUDSystem();
-	airBar = new HUDElement();
+	airBar = new HUDElement(glm::vec3(0.0, 0.0, 0.0));
 	hudSys->addHUDElement(airBar);
 
 	target->attachListenerOnBeginningProgramCycle(new UpdateHUDSystemListener(hudSys, IOManager::getInstance()->getDeltaTimePointer()));
 
 
 	//----textures----//
-		HUD_texture = new Texture(RESOURCES_PATH "/bubbles.png");
+		HUD_texture = new Texture(RESOURCES_PATH "/demo_scene/bubbles.png");
 	}
 
 }

@@ -1,6 +1,9 @@
 #version 330 
 
 uniform sampler2D uniformAirTexture;
+uniform vec3 uniformCameraWorldPos;
+
+uniform float uniformAirLeft;
 
 // uniform float uniformParticleDistanceMax;
 

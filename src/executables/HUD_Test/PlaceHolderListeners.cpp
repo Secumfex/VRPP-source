@@ -198,7 +198,6 @@ void ParticlesRenderPass::update(){
 
 			glBindVertexArray(0); // Unbind our Vertex Array Object
 
-//			currentShader->render(particleGC);
 		}
 
 
@@ -554,4 +553,35 @@ void UpdateHUDSystemListener::update(){
 
 }
 
+UploadUniformAirListener::UploadUniformAirListener(std::string name, std::string uniform_name){
+	airLeft = 1.0f;
+	this->uniform_name = uniform_name;
+	this->windowTime = IOManager::getInstance()->getWindowTimePointer();
+	startTime = IOManager::getInstance()->getWindowTime();
+	this->camPosition = RenderManager::getInstance()->getCamera()->getPositionPointer();
+}
 
+void UploadUniformAirListener::update(){
+	if ( camPosition->y < 10.0){
+		if ( timeUnderWater != 0.0){
+			timeUnderWater += *windowTime - startTime;
+		}
+		else {
+			timeUnderWater = 1.0;
+			startTime = *windowTime;
+		}
+		timeUnderWater = 0.0;
+	}
+
+	airLeft = (120.0f - timeUnderWater) / 120.0f;
+
+	std::cout<<"airleft: "<< airLeft << std::endl;
+
+	//-------------------------------------
+
+	Shader* shader = RenderManager::getInstance()->getCurrentShader();
+	shader->uploadUniform( airLeft, uniform_name);
+
+
+
+}

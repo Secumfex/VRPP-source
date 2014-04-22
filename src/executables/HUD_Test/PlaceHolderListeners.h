@@ -279,3 +279,20 @@ public:
 
 static void createSquare();
 
+
+/// listener to upload a Float to keep the air left in sight
+#include "IO/IOManager.h"
+#include "Visuals/RenderManager.h"
+class UploadUniformAirListener : public Listener {
+private:
+	float airLeft;
+	glm::vec3* camPosition;
+	float* windowTime;
+	std::string uniform_name;
+	float timeUnderWater, startTime, timeElapsed;
+public:
+	UploadUniformAirListener(std::string name = std::string("UNIFORMUPLOADLISTENER"), std::string uniform_name = "custom_uniform");
+	void update();
+};
+
+
