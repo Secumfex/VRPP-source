@@ -56,7 +56,6 @@ void createFloor() {
 	glm::mat4 myModelMatrix1 = glm::scale(	glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.0f, 0.0f)),	glm::vec3(5.0f, 0.2f, 5.0f));	//floor
 	floor->setModelMatrix(myModelMatrix1); 	// override default Model Matrix
 	floor->setPhysicsComponent(10.0f, 0.4f, 10.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1);
-	cout<<"1"<<endl;
 
 }
 
@@ -93,8 +92,11 @@ void createVirtualObject(int height) {
 		}
 
 		vo_tmp = testingState->createVirtualObject(	RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE, 1.0, 8);
+/** muss yPosPerVO nicht erhöht werden? mit jedem Durchlauf */
 		vo_tmp->translate(glm::vec3(xPosPerVO, yPosPerVO, zPosPerVO));
 		voVec.push_back(vo_tmp);
+		yPosPerVO +=20;
+
 		testingState->attachListenerOnBeginningProgramCycle(	new UpdateVirtualObjectModelMatrixListener(voVec[i]));
 		rb_tmp = vo_tmp->getPhysicsComponent()->getRigidBody();
 		rb_tmp->applyForce(btVector3(0.,100.,0), btVector3(0,0,0));
@@ -209,23 +211,16 @@ void catMullRomeSpline(){
  */
 
 void listenersEtc(){
-	cout<<"2"<<endl;
 	testingState->attachListenerOnBeginningProgramCycle(	new PhysicWorldSimulationListener(	IOManager::getInstance()->getDeltaTimePointer()));// updates physics simulation
-	cout<<"3"<<endl;
 	testingInputHandler = testingState->getIOHandler();
-	cout<<"31"<<endl;
 	testingInputHandler->attachListenerOnKeyPress(			new TerminateApplicationListener(testingApp), GLFW_KEY_ESCAPE);
-	cout<<"32"<<endl;
 	testingInputHandler->attachListenerOnKeyPress(			new SetCameraPositionListener(testingState->getCamera(), glm::vec3(0.0f, 0.1f, 0.0)), GLFW_KEY_SPACE);
-	cout<<"33"<<endl;
 	//testingInputHandler->attachListenerOnKeyPress( 			new ApplyLinearImpulseOnRigidBody(rigidBodyVec[3], btVector3(50, 0, 0)), GLFW_KEY_1);
-	cout<<"4"<<endl;
 	testingApp->attachListenerOnProgramInitialization( 		new PrintMessageListener(string("Application is booting")));
 	testingApp->attachListenerOnProgramTermination(			new PrintMessageListener(string("Application is terminating")));
 	testingApp->attachListenerOnBeginningProgramCycle(		new PhysicWorldSimulationListener(	IOManager::getInstance()->getDeltaTimePointer()));
 	testingApp->attachListenerOnProgramInitialization(		new SetDefaultShaderListener(	new Shader(SHADERS_PATH "/Phong/phong.vert", SHADERS_PATH "/Phong/phong.frag")));
 	testingApp->attachListenerOnRenderManagerFrameLoop(		new RenderloopPlaceHolderListener());
-	cout<<"5"<<endl;
 	std::cout << PhysicWorld::getInstance()->dynamicsWorld->getNumCollisionObjects() << endl;
 
 	testingApp->addState(testingState);
@@ -236,10 +231,10 @@ int main() {
 	createFloor();
 	createVirtualObject(5);
 	catMullRomeSpline();
-	catMullRomeSpline();
-	catMullRomeSpline();
-	catMullRomeSpline();
-	catMullRomeSpline();
+	//catMullRomeSpline();
+	//catMullRomeSpline();
+	//catMullRomeSpline();
+	//catMullRomeSpline();
 	listenersEtc();
 	testingApp->run();	// 2 run application
 	return 0;	// 3 end :)
