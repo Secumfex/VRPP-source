@@ -102,13 +102,15 @@ void TurnCameraListener::update(){
 	 kinect->isnew=true;
 	
 	 /*calculate which direction
-	 * threshhold depend on how fast you "swim"
-	 *
+	 * threshhold depends on how fast you "swim"
+	 * parameter work differently every time -.- they have to be adjusted to the room/lighting/distance to kinect
 	 *
 	 */
-	 if(kinect->forceNew-1.7f>kinect->forceOld){ strength=0.3;}
-    else if(kinect->forceNew+2.8f<kinect->forceOld){strength=-1.85;} 
+	 
+	 if(kinect->forceNew-1.5f>kinect->forceOld){ strength=0.4;}
+    else if(kinect->forceNew+2.5f<kinect->forceOld){strength=-1.5;} 
 	else strength=0.0f; 
+	
 
 	std::cout<<strength<<endl;
 	}

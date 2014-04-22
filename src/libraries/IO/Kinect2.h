@@ -44,6 +44,7 @@ HANDLE depthStream;              // The identifier of the Kinect's RGB Camera
 INuiSensor* sensor;            // The kinect sensor
 
 bool isnew;
+
 float* force;
 float forceDirection;
 
@@ -52,6 +53,7 @@ float* forceOldp;
 float* forceNewp;
 float forceOld;
 float forceNew;
+
 
 	bool initKinect();
 

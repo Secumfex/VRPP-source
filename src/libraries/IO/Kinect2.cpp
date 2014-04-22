@@ -71,6 +71,7 @@ Kinect::Kinect(void)
 	isnew=false;
 	forceOld=0;
 	forceNew=0;
+
 }
 
 
