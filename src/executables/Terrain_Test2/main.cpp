@@ -22,7 +22,7 @@ PlayerCamera*   playercam;
 void configureMyApp(){
 	/*	customize application a little bit*/
 	myApp = 		Application::getInstance();	//create an Application labeled PROJEKT PRAKTIKUM
-	myApp->			setLabel("PROJEKT PRAKTIKUM");
+	myApp->			setLabel("PP:HeightmapPhysicsTest");
 
 	/*	customize myVRState*/
 	VRState* myVRState = 	new VRState("VRSTATE"); // create a VRState labeled VRSTATE
@@ -30,13 +30,11 @@ void configureMyApp(){
 	myVRState->		attachListenerOnActivation(			new SetClearColorListener(0.44,0.5,0.56));					// custom background color
 	myVRState-> 	attachListenerOnActivation(			new PrintCameraStatusListener( myVRState->getCamera()));
 
-
 	playercam = new PlayerCamera();
 	myVRState->setCamera(playercam);
 
 
 	/*	customize virtual objects*/
-
 	//VirtualObject* groundObject = myVRState->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_ground.dae", VirtualObjectFactory::PLANE);
 
 	VirtualObject* 	terrain = 	myVRState->	createVirtualObject(RESOURCES_PATH "/Heightfield/terrainTest.obj", VirtualObjectFactory::TERRAIN);
@@ -45,25 +43,13 @@ void configureMyApp(){
 	//terrain->setPhysicsComponent(RESOURCES_PATH"/terrainTest.png", 2048, 2048, 0.0f, 0.0f, 1);
 	//myVRState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(terrain));
 
-
 	btRigidBody* camBody = playercam->getRigidBody();
 	playercam->setPosition(0.0f,0.0f,0.0f);
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(camBody);
 
 
-	/*
-	VirtualObject* 	cube20 = 	myVRState->	createVirtualObject(RESOURCES_PATH "/cube.obj");
-
-	glm::mat4		cube20M = 	glm::translate(glm::mat4(1.0f), glm::vec3(1.5f, 3.0f, 0.0f));
-	cube20-> setModelMatrix(		cube20M); 	// override default Model Matrix
-	cube20->	setPhysicsComponent(1.0f, 1.0f, 1.0f, 1.5f, 3.0f, 0.0f, 1.0f);
-	myVRState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube20));
-	*/
-
-	/*	load some virtual objects into vr state scene*/	 		// create a Virtual Object by reading an .obj file and add it to VRState automatically
-
+	/*	load some virtual objects into vr state scene*/
 	myVRState->			attachListenerOnBeginningProgramCycle( 	new PhysicWorldSimulationListener(IOManager::getInstance()->getDeltaTimePointer()));				// updates physics simulation
-
 
 	IOHandler* myVRStateIOHandler = myVRState-> getIOHandler();
 	// attach some listeners to keyboard key presses
@@ -84,7 +70,6 @@ void configureMyApp(){
 
 	SelectionHandler* sh = myVRStateIOHandler->getSelectionHandler();
 	myVRStateIOHandler->attachListenerOnMouseButtonPress(new ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener(sh, myVRState->getCamera(),50.0f), GLFW_MOUSE_BUTTON_RIGHT);
-
 
 	myVRStateIOHandler->attachListenerOnKeyPress(new ApplyLinearImpulseOnRigidBody(playercam->getRigidBody(), btVector3(0.0f,5.0f,0.0f)), GLFW_KEY_SPACE );
 	myVRStateIOHandler->attachListenerOnKeyPress(new SetCameraPositionListener(playercam, glm::vec3(0.0f,5.0f,0.0f)), GLFW_KEY_R );

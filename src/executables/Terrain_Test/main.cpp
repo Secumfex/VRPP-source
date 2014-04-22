@@ -108,7 +108,7 @@ void configRendering(){
 void configureMyApp(){
 	/*	customize application a little bit*/
 	myApp = Application::getInstance();			//create an Application labeled PROJEKT PRAKTIKUM
-	myApp->	setLabel("PROJEKT PRAKTIKUM");
+	myApp->	setLabel("PP:HeightmapShaderTest");
 
 	/*	customize myVRState*/
 	myVRState = 	new VRState("VRSTATE"); 	// create a VRState labeled VRSTATE

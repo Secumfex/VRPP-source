@@ -69,11 +69,10 @@ PhysicsComponent::PhysicsComponent(float x, float y, float z, glm::vec3 normal, 
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
 
-PhysicsComponent::PhysicsComponent(char* filename, float x, float y, float z, VirtualObject* vo){
+PhysicsComponent::PhysicsComponent(char* filename, float x, float y, float z){
 
 	hit = false;
 	rigidBody = addHeightfield(filename,x,y,z);
-	//rigidBody = addHeightfield2(x,y,z,vo);
 	addCollisionFlag(1);	//static object
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
@@ -205,28 +204,20 @@ btRigidBody* PhysicsComponent::addPlane(float x, float y, float z, glm::vec3 nor
 	return body;
 }
 
-//btRigidBody* PhysicsComponent::addHeightfield(char* filename, int width, int height, float x, float y, float z){	//for use of preferred constructor
-btRigidBody* PhysicsComponent::addHeightfield(char* filename, float x, float y, float z){	//for use of legacy constructor
-//btRigidBody* PhysicsComponent::addHeightfield(string filename, float x, float y, float z){
+btRigidBody* PhysicsComponent::addHeightfield(char* filename, float x, float y, float z){
 
 	cout << "addHeightfield called" << endl;	//zum test
 	FILE* heightfieldFile;
-	//char* filenameCHAR = RESOURCES_PATH"/Heightfield/heightfield128x128.raw";
-	int width,length = 128;
+	int width,length;	// = 128;
+	int bpp;
+	char* test = filename;
+	int inf = stbi_info(test,&width,&length,&bpp);
+	cout << "width: " << width << " length: " << length<< " bytesPerPixel: " << bpp << endl;
+
 	//BYTE* heightfieldData;
-	unsigned char* heightfieldData = new unsigned char[width*length];		//for 1. load methode
+	unsigned char* heightfieldData = new unsigned char[width*length];
 	//float* heightfieldData = new float[width*length];
 
-	/* for 2. load methode
-	int width, length, bytesPerPixel;
-	unsigned char* heightfieldData = stbi_load(filename.c_str(), &width, &length, &bytesPerPixel, 1);
-	if(heightfieldData == NULL){
-		cout << "ERROR: Unable to open image "  << filename << endl;
-	}
-	cout << "width: " << width << " length: " << length<< " bytesPerPixel: " << bytesPerPixel << endl;
-	*/
-
-	// for 1. load methode
 	for(int i=0; i<width*length; i++){
 		heightfieldData[i] = 0;
 	}
@@ -239,28 +230,23 @@ btRigidBody* PhysicsComponent::addHeightfield(char* filename, float x, float y, 
 			cout << "couldn't read heightfieldData at " << filename << endl;
 		}
 	}
-
-
-	//fread(heightfieldData,1,width*height,heightfieldFile);	//for use of preferred constructor
-	fclose(heightfieldFile);		//for 1. load methode
+	fclose(heightfieldFile);
 
 	//float heightScale = 0.2;									//for use of preferred constructor
-	//btScalar minHeight = 0;		//min hoehe						//for use of preferred constructor
+	//btScalar minHeight = 0;		//min hoehe					//for use of preferred constructor
 	btScalar maxHeight = 100;		//max hoehe
-	//int upAxis = 1;			//y-axis as "up"				//for use of preferred constructor
 	int upIndex = 1;	//y-axis as "up"						//for use of legacy constructor
 	//PHY_ScalarType heightDataType = PHY_FLOAT;				//for use of preferred constructor
 	bool useFloatData = false;									//for use of legacy constructor
 	bool flipQuadEdges = false;
 
-	//btHeightfieldTerrainShape* groundShape = new btHeightfieldTerrainShape(width, length, heightfieldData, heightScale, minHeight, maxHeight, upAxis, heightDataType, flipQuadEdges);	//for use of preferred constructor
-	btHeightfieldTerrainShape* groundShape = new btHeightfieldTerrainShape(width, length, &heightfieldData, maxHeight, upIndex, useFloatData, flipQuadEdges);	//for use of legacy constructor
+	//btHeightfieldTerrainShape* groundShape = new btHeightfieldTerrainShape(width, length, heightfieldData, heightScale, minHeight, maxHeight, upIndex, heightDataType, flipQuadEdges);	//preferred constructor
+	btHeightfieldTerrainShape* groundShape = new btHeightfieldTerrainShape(width, length, &heightfieldData, maxHeight, upIndex, useFloatData, flipQuadEdges);								//legacy constructor
 
 	groundShape->setUseDiamondSubdivision(true);
 
-	btVector3 localScaling(100,1,100);
-	localScaling[upIndex]=1.f;						//for use of legacy constructor
-	//localScaling[upAxis]=1.f;						//for use of preferred constructor
+	btVector3 localScaling(1,1,1);
+	localScaling[upIndex]=1.f;
 	groundShape->setLocalScaling(localScaling);
 
 	x,y,z = 0;	//zum test
@@ -280,42 +266,7 @@ btRigidBody* PhysicsComponent::addHeightfield(char* filename, float x, float y, 
 	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,groundShape);
 	btRigidBody* body = new btRigidBody(info);
 	cout << "heightMap phComp erstellt" << endl;	//zum test
-	//stbi_image_free(heightfieldData);
-	return body;
-}
 
-btRigidBody* PhysicsComponent::addHeightfield2(float x, float y, float z, VirtualObject* vo){
-
-	vector<GraphicsComponent*> GCs = vo->getGraphicsComponent();
-	int numTriangles = GCs[0]->getMesh()->getNumFaces();
-	int triangleBase;
-	int triangleStride = 3;
-	int numVertex = GCs[0]->getMesh()->getNumVertices();
-	vector<glm::vec3> temp2 = GCs[0]->getMesh()->getVertices();
-	btScalar vertexBase;
-	int vertexStride = 3*sizeof(int);
-
-	btTriangleIndexVertexArray* TIVA = new btTriangleIndexVertexArray(numTriangles,&triangleBase,triangleStride,numVertex,&vertexBase,vertexStride);
-
-	bool	useQuantizedAabbCompression = true;
-	btBvhTriangleMeshShape* groundShape = new btBvhTriangleMeshShape(TIVA,useQuantizedAabbCompression);
-
-	btVector3 localScaling(10,10,10);
-	groundShape->setLocalScaling(localScaling);
-
-	btTransform t;
-	t.setIdentity();
-	t.setOrigin(btVector3(x,y,z));
-
-	float mass = 0.0;	//damit dann static
-
-	btVector3 inertia;
-	if(mass != 0.0){
-		groundShape->calculateLocalInertia(mass, inertia);
-	}
-	btDefaultMotionState* motion = new btDefaultMotionState(t);
-	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,groundShape);
-	btRigidBody* body = new btRigidBody(info);
 	return body;
 }
 
