@@ -106,10 +106,21 @@ void FrameBufferObject::createShadowMap(){
 }
 void FrameBufferObject::createDepthBuffer(){
 	glBindFramebuffer(GL_FRAMEBUFFER, mFramebufferHandle);
-	glGenRenderbuffers(1, &mDepthbufferHandle);
-	glBindRenderbuffer(GL_RENDERBUFFER, mDepthbufferHandle);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, mWidth, mHeight);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mDepthbufferHandle);
+
+	glGenTextures(1, &mDepthbufferHandle);
+	glBindTexture(GL_TEXTURE_2D, mDepthbufferHandle);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, mWidth, mHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, mDepthbufferHandle, 0);
+
+//	glGenRenderbuffers(1, &mDepthbufferHandle);
+//	glBindRenderbuffer(GL_RENDERBUFFER, mDepthbufferHandle);
+//	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, mWidth, mHeight);
+//	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mDepthbufferHandle);
+
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
