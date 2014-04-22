@@ -195,7 +195,7 @@ glm::quat Flock::getRotation(Boid* boid){
 
 void Flock::updateAnimations(float t){
 	unsigned int i;
-	AnimationLoop *ani;
+	AnimationLoop *ani = VirtualObjectFactory::getInstance()->createNonAssimpVO()->getAnimation();
 	for (i = 0; i < mBoids.size(); ++i) {
 		if(ani != mBoids[i]->getVirtualObject()->getAnimation()){
 			ani = mBoids[i]->getVirtualObject()->getAnimation();
