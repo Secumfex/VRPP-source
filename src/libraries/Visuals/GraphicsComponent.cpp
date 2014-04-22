@@ -46,7 +46,7 @@ bool GraphicsComponent::isDynamic(){
 void GraphicsComponent::setModelMatrixGc(glm::mat4 matrix){
 	modelMatrixGc=matrix;
 	btTransform t;
-	float * mat = glm::value_ptr(matrix);
+	float* mat = glm::value_ptr(matrix);
 	t.setFromOpenGLMatrix(mat);
 	mGhostObject->setWorldTransform(t);
 }

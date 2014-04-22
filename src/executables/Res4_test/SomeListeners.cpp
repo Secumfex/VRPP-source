@@ -13,6 +13,7 @@ AlternativeRenderloopListener::AlternativeRenderloopListener(){
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
+#include <glm/ext.hpp>
 
 using namespace glm;
 
@@ -46,7 +47,7 @@ void AlternativeRenderloopListener::update(){
                         /* request for NormalMap */
                         bool normalMap = currentGCs[j]->hasNormalMap();
                         glm::vec3 colorcheck = glm::vec3(1.0,0.0,0.0);
-                        
+                       // std::cout<<"CHECK: "<<normalMap<<endl;
                         Listener* normalMapCheck 	= new UploadUniformBooleanListener	("UNIFORMUPLOADLISTENER", normalMap, "uniformNormalMap");
                         Listener* colorCheck        = new UploadUniformVec3Listener     ("UNIFORMUPLOADLISTENER", colorcheck, "uniformColorCheck");
 						rm->getCurrentVO();
@@ -100,26 +101,36 @@ void SetClearColorListener::update(){
 
 
 
-AnimateRotatingModelMatrixListener::AnimateRotatingModelMatrixListener(VirtualObject* vo){
+AnimateRotatingModelMatrixListener::AnimateRotatingModelMatrixListener(VirtualObject* vo,glm::mat4 save_modelMatrix){
 	this->vo = vo;
 	angle = 0.0;
+    this->save_modelMatrix = save_modelMatrix;
 }
 
 void AnimateRotatingModelMatrixListener::update(){
     //rotation angle
-    angle = fmod((float)(angle+0.001), (float)(pi<float>()*2.0f));
+   // angle = fmod((float)(angle+0.01), (float)(pi<float>()*2.0f));
+    if (angle >= 90.0f){
+        angle = 90.0f;
 
-	glm::mat4 new_modelMatrix = glm::translate(glm::rotate(glm::mat4(1.0f), glm::degrees(angle), glm::vec3(1.0f, 1.0f, 0.0f)), glm::vec3(0.0f, 0.5f, -0.5f));
-    
-    glm::mat4 new_modelMatrix2 = glm::translate(glm::rotate(glm::mat4(1.0f), glm::degrees(angle), glm::vec3(1.0f, 1.0f, 0.0f)), glm::vec3(0.0f, 0.5f, 0.5f));
-    
+    }
+    else{
+            angle += 0.5f;
+    }
+
+    //glm::mat4 new_modelMatrix = glm::rotate(glm::mat4(1.0f),glm::degrees(angle),glm::vec3(1.0f,0.0,0.0f)) * glm::translate(glm::mat4(1.0f), glm::vec3(0.0,0.0,0.0));
+    glm::mat4 saveMatrix = glm::rotate(glm::translate(glm::mat4(1.0f),glm::vec3(0.0,0.7,1.0)), 180.0f, glm::vec3(0.0,1.0,1.0));
+   // glm::mat4 new_modelMatrix = glm::translate(glm::rotate(glm::rotate(glm::mat4(1.0f),180.0f,glm::vec3(0.0,1.0,0.0)), angle, glm::vec3(1.0,0.0,0.0)),glm::vec3(0.0,0,-3.0));
+    glm::mat4 new_modelMatrix = glm::rotate(glm::translate(glm::vec3(0.0,2.0,-1.0)), -angle, glm::vec3(1.0,0.0,0.0))*saveMatrix;
+
 	vo->setModelMatrix(new_modelMatrix);
-    vo->getGraphicsComponent()[1]->setModelMatrixGc(new_modelMatrix2);
+    
 }
 
 /* my Listener for animate a GraphicComponent */
-AnimateGraphicComponentListener::AnimateGraphicComponentListener(GraphicsComponent* gc){
+AnimateGraphicComponentListener::AnimateGraphicComponentListener(GraphicsComponent* gc, VirtualObject* vo){
     this->gc=gc;
+    this->vo=vo;
     angle = 0.0;
 }
 
@@ -127,8 +138,24 @@ void AnimateGraphicComponentListener::update(){
     angle=fmod((float)(angle+0.001), (float)(pi<float>()*2.0f));
 
     glm::mat4 new_modelMatrix2 = glm::translate(glm::rotate(glm::mat4(1.0f), glm::degrees(angle), glm::vec3(1.0f, 1.0f, 0.0f)), glm::vec3(0.0f, 0.5f, -0.5f));
-    
-    gc->setModelMatrixGc(new_modelMatrix2);
+        gc->setModelMatrixGc(new_modelMatrix2);
+    std::cout<<"andere Matrix gesetzt!";
+    glm::mat4 new_modelMatrix = glm::mat4(1.0f);
+    for (int i=0;i<vo->getGraphicsComponent().size();i++){
+        new_modelMatrix = new_modelMatrix * vo->getGraphicsComponent()[i]->getModelMatrix();
+        std::cout<<vo->getGraphicsComponent()[i]->getMaterial()->getName()<<": ";
+        {
+            int m,n;
+            for (n=0; n<4; n++){
+                for (m=0; m<4; m++){
+                    std::cout<<vo->getModelMatrix()[m][n];
+                }
+                std::cout<<"\n";
+            }
+        }
+    }
+    vo->setModelMatrix(new_modelMatrix);
+
 };
 
 AnimateSinusModelMatrixListener::AnimateSinusModelMatrixListener(VirtualObject* vo){

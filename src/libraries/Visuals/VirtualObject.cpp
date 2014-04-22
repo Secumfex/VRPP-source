@@ -141,15 +141,23 @@ void VirtualObject::setPhysicComponent(float x, float y, float z, glm::vec3 norm
 }
 
 glm::mat4 VirtualObject::getModelMatrix(){
+   /* glm::mat4 gcmodelmatrix = glm::mat4(1.0f);
+    unsigned int i = 0;
+    for (i = 0; i< mGraphComponent.size();i++){
+        gcmodelmatrix = mGraphComponent[i]->getModelMatrix() * gcmodelmatrix;
+        
+    }
+    gcmodelmatrix = modelMatrix;
+    */
 	return modelMatrix;
 }
 
 void VirtualObject::setModelMatrix(glm::mat4 modelmatrix){
 	modelMatrix = modelmatrix;
-	unsigned int i = 0;
-	for(i=0; i< mGraphComponent.size();i++){
-		mGraphComponent[i]->setModelMatrixGc(modelmatrix);
-	}
+	//unsigned int i = 0;
+	//for(i=0; i< mGraphComponent.size();i++){
+	//	mGraphComponent[i]->setModelMatrixGc(modelmatrix);
+	//}
 }
 
 PhysicsComponent* VirtualObject::getPhysicsComponent(){

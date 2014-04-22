@@ -54,8 +54,9 @@ class AnimateRotatingModelMatrixListener : public Listener{
 private:
 	VirtualObject* vo;
 	float angle;
+    glm::mat4 save_modelMatrix;
 public:
-	AnimateRotatingModelMatrixListener(VirtualObject* vo);
+	AnimateRotatingModelMatrixListener(VirtualObject* vo,glm::mat4 save_modelMatrix);
 	void update();
 };
 
@@ -63,9 +64,10 @@ public:
 class AnimateGraphicComponentListener : public Listener{
 private:
     GraphicsComponent* gc;
+    VirtualObject* vo;
     float angle;
 public:
-    AnimateGraphicComponentListener(GraphicsComponent* gc);
+    AnimateGraphicComponentListener(GraphicsComponent* gc, VirtualObject* vo);
     void update();
 };
 

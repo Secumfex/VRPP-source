@@ -6,12 +6,20 @@ uniform sampler2D positionMap;
 uniform sampler2D normalMap;
 uniform sampler2D colorMap;
 uniform sampler2D specularMap;
-//uniform sampler2D shadowMap;
+uniform sampler2D shadowMap;
 
 uniform mat4 uniformLightPerspective;
 
 uniform float resX;
 uniform float resY;
+
+
+const int gaussRadius = 11;
+const float gaussFilter[gaussRadius] = float[gaussRadius](
+	0.0402,0.0623,0.0877,0.1120,0.1297,0.1362,0.1297,0.1120,0.0877,0.0623,0.0402);
+	
+vec4 outputColor = vec4(0,0,0,1);
+vec3 newColor = vec3(0.0, 0.0, 0.0); 
 
 out vec4 fragmentColor;
 
@@ -29,25 +37,25 @@ void main() {
     
 	lightPerspective = vec4(lightPerspective.xyz / lightPerspective.w, 0.0);
     lightPerspective = lightPerspective * 0.5 + 0.5;
-   // float lightDepth = texture(shadowMap, lightPerspective.xy).x;
+    float lightDepth = texture(shadowMap, lightPerspective.xy).x;
     
 	float visibility = 1.0;
-    //
-    //  	if (lightDepth < lightPerspective.z - 0.0005) {
-    //       visibility = 0.5;
-    //  } else {
-    //     visibility = 1.0;
-    // }
+  
+ 	if (lightDepth < lightPerspective.z - 0.0005) {
+        visibility = 0.5;
+    } else {
+         visibility = 1.0;
+     }
     
     //calculate lighting with given position, normal and lightposition
     vec3 nPosToLight = normalize(vec3(lightPos.xyz - position.xyz));
     
 	vec4 lightColor = vec4(1.0, 1.0, 1.0, 1.0);
     
-   vec3  reflection = normalize(reflect(-nPosToLight,normal.xyz));
+    vec3  reflection = normalize(reflect(-nPosToLight,normal.xyz));
     float ambient = 0.1;
-   float diffuse = max(dot(normal.xyz, nPosToLight), 0) * visibility;
-    float specular = pow(max(dot(reflection, -normalize(position.xyz)),0), shininess * 1000.0);
+    float diffuse = max(dot(normal.xyz, nPosToLight), 0) * visibility;
+    float specular = pow(max(dot(reflection, -normalize(position.xyz)),0), shininess * 1000.0f);
     
     
     float resX_temp = 1.0/resX;
@@ -66,7 +74,13 @@ void main() {
     }
     glow /= strength * strength * 4;
 
-    fragmentColor = color * ambient + (color * diffuse  + specularColor * specular) * lightColor;
-    fragmentColor += glow;
-    //fragmentColor = normal;
+   // fragmentColor = color * ambient + (color * diffuse  + specularColor * specular) * lightColor;
+   // fragmentColor += glow;
+   outputColor = color * ambient + (color * diffuse  + specularColor * specular) * lightColor;
+   outputColor += glow;
+   for (int i=0; i<gaussRadius; ++i) { 
+		newColor += gaussFilter[i] * vec3(outputColor.xyz);
+	}
+	
+	fragmentColor = vec4(newColor,1.0);
 }

@@ -42,32 +42,58 @@ void configureScene(ApplicationState* target){
     rm = RenderManager::getInstance();
     
     PlayerCamera* playercam = new PlayerCamera();
-    playercam->setPosition(glm::vec3(0.0f, -5.0f, -5.0f));
+    playercam->setPosition(glm::vec3(5.0f, 10.0f, 10.0f));
 	playercam->setCenter(glm::vec3(0.0f, 0.0f, 0.0f));
+    //playercam->setDirection(glm::vec3(0.0f,-0.5f,1.0f));
 	myState->setCamera(playercam);
 	rm->setLightPosition(glm::vec3(500,2,-2),0); // for uniformLightPerspective
     
     
- 	VirtualObject* scene_chest_Object;
-    scene_chest_Object	= target->createVirtualObject(RESOURCES_PATH "/chest_scene/nicer_chest.dae",VirtualObjectFactory::OTHER, 0.0f, 1, true);
-    scene_chest_Object->setModelMatrix(glm::rotate(glm::mat4(1.0f), 180.0f, glm::vec3(0,1,0)));
+ 	VirtualObject* scene_chest_top;
+    scene_chest_top	= target->createVirtualObject(RESOURCES_PATH "/chest_scene/nicer_chest_top2.dae",VirtualObjectFactory::OTHER, 0.0f, 1, true);
+    //scene_chest_top->setModelMatrix(glm::translate(glm::mat4(1.0f), glm::vec3(0.0,0.0,0.0)));
+    
+    {
+        int m,n;
+        for (n=0; n<4; n++){
+            for (m=0; m<4; m++){
+                std::cout<<scene_chest_top->getModelMatrix()[m][n];
+            }
+            std::cout<<"\n";
+        }
+    }
+
+    
+    
+    VirtualObject* scene_chest_bottom;
+    scene_chest_bottom = target->createVirtualObject(RESOURCES_PATH "/chest_scene/nicer_chest_bottom.dae",VirtualObjectFactory::OTHER, 0.0f, 1, true);
+    //scene_chest_bottom->setModelMatrix(glm::translate(glm::mat4(1.0f), glm::vec3(0.0,0.0,0.0)));
+    {
+        int m,n;
+        for (n=0; n<4; n++){
+            for (m=0; m<4; m++){
+                std::cout<<scene_chest_bottom->getModelMatrix()[m][n];
+            }
+            std::cout<<"\n";
+        }
+    }
+    
+    glm::mat4 save_modelMatrix = scene_chest_bottom->getModelMatrix();
     /* to animate the VirtualObject */
-    // Listener* new_lesten = new AnimateRotatingModelMatrixListener(scene_chest_Object);
-    // myApp->attachListenerOnRenderManagerFrameLoop(new_lesten);
+    Listener* new_lesten = new AnimateRotatingModelMatrixListener(scene_chest_top,save_modelMatrix);
+    myApp->attachListenerOnRenderManagerFrameLoop(new_lesten);
+   // Listener* new_gc = new AnimateGraphicComponentListener(scene_chest_top->getGraphicsComponent()[0],scene_chest_Object);
+   // Listener* new_gc = new AnimateRotatingModelMatrixListener(scene_chest_top);
+    //myApp->attachListenerOnRenderManagerFrameLoop(new_gc);
     
 
 
-    Shader* phong_shader 		= new Shader( SHADERS_PATH "/chest_test/shader_chest.vert"	, SHADERS_PATH 	"/chest_test/shader_chest.frag");
+    Shader* phong_shader 		= new Shader( SHADERS_PATH "/chest_test/shader_chest.vert", SHADERS_PATH 	"/chest_test/shader_chest.frag");
     
-
+    Shader* depth_shader 		= new Shader( SHADERS_PATH "/chest_test/Depthwrite.vert", SHADERS_PATH 	"/chest_test/Depthwrite.frag");
     
-   // Shader* depth_shader 		= new Shader( SHADERS_PATH "/chest_test/Depthwrite.vert"	, SHADERS_PATH 	"/chest_test/Depthwrite.frag");
+	Shader* composition_shader  = new Shader( SHADERS_PATH "/chest_test/screenFill.vert", SHADERS_PATH "/chest_test/finalCompositing.frag");
     
-	Shader *composition_shader  = new Shader( SHADERS_PATH "/chest_test/screenFill.vert", SHADERS_PATH "/chest_test/finalCompositing.frag");
-    
-
-   // rq->addShader(phong_shader);
-   // rq->addCompositingShader(composition_shader);
     
     
     /******************* framebuffer objects *****************************************/
@@ -98,7 +124,7 @@ void configureScene(ApplicationState* target){
     
     
    /******************* framebuffer objects *****************************************/
-   /*
+   
     FrameBufferObject* framebuffer_render2 = new FrameBufferObject(800, 600);
     myState->attachListenerOnActivation(new SetFrameBufferObjectListener(framebuffer_render2)); //bindFBO;
     
@@ -109,7 +135,7 @@ void configureScene(ApplicationState* target){
     myApp->attachListenerOnRenderManagerFrameLoop(new SetCurrentShaderListener(depth_shader));
 	myApp->attachListenerOnRenderManagerFrameLoop(new AlternativeRenderloopListener());
     myApp->attachListenerOnRenderManagerFrameLoop(new UnbindFrameBufferObjectListener());
- */
+ 
     
     
     /* compositing */
