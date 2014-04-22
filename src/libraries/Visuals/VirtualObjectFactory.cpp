@@ -235,7 +235,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 
 	Mesh* physMesh = new Mesh();
 	btTriangleMesh btMesh = new btTriangleMesh();
-	btTriangleIndexVertexArray* btIVA = new btTriangleIndexVertexArray();
+	btTriangleIndexVertexArray* btTIVA = new btTriangleIndexVertexArray();
 	cout << "pScene->mNumMeshes " << pScene->mNumMeshes << endl;
 
 	// For each mesh
@@ -255,22 +255,21 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 
 			int numTriangles = 0;
 			int numVertices = 0;
-			vector<unsigned char> * triangleIndexBase;
-			vector<unsigned char> * vertexBase;
+			vector<unsigned int> triangleIndexBase;
+			vector<glm::vec3> * vertexBase;
 			/*
 			 * vertexStride = the number of bytes to skip in the vertex position array to
 			 * 	go from the start of one vertex to the start of the next vertex.
 			 * 	If the vertex position is composed of 3 floats for example, then this
 			 * 	would be 3*sizeof(float).
 			 * 	*/
-			btIMesh.m_vertexStride = sizeof(aiVector3D) * 3;
+			btIMesh.m_vertexStride = sizeof(glm::vec3) * 3;
 			/*
 			 * triangleIndexStride = the number of bytes to skip in the vertex indices array to go
 			 * 	from the start of one triangle to the start of the next triangle.
 			 * 	Typically this is 3 times the sizeof the vertex index type.
 			 */
 			btIMesh.m_triangleIndexStride = sizeof(unsigned int) *3;
-
 
 			for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
 
@@ -313,21 +312,37 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 					 * vertexBase = the array of vertex positions
 					 * triangleIndexBase = the array of vertex indices that makes up the triangles
 					 */
-					vertexBase->push_back(face.mIndices[0]);
-					vertexBase->push_back(face.mIndices[1]);
-					vertexBase->push_back(face.mIndices[2]);
-					numVertices+=3;
+					cout << "test 1" << endl;
+					cout << "?????????????    " << face.mIndices[1] << endl;
+					triangleIndexBase.push_back(face.mIndices[0]);
+					cout << "test 2 " << endl;
 
-					triangleIndexBase->push_back(i);
+					triangleIndexBase.push_back(face.mIndices[1]);
+					cout << "test 3 " << endl;
+
+					triangleIndexBase.push_back(face.mIndices[2]);
+					cout << "testt 4 " << endl;
+
 					numTriangles++;
+					cout << "triangleIndexBase face.mIndices: " << endl;
 				}
 
 			}
-			btIMesh.m_vertexBase = vertexBase;
-			btIMesh.m_triangleIndexBase = triangleIndexBase;
-			btIMesh.m_numVertices = numVertices;
+			for (unsigned int k; k <mesh->mNumVertices; k++){
+				const aiVector3D* pPos = &(mesh->mVertices[k]);
+				vertexBase->push_back(glm::vec3(pPos->x, pPos->y, pPos->z));
+				cout << "vertexBase k " << k << endl;
+			}
+
+			const unsigned char* tib = (const unsigned char*)triangleIndexBase;
+			btIMesh.m_triangleIndexBase = tib;
+			unsigned char * vb = (unsigned char*)vertexBase;
+			btIMesh.m_vertexBase = vb;
+			btIMesh.m_numVertices = mesh->mNumVertices;
 			btIMesh.m_numTriangles = numTriangles;
-			btIVA->addIndexedMesh(btIMesh);
+			cout << "before adding " << endl;
+			btTIVA->addIndexedMesh(btIMesh);
+			cout << "after adding" << endl;
 		}
 
 		//Our Material and Mesh to be filled
@@ -676,8 +691,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 				collisionFlag);
 		break;
 	case MESH:
-		virtualObject->setPhysicsComponent(x, y, z, physMesh, btMesh, mass,
-				collisionFlag);
+		virtualObject->setPhysicsComponent(x, y, z, physMesh, btMesh, btTIVA);
 		break;
 	case OTHER:
 		virtualObject->setPhysicsComponent(physics_min, physics_max, mass,
