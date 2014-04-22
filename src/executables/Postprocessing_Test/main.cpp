@@ -166,6 +166,7 @@ void configureRendering(){
 	compositingRenderPass->setColorMap(fbo->getColorTextureHandle());
 	compositingRenderPass->setNormalMap(fbo->getNormalTextureHandle());
 
+
 	//compositingRenderPass->addInitialGraphicsComponent( VirtualObjectFactory::getInstance()->getTriangle() );
 
 	testingState->getRenderLoop()->addRenderPass( compositingRenderPass );
