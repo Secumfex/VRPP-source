@@ -146,7 +146,8 @@ void configureRendering(){
 
 	/* compositing renderpass */
 	
-	RenderPass* compositingRenderPass = new RenderPass(finalCompShader, fbo2);
+	//RenderPass* compositingRenderPass = new CompositingPass(finalCompShader, fbo2);
+	CompositingPass* compositingRenderPass = new CompositingPass(finalCompShader, fbo2);
 	compositingRenderPass->setCustomClearColor( glm::vec4(1.0, 1.0, 1.0, 1.0) );
 	compositingRenderPass->setClearColorBufferBit(true);	// clear color buffer on every frame
 	compositingRenderPass->attachListenerOnPostUniformUpload( uniResX );
@@ -155,7 +156,7 @@ void configureRendering(){
 	compositingRenderPass->attachListenerOnPostUniformUpload( uniColorMap1 );
 	compositingRenderPass->attachListenerOnPostUniformUpload( uniNormalMap1 );
 
-	compositingRenderPass->addInitialGraphicsComponent( VirtualObjectFactory::getInstance()->getTriangle() );
+	//compositingRenderPass->addInitialGraphicsComponent( VirtualObjectFactory::getInstance()->getTriangle() );
 
 	testingState->getRenderLoop()->addRenderPass( compositingRenderPass );
 
