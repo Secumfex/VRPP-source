@@ -30,13 +30,12 @@ void configureTestingApplication(){
 
 void configureVirtualObjects(){
 	//setInitialGraphicsComponentList
-	VirtualObjectFactory *voFactory = VirtualObjectFactory::getInstance();
 
-	VirtualObject *object03 = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj", VirtualObjectFactory::OTHER);
-	VirtualObject *object02 = voFactory->createVirtualObject(RESOURCES_PATH "/cow.obj", VirtualObjectFactory::OTHER);
-	VirtualObject *object01 = voFactory->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE);
+	VirtualObject *object03 = VirtualObjectFactory::getInstance()->createVirtualObject(RESOURCES_PATH "/barrel.obj", VirtualObjectFactory::OTHER);
+	VirtualObject *object02 = VirtualObjectFactory::getInstance()->createVirtualObject(RESOURCES_PATH "/cow.obj", VirtualObjectFactory::OTHER);
+	VirtualObject *object01 = VirtualObjectFactory::getInstance()->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE);
 
-	GraphicsComponent* triangle = voFactory->getTriangle();
+	//GraphicsComponent* triangle = VirtualObjectFactory::getInstance()->getTriangle();
 
 	MaterialManager::getInstance()->makeMaterial("polished_chrome", object02->getGraphicsComponent());
 
@@ -148,7 +147,7 @@ void configureRendering(){
 	/* compositing renderpass */
 	
 
-	//RenderPass* compositingRenderPass = new CompositingPass(finalCompShader, fbo2);
+	//RenderPass* compositingRenderPass = new RenderPass(finalCompShader, fbo2);
 	CompositingPass* compositingRenderPass = new CompositingPass(finalCompShader, fbo2);
 
 	compositingRenderPass->setCustomClearColor( glm::vec4(1.0, 1.0, 1.0, 1.0) );

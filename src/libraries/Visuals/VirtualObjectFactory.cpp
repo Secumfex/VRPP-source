@@ -7,7 +7,7 @@
  */
 
 #include <Visuals/VirtualObjectFactory.h>
-#include <string>
+//#include <string>
 
 #ifndef PI
 	#define PI  3.14159265359
@@ -60,7 +60,7 @@ GraphicsComponent* VirtualObjectFactory::getTriangle(){
 		glGenBuffers(1, &vertexBufferHandle);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandle);
 
-		GLfloat vertices[] = {-1, -1,   3, -1,   -1,  3};
+		GLfloat vertices[] = {-1.0f, -1.0f,   3.0f, -1.0f,   -1.0f,  3.0f};
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 		glEnableVertexAttribArray(0);
