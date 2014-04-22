@@ -276,6 +276,7 @@ glm::vec3 PhysicsComponent::getPosition(){
 	return pos;
 }
 
+
 bool PhysicsComponent::getHit(){
 
 	return hit;

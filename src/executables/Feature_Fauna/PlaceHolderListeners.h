@@ -162,4 +162,12 @@ public:
 	void update();
 };
 
-
+/// listener to upload a custom Uniform Vec3
+class UploadUniformVOListener : public Listener {
+private:
+	VirtualObject* vo;
+	std::string uniform_name;
+public:
+	UploadUniformVOListener(std::string name = std::string("UNIFORMUPLOADLISTENER"), VirtualObject* vo=0, std::string uniform_name = "custom_uniform");
+	void update();
+};

@@ -60,8 +60,9 @@ void createFloor() {
 }
 
 void createVirtualObject(int height) {
+
 	//Erstelle erstes Objekt unten
-	vo_tmp = testingState->createVirtualObject( RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE, 0.0, 8);
+	vo_tmp = testingState->createVirtualObject( RESOURCES_PATH "/Fauna/Seegras.dae", VirtualObjectFactory::SPHERE, 0.0, 8);
 	testingState->attachListenerOnBeginningProgramCycle(	new UpdateVirtualObjectModelMatrixListener(vo_tmp));
 	testingState->attachListenerOnBeginningProgramCycle(	new UpdatePhysicsComponentListener(vo_tmp));
 	vo_tmp->translate(glm::vec3(0, 0, 0));
@@ -71,13 +72,15 @@ void createVirtualObject(int height) {
 	transform_tmp = btTransform::getIdentity();
 	transform_tmp.setOrigin(	btVector3(btScalar(0.), btScalar(0.), btScalar(0.)));
 	transformsVec.push_back(transform_tmp);
+
 	//Erstelle folgende Objekte nach oben hin
 	float yPosPerVO = 0;
-	float xPosPerVO = 0;
+	float xPosPerVO = 20;
 	float zPosPerVO = 0;
 
 	for (int i = 1; i < height; i++) {
 
+		//berechnet x und z Variationen für unser Seegras, nicht zwangsläufig notwendig
 		if ( (i%2)==0){
 			xPosPerVO = 0;
 			zPosPerVO = 0;
@@ -91,19 +94,18 @@ void createVirtualObject(int height) {
 			zPosPerVO =-5;
 		}
 
-		vo_tmp = testingState->createVirtualObject(	RESOURCES_PATH "/Fauna/plant.obj", VirtualObjectFactory::SPHERE, 1.0, 8);
-/** muss yPosPerVO nicht erhöht werden? mit jedem Durchlauf */
+		vo_tmp = testingState->createVirtualObject(	RESOURCES_PATH "/Fauna/Seegras.dae", VirtualObjectFactory::SPHERE, 1.0, 8);
+
 		vo_tmp->translate(glm::vec3(xPosPerVO, yPosPerVO, zPosPerVO));
 		voVec.push_back(vo_tmp);
-		yPosPerVO +=20;
+		yPosPerVO +=20;				//Damit das nächste VO 20 höher erstellt wird
 
 		testingState->attachListenerOnBeginningProgramCycle(	new UpdateVirtualObjectModelMatrixListener(voVec[i]));
 		rb_tmp = vo_tmp->getPhysicsComponent()->getRigidBody();
 		rb_tmp->applyForce(btVector3(0.,100.,0), btVector3(0,0,0));
-		//rb_tmp->setDamping(.1, .1);
-		//Negative Gravity um Erdanziehungskraft zu simulieren
+		rb_tmp->setDamping(10, 10);
+	/**Negative Gravity um Erdanziehungskraft zu simulieren*/
 		rb_tmp->setGravity(rb_tmp->getGravity() - rb_tmp->getGravity()+ btVector3(0.,0.,0.));
-		//rb_tmp->setFriction(btScalar(250.));
 		rb_tmp->setActivationState(DISABLE_DEACTIVATION);
 		rigidBodyVec.push_back(rb_tmp);
 
@@ -116,15 +118,61 @@ void createVirtualObject(int height) {
 		constraint_tmp->setLinearLowerLimit(btVector3(0., 16., 0.));
 		constraint_tmp->setDamping(.1, .1);
 		constraintsVec.push_back(constraint_tmp);
-			//constraints[i-1]->internalSetAppliedImpulse(btScalar(50));
-					//constraints[i-1]->enableSpring(0, false);
-					//constraints[i-1]->setStiffness(0,50);
-					//constraints[i-1]->setEquilibriumPoint();
-
-				//	constraint23->setLinearLowerLimit(btVector3(springRestLen - springRange, 0., 0.));
+		//constraints[i-1]->internalSetAppliedImpulse(btScalar(50));
+		//constraints[i-1]->enableSpring(0, false);
+		//constraints[i-1]->setStiffness(0,50);
+		//constraints[i-1]->setEquilibriumPoint();
+		//constraint23->setLinearLowerLimit(btVector3(springRestLen - springRange, 0., 0.));
 		PhysicWorld::getInstance()->dynamicsWorld->addConstraint( constraintsVec[i-1], true);
 
 	}
+
+
+	RenderPass* pass1 = new RenderPass(new Shader(SHADERS_PATH "/Phong/phong.vert", SHADERS_PATH "/Phong/phong.frag"));
+	pass1->setClearColorBufferBit(true);
+	pass1->setInitialGraphicsComponentList(testingState->getRenderQueue()->getGraphicsComponentList());
+	pass1->addRenderQueueRequestFlag(new FlagPartOfVirtualObject (voVec[0], true));
+	pass1->addRenderQueueRequestFlag(new FlagPartOfVirtualObject (voVec[1], true));
+	pass1->addRenderQueueRequestFlag(new FlagPartOfVirtualObject (voVec[2], true));
+	pass1->addRenderQueueRequestFlag(new FlagPartOfVirtualObject (voVec[3], true));
+	pass1->addRenderQueueRequestFlag(new FlagPartOfVirtualObject (voVec[4], true));
+
+	testingState->getRenderLoop()->addRenderPass(pass1);
+
+	//vom 1. VO zum 2.
+	RenderPass* pass2 = new RenderPass(new Shader(SHADERS_PATH "/FaunaFeature/FaunaFeature.vert", SHADERS_PATH "/FaunaFeature/simpleTexture.frag"));
+	pass2->addInitialGraphicsComponent(voVec[0]);
+	pass2->attachListenerOnPostUniformUpload(new UploadUniformVOListener("", voVec[0], "p0"));
+	pass2->attachListenerOnPostUniformUpload(new UploadUniformVOListener("", voVec[0], "p1"));
+	pass2->attachListenerOnPostUniformUpload(new UploadUniformVOListener("", voVec[1], "p2"));
+	pass2->attachListenerOnPostUniformUpload(new UploadUniformVOListener("", voVec[2], "p3"));
+	testingState->getRenderLoop()->addRenderPass(pass2);
+
+	//vom 2. VO zum 3.
+	RenderPass* pass3 = new RenderPass(new Shader(SHADERS_PATH "/FaunaFeature/FaunaFeature.vert", SHADERS_PATH "/FaunaFeature/simpleTexture.frag"));
+	pass3->addInitialGraphicsComponent(voVec[1]);
+	pass3->attachListenerOnPostUniformUpload(new UploadUniformVOListener("", voVec[0], "p0"));
+	pass3->attachListenerOnPostUniformUpload(new UploadUniformVOListener("", voVec[1], "p1"));
+	pass3->attachListenerOnPostUniformUpload(new UploadUniformVOListener("", voVec[2], "p2"));
+	pass3->attachListenerOnPostUniformUpload(new UploadUniformVOListener("", voVec[3], "p3"));
+	testingState->getRenderLoop()->addRenderPass(pass3);
+
+	RenderPass* pass4 = new RenderPass(new Shader(SHADERS_PATH "/FaunaFeature/FaunaFeature.vert", SHADERS_PATH "/FaunaFeature/simpleTexture.frag"));
+	pass4->addInitialGraphicsComponent(voVec[2]);
+	pass4->attachListenerOnPostUniformUpload(new UploadUniformVOListener("", voVec[1], "p0"));
+	pass4->attachListenerOnPostUniformUpload(new UploadUniformVOListener("", voVec[2], "p1"));
+	pass4->attachListenerOnPostUniformUpload(new UploadUniformVOListener("", voVec[3], "p2"));
+	pass4->attachListenerOnPostUniformUpload(new UploadUniformVOListener("", voVec[4], "p3"));
+	testingState->getRenderLoop()->addRenderPass(pass4);
+
+	RenderPass* pass5 = new RenderPass(new Shader(SHADERS_PATH "/FaunaFeature/FaunaFeature.vert", SHADERS_PATH "/FaunaFeature/simpleTexture.frag"));
+	pass5->addInitialGraphicsComponent(voVec[3]);
+	pass5->attachListenerOnPostUniformUpload(new UploadUniformVOListener("", voVec[2], "p0"));
+	pass5->attachListenerOnPostUniformUpload(new UploadUniformVOListener("", voVec[3], "p1"));
+	pass5->attachListenerOnPostUniformUpload(new UploadUniformVOListener("", voVec[4], "p2"));
+	pass5->attachListenerOnPostUniformUpload(new UploadUniformVOListener("", voVec[4], "p3"));
+	testingState->getRenderLoop()->addRenderPass(pass5);
+
 }
 
 void catMullRomeSpline(){
@@ -141,7 +189,7 @@ void catMullRomeSpline(){
 			for (float T = 0.0; T < 1.0; T += 0.1) {
 				float Catmullx, Catmully, Catmullz = 0.0;
 
-				if (i==0){							//1. Element
+				if (i==0){								//1. Element
 					vo1 = voVec[i];
 					vo2 = voVec[i];
 					if((i+1) == voVec.size()){
@@ -158,7 +206,7 @@ void catMullRomeSpline(){
 					vo3 = voVec[i+1];
 					vo4 = voVec[i+1];
 				}
-				else{								// Mitte
+				else{									// Mitte
 					vo1 = voVec[i-1];
 					vo2 = voVec[i];
 					vo3 = voVec[i+1];
@@ -195,32 +243,17 @@ void catMullRomeSpline(){
 		}
 	}
 }
-/*
- * Neue Klasse Seagras physics component, erbt von PhysicsComponent  		-> SeaGrasPhysicsComponent #include PhysicsComponent.h
- * kriegt den Vector von den Catmulls										vector aus GraphicsComponents? Oder doch eigene Klasse ?!
- * kriegt die Objekte, die mit Joints verbunden sind						-> vector aus btGeneric6dofCoinstraints
- *
- * Ein Grafik Objekt, durch mehrer Physikcomponentne beschrieben -> neu schreiben
- * Modelmatrix Rückgabe durch unterstes Objekt
- * Jede Kugel muss ihre Position per UniformListener an den Shader übergeben werden
- * Grafik Komponente des Shaders (auch ableiten/neu machen)
- * 			-> statischer Buffer der die unterschiedlichen T's hochladen
- * 			Liste T 0.1 bis n       -> Samplepunkte
- * 			Kontrollpunkte aus den Objekten selber von der physikengine
- * 			Spline im Shader implementieren
- */
 
 void listenersEtc(){
 	testingState->attachListenerOnBeginningProgramCycle(	new PhysicWorldSimulationListener(	IOManager::getInstance()->getDeltaTimePointer()));// updates physics simulation
 	testingInputHandler = testingState->getIOHandler();
 	testingInputHandler->attachListenerOnKeyPress(			new TerminateApplicationListener(testingApp), GLFW_KEY_ESCAPE);
 	testingInputHandler->attachListenerOnKeyPress(			new SetCameraPositionListener(testingState->getCamera(), glm::vec3(0.0f, 0.1f, 0.0)), GLFW_KEY_SPACE);
-	//testingInputHandler->attachListenerOnKeyPress( 			new ApplyLinearImpulseOnRigidBody(rigidBodyVec[3], btVector3(50, 0, 0)), GLFW_KEY_1);
 	testingApp->attachListenerOnProgramInitialization( 		new PrintMessageListener(string("Application is booting")));
 	testingApp->attachListenerOnProgramTermination(			new PrintMessageListener(string("Application is terminating")));
 	testingApp->attachListenerOnBeginningProgramCycle(		new PhysicWorldSimulationListener(	IOManager::getInstance()->getDeltaTimePointer()));
 	testingApp->attachListenerOnProgramInitialization(		new SetDefaultShaderListener(	new Shader(SHADERS_PATH "/Phong/phong.vert", SHADERS_PATH "/Phong/phong.frag")));
-	testingApp->attachListenerOnRenderManagerFrameLoop(		new RenderloopPlaceHolderListener());
+
 	std::cout << PhysicWorld::getInstance()->dynamicsWorld->getNumCollisionObjects() << endl;
 
 	testingApp->addState(testingState);
@@ -231,10 +264,6 @@ int main() {
 	createFloor();
 	createVirtualObject(5);
 	catMullRomeSpline();
-	//catMullRomeSpline();
-	//catMullRomeSpline();
-	//catMullRomeSpline();
-	//catMullRomeSpline();
 	listenersEtc();
 	testingApp->run();	// 2 run application
 	return 0;	// 3 end :)
