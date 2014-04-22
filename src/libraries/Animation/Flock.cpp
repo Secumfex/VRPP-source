@@ -11,6 +11,7 @@ Flock::Flock() {
 	srand(time(0));
 	startVelocity = glm::vec3(0.001f, 0.0f, 0.0f);
 	setPlaceToGo(glm::vec3(0.0f, 0.0f, 0.0f));
+	setPlaceToAvoid(glm::vec3(0.0f, 0.0f, 0.0f));
 	mSpeedlimit = 0.3f;
 }
 
@@ -81,7 +82,8 @@ void Flock::update(float t){
 		//		glm::vec3 v = glm::vec3(0.0f, 0.0f, 0.0f);
 		v += getCohesion(neightbors, boid_temp) * -0.8f;
 		v += getSeparation(neightbors, boid_temp) * 1.5f;
-		v += getPlace(boid_temp) * 1.0f;
+		v += getPlaceToGoVector(boid_temp) * 1.0f;
+		v += getPlaceToAvoidVector(boid_temp) * 1.0f;
 		next_velocities.push_back(v);
 
 	}
@@ -164,7 +166,7 @@ glm::quat Flock::getRotation(Boid* boid){
 
 	glm::vec3 velocity = mPlaceToGo - boid->getPosition();
 
-	velocity = 0.25f * velocity + 0.75f * boid->getVelocity();
+	velocity = 0.1f * velocity + 0.9f * boid->getVelocity();
 
 	if(glm::length(velocity) == 0.0f)
 		return rotation;
@@ -208,8 +210,28 @@ std::vector<Boid*> Flock::getBoids(){
 void Flock::setPlaceToGo(glm::vec3 place){
 	mPlaceToGo = place;
 }
-glm::vec3 Flock::getPlace(Boid* boid){
+void Flock::setPlaceToAvoid(glm::vec3 place){
+	mPlaceToAvoid = place;
+}
+glm::vec3 Flock::getPlaceToGoVector(Boid* boid){
 	return glm::vec3(mPlaceToGo - boid->getPosition()) * 0.001f;
+}
+glm::vec3 Flock::getPlaceToAvoidVector(Boid* boid){
+
+
+
+	glm::vec3 vec = glm::vec3(boid->getPosition() - mPlaceToAvoid);
+	float length = glm::length(vec);
+
+	cout << "pferdinant " << length << endl;
+	if(length > 2.0f)
+		return glm::vec3(0.0f, 0.0f, 0.0f);
+
+	vec = vec * (1.0f / (length));
+
+	cout << length << endl;
+
+	return vec * 0.05f;
 }
 
 glm::vec3 Flock::clampVelocity(glm::vec3 velocity){

@@ -39,3 +39,5 @@ glm::vec3 Boid::getVelocity(){
 glm::mat4 Boid::getBasePosition(){
 	return mBaseMatrix;
 }
+
+

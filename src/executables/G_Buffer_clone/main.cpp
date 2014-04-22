@@ -81,8 +81,10 @@ int main() {
 
 
 	myFlock->initializeStartPositions(5.0f, glm::vec3(0.0f, 0.0f, 0.0f));
+	myFlock->setPlaceToAvoid(glm::vec3(0.0f, 0.0f, 2.0f));
 
 	Boid* myBoid = myFlock->getBoids()[0];
+
 
 	//----------------------------//
 	//        SHADERS BABY        //
@@ -171,14 +173,14 @@ int main() {
 		animation->updateNodes(animation_time);
 
 		myFlock->update(animation_time);
-		myFlock->setPlaceToGo(vec3(sin(angle) * 10.0f, sin(angle) * 2.0f, cos(angle) * 5.0f));
+		myFlock->setPlaceToGo(vec3(sin(angle) * 10.0f, 0.0f, cos(angle) * 5.0f));
 //		myFlock->setPlaceToGo(glm::vec3(0.0f, 0.0f, 0.0f));
 
 
 		cam->setPosition(glm::vec3(0.0f, 2.0f, -8.0f));
-		cam->setCenter(glm::vec3(0.0f, 0.0f, 0.0f));
+//		cam->setCenter(glm::vec3(0.0f, 0.0f, 0.0f));
 //		cam->setPosition(myBoid->getPosition() + glm::vec3(0.0f, 2.0f, -10.0f));
-//		cam->setCenter(myBoid->getPosition());
+		cam->setCenter(myBoid->getPosition());
 
 		glfwSetTime(0.0);
 

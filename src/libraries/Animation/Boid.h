@@ -14,7 +14,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
 
-#include "Visuals/VirtualObject.h"
+#include "Visuals/VirtualObjectFactory.h"
 
 	/*! @brief Boid.
 	 *

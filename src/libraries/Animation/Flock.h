@@ -82,12 +82,20 @@ public:
 
 	void setPlaceToGo(glm::vec3 place);
 
+	/** \brief setter
+	*
+	* @param vec3 place : a position the boids will avoid
+	*/
+
+	void setPlaceToAvoid(glm::vec3 place);
+
 
 private:
 
 	glm::quat getRotation(Boid* boid);/**< calculates the rotation for the current velocity vector */
 	glm::vec3 clampVelocity(glm::vec3 velocity);/**< clamps the velocity vectors to a speedlimit */
-	glm::vec3 getPlace(Boid* boid);/**< calculates a vector for the boids to follow */
+	glm::vec3 getPlaceToGoVector(Boid* boid);/**< calculates a vector for the boids to follow */
+	glm::vec3 getPlaceToAvoidVector(Boid* boid);/**< calculates a vector for the boids to follow */
 	glm::vec3 getSeparation(std::vector<Boid*> neighbors, Boid* boid);/**< calculates the 1.rule of boids */
 	glm::vec3 getAllignment(std::vector<Boid*> neighbors, Boid* boid);/**< calculates the 2.rule of boids */
 	glm::vec3 getCohesion(std::vector<Boid*> neighbors, Boid* boid);/**< calculates the 3.rule of boids */
@@ -95,6 +103,7 @@ private:
 
 	float mSpeedlimit;/**< a maximum length for a velocity vector*/
 	glm::vec3 mPlaceToGo;/**< a world position the boids will follow */
+	glm::vec3 mPlaceToAvoid;/**< a world position the boids will avoid */
 	glm::vec3 startVelocity;/**< a velocity vector, all boids will have in the first frame */
 	std::vector<Boid*> mBoids;/**< array of boids */
 
