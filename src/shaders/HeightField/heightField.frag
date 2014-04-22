@@ -15,10 +15,10 @@ uniform sampler2D uniformTextureMask;
 //uniform sampler2D uniformSpecular1;
 //uniform sampler2D uniformSpecular2;
 
-layout(location = 0) out vec3 positionOut;
-layout(location = 1) out vec4 colorOut;
-layout(location = 2) out vec4 normalOut;
-layout(location = 3) out vec4 specularOut;
+//layout(location = 0) out vec3 positionOut;
+//layout(location = 1) out vec4 colorOut;
+//layout(location = 2) out vec4 normalOut;
+//layout(location = 3) out vec4 specularOut;
 
 out vec2 uvCoords;
 

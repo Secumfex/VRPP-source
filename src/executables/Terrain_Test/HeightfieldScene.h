@@ -12,13 +12,9 @@ namespace HeightfieldScene{
 
 	//VOs
 	VirtualObject* terrain;
-	VirtualObject* test;
 
 	//FBOs
 	FrameBufferObject* fboGround;
-	//FrameBufferObject* fboNormals;
-	//FrameBufferObject* fboGloss;
-
 
 	GLuint fboTexture;
 	GLuint fboColor;
@@ -45,14 +41,13 @@ namespace HeightfieldScene{
 
 		//VOs
 		terrain = state->createVirtualObject(RESOURCES_PATH"/Heightfield/terrainTest.obj",VirtualObjectFactory::TERRAIN);
-		//test = state->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_ground.dae", VirtualObjectFactory::OTHER, 0.0f, 1, true);
 
 		//FBOs
 		fboGround = new FrameBufferObject(800,600);
 		fboGround->bindFBO();
 		fboGround->createPositionTexture();
 
-
+		/*
 		glGenTextures(1,&fboTexture);
 		glBindTexture(GL_TEXTURE_2D,fboTexture);
 		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
@@ -61,7 +56,7 @@ namespace HeightfieldScene{
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA16F,800,600,0,GL_RGBA,GL_FLOAT,0);
 
-		//glGenTEsxtures();
+		//glGenTextures();
 		glBindTexture(GL_TEXTURE_2D,fboColor);
 		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
@@ -96,21 +91,11 @@ namespace HeightfieldScene{
 		glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, fboTexture, 0);
 		GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
 		glDrawBuffers(1, DrawBuffers);
+		 */
 
-
-		//fboGround->makeDrawBuffers();
+		fboGround->makeDrawBuffers();
 		fboGround->unbindFBO();
 
-		/*
-		fboNormals = new FrameBufferObject(800,600);
-		fboNormals->bindFBO();
-		fboNormals->createNormalTexture();
-		fboNormals->makeDrawBuffers();
-		fboNormals->unbindFBO();
-		*/
-
-		//fboGloss = new FrameBufferObject(800,600);
-		//...
 
 		//Textures
 		ground1 = new Texture(RESOURCES_PATH"/Heightfield/seamlessSandTest.jpg");
