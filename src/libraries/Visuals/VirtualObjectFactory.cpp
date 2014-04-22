@@ -255,15 +255,15 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 
 			int numTriangles = 0;
 			int numVertices = 0;
-			vector<unsigned int> triangleIndexBase;
-			vector<glm::vec3> * vertexBase;
+			std::vector<unsigned int> triangleIndexBase;
+			std::vector<glm::vec3> vertexBase;
 			/*
 			 * vertexStride = the number of bytes to skip in the vertex position array to
 			 * 	go from the start of one vertex to the start of the next vertex.
 			 * 	If the vertex position is composed of 3 floats for example, then this
 			 * 	would be 3*sizeof(float).
 			 * 	*/
-			btIMesh.m_vertexStride = sizeof(glm::vec3) * 3;
+			btIMesh.m_vertexStride = sizeof(float) * 3;
 			/*
 			 * triangleIndexStride = the number of bytes to skip in the vertex indices array to go
 			 * 	from the start of one triangle to the start of the next triangle.
@@ -281,27 +281,13 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 				if (face.mNumIndices == 3) {
 					aiVector3D vec0 = mesh->mVertices[face.mIndices[0]];
 					btVertex0 = btVector3(vec0.x, vec0.y, vec0.z);
-					/*
-					 cout << "facenr: " << i << "; vec0.x " << vec0.x << endl;
-					 cout << "facenr: " << i << "; vec0.y " << vec0.y << endl;
-					 cout << "facenr: " << i << "; vec0.z " << vec0.z << endl;
-					 */
 
 					aiVector3D vec1 = mesh->mVertices[face.mIndices[1]];
 					btVertex1 = btVector3(vec1.x, vec1.y, vec1.z);
-					/*
-					 cout << "facenr: " << i << "; vec1.x " << vec1.x << endl;
-					 cout << "facenr: " << i << "; vec1.y " << vec1.y << endl;
-					 cout << "facenr: " << i << "; vec1.z " << vec1.z << endl;
-					 */
 
 					aiVector3D vec2 = mesh->mVertices[face.mIndices[2]];
 					btVertex2 = btVector3(vec2.x, vec2.y, vec2.z);
-					/*
-					 cout << "facenr: " << i << "; vec2.x " << vec2.x << endl;
-					 cout << "facenr: " << i << "; vec2.y " << vec2.y << endl;
-					 cout << "facenr: " << i << "; vec2.z " << vec2.z << endl;
-					 */
+
 					btMesh.addTriangle(btVertex0, btVertex1, btVertex2, false);
 
 					//Var2 with IndexedMesh
@@ -309,40 +295,46 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 					/*
 					 * numVertices = number of vertices
 					 * numTriangles = number of triangles
-					 * vertexBase = the array of vertex positions
+
 					 * triangleIndexBase = the array of vertex indices that makes up the triangles
 					 */
-					cout << "test 1" << endl;
-					cout << "?????????????    " << face.mIndices[1] << endl;
 					triangleIndexBase.push_back(face.mIndices[0]);
-					cout << "test 2 " << endl;
-
 					triangleIndexBase.push_back(face.mIndices[1]);
-					cout << "test 3 " << endl;
-
 					triangleIndexBase.push_back(face.mIndices[2]);
-					cout << "testt 4 " << endl;
-
 					numTriangles++;
-					cout << "triangleIndexBase face.mIndices: " << endl;
 				}
-
 			}
-			for (unsigned int k; k <mesh->mNumVertices; k++){
-				const aiVector3D* pPos = &(mesh->mVertices[k]);
-				vertexBase->push_back(glm::vec3(pPos->x, pPos->y, pPos->z));
-				cout << "vertexBase k " << k << endl;
+			cout << "mNumVertices: " << mesh->mNumVertices << endl;
+
+			//vertexBase = the array of vertex positions
+			for (unsigned int k=0; k < mesh->mNumVertices; k++){
+				glm::vec3 vertex = glm::vec3(mesh->mVertices[k].x, mesh->mVertices[k].y, mesh->mVertices[k].z);
+				vertexBase.push_back(vertex);
 			}
 
-			const unsigned char* tib = (const unsigned char*)triangleIndexBase;
+			std::vector<unsigned char> tBase;
+			int size = triangleIndexBase.size();
+			for (int j=0; j<size; j++){
+				tBase.push_back((unsigned char)triangleIndexBase[j]);
+			}
+			unsigned char* tib = &tBase[0];
 			btIMesh.m_triangleIndexBase = tib;
-			unsigned char * vb = (unsigned char*)vertexBase;
+
+
+			std::vector<unsigned char> vBase;
+			int size2 = vertexBase.size();
+			for (int l=0; l<size2; l++){
+				vBase.push_back((unsigned char)(vertexBase[l].x));
+				vBase.push_back((unsigned char)(vertexBase[l].y));
+				vBase.push_back((unsigned char)(vertexBase[l].z));
+			}
+			unsigned char * vb = &vBase[0];
+
 			btIMesh.m_vertexBase = vb;
+
 			btIMesh.m_numVertices = mesh->mNumVertices;
 			btIMesh.m_numTriangles = numTriangles;
-			cout << "before adding " << endl;
 			btTIVA->addIndexedMesh(btIMesh);
-			cout << "after adding" << endl;
 		}
 
 		//Our Material and Mesh to be filled
@@ -354,7 +346,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 		glm::vec3 aabbMin = glm::vec3(INT_MAX, INT_MAX, INT_MAX);
 
 		//Our Indices for our Vertexlist
-		vector<unsigned int> indices;
+		std::vector<unsigned int> indices;
 
 		int incidesCounter = 0;
 
@@ -691,7 +683,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 				collisionFlag);
 		break;
 	case MESH:
-		virtualObject->setPhysicsComponent(x, y, z, physMesh, btMesh, btTIVA);
+		virtualObject->setPhysicsComponent(x, y, z, btMesh, btTIVA);
 		break;
 	case OTHER:
 		virtualObject->setPhysicsComponent(physics_min, physics_max, mass,

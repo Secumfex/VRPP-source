@@ -44,11 +44,11 @@ PhysicsComponent::PhysicsComponent(glm::vec3 min, glm::vec3 max, float mass, int
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
 
-PhysicsComponent::PhysicsComponent(float x, float y, float z, Mesh* mesh, btTriangleMesh btMesh, vector<GraphicsComponent*> mGraphComponent, btTriangleIndexVertexArray* btTIVA) {
+PhysicsComponent::PhysicsComponent(float x, float y, float z, btTriangleMesh btMesh, vector<GraphicsComponent*> mGraphComponent, btTriangleIndexVertexArray* btTIVA) {
 
 	hit = false;
 
-	rigidBody = addTriangleMesh(x,y,z, mesh, btMesh, mGraphComponent, btTIVA);
+	rigidBody = addTriangleMesh(x,y,z, btMesh, mGraphComponent, btTIVA);
 	rigidBody->setUserPointer(this);	// use bullet's user pointer to refer to this Object
 	setCollisionFlag(1);
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
@@ -255,10 +255,10 @@ btRigidBody* PhysicsComponent::addHeightfield(char* filename, float x, float y, 
 	return body;
 }
 
-btRigidBody* PhysicsComponent::addTriangleMesh(float x, float y, float z, Mesh* mesh, btTriangleMesh btMesh, vector<GraphicsComponent*> mGraphComponent, btTriangleIndexVertexArray* btTIVA){
+btRigidBody* PhysicsComponent::addTriangleMesh(float x, float y, float z, btTriangleMesh btMesh, vector<GraphicsComponent*> mGraphComponent, btTriangleIndexVertexArray* btTIVA){
 
 
-	btTriangleIndexVertexArray* tIVA = btTIVA;
+	static btTriangleIndexVertexArray* tIVA = btTIVA;
 	static btTriangleMesh triangleMesh = btMesh;
 	static btRigidBody* staticBody = 0;
 	float mass = 0.0f;
@@ -266,7 +266,7 @@ btRigidBody* PhysicsComponent::addTriangleMesh(float x, float y, float z, Mesh* 
 	cout << "triangleMesh.getNumTriangles() " << triangleMesh.getNumTriangles() << endl;
 
 	bool useQuantizedAabbCompression = true;
-	btBvhTriangleMeshShape* triangleShape = new btBvhTriangleMeshShape(tIVA, useQuantizedAabbCompression);
+	btBvhTriangleMeshShape* triangleShape = new btBvhTriangleMeshShape(&triangleMesh, useQuantizedAabbCompression);
 
 
 	btTransform trans;

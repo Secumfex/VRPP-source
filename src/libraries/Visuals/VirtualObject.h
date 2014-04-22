@@ -135,7 +135,7 @@ public:
 	 * @param collisionFlag sets collisiontype of the collisionshape
 	 * @return void
 	 */
-	void setPhysicsComponent(float x, float y, float z, Mesh* mesh, btTriangleMesh btMesh, btTriangleIndexVertexArray* btTIVA);
+	void setPhysicsComponent(float x, float y, float z, btTriangleMesh btMesh, btTriangleIndexVertexArray* btTIVA);
 
 	/** \brief sets PhysicsComponent
 	 *
