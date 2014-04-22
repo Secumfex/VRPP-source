@@ -21,6 +21,8 @@ FrameBufferObject::FrameBufferObject(int width, int height) {
 	mDepthbufferHandle = -1;
 	mNormalTextureHandle = -1;
 	mPositionTextureHandle = -1;
+	mShadowMapHandle = -1;
+	mSpecularTextureHandle = -1;
 
 	createDepthBuffer();
 
