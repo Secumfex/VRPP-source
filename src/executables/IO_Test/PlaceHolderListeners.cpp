@@ -91,7 +91,8 @@ void TurnCameraListener::update(){
 	 float strength=0;
 
 	temp = kinect->getKinectData(kinect->data);
-	
+
+	//checking for valid new data	
 	if(temp!=0 && !(kinect->isnew))
 	{
 		//update values
