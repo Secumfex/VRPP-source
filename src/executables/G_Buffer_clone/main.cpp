@@ -57,7 +57,7 @@ int main() {
 
 	VirtualObject *object02 = voFactory->createVirtualObject(RESOURCES_PATH "/animation_test/Fish_bones.dae", VirtualObjectFactory::OTHER);
 	VirtualObject *object03 = voFactory->createVirtualObject(RESOURCES_PATH "/animation_test/piranha.dae", VirtualObjectFactory::OTHER);
-	VirtualObject *object01 = voFactory->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE);
+	VirtualObject *object01 = voFactory->createVirtualObject(RESOURCES_PATH "/animation_test/tentacle.dae", VirtualObjectFactory::CUBE);
 
 	VirtualObject *object10 = voFactory->createVirtualObject(RESOURCES_PATH "/animation_test/fish.dae", VirtualObjectFactory::OTHER);
 
@@ -170,6 +170,7 @@ int main() {
 		animation_time += glfwGetTime();
 
 		object03->getAnimation()->updateNodes(animation_time);
+		object01->getAnimation()->updateNodes(animation_time);
 		myFlock->update(animation_time);
 		myFlock->setPlaceToGo(vec3(sin(angle) * 10.0f, 0.0f, cos(angle) * 5.0f));
 		myFlock->setPlaceToAvoid(piranha_place);
@@ -182,7 +183,7 @@ int main() {
 		glfwSetTime(0.0);
 
 		//scale a cube into a flat plane
-		mat4 modelMatrix01 = scale(translate(mat4(1.0f), vec3(0.0f, -1.0f, 0.0f)), vec3(2.5f, 0.2f, 2.5f));
+		mat4 modelMatrix01 = translate(mat4(1.0f), vec3(0.0f, -4.0f, 0.0f)) * rotate(mat4(), 90.0f, vec3(0.0f, 1.0f, 0.0f)) *scale(mat4(), vec3(0.5f, 0.5f, 0.5f));;
 
 		//nice rotation of a small cube
 
