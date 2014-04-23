@@ -14,13 +14,6 @@ uniform float resX;
 uniform float resY;
 
 
-const int gaussRadius = 11;
-const float gaussFilter[gaussRadius] = float[gaussRadius](
-	0.0402,0.0623,0.0877,0.1120,0.1297,0.1362,0.1297,0.1120,0.0877,0.0623,0.0402);
-	
-vec4 outputColor = vec4(0,0,0,1);
-vec3 newColor = vec3(0.0, 0.0, 0.0); 
-
 out vec4 fragmentColor;
 
 void main() {
@@ -31,7 +24,7 @@ void main() {
 	float shininess = texture(specularMap, passUV).w;
     
     //lightPosition from camera system
-    vec4 lightPos = vec4(5,2,-2,1);
+    vec4 lightPos = vec4(5,2,-2,0);
     
     vec4 lightPerspective = uniformLightPerspective * position;
     
@@ -74,13 +67,6 @@ void main() {
     }
     glow /= strength * strength * 4;
 
-   // fragmentColor = color * ambient + (color * diffuse  + specularColor * specular) * lightColor;
-   // fragmentColor += glow;
-   outputColor = color * ambient + (color * diffuse  + specularColor * specular) * lightColor;
-   outputColor += glow;
-   for (int i=0; i<gaussRadius; ++i) { 
-		newColor += gaussFilter[i] * vec3(outputColor.xyz);
-	}
-	
-	fragmentColor = vec4(newColor,1.0);
+    fragmentColor = color * ambient + (color * diffuse  + specularColor * specular) * lightColor;
+    fragmentColor += glow;
 }

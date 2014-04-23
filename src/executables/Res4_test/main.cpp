@@ -47,20 +47,20 @@ void configureScene(ApplicationState* target){
     /*************** virtual objects ***************/
     
  	VirtualObject* scene_chest_top;
-    scene_chest_top	= target->createVirtualObject(RESOURCES_PATH "/chest_scene/nicer_chest_top2.dae",VirtualObjectFactory::OTHER, 0.0f, 1, true);
+    scene_chest_top	= target->createVirtualObject(RESOURCES_PATH "/treasureChest_scene/treasureChest_top.dae",VirtualObjectFactory::OTHER, 0.0f, 1, true);
 
     VirtualObject* scene_chest_bottom;
-    scene_chest_bottom = target->createVirtualObject(RESOURCES_PATH "/chest_scene/nicer_chest_bottom.dae",VirtualObjectFactory::OTHER, 0.0f, 1, true);
+    scene_chest_bottom = target->createVirtualObject(RESOURCES_PATH "/treasureChest_scene/treasureChest_bottom.dae",VirtualObjectFactory::OTHER, 0.0f, 1, true);
     scene_chest_top->setModelMatrix(glm::rotate(glm::translate(glm::mat4(1.0f),glm::vec3(0.0,2.6,0.0)), 180.0f, glm::vec3(0.0,1.0,1.0)));
 
     
     /*************** shaders ***************/
 
-    Shader* phong_shader 		= new Shader( SHADERS_PATH "/chest_test/shader_chest.vert", SHADERS_PATH 	"/chest_test/shader_chest.frag");
+    Shader* phong_shader 		= new Shader( SHADERS_PATH "/treasureChest_shader/shader_chest.vert", SHADERS_PATH 	"/treasureChest_shader/shader_chest.frag");
     
-    Shader* depth_shader 		= new Shader( SHADERS_PATH "/chest_test/Depthwrite.vert", SHADERS_PATH 	"/chest_test/Depthwrite.frag");
+    Shader* depth_shader 		= new Shader( SHADERS_PATH "/treasureChest_shader/Depthwrite.vert", SHADERS_PATH 	"/treasureChest_shader/Depthwrite.frag");
     
-	Shader* composition_shader  = new Shader( SHADERS_PATH "/chest_test/screenFill.vert", SHADERS_PATH "/chest_test/finalCompositing.frag");
+	Shader* composition_shader  = new Shader( SHADERS_PATH "/treasureChest_shader/screenFill.vert", SHADERS_PATH "/treasureChest_shader/finalCompositing.frag");
     
     
     /*************** 1st framebuffer object ***************/
@@ -146,7 +146,7 @@ void configureScene(ApplicationState* target){
 void configureMyApp(){
 	/*	customize application a little bit */
 	myApp = 		Application::getInstance();	//create an Application labeled CHEST
-	myApp->			setLabel("TREASURE_CHEST");
+	myApp->			setLabel("TREASURE_CHEST - please zoom in");
     
 	/*	customize myVRState */
 	myState = 	new VRState("FEATURE"); // create a VRState labeled FEATURE
