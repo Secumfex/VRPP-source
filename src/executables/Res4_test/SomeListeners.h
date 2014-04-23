@@ -1,13 +1,17 @@
-#include "Patterns/Listener.h"
-
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <cmath>
+#include <stdlib.h>
+#include <time.h>
 
+#include "Patterns/Listener.h"
 #include "Visuals/RenderManager.h"
 #include "IO/PlayerCamera.h"
+#include "Application/ApplicationStates.h"
+#include "Physics/PhysicWorld.h"
+#include "Physics/UpdatePhysicsComponentListener.h"
 
-/// Listener which renders a frame by using current Instance pointers of RenderManager
+// Listener which renders a frame by using current Instance pointers of RenderManager
 class AlternativeRenderloopListener : public Listener{
 private:
 	RenderManager* rm;
@@ -20,7 +24,7 @@ public:
 	void update();
 };
 
-/// Listener which sets the Phong_Test Shader as the RenderManagers current Shader
+// Listener which sets the Phong_Test Shader as the RenderManagers current Shader
 class SetAlternativeDefaultRenderManagerPointersListener : public Listener{
 private:
 	RenderManager* rm;
@@ -29,7 +33,7 @@ public:
 	void update();
 };
 
-/// Listener which sets the Phont_Test Shader as the RenderManagers current Shader
+// Listener which sets custom Shaders
 class SetCurrentShaderListener : public Listener{
 private:
 	RenderManager* rm;
@@ -39,7 +43,7 @@ public:
 	void update();
 };
 
-/// Listener which sets the glClearColor
+// Listener which sets the glClearColor
 class SetClearColorListener : public Listener {
 private:
 	float r, g, b, a;
@@ -48,8 +52,8 @@ public:
 	void update();
 };
 
-
-/// Listener which rotates the Model Matrix by a tiny bit on every update
+// Listener which rotates the Model Matrix
+/* ... and opens the treasure chest as well ... */
 class AnimateRotatingModelMatrixListener : public Listener{
 private:
 	VirtualObject* vo;
@@ -59,7 +63,7 @@ public:
 	void update();
 };
 
-/// my Listener for animate a GraphicComponent
+// my Listener for animate a GraphicComponent (not used)
 class AnimateGraphicComponentListener : public Listener{
 private:
     GraphicsComponent* gc;
@@ -70,31 +74,12 @@ public:
     void update();
 };
 
-/// Listener which moves the Model Matrix on a sinus curve by a tiny bit on every update
-class AnimateSinusModelMatrixListener : public Listener{
-private:
-	VirtualObject* vo;
-	float old_sinus;
-	float t;
-public:
-	AnimateSinusModelMatrixListener(VirtualObject* vo);
-	void update();
-};
-
-/// Listener which updates the VirtualObject Modelmatrix by reading the PhysicsComponent Modelmatrix
+// Listener which updates the VirtualObject Modelmatrix by reading the PhysicsComponent Modelmatrix
 class UpdateVirtualObjectModelMatrixListener : public Listener{
 private:
 	VirtualObject* vo;
 public:
 	UpdateVirtualObjectModelMatrixListener(VirtualObject* vo);
-	void update();
-};
-
-// Listener which updates the PhysicsWorld on every update
-class UpdatePhysicsWorldListener : public Listener {
-private:
-public:
-	UpdatePhysicsWorldListener();
 	void update();
 };
 
@@ -108,7 +93,7 @@ public:
 	void update();
 };
 
-//Listener which turns the LookAt-Position of the given Camera Object
+// Listener which turns the LookAt-Position of the given Camera Object
 class TurnCameraListener : public Listener {
 private:
 	Camera* 	cam;
@@ -119,10 +104,10 @@ public:
 	void update();
 };
 
-//Listener which moves the PlayerCamera
+// Listener which moves the PlayerCamera
+/* it also 'calculates the collision between the camera and other objects */
 class MovePlayerCameraListener : public Listener {
 private:
-
     Camera* pcam;
     float x_pos;
     float y_pos;
@@ -135,19 +120,7 @@ public:
     void update();
 };
 
-#include "Application/ApplicationStates.h"
-/// Listener which applies an impulse to a rigid body in direction of the provided cam
-class ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener : public Listener {
-private:
-	SelectionHandler* selectionHandler;
-	Camera* cam;
-	float strength;
-public:
-	ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener(SelectionHandler* selectionHandler, Camera* cam, float strength = 100.0f);
-	void update();
-};
-
-/// Listener which creates a Virtual Object at the provided position in the provided state
+// Listener which creates a Virtual Object at the provided position in the provided state
 class CreateVirtualObjectListener : public Listener {
 private:
 	ApplicationState* state;
@@ -161,7 +134,7 @@ public:
 	void update();
 };
 
-/// Sets the current FrameBufferObject
+// Sets the current FrameBufferObject
 class SetFrameBufferObjectListener : public Listener {
 private:
 	FrameBufferObject* fbo;
@@ -170,16 +143,14 @@ public:
 	void update();
 };
 
-
-/// Unbinds the current FrameBufferObject
+// Unbinds the current FrameBufferObject
 class UnbindFrameBufferObjectListener : public Listener {
 public:
 	UnbindFrameBufferObjectListener();
 	void update();
 };
 
-
-/// Renders a single GraphicsComponent
+// Renders a single GraphicsComponent
 class RenderGraphicsComponentListener : public Listener{
 protected:
 	GraphicsComponent* gc;
@@ -188,19 +159,9 @@ public:
 	virtual void update();
 };
 
-
-/// Renders a Screen Filling Triangle
+// Renders a Screen Filling Triangle
 class RenderScreenFillingTriangleListener : public RenderGraphicsComponentListener{
 public:
 	RenderScreenFillingTriangleListener();
-	void update();
-};
-
-class ApplyLinearImpulseOnRigidBody : public Listener{
-private:
-	btRigidBody* rigidBody;
-	btVector3 force;
-public:
-	ApplyLinearImpulseOnRigidBody(btRigidBody* rigidBody, btVector3 force);
 	void update();
 };
