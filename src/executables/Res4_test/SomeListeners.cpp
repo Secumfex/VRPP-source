@@ -101,15 +101,13 @@ void SetClearColorListener::update(){
 
 
 
-AnimateRotatingModelMatrixListener::AnimateRotatingModelMatrixListener(VirtualObject* vo,glm::mat4 save_modelMatrix){
+AnimateRotatingModelMatrixListener::AnimateRotatingModelMatrixListener(VirtualObject* vo){
 	this->vo = vo;
 	angle = 0.0;
-    this->save_modelMatrix = save_modelMatrix;
 }
 
 void AnimateRotatingModelMatrixListener::update(){
     //rotation angle
-   // angle = fmod((float)(angle+0.01), (float)(pi<float>()*2.0f));
     if (angle >= 90.0f){
         angle = 90.0f;
 
@@ -118,9 +116,7 @@ void AnimateRotatingModelMatrixListener::update(){
             angle += 0.5f;
     }
 
-    //glm::mat4 new_modelMatrix = glm::rotate(glm::mat4(1.0f),glm::degrees(angle),glm::vec3(1.0f,0.0,0.0f)) * glm::translate(glm::mat4(1.0f), glm::vec3(0.0,0.0,0.0));
     glm::mat4 saveMatrix = glm::rotate(glm::translate(glm::mat4(1.0f),glm::vec3(0.0,0.7,1.0)), 180.0f, glm::vec3(0.0,1.0,1.0));
-   // glm::mat4 new_modelMatrix = glm::translate(glm::rotate(glm::rotate(glm::mat4(1.0f),180.0f,glm::vec3(0.0,1.0,0.0)), angle, glm::vec3(1.0,0.0,0.0)),glm::vec3(0.0,0,-3.0));
     glm::mat4 new_modelMatrix = glm::rotate(glm::translate(glm::vec3(0.0,2.0,-1.0)), -angle, glm::vec3(1.0,0.0,0.0))*saveMatrix;
 
 	vo->setModelMatrix(new_modelMatrix);
@@ -213,18 +209,51 @@ void TurnCameraListener::update(){
 	cam->setTheta(old_theta + theta);
 }
 
-MovePlayerCameraListener::MovePlayerCameraListener(Camera* pcam, float x, float y, float z){
+MovePlayerCameraListener::MovePlayerCameraListener(Camera* pcam, float x, float y, float z, VirtualObject* vo_1, VirtualObject* vo_2, btRigidBody* camBody){
     this->pcam = pcam;
     this->x_pos = x;
     this->y_pos = y;
     this->z_pos = z;
+    this->vo_1 = vo_1;
+    this->vo_2 = vo_2;
+    this->camBody = camBody;
 }
 void MovePlayerCameraListener::update(){
     float old_x = pcam->getX();
     float old_y = pcam->getY();
     float old_z = pcam->getZ();
     
-    pcam->setPosition(old_x+x_pos,old_y+y_pos,old_z+z_pos);
+    pcam->setPosition(old_x+x_pos,old_y+y_pos-0.25f,old_z+z_pos);
+    
+    /* Collision */
+    
+    struct   MyContactResultCallback : public btCollisionWorld::ContactResultCallback
+    {
+        bool m_connected;
+        btScalar m_margin;
+        MyContactResultCallback() :m_connected(false),m_margin(7.95f)
+        {
+        }
+        virtual   btScalar   addSingleResult(btManifoldPoint& cp,   const btCollisionObjectWrapper* colObj0Wrap,int partId0,int index0,const btCollisionObjectWrapper* colObj1Wrap,int partId1,int index1)
+        {
+            if (cp.getDistance()<=m_margin)
+                m_connected = true;
+            return 1.f;
+        }
+    };
+    
+    vo_2->setPhysicsComponent(10.0f, 10.0f, 10.0f,0.0f,3.0f,0.0f,1.0f,true);
+    btRigidBody* body_2 = vo_2->getPhysicsComponent()->getRigidBody();
+    
+    MyContactResultCallback callback;
+    PhysicWorld::getInstance()->dynamicsWorld->contactPairTest(camBody, body_2, callback);
+    std::cout<<"WTF: "<<callback.m_connected;
+    
+    if (callback.m_connected == true){
+        Listener* listener = new AnimateRotatingModelMatrixListener(vo_2);
+        RenderManager::getInstance()->attachListenerOnNewFrame(listener);
+    }
+    
 }
 
 ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener::ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener(SelectionHandler* selectionHandler, Camera* cam, float strength){
@@ -298,54 +327,6 @@ void UnbindFrameBufferObjectListener::update(){
 	// RenderManager::getInstance()->setCurrentFBO( 0 );
 }
 
-ReflectionMapRenderPass::ReflectionMapRenderPass(FrameBufferObject* fbo){
-    rm = RenderManager::getInstance();
-    this->fbo = fbo;
-  }
-
-void ReflectionMapRenderPass::update(){
-    /***************** save old state ******************/
-    FrameBufferObject* tempFBO = rm->getCurrentFBO();
-    
-    /***************** set shader state and get ready to draw ***************/
-    fbo->bindFBO();	// From now on, everything will be written into ColorAttachment0
-
-    rm->setCurrentFBO(fbo);
-    
-    glEnable(GL_DEPTH_TEST);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
-    glViewport(0, 0, fbo->getWidth(), fbo->getHeight());
-    
-    currentShader = rm->getCurrentShader();
-    currentRenderQueue = rm->getRenderQueue();
-    
-    /***************** render objects ***************/
-    //render GCs with current Shader
-    if ( currentRenderQueue != 0 ){
-        voList = currentRenderQueue->getVirtualObjectList();	//get List of all VOs in RenderQueue
-        //for every VO
-        for (std::list<VirtualObject* >::iterator i = voList.begin(); i != voList.end(); ++i) {	//get GCs of VO
-
-            currentGCs = (*i)->getGraphicsComponent();
-            //for every GC
-            for (unsigned int j = 0; j < currentGCs.size(); j++){
-                rm->setCurrentGC(currentGCs[j]);
-                rm->getCurrentVO();
-                
-                //tell Shader to upload all Uniforms
-                currentShader->uploadAllUniforms();
-                //render the GC
-                currentShader->render(currentGCs[j]);
-            }
-            
-        }
-    }
-    /****************** back to old state *****************/
-    fbo->unbindFBO();	
-    rm->setCurrentFBO(tempFBO);
-    
-}
 
 RenderGraphicsComponentListener::RenderGraphicsComponentListener(GraphicsComponent* gc){
 	this->gc = gc;
@@ -371,3 +352,29 @@ void RenderScreenFillingTriangleListener::update(){
 
     
 }
+
+
+ApplyLinearImpulseOnRigidBody::ApplyLinearImpulseOnRigidBody(btRigidBody* rigidBody, btVector3 force){
+	this->rigidBody = rigidBody;
+	this->force = force;
+}
+
+void ApplyLinearImpulseOnRigidBody::update(){
+	rigidBody->applyCentralImpulse(btVector3(force));
+}
+
+
+/*struct   MyContactResultCallback : public btCollisionWorld::ContactResultCallback
+{
+	bool m_connected;
+	MyContactResultCallback() :m_connected(false)
+	{
+	}
+	virtual   btScalar   addSingleResult(btManifoldPoint& cp,   const btCollisionObject* colObj0,int partId0,int index0,const btCollisionObject* colObj1,int partId1,int index1)
+	{
+		if (cp.getDistance()<=0)
+			m_connected = true;
+		return 1.f;
+	}
+};
+*/

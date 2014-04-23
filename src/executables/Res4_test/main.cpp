@@ -23,6 +23,8 @@ Application*    myApp;
 VRState*        myState;
 IOHandler*      myInputHandler;
 RenderManager*  rm;
+PhysicWorld*    pw;
+
 
 void configureTestingApplication(){
     /*	further customize application functionality by adding various listeners */
@@ -40,6 +42,7 @@ void configureScene(ApplicationState* target){
 
     
     rm = RenderManager::getInstance();
+    pw = PhysicWorld::getInstance();
     
     PlayerCamera* playercam = new PlayerCamera();
     playercam->setPosition(glm::vec3(5.0f, 10.0f, 10.0f));
@@ -48,44 +51,18 @@ void configureScene(ApplicationState* target){
 	myState->setCamera(playercam);
 	rm->setLightPosition(glm::vec3(500,2,-2),0); // for uniformLightPerspective
     
+    rm->getCurrentFrustum()->setCamera(playercam);
+    
     
  	VirtualObject* scene_chest_top;
     scene_chest_top	= target->createVirtualObject(RESOURCES_PATH "/chest_scene/nicer_chest_top2.dae",VirtualObjectFactory::OTHER, 0.0f, 1, true);
-    //scene_chest_top->setModelMatrix(glm::translate(glm::mat4(1.0f), glm::vec3(0.0,0.0,0.0)));
-    
-    {
-        int m,n;
-        for (n=0; n<4; n++){
-            for (m=0; m<4; m++){
-                std::cout<<scene_chest_top->getModelMatrix()[m][n];
-            }
-            std::cout<<"\n";
-        }
-    }
 
-    
-    
     VirtualObject* scene_chest_bottom;
     scene_chest_bottom = target->createVirtualObject(RESOURCES_PATH "/chest_scene/nicer_chest_bottom.dae",VirtualObjectFactory::OTHER, 0.0f, 1, true);
-    //scene_chest_bottom->setModelMatrix(glm::translate(glm::mat4(1.0f), glm::vec3(0.0,0.0,0.0)));
-    {
-        int m,n;
-        for (n=0; n<4; n++){
-            for (m=0; m<4; m++){
-                std::cout<<scene_chest_bottom->getModelMatrix()[m][n];
-            }
-            std::cout<<"\n";
-        }
-    }
-    
-    glm::mat4 save_modelMatrix = scene_chest_bottom->getModelMatrix();
+    scene_chest_top->setModelMatrix(glm::rotate(glm::translate(glm::mat4(1.0f),glm::vec3(0.0,2.6,0.0)), 180.0f, glm::vec3(0.0,1.0,1.0)));
     /* to animate the VirtualObject */
-    Listener* new_lesten = new AnimateRotatingModelMatrixListener(scene_chest_top,save_modelMatrix);
-    myApp->attachListenerOnRenderManagerFrameLoop(new_lesten);
-   // Listener* new_gc = new AnimateGraphicComponentListener(scene_chest_top->getGraphicsComponent()[0],scene_chest_Object);
-   // Listener* new_gc = new AnimateRotatingModelMatrixListener(scene_chest_top);
-    //myApp->attachListenerOnRenderManagerFrameLoop(new_gc);
-    
+   // Listener* new_lesten = new AnimateRotatingModelMatrixListener(scene_chest_top);
+  //  myApp->attachListenerOnRenderManagerFrameLoop(new_lesten);
 
 
     Shader* phong_shader 		= new Shader( SHADERS_PATH "/chest_test/shader_chest.vert", SHADERS_PATH 	"/chest_test/shader_chest.frag");
@@ -108,8 +85,6 @@ void configureScene(ApplicationState* target){
     framebuffer_render->createColorTexture();
 	framebuffer_render->createSpecularTexture();
     framebuffer_render->makeDrawBuffers();
-
-//glEnable(GL_DEPTH_TEST);
     
     /* render regular Scene */
     // bindFBO
@@ -149,14 +124,33 @@ void configureScene(ApplicationState* target){
     myVRStateIOHandler->attachListenerOnKeyPress(new SetClearColorListener(0.0,0.0,0.0),	GLFW_KEY_1);		// pressing '1' : black background
     myVRStateIOHandler->attachListenerOnKeyPress(new SetClearColorListener(1.0,1.0,1.0), 	GLFW_KEY_2);		// pressing '2' : white background
     myVRStateIOHandler->attachListenerOnKeyPress(new SetClearColorListener(0.44,0.5,0.56), 	GLFW_KEY_3);		// pressing '3' : default greyish-blue background
-    myVRStateIOHandler->attachListenerOnKeyPress(new TurnCameraListener(myState->getCamera(), 0.1f, 0.0f), 	GLFW_KEY_LEFT);		// pressing '<-' : view direction at an angle to the left
-    myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myState->getCamera()), 								GLFW_KEY_LEFT);
-    myVRStateIOHandler->attachListenerOnKeyPress(new TurnCameraListener(myState->getCamera(), -0.1f, 0.0f), 	GLFW_KEY_RIGHT);	// pressing '->' : view direction at an angle to the right
-    myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myState->getCamera()), 								GLFW_KEY_RIGHT);
-    myVRStateIOHandler->attachListenerOnKeyPress(new TurnCameraListener(myState->getCamera(), 0.0f, 0.1f), 	GLFW_KEY_UP);		// pressing '<-' : view direction straight ahead
-    myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myState->getCamera()), 								GLFW_KEY_UP);
-    myVRStateIOHandler->attachListenerOnKeyPress(new TurnCameraListener(myState->getCamera(), 0.0f, -0.1f), 	GLFW_KEY_DOWN);		// pressing '->' : view direction straight ahead
-    myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myState->getCamera()), 								GLFW_KEY_DOWN);
+    myVRStateIOHandler->attachListenerOnKeyPress(new TurnCameraListener(myState->getCamera(), 0.1f, 0.0f), 	GLFW_KEY_A);		// pressing '<-' : view direction at an angle to the left
+    myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myState->getCamera()), 								GLFW_KEY_A);
+    myVRStateIOHandler->attachListenerOnKeyPress(new TurnCameraListener(myState->getCamera(), -0.1f, 0.0f), 	GLFW_KEY_D);	// pressing '->' : view direction at an angle to the right
+    myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myState->getCamera()), 								GLFW_KEY_D);
+    myVRStateIOHandler->attachListenerOnKeyPress(new TurnCameraListener(myState->getCamera(), 0.0f, 0.1f), 	GLFW_KEY_W);		// pressing '<-' : view direction straight ahead
+    myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myState->getCamera()), 								GLFW_KEY_W);
+    myVRStateIOHandler->attachListenerOnKeyPress(new TurnCameraListener(myState->getCamera(), 0.0f, -0.1f), 	GLFW_KEY_Z);		// pressing '->' : view direction straight ahead
+    myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myState->getCamera()), 								GLFW_KEY_Z);
+    
+
+    btRigidBody* camBody = playercam->getRigidBody();
+    
+
+    myVRStateIOHandler->attachListenerOnKeyPress(new MovePlayerCameraListener(myState->getCamera(), -0.25,0.0,0.0, scene_chest_bottom, scene_chest_top, camBody ), 	GLFW_KEY_LEFT);
+    myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myState->getCamera()),              GLFW_KEY_LEFT);
+    myVRStateIOHandler->attachListenerOnKeyPress(new MovePlayerCameraListener(myState->getCamera(), 0.25,0.0,0.0, scene_chest_bottom, scene_chest_top, camBody),      GLFW_KEY_RIGHT);
+    myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myState->getCamera()),              GLFW_KEY_RIGHT);
+    myVRStateIOHandler->attachListenerOnKeyPress(new MovePlayerCameraListener(myState->getCamera(), 0.0,0.0,-0.25, scene_chest_bottom, scene_chest_top, camBody),      GLFW_KEY_UP);
+    myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myState->getCamera()),              GLFW_KEY_UP);
+    myVRStateIOHandler->attachListenerOnKeyPress(new MovePlayerCameraListener(myState->getCamera(), 0.0,-0.25,0.25, scene_chest_bottom, scene_chest_top, camBody),      GLFW_KEY_DOWN);
+    myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myState->getCamera()),              GLFW_KEY_DOWN);
+    
+
+    
+    myVRStateIOHandler->attachListenerOnKeyPress(new ApplyLinearImpulseOnRigidBody(playercam->getRigidBody(), btVector3(0.0f,5.0f,0.0f)), GLFW_KEY_SPACE );
+    
+
     
 }
 

@@ -54,9 +54,8 @@ class AnimateRotatingModelMatrixListener : public Listener{
 private:
 	VirtualObject* vo;
 	float angle;
-    glm::mat4 save_modelMatrix;
 public:
-	AnimateRotatingModelMatrixListener(VirtualObject* vo,glm::mat4 save_modelMatrix);
+	AnimateRotatingModelMatrixListener(VirtualObject* vo);
 	void update();
 };
 
@@ -123,12 +122,16 @@ public:
 //Listener which moves the PlayerCamera
 class MovePlayerCameraListener : public Listener {
 private:
+
     Camera* pcam;
     float x_pos;
     float y_pos;
     float z_pos;
+    VirtualObject* vo_1;
+    VirtualObject* vo_2;
+    btRigidBody* camBody;
 public:
-    MovePlayerCameraListener(Camera* pcam, float x_pos, float y_pos, float z_pos);
+    MovePlayerCameraListener(Camera* pcam, float x_pos, float y_pos, float z_pos, VirtualObject* vo_1, VirtualObject* vo_2, btRigidBody* camBody);
     void update();
 };
 
@@ -176,23 +179,6 @@ public:
 };
 
 
-/// Listener which uses an FBO as Render Target, activates certain camera, and ignores the water_object
-class ReflectionMapRenderPass : public Listener{
-public:
-	RenderManager* rm;
-	RenderQueue* currentRenderQueue;
-	list<VirtualObject* > voList;
-	Shader* currentShader;
-	vector<GraphicsComponent* > currentGCs;
-    
-	/*außerdem*/
-	FrameBufferObject* fbo; // reflectionmap target
-
-    
-	ReflectionMapRenderPass(FrameBufferObject* fbo);
-	void update();
-};
-
 /// Renders a single GraphicsComponent
 class RenderGraphicsComponentListener : public Listener{
 protected:
@@ -210,3 +196,11 @@ public:
 	void update();
 };
 
+class ApplyLinearImpulseOnRigidBody : public Listener{
+private:
+	btRigidBody* rigidBody;
+	btVector3 force;
+public:
+	ApplyLinearImpulseOnRigidBody(btRigidBody* rigidBody, btVector3 force);
+	void update();
+};
