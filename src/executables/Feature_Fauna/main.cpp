@@ -80,25 +80,11 @@ void createVirtualObject(int height) {
 
 	for (int i = 1; i < height; i++) {
 
-		//berechnet x und z Variationen für unser Seegras, nicht zwangsläufig notwendig
-		if ( (i%2)==0){
-			xPosPerVO = 0;
-			zPosPerVO = 0;
-		}
-		else if ( (i%3) ==1){
-			xPosPerVO = 5;
-			zPosPerVO = 5;
-		}
-		else {
-			xPosPerVO =-5;
-			zPosPerVO =-5;
-		}
-
 		vo_tmp = testingState->createVirtualObject(	RESOURCES_PATH "/Fauna/Seegras.dae", VirtualObjectFactory::SPHERE, 1.0, 8);
 
 		vo_tmp->translate(glm::vec3(xPosPerVO, yPosPerVO, zPosPerVO));
 		voVec.push_back(vo_tmp);
-		yPosPerVO +=20;				//Damit das nächste VO 20 höher erstellt wird
+		yPosPerVO +=21;				//Damit das nächste VO 20 höher erstellt wird
 
 		testingState->attachListenerOnBeginningProgramCycle(	new UpdateVirtualObjectModelMatrixListener(voVec[i]));
 		rb_tmp = vo_tmp->getPhysicsComponent()->getRigidBody();
@@ -114,7 +100,7 @@ void createVirtualObject(int height) {
 		transformsVec.push_back(transform_tmp);
 
 		constraint_tmp = new btGeneric6DofSpringConstraint( *rigidBodyVec[i - 1], *rigidBodyVec[i], transformsVec[i - 1], transformsVec[i], true);
-		constraint_tmp->setLinearUpperLimit(btVector3(0., 20., 0.));
+		constraint_tmp->setLinearUpperLimit(btVector3(0., 21., 0.));
 		constraint_tmp->setLinearLowerLimit(btVector3(0., 16., 0.));
 		constraint_tmp->setDamping(.1, .1);
 		constraintsVec.push_back(constraint_tmp);
@@ -142,6 +128,7 @@ void createVirtualObject(int height) {
 	//vom 1. VO zum 2.
 	RenderPass* pass2 = new RenderPass(new Shader(SHADERS_PATH "/FaunaFeature/FaunaFeature.vert", SHADERS_PATH "/FaunaFeature/simpleTexture.frag"));
 	pass2->addInitialGraphicsComponent(voVec[0]);
+	pass2->setUseAlphaBlending(true);
 	pass2->attachListenerOnPostUniformUpload(new UploadUniformVOListener("", voVec[0], "p0"));
 	pass2->attachListenerOnPostUniformUpload(new UploadUniformVOListener("", voVec[0], "p1"));
 	pass2->attachListenerOnPostUniformUpload(new UploadUniformVOListener("", voVec[1], "p2"));
@@ -151,6 +138,7 @@ void createVirtualObject(int height) {
 	//vom 2. VO zum 3.
 	RenderPass* pass3 = new RenderPass(new Shader(SHADERS_PATH "/FaunaFeature/FaunaFeature.vert", SHADERS_PATH "/FaunaFeature/simpleTexture.frag"));
 	pass3->addInitialGraphicsComponent(voVec[1]);
+	pass3->setUseAlphaBlending(true);
 	pass3->attachListenerOnPostUniformUpload(new UploadUniformVOListener("", voVec[0], "p0"));
 	pass3->attachListenerOnPostUniformUpload(new UploadUniformVOListener("", voVec[1], "p1"));
 	pass3->attachListenerOnPostUniformUpload(new UploadUniformVOListener("", voVec[2], "p2"));
@@ -159,6 +147,7 @@ void createVirtualObject(int height) {
 
 	RenderPass* pass4 = new RenderPass(new Shader(SHADERS_PATH "/FaunaFeature/FaunaFeature.vert", SHADERS_PATH "/FaunaFeature/simpleTexture.frag"));
 	pass4->addInitialGraphicsComponent(voVec[2]);
+	pass4->setUseAlphaBlending(true);
 	pass4->attachListenerOnPostUniformUpload(new UploadUniformVOListener("", voVec[1], "p0"));
 	pass4->attachListenerOnPostUniformUpload(new UploadUniformVOListener("", voVec[2], "p1"));
 	pass4->attachListenerOnPostUniformUpload(new UploadUniformVOListener("", voVec[3], "p2"));
@@ -167,6 +156,7 @@ void createVirtualObject(int height) {
 
 	RenderPass* pass5 = new RenderPass(new Shader(SHADERS_PATH "/FaunaFeature/FaunaFeature.vert", SHADERS_PATH "/FaunaFeature/simpleTexture.frag"));
 	pass5->addInitialGraphicsComponent(voVec[3]);
+	pass5->setUseAlphaBlending(true);
 	pass5->attachListenerOnPostUniformUpload(new UploadUniformVOListener("", voVec[2], "p0"));
 	pass5->attachListenerOnPostUniformUpload(new UploadUniformVOListener("", voVec[3], "p1"));
 	pass5->attachListenerOnPostUniformUpload(new UploadUniformVOListener("", voVec[4], "p2"));
