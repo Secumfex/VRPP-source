@@ -52,7 +52,7 @@ public:
 	/** \brief
 	 * @param particle_shader shader to be used to render particles
 	 * @param fbo framebufferobject to be used as render target
-	 * @param particle system to be rendered
+	 * @param particleSystem particle system to be rendered
 	 * @param vao vertex array object to be used as particle geometry 
 	 */
 	ParticlesRenderPass(Shader* particle_shader, FrameBufferObject* fbo, ParticleSystem* particleSystem, GLint vao);

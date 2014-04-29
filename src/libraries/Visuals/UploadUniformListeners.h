@@ -67,7 +67,7 @@ class UploadUniformModelMatrixListener : public Listener{
  private:
  	FrameBufferObject* mSourceFBO;
  public:
-	 	///constructor @param name
+	 	///constructor @param name @param source_fbo
  		UploadUniformPositionMapListener(std::string name, FrameBufferObject* source_fbo = 0);
  	 	///
  		void update();
@@ -77,7 +77,7 @@ class UploadUniformModelMatrixListener : public Listener{
  private:
  	FrameBufferObject* mSourceFBO;
  	public:
-	 	///constructor @param name
+	 	///constructor @param name @param source_fbo
  		UploadUniformNormalMapListener(std::string name, FrameBufferObject* source_fbo = 0);
  	 	///
  		void update();
@@ -87,7 +87,7 @@ class UploadUniformModelMatrixListener : public Listener{
  private:
  	FrameBufferObject* mSourceFBO;
  	public:
-	 	///constructor @param name
+	 	///constructor @param name @param source_fbo
  		UploadUniformColorMapListener(std::string name, FrameBufferObject* source_fbo = 0);
  	 	///
  		void update();
@@ -107,7 +107,7 @@ class UploadUniformModelMatrixListener : public Listener{
  private:
  	FrameBufferObject* mSourceFBO;
  	public:
-	 	///constructor @param name
+	 	///constructor @param name @param source_fbo
 	 	UploadUniformDepthMapListener(std::string name, FrameBufferObject* source_fbo = 0);
  	 	///
 	 	void update();

@@ -296,6 +296,7 @@ class CompositingPass : public RenderPass {
 public:
 	/** \brief constructor
 	 * @param gbuffer_compositing_shader a g buffer compositing style shader, i.e. a shader with sampler2d uniforms for positionMap, colorMap and normalMap
+	 * @param fbo FrameBufferObject
 	 */
 	CompositingPass(Shader* gbuffer_compositing_shader, FrameBufferObject* fbo = 0);
 
