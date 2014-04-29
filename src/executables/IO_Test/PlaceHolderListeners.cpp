@@ -161,7 +161,9 @@ ApplyLinearImpulseOnRigidBody::ApplyLinearImpulseOnRigidBody(btRigidBody* rigidB
 }
 
 void ApplyLinearImpulseOnRigidBody::update(){
-	rigidBody->applyCentralImpulse(btVector3(force.x,force.y,force.z));	
+
+	rigidBody->applyCentralImpulse(btVector3(force.x, force.y, force.z));	
+
 }
 
 SetCameraPositionListener::SetCameraPositionListener(Camera* cam, glm::vec3 position){

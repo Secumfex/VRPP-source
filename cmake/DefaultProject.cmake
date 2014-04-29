@@ -11,7 +11,11 @@ find_package(GLFW3 REQUIRED)
 find_package(GLM REQUIRED)
 find_package(ASSIMP REQUIRED)
 find_package(BULLET REQUIRED)
+
 find_package(KINECT REQUIRED)
+
+find_package(LIBOVR REQUIRED)
+
 
 set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 GENERATE_SUBDIRS(ALL_LIBRARIES ${CMAKE_SOURCE_DIR}/src/libraries)

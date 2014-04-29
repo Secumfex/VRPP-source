@@ -10,13 +10,20 @@ uniform sampler2D specularMap;
 uniform float resX;
 uniform float resY;
 
+uniform float shininess;
+
+
 out vec4 fragmentColor;
 
 void main() {
-    vec4 position = texture(positionMap, passUV);
-    vec4 normal = texture(normalMap, passUV);
-    vec4 color = texture(colorMap, passUV);
-	float shininess = texture(specularMap, passUV).x;
+
+    vec4 position = vec4(texture(positionMap, passUV).xyz,1.0);
+    vec4 normal = vec4(texture(normalMap, passUV).xyz,1.0);
+   // vec4 color = texture(colorMap, passUV);
+    vec4 color = vec4((texture(positionMap,passUV).w),(texture(normalMap,passUV).w),
+    				(texture(specularMap,passUV).w),0.0)+texture(colorMap, passUV);
+    vec4 specularColor = vec4(texture(specularMap,passUV).xyz,1.0f);
+
 
     //lightPosition from camera system
     vec4 lightPos = vec4(5,2,-2,1);
@@ -44,8 +51,9 @@ void main() {
             }
         }
     }
-    glow /= strength * strength * 4;
 
-    fragmentColor = color * ambient + color * diffuse + vec4(1,1,1,1) * specular;
+   glow /= strength * strength * 4;
+
+    fragmentColor = color * ambient + color * diffuse + specularColor * specular;
     fragmentColor += glow;
 }

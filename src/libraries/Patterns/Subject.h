@@ -34,9 +34,9 @@ public:
 	 */
 	void notify(string name);
 private:
-	list<Listener*> listeners;	/**<  list of all listeners attached to the Subject */
 
 protected:
+	list<Listener*> listeners;	/**<  list of all listeners attached to the Subject */
 	/** \brief protected-constructor so the class becomes abstract
 	 *
 	 */

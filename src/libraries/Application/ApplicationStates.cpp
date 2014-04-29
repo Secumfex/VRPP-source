@@ -18,6 +18,7 @@ ApplicationState::ApplicationState(){
 	camera = new Camera();
 	renderQueue = new RenderQueue();
 	iOHandler = new IngameHandler();
+	renderLoop = new RenderLoop();
 	frustum = new Frustum(camera);
 	iOHandler->setCameraObject(camera);
 	attachListenerOnBeginningProgramCycle(	new UpdateCameraPositionListener(camera, IOManager::getInstance()->getDeltaTimePointer()));
@@ -44,6 +45,11 @@ IOHandler* ApplicationState::getIOHandler(){
 
 glm::mat4 ApplicationState::getPerspectiveMatrix(){
 	return perspectiveMatrix;
+}
+
+RenderLoop* ApplicationState::getRenderLoop()
+{
+	return renderLoop;
 }
 
 void ApplicationState::setRenderQueue(		RenderQueue* renderQueue){
@@ -78,6 +84,7 @@ void ApplicationState::bindObjects(){
 	rm->setCurrentFrustum(frustum);
 	rm->setPerspectiveMatrix(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
 	rm->setRenderQueue(renderQueue);
+	rm->setRenderLoop(renderLoop);
 
 	IOManager* io = IOManager::getInstance();
 	io->setCurrentIOHandler(iOHandler);
@@ -86,10 +93,9 @@ void ApplicationState::bindObjects(){
 }
 
 
-VirtualObject* ApplicationState::createVirtualObject(std::string path, VirtualObjectFactory::BodyType bodyType, float mass){
-	VirtualObject* vo = VirtualObjectFactory::getInstance()->createVirtualObject(path, bodyType, mass);
+VirtualObject* ApplicationState::createVirtualObject(std::string path, VirtualObjectFactory::BodyType bodyType, float mass, int collisionFlag, bool blenderAxes){
+	VirtualObject* vo = VirtualObjectFactory::getInstance()->createVirtualObject(path, bodyType, mass, collisionFlag, blenderAxes);
 	renderQueue->addVirtualObject(vo);
-
 
 	notify("CREATE_VIRTUAL_OBJECT_LISTENER");	//in case someone cares
 

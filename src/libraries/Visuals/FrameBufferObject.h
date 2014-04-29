@@ -41,6 +41,7 @@ public:
 	 */
 	void createColorTexture();
 
+
 	/** \brief creates a specularmap for a color attachment to write in
 	 *
 	 */
@@ -80,6 +81,7 @@ public:
 	 */
 	GLuint getColorTextureHandle();
 
+
 	/** \brief getter
 	 *
 	 * @return specular texture handle
@@ -90,6 +92,7 @@ public:
 	 *
 	 * @return shadow texture handle
 	 */
+
 	GLuint getShadowMapHandle();
 
 	/** \brief getter
@@ -123,6 +126,7 @@ public:
 	 */
 	void bindColorTexture();
 
+
 	/** \brief binds specular map of this fbo
 	 *
 	 */
@@ -131,6 +135,7 @@ public:
 	/** \brief binds shadow map of this fbo
 	 *
 	 */
+
 	void bindShadowMap();
 
 	/** \brief binds depthbuffer of this fbo
@@ -176,13 +181,14 @@ protected:
 	int mHeight, mWidth;				/**< !docu pls! */
 
     GLuint mFramebufferHandle;			/**< !docu pls! */
-
     GLuint mPositionTextureHandle;		/**< !docu pls! */
     GLuint mNormalTextureHandle;		/**< !docu pls! */
     GLuint mColorTextureHandle;			/**< !docu pls! */
     GLuint mSpecularTextureHandle;		/**< !docu pls! */
     GLuint mShadowMapHandle;			/**< !docu pls! */
     GLuint mDepthbufferHandle;			/**< !docu pls! */
+
+
 
     std::vector <GLenum> mDrawBuffers;	/**< !docu pls! */
 

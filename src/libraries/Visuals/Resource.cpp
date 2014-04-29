@@ -20,7 +20,10 @@ Material :: Material(){
 	mTextures.push_back(tex);
 	mTextures.push_back(tex);
 	mTextures.push_back(tex);
-
+	mTextures.push_back(tex);
+	mTextures.push_back(tex);
+	mTextures.push_back(tex);
+	mTextures.push_back(tex);
 
 	mAmbColor = glm::vec3(1,1,1);
 	mDiffColor = glm::vec3(1,1,1);
@@ -89,6 +92,7 @@ void Material :: setShininess(GLfloat term){
 void Material:: setTransparency(GLfloat term){
     mTransparency = term;
 }
+
 Texture* Material ::getAmbientMap(){
 	return mTextures[0];
 }
@@ -127,6 +131,7 @@ GLfloat Material::getShininess(){
 GLfloat Material::getTransparency(){
 	return mTransparency;
 }
+
 Texture* Material ::getSpecularMap(){
 	return mTextures[6];
 }

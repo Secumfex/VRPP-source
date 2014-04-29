@@ -66,7 +66,7 @@ void PhysicWorld::screenPosToWorldRay(double mouseX, double mouseY, int screenWi
 	PhysicWorld::getInstance()->dynamicsWorld->rayTest(btVector3(outOrigin.x, outOrigin.y, outOrigin.z), btVector3(outDirection.x, outDirection.y, outDirection.z), RayCallback);
 
 	if(RayCallback.hasHit()) {
-	    cout << "mesh: " << (int)RayCallback.m_collisionObject->getUserPointer() << endl;
+	    cout << "mesh: " << RayCallback.m_collisionObject->getUserPointer() << endl;
 	}
 	else{
 	    cout << "background" << endl;

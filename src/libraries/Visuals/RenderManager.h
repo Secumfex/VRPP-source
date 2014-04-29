@@ -7,6 +7,7 @@
 #include "IO/Camera.h"
 #include "Visuals/Shader.h"
 #include "Visuals/FrameBufferObject.h"
+#include "Visuals/RenderLoop.h"
 #include "Visuals/Frustum.h"
 
 
@@ -65,6 +66,13 @@ public:
 
     /** \brief setter
      *
+     * sets/changes mRenderLoop
+     * @param renderLoop
+     */
+	void setRenderLoop(RenderLoop* renderLoop);
+
+    /** \brief setter
+     *
      * @param fovy,aspect,near,far
      */
 	void setPerspectiveMatrix(float fovy, float aspect, float near, float far);
@@ -118,6 +126,12 @@ public:
 	 * @return mCurrentFBO
 	 */
 	FrameBufferObject* getCurrentFBO();
+
+	 /** \brief getter
+     *
+     * @return mCurrentRenderLoop
+     */
+	RenderLoop* getCurrentRenderLoop();
 
 	/** \brief getter
 	 *
@@ -209,6 +223,7 @@ private:
 	VirtualObject* mCurrentVO;			/**< !docu pls! */
 	FrameBufferObject* mCurrentFBO;		/**< !docu pls! */
 	vector<glm::vec3> mLightPositions;	/**< !docu pls! */
+	RenderLoop* mRenderLoop;		/**< current renderloop */
 
 };
 

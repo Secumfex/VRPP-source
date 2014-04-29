@@ -208,10 +208,12 @@ public:
 	 */
 	Texture* getOpacityMap();
 
+
 	/** \brief getter
 	 *
 	 * @return specular texture
 	 */
+
 	Texture* getSpecularMap();
 
 	/** \brief getter
@@ -350,10 +352,12 @@ public:
 
 
 
+
 	//---------------MEMBER VARIABLES--------------------
 private:
 	std::string mName;			/**< docu pls */
 	vector<Texture*> mTextures;	/**< docu pls */
+
 
 	glm::vec3 mAmbColor;		/**< docu pls */
 	glm::vec3 mDiffColor;		/**< docu pls */

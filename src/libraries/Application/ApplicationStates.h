@@ -10,7 +10,8 @@
 #include "Visuals/VirtualObjectFactory.h"
 #include "Visuals/Frustum.h"
 
-class Camera; class RenderQueue; class VirtualObject;
+
+class Camera; class RenderQueue; class RenderLoop; class VirtualObject;
 
 /// Base class of States specifically for the Application-Class
 class ApplicationState : public State{
@@ -22,6 +23,7 @@ protected:
 	Camera* camera;					/**< camera to be used for view in this state */
 	RenderQueue* renderQueue;		/**< renderqueue to be used for rendering in this state */
 	IOHandler* iOHandler;			/**< IOHandler to be used for input interpretation */
+	RenderLoop* renderLoop;			/**< RenderLoop to be used for rendering */
 	glm::mat4 perspectiveMatrix;	/**< perspective matrix to be used by rendering! */
 
 	/** \brief bind objects to RenderManager, IOManager, PhysicsWorld etc.
@@ -64,6 +66,14 @@ public:
 	 */
 	glm::mat4 		getPerspectiveMatrix();
 
+
+	/** \brief getter
+	 *
+	 * @return Renderloop
+	 */
+
+	RenderLoop* getRenderLoop();
+	
 	/** \brief setter
 	 *
 	 * @param camera
@@ -82,6 +92,7 @@ public:
 	 */
 	void setIOHandler(			IOHandler* iOHandler);
 
+
 	/** \brief setter
 	 *
 	 * @param projectionMatrix
@@ -95,18 +106,23 @@ public:
 
 	/** \brief create Object from path and add it to renderQueue
 	 *
-	 * @param path
+	 * @param path object path
 	 * @param bodyType
 	 * @param mass
+	 * @param collisionFlag
+	 * @param blenderAxes
 	 * @return VirtualObject reference
 	 */
-	VirtualObject* createVirtualObject(std::string path, VirtualObjectFactory::BodyType bodyType, float mass = 0.0);
+	VirtualObject* createVirtualObject(std::string path, VirtualObjectFactory::BodyType bodyType = VirtualObjectFactory::OTHER, float mass = 0.0, int collisionFlag = 1, bool blenderAxes = false); //!< create Object from path and add it to renderQueue
 
 	/** \brief add existing VO to renderQueue
 	 *
 	 * @param vo
 	 */
 	void addVirtualObject(VirtualObject* vo);
+
+
+
 
 	/*Application State Listeners*/
 	/** \brief attach listener

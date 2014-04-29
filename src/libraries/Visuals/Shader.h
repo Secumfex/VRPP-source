@@ -26,6 +26,11 @@ public:
 
 	/** \brief constructor
 	 *
+	 * @param shaders list of uncompiled shaderprograms
+	 */
+	Shader(std::vector<const char*> shaders);
+	/** \brief constructor
+	 *
 	 * @param vertexShader
 	 * @param fragmentShader
 	 */
@@ -114,6 +119,7 @@ public:
 	 * @param gc
 	 */
 	void render(GraphicsComponent *gc);
+    // void render(VirtualObject *vo);
 
 	/** \brief attach listener
 	 *

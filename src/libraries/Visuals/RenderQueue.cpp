@@ -11,10 +11,15 @@ RenderQueue::~RenderQueue() {
 
 }
 
+
 /** \brief returns a pointer to this RenderQueue
  */
 RenderQueue* RenderQueue::getRenderQueue() {
 	return this;
+}
+
+void RenderQueue::accept(Visitor* v){
+	v->visitRenderQueue(this);
 }
 
 void RenderQueue::addShader(Shader* sh) {
@@ -29,7 +34,6 @@ void RenderQueue::addCompositingShader(Shader* sh){
 
 /** \brief adds a VO to the member list of VOs, also maps GC->VO and vice versa
  */
-
 void RenderQueue::addVirtualObject(VirtualObject* vo) {
 	cout << "Adding VO." << endl; // <-- REMOVE IN FINAL
 	voList.push_back(vo);
@@ -115,6 +119,10 @@ map<VirtualObject*, vector<GraphicsComponent*> > RenderQueue::getVo2GcMap() {
 
 list<VirtualObject*> RenderQueue::getVirtualObjectList() {
 	return voList;
+}
+
+list<GraphicsComponent* > RenderQueue::getGraphicsComponentList() {
+	return gcList;
 }
 
 
@@ -401,3 +409,110 @@ void RenderQueue::sortByFlags() {
 	}
 }
 
+/** \brief leaves only shadow casting elements in the list
+ */
+list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagShadowCaster* flag, list<GraphicsComponent* > temp){
+	vector<GraphicsComponent* > vec = gcFlagStorage["SHADOW"];
+	list<GraphicsComponent* >::iterator l_it = temp.begin();
+	vector<GraphicsComponent* >::iterator v_it = vec.begin();
+
+	bool hasElement = false;
+
+	for(l_it = temp.begin(); l_it != temp.end(); l_it++){
+		hasElement = false;
+		for(v_it = vec.begin(); v_it != vec.end(); v_it++){
+			if(*v_it == *l_it){
+				hasElement = true;
+			}
+		}
+		if (flag->getInvertCondition())	//invert condition if necessary
+		{
+			hasElement = !hasElement;
+		}
+		if(hasElement == false){
+			temp.erase(l_it);
+		}
+	}
+
+	return temp;
+}
+
+list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagUsesShader* flag, list<GraphicsComponent* > temp){
+	//TODO
+	return temp;
+}
+
+/** \brief leaves only transparent elements in the list
+ */
+list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagTransparency* flag, list<GraphicsComponent* > temp){
+		vector<GraphicsComponent* > vec = gcFlagStorage["TRANSPARENCY"];
+	list<GraphicsComponent* >::iterator l_it = temp.begin();
+	vector<GraphicsComponent* >::iterator v_it = vec.begin();
+
+	bool hasElement = false;
+
+	for(l_it = temp.begin(); l_it != temp.end(); l_it++){
+		hasElement = false;
+		for(v_it = vec.begin(); v_it != vec.end(); v_it++){
+			if(*v_it == *l_it){
+				hasElement = true;
+			}
+		}
+		if (flag->getInvertCondition())	//invert condition if necessary
+		{
+			hasElement = !hasElement;
+		}
+		if(hasElement == false){
+			temp.erase(l_it);
+		}
+	}
+
+	return temp;
+}
+
+list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagUsesMesh* flag, list<GraphicsComponent* > temp){
+	// TODO
+	return temp;
+}
+
+list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagPartOfVirtualObject* flag, list<GraphicsComponent* > temp){
+	list<GraphicsComponent* >::iterator l_it = temp.begin();
+	vector<GraphicsComponent* > vo_gcs = flag->getVirtualObject()->getGraphicsComponent();
+	
+	l_it = temp.begin();
+	while(l_it != temp.end()){
+		bool isPartOfVO = false;
+		for (unsigned int i = 0; i < vo_gcs.size(); i++)	// test for condition
+		{
+			if (*l_it == vo_gcs[i])	// if gc of vo == current gc
+			{
+				isPartOfVO = true;
+			}
+		}
+		bool conditionHolds = isPartOfVO;	//condition holds == false --> GC not Part of VO, condition holds == true --> GC part of VO
+		if (flag->getInvertCondition())		//condition holds == false --> GC     Part of VO, condition holds == false --> GC not part of VO
+		{
+			conditionHolds = !conditionHolds;
+		}
+		if (conditionHolds)
+		{	// if condition holds, keep GC and proceed to next GC
+			++l_it;
+		}
+		else
+		{	// if condition does not hold, erase GC from temporary list
+			l_it = temp.erase(l_it);
+		}
+	}
+
+	return temp;
+}
+
+list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagScreenFillingPolygon* flag, list<GraphicsComponent* > temp){
+	//TODO
+	return temp;
+}
+
+list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagInViewFrustum* flag, list<GraphicsComponent* > temp){
+	//TODO
+	return temp;
+}

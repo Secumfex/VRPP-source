@@ -19,6 +19,7 @@ class GraphicsComponent{
 public:
 
 
+
 	/** \brief setter
 	 *
 	 * sets/changes mMesh
@@ -37,6 +38,7 @@ public:
 	 *
 	 * @return mMesh
 	 */
+
 	Mesh* getMesh();
 
 	/** \brief getter
@@ -70,6 +72,7 @@ public:
 	 * @return the modelMatrixGc
 	 */
 	glm::mat4 getModelMatrix();
+
 
 	/** \brief setter
 	 *
@@ -142,12 +145,14 @@ public:
 	 * @param mesh
 	 * @param material
 	 */
+
 	GraphicsComponent(Mesh* mesh, Material* material);
 
 
 private:
 	Mesh *mMesh;					/**< !docu pls! */
 	Material *mMaterial;			/**< !docu pls! */
+
 
 
 	glm::mat4 modelMatrixGc;		/**< !docu pls! */

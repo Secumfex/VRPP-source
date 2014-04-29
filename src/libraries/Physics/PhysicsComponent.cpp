@@ -5,9 +5,12 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Application/ApplicationStates.h"
+
 #include "Visuals/VirtualObject.h"
 
 #include "BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h"
+
 
 using namespace std;
 
@@ -16,7 +19,7 @@ PhysicsComponent::PhysicsComponent(){
 	hit = false;
 }
 
-PhysicsComponent::PhysicsComponent(glm::vec3 min, glm::vec3 max, float mass) {
+PhysicsComponent::PhysicsComponent(glm::vec3 min, glm::vec3 max, float mass, int collisionFlag) {
 
 	glm::vec3 boxValue = max-min;
 
@@ -31,37 +34,36 @@ PhysicsComponent::PhysicsComponent(glm::vec3 min, glm::vec3 max, float mass) {
 
 	hit = false;
 
-	rigidBody = addBox(width / 2.0f, height / 2.0f, depth / 2.0f, x, y, z, mass);
+	rigidBody = addBox(width , height , depth, x, y, z, mass);
 	rigidBody->setUserPointer(this);	// use bullet's user pointer to refer to this Object
-	addCollisionFlag(8);	//momentan noch fest, muesste eig auch zusaetzlicher input wert sein
+	setCollisionFlag(collisionFlag);	//momentan noch fest, muesste eig auch zusaetzlicher input wert sein
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
 
-PhysicsComponent::PhysicsComponent(float radius, float x, float y, float z, float mass) {
+PhysicsComponent::PhysicsComponent(float radius, float x, float y, float z, float mass, int collisionFlag) {
 
 	hit = false;
 
 	rigidBody = addSphere(radius,x,y,z,mass);
 	rigidBody->setUserPointer(this);	// use bullet's user pointer to refer to this Object
-	addCollisionFlag(8);
+	setCollisionFlag(collisionFlag);
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
 
-PhysicsComponent::PhysicsComponent(float width, float height, float depth, float x, float y, float z, float mass) {
-
+PhysicsComponent::PhysicsComponent(float width, float height, float depth, float x, float y, float z, float mass, int collisionFlag) {
 	hit = false;
 	rigidBody = addBox(width,height,depth,x,y,z,mass);
 	rigidBody->setUserPointer(this);	// use bullet's user pointer to refer to this Object
-	addCollisionFlag(8);
+	setCollisionFlag(collisionFlag);
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
 
-PhysicsComponent::PhysicsComponent(float x, float y, float z, glm::vec3 normal, float mass){
 
+PhysicsComponent::PhysicsComponent(float x, float y, float z, glm::vec3 normal, float mass, int collisionFlag){
 	hit = false;
 	rigidBody = addPlane(x,y,z,normal,mass);
 	rigidBody->setUserPointer(this);	// use bullet's user pointer to refer to this Object
-	addCollisionFlag(8);
+	setCollisionFlag(collisionFlag);
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
 
@@ -69,7 +71,7 @@ PhysicsComponent::PhysicsComponent(char* filename, float x, float y, float z){
 
 	hit = false;
 	rigidBody = addHeightfield(filename,x,y,z);
-	addCollisionFlag(1);	//static object
+	setCollisionFlag(1);	//static object
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 
 	/*
@@ -101,14 +103,30 @@ PhysicsComponent::~PhysicsComponent() {
 
 void PhysicsComponent::translate(glm::vec3 pos){
 	btVector3 trans = btVector3(pos.x, pos.y, pos.z);
+	rigidBody->translate(trans);
+	glm::vec3 origin = this->getPosition();
+	this->setPosition(origin.x+pos.x,origin.y+pos.y,origin.z+pos.z);
 
-	this->rigidBody->translate(trans);
+
+	/*
+	btTransform transform = rigidBody->getWorldTransform();
+	btVector3 origin2 = transform.getOrigin();
+	transform.setIdentity();
+	transform.setOrigin(origin2+trans);
+	rigidBody->setWorldTransform(transform);
+	*/
+	//rigidBody->translate(trans);
+
 }
 
-void PhysicsComponent::scale(glm::vec3 scale){
+void PhysicsComponent::scale(glm::vec3 scale, VirtualObject* vo){
 	btVector3 scalevec = btVector3(scale.x, scale.y, scale.z);
 
-		rigidBody->getCollisionShape()->setLocalScaling(scalevec);
+		//vo->setModelMatrix(glm::scale(glm::mat4(1.0f), scale));
+
+
+	this->rigidBody->getCollisionShape()->setLocalScaling(scalevec);
+	update(vo);
 }
 
 void PhysicsComponent::addCollisionFlag(int flag) {
@@ -139,8 +157,7 @@ btRigidBody* PhysicsComponent::addBox(float width, float height, float depth, fl
 	t.setIdentity();
 	t.setOrigin(btVector3(x,y,z));
 
-	btBoxShape* box = new btBoxShape(btVector3(width,height,depth));
-
+	btBoxShape* box = new btBoxShape(btVector3(width/2.0f,height/2.0f,depth/2.0f));
 	btVector3 inertia;
 	if(mass != 0.0) {
 		box->calculateLocalInertia(mass,inertia);
@@ -154,6 +171,7 @@ btRigidBody* PhysicsComponent::addBox(float width, float height, float depth, fl
 
 	btRigidBody* body = new btRigidBody(info);
 	body->setLinearFactor(btVector3(1,1,1));
+
 	return body;
 }
 
@@ -170,10 +188,8 @@ btRigidBody* PhysicsComponent::addSphere(float radius, float x, float y, float z
 		sphere->calculateLocalInertia(mass, inertia);
 	}
 
-
-
 	btMotionState* motion = new btDefaultMotionState(t);
-	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,sphere,inertia);
+	btRigidBody::btRigidBodyConstructionInfo info(mass,motion,sphere);
 	btRigidBody* body = new btRigidBody(info);
 	body->setLinearFactor(btVector3(1,1,1));
 	return body;
