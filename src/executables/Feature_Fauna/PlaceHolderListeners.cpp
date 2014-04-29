@@ -246,13 +246,13 @@ void SetClearColorListener::update(){
 		glClearColor(r,g,b,a);
 }
 
-ApplyLinearImpulseOnRigidBody::ApplyLinearImpulseOnRigidBody(btRigidBody* rigidBody, btVector3 force){
+ApplyLinearImpulseOnRigidBody::ApplyLinearImpulseOnRigidBody(btRigidBody* rigidBody, glm::vec3 force){
 	this->rigidBody = rigidBody;
 	this->force = force;
 }
 
 void ApplyLinearImpulseOnRigidBody::update(){
-	rigidBody->applyCentralImpulse(btVector3(force));
+	rigidBody->applyCentralImpulse(btVector3(force.x, force.y, force.z));
 }
 
 UploadUniformVOListener::UploadUniformVOListener(std::string name, VirtualObject* vo, std::string uniform_name){
