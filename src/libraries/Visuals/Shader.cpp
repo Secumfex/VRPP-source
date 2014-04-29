@@ -252,7 +252,4 @@ void Shader::attachUniformListener(std::string uniform){
 	else {
 		std::cout << "ERROR: Uniform \"" << uniform << "\" is not a valid uniform name." << std:: endl;
 	}
-
-
-
 }

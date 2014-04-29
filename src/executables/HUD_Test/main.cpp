@@ -100,7 +100,7 @@ void configureRendering(){
 	Shader* godRay_shader 		= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/godrays.vert"		, SHADERS_PATH 	"/Underwater_Visuals_Test/godrays.frag");
 	Shader* water_shader 		= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/water.vert"		, SHADERS_PATH 	"/Underwater_Visuals_Test/water.frag");
 	Shader* particles_shader	= new Shader( SHADERS_PATH "/HUD/Copy of particles.vert"	, SHADERS_PATH  "/HUD/Copy of particles.frag");
-	Shader* composition_shader  = new Shader( SHADERS_PATH "/Underwater_Visuals_Test/screenFill.vert"	, SHADERS_PATH  "/Underwater_Visuals_Test/finalCompositing.frag");
+	Shader* composition_shader  = new Shader( SHADERS_PATH "/Underwater_Visuals_Test/screenFill.vert"	, SHADERS_PATH  "/Underwater_Visuals_Test/finalCompositing_hud.frag");
 
 	//HUD-Shaders
 	Shader* HUDAirShader		= new Shader( SHADERS_PATH "/HUD/StaticHUDElement.vert"					, SHADERS_PATH  "/HUD/HUDAir.faggot");
