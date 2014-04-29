@@ -156,8 +156,8 @@ void MaterialManager::makeMaterial(std:: string matName, GraphicsComponent* gc){
 	    gc->getMaterial()->setAmbient(glm::vec3(0.329412f,0.223529f,0.027451f));
 	    gc->getMaterial()->setDiffuse(glm::vec3(0.54f,0.26f,0.07f));
 
-	    gc->getMaterial()->setSpecular(glm::vec3(0.992157f,0.941176f,0.807843f));
-	    gc->getMaterial()->setShininess(27.89743616f/1000.0f);
+	    gc->getMaterial()->setSpecular(glm::vec3(0.492157f,0.241176f,0.207843f));
+	    gc->getMaterial()->setShininess(7.89743616f/1000.0f);
 	    gc->getMaterial()->setName("Wood");
 	    std::cout<<"'wood' set"<<endl;
 		}
@@ -248,7 +248,7 @@ void MaterialManager::makeMaterial(std:: string matName, GraphicsComponent* gc){
     gc->getMaterial()->setAmbient(glm::vec3(0.19125f,0.0735f,0.0225f));
     gc->getMaterial()->setDiffuse(glm::vec3(0.7038f,0.27048f,0.0828f));
     gc->getMaterial()->setSpecular(glm::vec3(0.256777f,0.137622f,0.086014f));
-    gc->getMaterial()->setShininess(12.8f);
+    gc->getMaterial()->setShininess(12.8f/1000.0f);
     gc->getMaterial()->setName("Copper");
     std::cout<<"'copper' set"<<endl;
 
@@ -261,8 +261,8 @@ void MaterialManager::makeMaterial(std:: string matName, GraphicsComponent* gc){
     gc->setTransparency(false);
     gc->getMaterial()->setAmbient(glm::vec3(0.24725f,0.1995f,0.0745f));
     gc->getMaterial()->setDiffuse(glm::vec3(0.75164f,0.60648f,0.22648f));
-    gc->getMaterial()->setSpecular(glm::vec3(0.628281f,0.555802f,0.366065f));
-    gc->getMaterial()->setShininess(51.2f);
+    gc->getMaterial()->setSpecular(glm::vec3(0.628281f, 0.555802f, 0.366065f));
+    gc->getMaterial()->setShininess(7.2f/1000.0f);
     gc->getMaterial()->setName("Gold");
     std::cout<<"'gold' set"<<endl;
 
@@ -276,7 +276,7 @@ void MaterialManager::makeMaterial(std:: string matName, GraphicsComponent* gc){
     gc->getMaterial()->setAmbient(glm::vec3(0.19225f,0.19225f,0.19225f));
     gc->getMaterial()->setDiffuse(glm::vec3(0.50754f,0.50754f,0.50754f));
     gc->getMaterial()->setSpecular(glm::vec3(0.508273f,0.508273f,0.508273f));
-    gc->getMaterial()->setShininess(51.2f);
+    gc->getMaterial()->setShininess(51.2f/1000.0f);
     gc->getMaterial()->setName("Silver");
     std::cout<<"'silver' set"<<endl;
 
@@ -306,7 +306,7 @@ void MaterialManager::makeMaterial(std:: string matName, GraphicsComponent* gc){
 
     gc->getMaterial()->setSpecular(glm::vec3(0.0f,0.3f,0.9f));
 
-    gc->getMaterial()->setShininess(32.0f);
+    gc->getMaterial()->setShininess(32.0f/1000.0f);
     gc->getMaterial()->setName("Generic");
     std::cout<<"'generic material' set"<<endl;
 
@@ -381,7 +381,7 @@ void MaterialManager::makeMaterial(std:: string matName, GraphicsComponent* gc){
 	    gc->getMaterial()->setAmbient(glm::vec3(0.5f));
 	    gc->getMaterial()->setDiffuse(glm::vec3(0.02f,0.02f,0.02f));
 	    gc->getMaterial()->setSpecular(glm::vec3(0.3f));
-	    gc->getMaterial()->setShininess(20.0f);
+	    gc->getMaterial()->setShininess(10.0f/1000.0f);
 
 	    std::cout<<"'generic color' set"<<endl;
 	}

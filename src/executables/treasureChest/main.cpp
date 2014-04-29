@@ -41,7 +41,7 @@ void configureScene(ApplicationState* target){
 	playercam->setCenter(glm::vec3(0.0f, 0.0f, 0.0f));
 	myState->setCamera(playercam);
 	rm->setLightPosition(glm::vec3(500,2,-2),0); // for uniformLightPerspective
-    rm->getCurrentFrustum()->setCamera(playercam);
+    //rm->getCurrentFrustum()->setCamera(playercam);
     
     
     /*************** virtual objects ***************/
@@ -51,7 +51,7 @@ void configureScene(ApplicationState* target){
 
     VirtualObject* scene_chest_bottom;
     scene_chest_bottom = target->createVirtualObject(RESOURCES_PATH "/treasureChest_scene/treasureChest_bottom.dae",VirtualObjectFactory::OTHER, 0.0f, 1, true);
-    scene_chest_top->setModelMatrix(glm::rotate(glm::translate(glm::mat4(1.0f),glm::vec3(0.0,2.6,0.0)), 180.0f, glm::vec3(0.0,1.0,1.0)));
+   // scene_chest_top->setModelMatrix(glm::rotate(glm::translate(glm::mat4(1.0f),glm::vec3(0.0,2.6,0.0)), 180.0f, glm::vec3(0.0,1.0,1.0)));
 
     
     /*************** shaders ***************/

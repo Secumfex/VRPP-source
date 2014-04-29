@@ -95,13 +95,17 @@ void AnimateRotatingModelMatrixListener::update(){
         angle += 0.5f;
     }
 
-    // transform the treasure chest top on the right position
-    glm::mat4 saveMatrix = glm::rotate( glm::translate( glm::mat4(1.0f),glm::vec3( 0.0,0.7,1.0) ), 180.0f, glm::vec3( 0.0,1.0,1.0 ) );
+    // transform the treasure chest top on the 'right' position (zero point)
+    glm::mat4 saveMatrix = glm::rotate(glm::translate(0.0f,-2.0f,1.0f), -90.0f, glm::vec3(1.0f,0.0f,0.0f));
+
     // then open it!
-    glm::mat4 new_modelMatrix = glm::rotate( glm::translate( glm::vec3( 0.0,2.0,-1.0 )), -angle, glm::vec3( 1.0,0.0,0.0 )) * saveMatrix;
+    glm::mat4 new_modelMatrix = glm::rotate( glm::mat4(1.0f), -angle, glm::vec3( 1.0,0.0,0.0 ))* saveMatrix;
+    
+    // ... and translate the top back to the bottom
+    glm::mat4 new_Matrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f,2.0f,-1.0f)) * new_modelMatrix;
 
     // 'refresh' the modelMatrix
-	vo->setModelMatrix(new_modelMatrix);
+	vo->setModelMatrix(new_Matrix);
 }
 
 /* my Listener for animate a GraphicComponent (not used) */
