@@ -32,9 +32,12 @@ void main() {
 						+ ((3.0 * p1.z - p0.z - 3.0 * p2.z + p3.z) * (T * T * T))));
 
     //gl_Position = uniformPerspective * uniformView * uniformModel * positionAttribute;
-gl_Position = uniformPerspective * uniformView * uniformModel * vec4(positionAttribute.x + Catmullx, Catmully, positionAttribute.z + Catmullz, 1);
+	gl_Position = uniformPerspective * uniformView * uniformModel * vec4(positionAttribute.x + Catmullx, Catmully, positionAttribute.z + Catmullz, 1);
 
-
+	vec4 modelPos = ( uniformModel * vec4( 0.0, 0.0, 0.0, 1.0 ) ); 
+	vec4 viewPos  = ( uniformView  * modelPos) + ( vec4( positionAttribute.x + Catmullx, Catmully, positionAttribute.z + Catmullz, 0.0 ));
+	
+	gl_Position = uniformPerspective * viewPos;
 	
 	passUVCoords = uvCoordAttribute;
 }
