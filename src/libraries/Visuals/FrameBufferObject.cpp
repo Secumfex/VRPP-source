@@ -21,8 +21,12 @@ FrameBufferObject::FrameBufferObject(int width, int height) {
 	mDepthbufferHandle = -1;
 	mNormalTextureHandle = -1;
 	mPositionTextureHandle = -1;
+
 	mShadowMapHandle = -1;
 	mSpecularTextureHandle = -1;
+
+	mGuiTextureHandle = -1;
+
 
 	createDepthBuffer();
 
@@ -124,6 +128,19 @@ void FrameBufferObject::createDepthBuffer(){
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+void FrameBufferObject::createGuiTexture(){
+	glGenTextures(1, &mGuiTextureHandle);
+	glBindTexture(GL_RENDERBUFFER, mGuiTextureHandle);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWidth, mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glBindFramebuffer(GL_FRAMEBUFFER, mFramebufferHandle);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT5, GL_TEXTURE_2D, mGuiTextureHandle, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
 GLuint FrameBufferObject::getFboHandle(){
 	return mFramebufferHandle;
 }
@@ -144,6 +161,9 @@ GLuint FrameBufferObject::getShadowMapHandle(){
 }
 GLuint FrameBufferObject::getDepthBufferHandle(){
 	return mDepthbufferHandle;
+}
+GLuint FrameBufferObject::getGuiTextureHandle(){
+	return mGuiTextureHandle;
 }
 
 void FrameBufferObject::bindFBO(){
@@ -170,6 +190,9 @@ void FrameBufferObject::bindShadowMap(){
 }
 void FrameBufferObject::bindDepthBuffer(){
 	glBindTexture(GL_TEXTURE_2D, mDepthbufferHandle);
+}
+void FrameBufferObject::bindGuiTexture(){
+	glBindTexture(GL_TEXTURE_2D, mGuiTextureHandle);
 }
 void FrameBufferObject::unbindTexture(){
 	glBindTexture(GL_TEXTURE_2D, 0);
