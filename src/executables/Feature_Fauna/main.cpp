@@ -24,6 +24,7 @@
 Application* testingApp;
 VRState* testingState;
 IOHandler* testingInputHandler;
+btRigidBody* camBody;
 Camera* cam;
 PhysicsComponent* phyComp;
 
@@ -44,16 +45,25 @@ testingApp->setLabel("PROJEKT PRAKTIKUM");
 
 testingState = new VRState("TESTING FRAMEWORK");
 testingState->attachListenerOnAddingVirtualObject(		new PrintMessageListener( string("Added a VirtualObject to RenderQueue")));// console output when virtual object is added
-testingState->attachListenerOnActivation(		new SetClearColorListener(0.44, 0.5, 0.56));// custom background color
-testingState->attachListenerOnActivation(		new PrintCameraStatusListener(testingState->getCamera()));
+testingState->attachListenerOnActivation(				new SetClearColorListener(0.44, 0.5, 0.56));// custom background color
+testingState->attachListenerOnActivation(				new PrintCameraStatusListener(testingState->getCamera()));
+
+//playerCam = new PlayerCamera;
+//testingState->setCamera(playerCam);
 
 cam = testingState->getCamera();
 cam->setPosition(0, 15, 75);
+
+//btRigidBody* camBody = playerCam->getRigidBody();
+//playerCam->setPosition(0.0f,2.0f,5.0f);
+//PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(camBody);
+
 }
 
+/* Create a Floor plane */
 void createFloor() {
 	VirtualObject* floor = testingState->createVirtualObject( 	RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 0.0, 1);
-	glm::mat4 myModelMatrix1 = glm::scale(	glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.0f, 0.0f)),	glm::vec3(5.0f, 0.2f, 5.0f));	//floor
+	glm::mat4 myModelMatrix1 = glm::scale(	glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f)),	glm::vec3(5.0f, 0.2f, 5.0f));	//floor
 	floor->setModelMatrix(myModelMatrix1); 	// override default Model Matrix
 	floor->setPhysicsComponent(10.0f, 0.4f, 10.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1);
 
@@ -61,7 +71,7 @@ void createFloor() {
 
 void createVirtualObject(int height) {
 
-	//Erstelle erstes Objekt unten
+	//Erstelle erstes Objekt unten statisch
 	vo_tmp = testingState->createVirtualObject( RESOURCES_PATH "/Fauna/Seegras.dae", VirtualObjectFactory::SPHERE, 0.0, 8);
 	testingState->attachListenerOnBeginningProgramCycle(	new UpdateVirtualObjectModelMatrixListener(vo_tmp));
 	testingState->attachListenerOnBeginningProgramCycle(	new UpdatePhysicsComponentListener(vo_tmp));
@@ -235,10 +245,16 @@ void catMullRomeSpline(){
 }
 
 void listenersEtc(){
+
+
 	testingState->attachListenerOnBeginningProgramCycle(	new PhysicWorldSimulationListener(	IOManager::getInstance()->getDeltaTimePointer()));// updates physics simulation
 	testingInputHandler = testingState->getIOHandler();
 	testingInputHandler->attachListenerOnKeyPress(			new TerminateApplicationListener(testingApp), GLFW_KEY_ESCAPE);
 	testingInputHandler->attachListenerOnKeyPress(			new SetCameraPositionListener(testingState->getCamera(), glm::vec3(0.0f, 0.1f, 0.0)), GLFW_KEY_SPACE);
+
+//	testingInputHandler->attachListenerOnKeyPress(			new ApplyLinearImpulseOnRigidBody(playerCam->getRigidBody(), glm::vec3(0.0f,5.0f,0.0f)), GLFW_KEY_SPACE );
+//	testingInputHandler->attachListenerOnKeyPress(			new SetCameraPositionListener(playerCam, glm::vec3(0.0f,5.0f,0.0f)), GLFW_KEY_R );
+
 	testingApp->attachListenerOnProgramInitialization( 		new PrintMessageListener(string("Application is booting")));
 	testingApp->attachListenerOnProgramTermination(			new PrintMessageListener(string("Application is terminating")));
 	testingApp->attachListenerOnBeginningProgramCycle(		new PhysicWorldSimulationListener(	IOManager::getInstance()->getDeltaTimePointer()));
@@ -248,12 +264,13 @@ void listenersEtc(){
 
 	testingApp->addState(testingState);
 }
+
 int main() {
 
 	configureApplication();	// 1 do some customization
 	createFloor();
 	createVirtualObject(5);
-	catMullRomeSpline();
+	//catMullRomeSpline();
 	listenersEtc();
 	testingApp->run();	// 2 run application
 	return 0;	// 3 end :)
