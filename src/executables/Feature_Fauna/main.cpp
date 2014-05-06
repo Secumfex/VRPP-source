@@ -3,7 +3,6 @@
 #include "Application/ApplicationListeners.h"
 #include "Tools/UtilityListeners.h"
 #include "PlaceHolderListeners.h"
-#include "Seetang.h"
 #include "BulletDynamics/Dynamics/btRigidBody.h"
 #include "IO/IOManager.h"
 #include "IO/PlayerCamera.h"
@@ -48,15 +47,8 @@ testingState->attachListenerOnAddingVirtualObject(		new PrintMessageListener( st
 testingState->attachListenerOnActivation(				new SetClearColorListener(0.44, 0.5, 0.56));// custom background color
 testingState->attachListenerOnActivation(				new PrintCameraStatusListener(testingState->getCamera()));
 
-//playerCam = new PlayerCamera;
-//testingState->setCamera(playerCam);
-
 cam = testingState->getCamera();
 cam->setPosition(0, 15, 75);
-
-//btRigidBody* camBody = playerCam->getRigidBody();
-//playerCam->setPosition(0.0f,2.0f,5.0f);
-//PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(camBody);
 
 }
 
@@ -94,7 +86,7 @@ void createVirtualObject(int height) {
 
 		vo_tmp->translate(glm::vec3(xPosPerVO, yPosPerVO, zPosPerVO));
 		voVec.push_back(vo_tmp);
-		yPosPerVO +=21;				//Damit das nächste VO 20 höher erstellt wird
+		yPosPerVO +=21;
 
 		testingState->attachListenerOnBeginningProgramCycle(	new UpdateVirtualObjectModelMatrixListener(voVec[i]));
 		rb_tmp = vo_tmp->getPhysicsComponent()->getRigidBody();
@@ -114,11 +106,6 @@ void createVirtualObject(int height) {
 		constraint_tmp->setLinearLowerLimit(btVector3(0., 16., 0.));
 		constraint_tmp->setDamping(.1, .1);
 		constraintsVec.push_back(constraint_tmp);
-		//constraints[i-1]->internalSetAppliedImpulse(btScalar(50));
-		//constraints[i-1]->enableSpring(0, false);
-		//constraints[i-1]->setStiffness(0,50);
-		//constraints[i-1]->setEquilibriumPoint();
-		//constraint23->setLinearLowerLimit(btVector3(springRestLen - springRange, 0., 0.));
 		PhysicWorld::getInstance()->dynamicsWorld->addConstraint( constraintsVec[i-1], true);
 
 	}
@@ -175,7 +162,7 @@ void createVirtualObject(int height) {
 
 }
 
-void catMullRomeSpline(){
+/*void catMullRomeSpline(){
 	if(voVec.size()>= 2){
 		int pos = 0;
 		float p0x,p1x,p2x,p3x,p0y,p1y,p2y,p3y,p0z,p1z,p2z,p3z;
@@ -242,18 +229,14 @@ void catMullRomeSpline(){
 			}
 		}
 	}
-}
+}*/
 
 void listenersEtc(){
-
 
 	testingState->attachListenerOnBeginningProgramCycle(	new PhysicWorldSimulationListener(	IOManager::getInstance()->getDeltaTimePointer()));// updates physics simulation
 	testingInputHandler = testingState->getIOHandler();
 	testingInputHandler->attachListenerOnKeyPress(			new TerminateApplicationListener(testingApp), GLFW_KEY_ESCAPE);
 	testingInputHandler->attachListenerOnKeyPress(			new SetCameraPositionListener(testingState->getCamera(), glm::vec3(0.0f, 0.1f, 0.0)), GLFW_KEY_SPACE);
-
-//	testingInputHandler->attachListenerOnKeyPress(			new ApplyLinearImpulseOnRigidBody(playerCam->getRigidBody(), glm::vec3(0.0f,5.0f,0.0f)), GLFW_KEY_SPACE );
-//	testingInputHandler->attachListenerOnKeyPress(			new SetCameraPositionListener(playerCam, glm::vec3(0.0f,5.0f,0.0f)), GLFW_KEY_R );
 
 	testingApp->attachListenerOnProgramInitialization( 		new PrintMessageListener(string("Application is booting")));
 	testingApp->attachListenerOnProgramTermination(			new PrintMessageListener(string("Application is terminating")));
@@ -270,7 +253,6 @@ int main() {
 	configureApplication();	// 1 do some customization
 	createFloor();
 	createVirtualObject(5);
-	//catMullRomeSpline();
 	listenersEtc();
 	testingApp->run();	// 2 run application
 	return 0;	// 3 end :)
