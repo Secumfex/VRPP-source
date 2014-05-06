@@ -6,13 +6,25 @@ uniform sampler2D uniformParticleTexture;
 
 in vec2 passUVCoords;
 in float passDistance;
-
 in vec3 passWorldPosition;
+
+uniform sampler2D uniformDepthMap;
+uniform float uniformWidth;
+uniform float uniformHeight;
 
 out vec4 fragmentColor;
 
 void main() {
 	if( passWorldPosition.y > 10.0 )
+	{
+		discard;
+	}
+
+	vec2 depthCoord = gl_FragCoord.xy;
+	depthCoord.x *= uniformWidth;
+	depthCoord.y *= uniformHeight;
+	
+	if (gl_FragDepth > texture2D(uniformDepthMap, depthCoord).x)
 	{
 		discard;
 	}

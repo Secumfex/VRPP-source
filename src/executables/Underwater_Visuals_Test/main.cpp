@@ -89,12 +89,14 @@ void configureRendering(){
 	Shader* water_shader 		= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/water.vert"		, SHADERS_PATH 	"/Underwater_Visuals_Test/water.frag");
 	Shader* particles_shader	= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/particles.vert"	, SHADERS_PATH  "/Underwater_Visuals_Test/particles.frag");
 	Shader *composition_shader  = new Shader( SHADERS_PATH "/Underwater_Visuals_Test/screenFill.vert"	, SHADERS_PATH  "/Underwater_Visuals_Test/finalCompositing.frag");
-	Shader *simpleTex			= new Shader( SHADERS_PATH "/Underwater_visuals_Test/screenFill.vert"   , SHADERS_PATH  "/GBuffer/simpleTexture.frag");
-	Shader* gbuffer_shader		= new Shader( SHADERS_PATH "/Underwater_visuals_Test/GBuffer.vert"      , SHADERS_PATH  "/Underwater_visuals_Test/GBuffer_normalTexture.frag");
-	Shader* gbuffer_compositing_shader= new Shader( SHADERS_PATH "/Underwater_visuals_Test/screenFill.vert"      , SHADERS_PATH  "/Underwater_visuals_Test/gbuffer_compositing.frag");
+	Shader *simpleTex			= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/screenFill.vert"   , SHADERS_PATH  "/GBuffer/simpleTexture.frag");
 
-	Shader* add_shader 			= new Shader( SHADERS_PATH "/Underwater_visuals_Test/screenFill.vert"   , SHADERS_PATH "/Underwater_visuals_Test/add.frag ");
-	Shader* overlay_shader 		= new Shader( SHADERS_PATH "/Underwater_visuals_Test/screenFill.vert"   , SHADERS_PATH "/Underwater_visuals_Test/overlay.frag ");
+	Shader* gbuffer_shader		= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/GBuffer.vert"      , SHADERS_PATH  "/Underwater_Visuals_Test/GBuffer_normalTexture.frag");
+	Shader* gbuffer_compositing_shader= new Shader( SHADERS_PATH "/Underwater_visuals_Test/screenFill.vert"      , SHADERS_PATH  "/Underwater_Visuals_Test/gbuffer_compositing.frag");
+	Shader* gbuffer_particle_shader = new Shader( SHADERS_PATH "/Underwater_visuals_Test/particles.vert" , SHADERS_PATH "/Underwater_Visuals_Test/particles.frag");
+
+	Shader* add_shader 			= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/screenFill.vert"   , SHADERS_PATH "/Underwater_Visuals_Test/add.frag ");
+	Shader* overlay_shader 		= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/screenFill.vert"   , SHADERS_PATH "/Underwater_Visuals_Test/overlay.frag ");
 
 	FrameBufferObject* gbuffer_fbo = new FrameBufferObject(800,600);
 	gbuffer_fbo->bindFBO();
@@ -277,9 +279,13 @@ void configureRendering(){
 	testingState->getRenderLoop()->addRenderPass( gbufferCompositingRenderPass );
 	
 	//TODO render god_rays with gbuffer information ( depth ) into seperate FBO
-	// MixTexturesRenderPass* gbufferParticlesRenderPass = new MixTexturesRenderPass(gbuffer_particle_shader, UnderwaterScene::framebuffer_water_particles, gbuffer_fbo->getDepthBufferHandle());
-	// gbufferParticlesRenderPass->setMixTextureUniformName("uniformDepthMap");
+	MixTexturesRenderPass* gbufferParticlesRenderPass = new MixTexturesRenderPass(gbuffer_particle_shader, UnderwaterScene::framebuffer_water_particles, gbuffer_fbo->getDepthBufferHandle());
+	
+	gbufferParticlesRenderPass->setMixTextureUniformName("uniformDepthMap");
+	gbufferParticlesRenderPass->attachListenerOnPostUniformUpload( new UploadUniformFloatListener("", gbuffer_fbo->getWidth(), "uniformWidth"));
+	gbufferParticlesRenderPass->attachListenerOnPostUniformUpload( new UploadUniformFloatListener("", gbuffer_fbo->getHeight(), "uniformHeight"));
 
+	testingState->getRenderLoop()->addRenderPass( gbufferParticlesRenderPass );
 
 	//TODO render waterobject into seperate FBO
 
