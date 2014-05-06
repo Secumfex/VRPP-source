@@ -29,7 +29,7 @@ void main() {
 	vec4 lightColor = vec4(1.0, 1.0, 1.0, 1.0);
 
     vec3  reflection = normalize(reflect(-nPosToLight,normal.xyz));
-    float ambient = 0.1;
+    float ambient = 0.2;
     float diffuse = max(dot(normal.xyz, nPosToLight), 0);
   
     fragmentColor = color * ambient + (color * diffuse );
