@@ -245,10 +245,13 @@ ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener::ApplyForceOnS
 void ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener::update(){
 	if (selectionHandler->somethingIsSelected()){
 		/*Pray and Cast*/
-		btRigidBody* rigidBody = (static_cast< PhysicsComponent* > (selectionHandler->getCurrentSelection()->getUserPointer()))->getRigidBody();
-		/*pray some more and apply force*/
-		glm::vec3 force = cam->getViewDirection() * strength;
-		std::cout << force.x <<", "<< force.y <<", "<< force.z << std::endl;
-		rigidBody->applyCentralImpulse(btVector3(force.x,force.y,force.z));
+		void* userPointer = selectionHandler->getCurrentSelection()->getUserPointer();
+		if 	(userPointer != 0){
+			btRigidBody* rigidBody = (static_cast< PhysicsComponent* > (userPointer))->getRigidBody();
+			/*pray some more and apply force*/
+			glm::vec3 force = cam->getViewDirection() * strength;
+			rigidBody->applyCentralImpulse(btVector3(force.x,force.y,force.z));	
+			std::cout << force.x <<", "<< force.y <<", "<< force.z << std::endl;
+		}
 	}
 }
