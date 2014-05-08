@@ -126,13 +126,18 @@ Frustum* RenderManager::getCurrentFrustum(){
 }
 
 glm::mat4 RenderManager::getLightPerspectiveMatrix(int index){
-	glm::vec3 eye = mCamera->getPosition();
-	glm::vec3 center = mCamera->getViewDirection() - eye;
+	if (!mLightPositions.empty()){
+		glm::vec3 eye = mCamera->getPosition();
+		glm::vec3 center = mCamera->getViewDirection() - eye;
 
-	glm::mat4 persp = glm::perspective(60.0f, 1.0f, 0.1f, 100.0f);
-	glm::mat4 view = glm::lookAt(mLightPositions[index], center, vec3(0.0, 1.0, 0.0));
+		glm::mat4 persp = glm::perspective(60.0f, 1.0f, 0.1f, 100.0f);
+		glm::mat4 view = glm::lookAt(mLightPositions[index], center, vec3(0.0, 1.0, 0.0));
 
-	return  persp * view;
+		return  persp * view;
+	}
+	else{
+		return glm::mat4(1.0f);
+	}
 }
 
 //glfw error-callback function

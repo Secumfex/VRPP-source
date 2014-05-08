@@ -55,10 +55,10 @@ int mainTemp() {
 			SHADERS_PATH "/Postprocessing/simpleTexture.frag");
 
 	Shader *finalCompShader = new Shader(	SHADERS_PATH "/Postprocessing/screenFill.vert",
-			SHADERS_PATH "/Postprocessing/finalCompositing.frag");
+			SHADERS_PATH "/Postprocessing/finalCompositingOld.frag");
 
 	Shader *gbufferShader = new Shader(		SHADERS_PATH "/Postprocessing/GBuffer.vert",
-			SHADERS_PATH "/Postprocessing/GBuffer.frag");
+			SHADERS_PATH "/Postprocessing/GBufferOld.frag");
 
 	Shader *gbuffer_normalMap_Shader = new Shader(		SHADERS_PATH "/Postprocessing/GBuffer.vert",
 			SHADERS_PATH "/Postprocessing/GBuffer_normalTexture.frag");
@@ -113,7 +113,7 @@ int mainTemp() {
 	fbo->createNormalTexture();
 	fbo->createColorTexture();
 	fbo->createSpecularTexture();
-	fbo->createShadowMap();
+	//fbo->createShadowMap();
 
 	//set the list of draw buffers.
 	fbo->makeDrawBuffers();

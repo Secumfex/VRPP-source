@@ -47,6 +47,7 @@ RenderPass::RenderPass(Shader* shader, FrameBufferObject* fbo){
 	mCustomClearColor = 0;
 	mHasCustomClearColor = false;
 
+
 	mCustomViewPortHeight = 0.0f;
 	mCustomViewPortWidth = 0.0f;
 }
@@ -82,6 +83,7 @@ void RenderPass::activate()
 		mViewPort_width  = IOManager::getInstance()->getWidth();
 		mViewPort_height = IOManager::getInstance()->getHeight();
 	}
+
 	if (mCustomViewPortHeight != 0.0f)
 	{
 		mViewPort_height = mCustomViewPortHeight;
@@ -260,13 +262,16 @@ void RenderPass::setViewPortY(float y)
 
 void RenderPass::setViewPortWidth(float width)
 {
+
 	mCustomViewPortWidth = width;
+
 	mViewPort_width = width;
 }
 
 void RenderPass::setViewPortHeight(float height)
 {
 	mCustomViewPortHeight = height;
+
 	mViewPort_height = height;
 }
 
@@ -417,22 +422,14 @@ GBufferRenderPass::GBufferRenderPass(Shader* gbuffer_shader, FrameBufferObject* 
 	mCustomViewPortWidth = 0.0f;
 }
 
-void CompositingPass::uploadUniforms()
-{
-	RenderPass::uploadUniforms();
-	colorMapUploader.update();
-	positionMapUploader.update();
-	normalMapUploader.update();
-}
-
 CompositingPass::CompositingPass(Shader* gbuffer_compositing_shader, FrameBufferObject* fbo){
-	mTriangle =	VirtualObjectFactory::getInstance()->getTriangle();
-
 	clearDepthBufferBit = true;
 	clearColorBufferBit = true;
 
 	mShader = gbuffer_compositing_shader;
 	mFBO = fbo;
+	
+	mTriangle =	VirtualObjectFactory::getInstance()->getTriangle();
 
 	useDepthTest = false;
 
@@ -449,6 +446,15 @@ CompositingPass::CompositingPass(Shader* gbuffer_compositing_shader, FrameBuffer
 	positionMapUploader.setTextureUnit(4);
 	positionMapUploader.setUniformName("positionMap");
 }
+
+void CompositingPass::uploadUniforms()
+{
+	RenderPass::uploadUniforms();
+	colorMapUploader.update();
+	positionMapUploader.update();
+	normalMapUploader.update();
+}
+
 CompositingPass::~CompositingPass(){
 
 }
