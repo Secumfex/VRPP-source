@@ -475,6 +475,13 @@ list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagUsesMesh* fl
 	return temp;
 }
 
+list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(CurrentRenderQueFlag* flag, list<GraphicsComponent* > temp){
+	// TODO
+	return getGraphicsComponentList();
+}
+
+
+
 list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagPartOfVirtualObject* flag, list<GraphicsComponent* > temp){
 	list<GraphicsComponent* >::iterator l_it = temp.begin();
 	vector<GraphicsComponent* > vo_gcs = flag->getVirtualObject()->getGraphicsComponent();

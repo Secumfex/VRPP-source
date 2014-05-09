@@ -85,3 +85,11 @@ FlagScreenFillingPolygon::FlagScreenFillingPolygon(bool invertedCondition){
 list<GraphicsComponent*> FlagScreenFillingPolygon::extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* > temp){
 	return rq->extrudeGCsForRequestFlag(this, temp);
 }
+
+CurrentRenderQueFlag::CurrentRenderQueFlag(bool invertedCondition){
+	setInvertCondition(invertedCondition);
+}
+
+list<GraphicsComponent*> CurrentRenderQueFlag::extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* > temp){
+	return rq->extrudeGCsForRequestFlag(this, temp);
+}
