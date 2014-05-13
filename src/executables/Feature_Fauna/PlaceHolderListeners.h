@@ -170,7 +170,6 @@ public:
 	void update();
 };
 
-
 #include "Application/ApplicationStates.h"
 /// Listener which shoots a sphere out of the camera
 class ShootSphereListener : public Listener {
@@ -181,4 +180,3 @@ public:
 	ShootSphereListener(Camera* cam, VRState* state);
 	void update();
 };
-

@@ -266,7 +266,6 @@ void UploadUniformVOListener::update(){
 	shader->uploadUniform( vo->getPhysicsComponent()->getPosition(), uniform_name);
 }
 
-
 #include "Application/ApplicationStates.h"
 #include "Visuals/VirtualObjectFactory.h"
 #include "Tools/NoAssimpVirtualObjectFactory.h"
@@ -314,4 +313,3 @@ void ShootSphereListener::update(){
 	state->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube));
 	*/
 }
-
