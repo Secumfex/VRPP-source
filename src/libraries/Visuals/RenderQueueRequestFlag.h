@@ -194,4 +194,16 @@ public:
 	list<GraphicsComponent* > extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* > temp);
 };
 
+class CurrentRenderQueFlag : public RenderQueueRequestFlag{
+private:
+public:
+	CurrentRenderQueFlag(bool invertedCondition = false);
+
+	/*! @brief flag visits the render queue
+	 *
+	 * flag sends itself to the render queue, which will trigger the overloaded method
+	 */
+	list<GraphicsComponent* > extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* > temp);
+};
+
 #endif

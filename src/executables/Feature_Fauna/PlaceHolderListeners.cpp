@@ -265,3 +265,53 @@ void UploadUniformVOListener::update(){
 	Shader* shader = RenderManager::getInstance()->getCurrentShader();
 	shader->uploadUniform( vo->getPhysicsComponent()->getPosition(), uniform_name);
 }
+
+
+#include "Application/ApplicationStates.h"
+#include "Visuals/VirtualObjectFactory.h"
+#include "Tools/NoAssimpVirtualObjectFactory.h"
+
+ShootSphereListener::ShootSphereListener(Camera* cam, VRState* state){
+	this->cam = cam;
+	this->state = state;
+}
+void ShootSphereListener::update(){
+	glm::vec3 start = cam->getPosition();
+	glm::vec3 view = cam->getViewDirection();
+	btVector3 dir = btVector3(view.x, view.y, view.z);
+	btScalar speed = 30;
+
+
+	VirtualObject* 	sphere = 	VirtualObjectFactory::getInstance()->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 3.0, 8);
+
+	state->addVirtualObject(sphere);
+	sphere->translate(glm::vec3(start.x, start.y, start.z));
+	//sphere->setModelMatrix(glm::translate(glm::mat4(1.0f), glm::vec3(start.x, start.y, start.z)));
+	//sphere->getPhysicsComponent()->setPosition(start.x, start.y, start.z);
+
+	//sphere->setPhysicsComponent(1.0f,1.0f,1.0f,start.x, start.y, start.z, 3.0f, 8);
+	sphere->physicsComponent->getRigidBody()->setLinearVelocity(dir*speed);
+	state->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(sphere));
+
+
+	/*
+	VirtualObject* sphere = new VirtualObject(0.2f, 0.2f, 0.2f, start.x, start.y, start.z, 1.0f);
+	VirtualObject* sphere = new VirtualObject(0.2f, start.x, start.y, start.z, 1.0f);
+	sphere->addGraphicsComponent(new GraphicsComponent);
+	VirtualObject* cube = VirtualObjectFactory::getInstance()->createNonAssimpVO();
+	 */
+
+	/*
+	VirtualObject* 	cube = 	VirtualObjectFactory::getInstance()->createVirtualObject(RESOURCES_PATH "/cube.obj");
+
+	state->addVirtualObject(cube);
+	cube->setModelMatrix(glm::translate(glm::mat4(1.0f), glm::vec3(start.x, start.y, start.z)));
+	cube->getPhysicsComponent()->~PhysicsComponent();
+	cube->setPhysicsComponent(1.0f, 1.0f, 1.0f, start.x, start.y, start.z, 3.0f);
+	cube->physicsComponent->getRigidBody()->setLinearVelocity(dir*speed);
+	std::cout << PhysicWorld::getInstance()->dynamicsWorld->getNumCollisionObjects() << endl;
+
+	state->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube));
+	*/
+}
+

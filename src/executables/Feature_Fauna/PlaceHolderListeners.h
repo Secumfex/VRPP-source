@@ -169,3 +169,16 @@ public:
 	UploadUniformVOListener(std::string name = std::string("UNIFORMUPLOADLISTENER"), VirtualObject* vo=0, std::string uniform_name = "custom_uniform");
 	void update();
 };
+
+
+#include "Application/ApplicationStates.h"
+/// Listener which shoots a sphere out of the camera
+class ShootSphereListener : public Listener {
+private:
+	Camera* cam;
+	VRState* state;
+public:
+	ShootSphereListener(Camera* cam, VRState* state);
+	void update();
+};
+

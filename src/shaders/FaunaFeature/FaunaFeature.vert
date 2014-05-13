@@ -34,7 +34,13 @@ void main() {
     //gl_Position = uniformPerspective * uniformView * uniformModel * positionAttribute;
 	gl_Position = uniformPerspective * uniformView * uniformModel * vec4(positionAttribute.x + Catmullx, Catmully, positionAttribute.z + Catmullz, 1);
 
+<<<<<<< HEAD
 	vec4 modelPos = ( uniformModel * vec4( 0.0, Catmully, 0.0, 1.0 ) ); 
+=======
+	//vec4 modelPos = ( uniformModel * vec4( 0.0, Catmully, 0.0, 1.0 ) ); 
+	//Billboard
+	vec4 modelPos = ( uniformModel * vec4( 0.0, positionAttribute.y, 0.0, 1.0 ) ); 
+>>>>>>> origin/master
 	vec4 viewPos  = ( uniformView  * modelPos) + ( vec4( positionAttribute.x + Catmullx, 0.0, positionAttribute.z + Catmullz, 0.0 ));
 	
 	gl_Position = uniformPerspective * viewPos;

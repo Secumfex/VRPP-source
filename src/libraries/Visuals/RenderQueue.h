@@ -185,6 +185,11 @@ public:
 	 */
 	list<GraphicsComponent* > extrudeGCsForRequestFlag(FlagPartOfVirtualObject* flag, list<GraphicsComponent* > temp);
 
+	/** \brief overloaded. returns GC-list depending on flag
+		 *
+		 * overloaded method for any possible flag object. will extract a GC list depending on that object
+		 */
+	list<GraphicsComponent* > extrudeGCsForRequestFlag(CurrentRenderQueFlag* flag, list<GraphicsComponent* > temp);
 
 	/** \brief overloaded. returns GC-list depending on flag
 	 *
