@@ -20,6 +20,15 @@
  * tip: write short Listener classes to wrap code and attach to suitable listener interfaces; i.e. use attachListenerOnBeginningProgramCycle to use code during a program cycle
  */
 
+/*
+ * Ein Billboard, das sich über komplette Dings
+ * Tiefenwert nachträglich drauf multiplizieren
+ *
+ * Weltkoordinaten die wir haben (mit dem T) in Kamerakoordinaten umrechnen,
+ * Billboard drüber und dann mit Tiefenwert Multiplizieren (wieder umrechnen?)
+ * */
+
+
 Application* testingApp;
 VRState* testingState;
 IOHandler* testingInputHandler;
@@ -48,7 +57,7 @@ testingState->attachListenerOnActivation(				new SetClearColorListener(0.44, 0.5
 testingState->attachListenerOnActivation(				new PrintCameraStatusListener(testingState->getCamera()));
 
 cam = testingState->getCamera();
-cam->setPosition(0, 15, 75);
+cam->setPosition(0, 65, 75);
 
 }
 
@@ -76,13 +85,15 @@ void createVirtualObject(int height) {
 	transformsVec.push_back(transform_tmp);
 
 	//Erstelle folgende Objekte nach oben hin
-	float yPosPerVO = 0;
-	float xPosPerVO = 20;
+	float xPosPerVO = 0;
+	float yPosPerVO = 20;
 	float zPosPerVO = 0;
+
+	PhysicWorld::getInstance()->dynamicsWorld->setGravity(btVector3(0,3.0,0));
 
 	for (int i = 1; i < height; i++) {
 
-		vo_tmp = testingState->createVirtualObject(	RESOURCES_PATH "/Fauna/Seegras.dae", VirtualObjectFactory::SPHERE, 1.0, 8);
+		vo_tmp = testingState->createVirtualObject(	RESOURCES_PATH "/Fauna/Seegras.dae", VirtualObjectFactory::CUBE, 1.0, 8);
 
 		vo_tmp->translate(glm::vec3(xPosPerVO, yPosPerVO, zPosPerVO));
 		voVec.push_back(vo_tmp);
@@ -90,10 +101,10 @@ void createVirtualObject(int height) {
 
 		testingState->attachListenerOnBeginningProgramCycle(	new UpdateVirtualObjectModelMatrixListener(voVec[i]));
 		rb_tmp = vo_tmp->getPhysicsComponent()->getRigidBody();
-		rb_tmp->applyForce(btVector3(0.,100.,0), btVector3(0,0,0));
-		rb_tmp->setDamping(10, 10);
+		//rb_tmp->applyForce(btVector3(0.,50.,0), btVector3(0,0,0));
+		rb_tmp->setDamping(0.3, 0.5);
 	/**Negative Gravity um Erdanziehungskraft zu simulieren*/
-		rb_tmp->setGravity(rb_tmp->getGravity() - rb_tmp->getGravity()+ btVector3(0.,0.,0.));
+		//rb_tmp->setGravity(rb_tmp->getGravity() - rb_tmp->getGravity()+ btVector3(0.,0.,0.));
 		rb_tmp->setActivationState(DISABLE_DEACTIVATION);
 		rigidBodyVec.push_back(rb_tmp);
 
@@ -104,21 +115,32 @@ void createVirtualObject(int height) {
 		constraint_tmp = new btGeneric6DofSpringConstraint( *rigidBodyVec[i - 1], *rigidBodyVec[i], transformsVec[i - 1], transformsVec[i], true);
 		constraint_tmp->setLinearUpperLimit(btVector3(0., 21., 0.));
 		constraint_tmp->setLinearLowerLimit(btVector3(0., 16., 0.));
-		constraint_tmp->setDamping(.1, .1);
+		constraint_tmp->setLimit(0, 0.5, 0.5);
+		constraint_tmp->setLimit(2, 0.5, 0.5);
+		constraint_tmp->setDamping(.1, .6);
 		constraintsVec.push_back(constraint_tmp);
 		PhysicWorld::getInstance()->dynamicsWorld->addConstraint( constraintsVec[i-1], true);
 
 	}
 
+	VirtualObject* 	cube1 = 	testingState->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 1.0, 8);
+	cube1->translate(glm::vec3(xPosPerVO, 50, zPosPerVO));
+	testingState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube1));
+
+
+
+
+
 
 	RenderPass* pass1 = new RenderPass(new Shader(SHADERS_PATH "/Phong/phong.vert", SHADERS_PATH "/Phong/phong.frag"));
 	pass1->setClearColorBufferBit(true);
 	pass1->setInitialGraphicsComponentList(testingState->getRenderQueue()->getGraphicsComponentList());
-	pass1->addRenderQueueRequestFlag(new FlagPartOfVirtualObject (voVec[0], true));
-	pass1->addRenderQueueRequestFlag(new FlagPartOfVirtualObject (voVec[1], true));
-	pass1->addRenderQueueRequestFlag(new FlagPartOfVirtualObject (voVec[2], true));
-	pass1->addRenderQueueRequestFlag(new FlagPartOfVirtualObject (voVec[3], true));
-	pass1->addRenderQueueRequestFlag(new FlagPartOfVirtualObject (voVec[4], true));
+	pass1->addRenderQueueRequestFlag(new CurrentRenderQueFlag());
+//	pass1->addRenderQueueRequestFlag(new FlagPartOfVirtualObject (voVec[0], true));
+//	pass1->addRenderQueueRequestFlag(new FlagPartOfVirtualObject (voVec[1], true));
+//	pass1->addRenderQueueRequestFlag(new FlagPartOfVirtualObject (voVec[2], true));
+//	pass1->addRenderQueueRequestFlag(new FlagPartOfVirtualObject (voVec[3], true));
+//	pass1->addRenderQueueRequestFlag(new FlagPartOfVirtualObject (voVec[4], true));
 
 	testingState->getRenderLoop()->addRenderPass(pass1);
 
@@ -234,9 +256,12 @@ void createVirtualObject(int height) {
 void listenersEtc(){
 
 	testingState->attachListenerOnBeginningProgramCycle(	new PhysicWorldSimulationListener(	IOManager::getInstance()->getDeltaTimePointer()));// updates physics simulation
+
 	testingInputHandler = testingState->getIOHandler();
 	testingInputHandler->attachListenerOnKeyPress(			new TerminateApplicationListener(testingApp), GLFW_KEY_ESCAPE);
 	testingInputHandler->attachListenerOnKeyPress(			new SetCameraPositionListener(testingState->getCamera(), glm::vec3(0.0f, 0.1f, 0.0)), GLFW_KEY_SPACE);
+	testingInputHandler->attachListenerOnMouseButtonPress(  new ShootSphereListener(testingState->getCamera(), testingState), GLFW_MOUSE_BUTTON_LEFT);
+
 
 	testingApp->attachListenerOnProgramInitialization( 		new PrintMessageListener(string("Application is booting")));
 	testingApp->attachListenerOnProgramTermination(			new PrintMessageListener(string("Application is terminating")));
