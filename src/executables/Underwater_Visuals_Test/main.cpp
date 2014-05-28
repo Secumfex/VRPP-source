@@ -80,6 +80,40 @@ void configureInputHandler(){
 
 }
 
+std::vector< RenderPass* > debugViews;
+
+/**
+ * Create a tiny view at the top of the window
+ * @param shader to be used ( should be simpleTex )
+ * @param state to use to add the renderpass to
+ * @param imageHandle of texture to be presented
+ */
+void addDebugView(Shader* shader, ApplicationState* state, GLuint imageHandle)
+{
+	int x = 0;
+	int y = 500;
+
+	// max debug views : 8
+	if ( debugViews.size() < 8)
+	{
+		x = debugViews.size() * 100;
+	}
+	else{
+		std::cout << "Maximum amount of debug views reached." << std::endl;
+		return;
+	}
+
+	MixTexturesRenderPass* renderTinyView = new MixTexturesRenderPass(shader, 0, imageHandle);
+	renderTinyView->setBaseTextureUniformName("diffuseTexture");
+	renderTinyView->setViewPortY(y);
+	renderTinyView->setViewPortX(x);
+	renderTinyView->setViewPortWidth(100);
+	renderTinyView->setViewPortHeight(100);
+	state->getRenderLoop()->addRenderPass(renderTinyView);
+
+	debugViews.push_back(renderTinyView);
+}
+
 void configureRendering(){
 	Shader* phong_shader 		= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/phong.vert"		, SHADERS_PATH 	"/Underwater_Visuals_Test/phong.frag");
 	Shader* underwater_shader 	= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/phong_caustics.vert",SHADERS_PATH  "/Underwater_Visuals_Test/phong_caustics.frag");
@@ -308,70 +342,14 @@ void configureRendering(){
 	testingState->getRenderLoop()->addRenderPass(addGodRays);
 
 /******************** Debug Views ************************/
-
-	MixTexturesRenderPass* renderTinyView = new MixTexturesRenderPass(simpleTex, 0, UnderwaterScene::framebuffer_water_refraction->getPositionTextureHandle());
-	renderTinyView->setBaseTextureUniformName("diffuseTexture");
-	renderTinyView->setViewPortY(500);
-	renderTinyView->setViewPortX(0);
-	renderTinyView->setViewPortWidth(100);
-	renderTinyView->setViewPortHeight(100);
-	testingState->getRenderLoop()->addRenderPass(renderTinyView);
-
-	MixTexturesRenderPass* renderTinyView2 = new MixTexturesRenderPass(simpleTex, 0, UnderwaterScene::framebuffer_water_reflection->getPositionTextureHandle());
-	renderTinyView2->setBaseTextureUniformName("diffuseTexture");
-	renderTinyView2->setViewPortY(500);
-	renderTinyView2->setViewPortX(100);
-	renderTinyView2->setViewPortWidth(100);
-	renderTinyView2->setViewPortHeight(100);
-	testingState->getRenderLoop()->addRenderPass(renderTinyView2);
-
-	MixTexturesRenderPass* renderTinyView3= new MixTexturesRenderPass(simpleTex, 0, UnderwaterScene::framebuffer_water_god_rays->getPositionTextureHandle());
-	renderTinyView3->setBaseTextureUniformName("diffuseTexture");
-	renderTinyView3->setViewPortY(500);
-	renderTinyView3->setViewPortX(200);
-	renderTinyView3->setViewPortWidth(100);
-	renderTinyView3->setViewPortHeight(100);
-	testingState->getRenderLoop()->addRenderPass(renderTinyView3);
-
-	MixTexturesRenderPass* renderTinyView4 = new MixTexturesRenderPass(simpleTex, 0, UnderwaterScene::framebuffer_water_particles->getPositionTextureHandle());
-	renderTinyView4->setBaseTextureUniformName("diffuseTexture");
-	renderTinyView4->setViewPortY(500);
-	renderTinyView4->setViewPortX(300);
-	renderTinyView4->setViewPortWidth(100);
-	renderTinyView4->setViewPortHeight(100);
-	testingState->getRenderLoop()->addRenderPass(renderTinyView4);
-
-	MixTexturesRenderPass* renderTinyView5 = new MixTexturesRenderPass(simpleTex, 0, preCompositingScene->getPositionTextureHandle());
-	renderTinyView5->setBaseTextureUniformName("diffuseTexture");
-	renderTinyView5->setViewPortY(500);
-	renderTinyView5->setViewPortX(400);
-	renderTinyView5->setViewPortWidth(100);
-	renderTinyView5->setViewPortHeight(100);
-	testingState->getRenderLoop()->addRenderPass(renderTinyView5);
-
-	MixTexturesRenderPass* renderTinyView6 = new MixTexturesRenderPass(simpleTex, 0, finalImage->getPositionTextureHandle());
-	renderTinyView6->setBaseTextureUniformName("diffuseTexture");
-	renderTinyView6->setViewPortY(500);
-	renderTinyView6->setViewPortX(500);
-	renderTinyView6->setViewPortWidth(100);
-	renderTinyView6->setViewPortHeight(100);
-	testingState->getRenderLoop()->addRenderPass(renderTinyView6);
-
-	MixTexturesRenderPass* renderTinyView7 = new MixTexturesRenderPass(simpleTex, 0, gbuffer_fbo->getNormalTextureHandle());
-	renderTinyView7->setBaseTextureUniformName("diffuseTexture");
-	renderTinyView7->setViewPortY(500);
-	renderTinyView7->setViewPortX(600);
-	renderTinyView7->setViewPortWidth(100);
-	renderTinyView7->setViewPortHeight(100);
-	testingState->getRenderLoop()->addRenderPass(renderTinyView7);
-
-	MixTexturesRenderPass* renderTinyView8 = new MixTexturesRenderPass(simpleTex, 0, gbuffer_compositing_fbo->getPositionTextureHandle());
-	renderTinyView8->setBaseTextureUniformName("diffuseTexture");
-	renderTinyView8->setViewPortY(500);
-	renderTinyView8->setViewPortX(700);
-	renderTinyView8->setViewPortWidth(100);
-	renderTinyView8->setViewPortHeight(100);
-	testingState->getRenderLoop()->addRenderPass(renderTinyView8);
+	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_refraction->getPositionTextureHandle() );
+	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_reflection->getPositionTextureHandle() );
+	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_god_rays->getPositionTextureHandle() );
+	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_particles->getPositionTextureHandle() );
+	addDebugView(simpleTex, testingState, preCompositingScene->getPositionTextureHandle() );
+	addDebugView(simpleTex, testingState, finalImage->getPositionTextureHandle() );
+	addDebugView(simpleTex, testingState, gbuffer_fbo->getNormalTextureHandle() );
+	addDebugView(simpleTex, testingState, gbuffer_compositing_fbo->getPositionTextureHandle() );
 }
 
 void configureOtherStuff(){
