@@ -440,3 +440,20 @@ void UploadUniformTextureListener::setUniformName(std::string uniform_name)
 {
 	this->uniform_name = uniform_name;
 }
+
+UploadUniformBooleanListener::UploadUniformBooleanListener(std::string name, bool value, std::string uniform_name){
+	setName(name);
+	this->value     = new bool (value);
+	this->uniform_name 	= uniform_name;
+}
+
+UploadUniformBooleanListener::UploadUniformBooleanListener(std::string name, bool* value, std::string uniform_name){
+	setName(name);
+	this->value 	= value;
+	this->uniform_name 	= uniform_name;
+}
+
+void UploadUniformBooleanListener::update(){
+	Shader* shader = RenderManager::getInstance()->getCurrentShader();
+	shader->uploadUniform(*value, uniform_name);
+}

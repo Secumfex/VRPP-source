@@ -234,14 +234,24 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 	// For each mesh
 
+
+	// For each mesh of the loaded object
 	for (unsigned int n = 0; n < pScene->mNumMeshes; ++n)
 	{
 		const aiMesh* mesh = pScene->mMeshes[n];
-
-
+        
+        /* name of each GraphicComponent */
+        const aiString name_gc = pScene->mMeshes[n]->mName;
+        std::string str( name_gc.data, name_gc.length );
+        std::cout <<"GraphicComponent: " << str <<endl;
+    
+        
 		//Our Material and Mash to be filled
 		Mesh* aMesh = new Mesh();
 		Material* aMat = new Material();
+        
+        // for Shader
+        bool hasNormalMap = false;
 
 
 		GLuint buffer = 0;
@@ -307,6 +317,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 
 		}
 		if (mesh->HasTangentsAndBitangents()) {
+            cout << "HAS TANGENT SPACE"<<endl;
 			glGenBuffers(1, &buffer);
 			glBindBuffer(GL_ARRAY_BUFFER, buffer);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(float)*3*mesh->mNumVertices, mesh->mTangents, GL_STATIC_DRAW);
@@ -403,6 +414,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 			cout << "Try to find NormalMap: " << texPath.C_Str() << endl;
 			tex_temp = new Texture(directory + texPath.C_Str());
 			aMat->setNormalMap(tex_temp);
+            hasNormalMap = true;
 		}
 		// @todo : find out whether it really is switched or not
 		if(AI_SUCCESS == mtl->GetTexture(aiTextureType_HEIGHT, 0, &texPath)){
@@ -533,6 +545,12 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 		//Mesh und Material wird gelesen und in neuer GraphicsComponent gespeichert
 		gc->setGhostObject(aabbMin, aabbMax);
 
+        // NormalMap - check
+        if (hasNormalMap == true){
+            std::cout<<"NORNALMAP check"<<endl;
+            gc->setNormalMap(hasNormalMap);
+        }
+        
 		virtualObject->addGraphicsComponent(gc);
 
 		if(aabbMin.x < physics_min.x)

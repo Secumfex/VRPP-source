@@ -134,6 +134,19 @@ public:
 	 */
 	btGhostObject* getGhostObject();
 
+    /** \brief setter
+	 *
+	 * turns the the NormalMap either "on" or "off"
+	 * @param value
+	 */
+	void setNormalMap(bool value);
+    
+    /** \brief checks if graphic component has a NormalMap
+	 *
+	 * @return 1 if component has NormalMap
+	 * @return 0 if component don't have NormalMap
+	 */
+    bool hasNormalMap();
 
 	/** \brief default constructor without parameters
 	 *
@@ -163,6 +176,7 @@ private:
 	bool mEmission;					/**< !docu pls! */
 	bool mShadow;					/**< !docu pls! */
 	bool mTranparency;				/**< !docu pls! */
+    bool mHasNormalMap;             
 
 
 };
