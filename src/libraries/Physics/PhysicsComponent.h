@@ -220,12 +220,6 @@ public:
 	* @param vo VirtualObject pointer
 	*/
 	void update(VirtualObject* vo);
-
-	/** \brief initialize FrameListener
-	*
-	* updates the modelMatrix by the rigid body's behavior in the physics world.
-	*/
-	void initFrameListener();
 };
 
 #endif

@@ -74,8 +74,6 @@ void createVirtualObject(int height) {
 
 	//Erstelle erstes Objekt unten statisch
 	vo_tmp = testingState->createVirtualObject( RESOURCES_PATH "/Fauna/Seegras.dae", VirtualObjectFactory::SPHERE, 0.0, 8);
-	testingState->attachListenerOnBeginningProgramCycle(	new UpdateVirtualObjectModelMatrixListener(vo_tmp));
-	testingState->attachListenerOnBeginningProgramCycle(	new UpdatePhysicsComponentListener(vo_tmp));
 	vo_tmp->translate(glm::vec3(0, 0, 0));
 	voVec.push_back(vo_tmp);
 	rb_tmp = vo_tmp->getPhysicsComponent()->getRigidBody();
@@ -99,7 +97,6 @@ void createVirtualObject(int height) {
 		voVec.push_back(vo_tmp);
 		yPosPerVO +=21;
 
-		testingState->attachListenerOnBeginningProgramCycle(	new UpdateVirtualObjectModelMatrixListener(voVec[i]));
 		rb_tmp = vo_tmp->getPhysicsComponent()->getRigidBody();
 		//rb_tmp->applyForce(btVector3(0.,50.,0), btVector3(0,0,0));
 		rb_tmp->setDamping(0.3, 0.5);
@@ -125,7 +122,6 @@ void createVirtualObject(int height) {
 
 	VirtualObject* 	cube1 = 	testingState->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 1.0, 8);
 	cube1->translate(glm::vec3(xPosPerVO, 50, zPosPerVO));
-	testingState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube1));
 
 
 
@@ -246,7 +242,6 @@ void createVirtualObject(int height) {
 				cat_tmp = testingState->createVirtualObject( RESOURCES_PATH "/sphere.obj", VirtualObjectFactory::SPHERE, 0.0, 8);
 				cat_tmp->translate(glm::vec3(Catmullx, Catmully, Catmullz));
 				catmullVec.push_back(cat_tmp);
-				testingState->attachListenerOnBeginningProgramCycle( new UpdateVirtualObjectModelMatrixListener(catmullVec[pos]));
 				pos++;
 			}
 		}

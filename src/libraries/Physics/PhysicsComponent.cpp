@@ -107,6 +107,12 @@ void PhysicsComponent::translate(glm::vec3 pos){
 	glm::vec3 origin = this->getPosition();
 	this->setPosition(origin.x+pos.x,origin.y+pos.y,origin.z+pos.z);
 
+//	btTransform transform = rigidBody -> getCenterOfMassTransform();
+//	transform.setOrigin( transform.getOrigin() + trans );
+//	rigidBody -> setCenterOfMassTransform(transform);
+//
+//	btVector3 position = transform.getOrigin();
+//	this->setPosition( position.x(), position.y(), position.z() );
 
 	/*
 	btTransform transform = rigidBody->getWorldTransform();
@@ -298,19 +304,4 @@ void PhysicsComponent::update(VirtualObject* vo){
 		t.getOpenGLMatrix(mat);
 
 		vo->setModelMatrix(glm::make_mat4(mat));
-}
-
-void PhysicsComponent::initFrameListener(){
-/**
- * @todo instead:
- * 	write a "UpdatePhysicsComponentListener" class as a derivative of Listener
- * 	as members, it receives a simple PhysicsComponent pointer
- * 	in its update() method it calls pc->update()
- * alternatively, leave PhysicsComponent as it is ( a Listener itself )
- *  it may be attached to the RenderLoop just the way it is
- *  how ever, bear in mind that it can only be attached to a single Subject
- */
-//	Listener* frameListener;
-//	frameListener->setName("FRAMELISTENER");
-//	frameListener->update();
 }

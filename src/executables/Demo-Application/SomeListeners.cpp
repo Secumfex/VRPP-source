@@ -128,22 +128,6 @@ void AnimateSinusModelMatrixListener::update(){
     old_sinus = new_sinus;
 }
 
-UpdateVirtualObjectModelMatrixListener::UpdateVirtualObjectModelMatrixListener(VirtualObject* vo){
-	this->vo = vo;
-}
-
-void UpdateVirtualObjectModelMatrixListener::update(){
-	vo->updateModelMatrixViaPhysics();
-}
-#include "Physics/PhysicWorld.h"
-UpdatePhysicsWorldListener::UpdatePhysicsWorldListener(){
-}
-
-void UpdatePhysicsWorldListener::update(){
-	PhysicWorld* pw = PhysicWorld::getInstance();
-	pw->dynamicsWorld->stepSimulation(0.1,5,0.02);
-}
-
 SetCameraDirectionListener::SetCameraDirectionListener(Camera* cam, glm::vec3 direction){
 	this->cam = cam;
 	this->direction = direction;
@@ -169,7 +153,7 @@ CreateVirtualObjectListener::CreateVirtualObjectListener(string path, glm::vec3 
 #include "Physics/UpdatePhysicsComponentListener.h"
 
 void CreateVirtualObjectListener::update(){
-	VirtualObject* vo = state->createVirtualObject(path, bodyType, mass);		// create new Virtual Object
+	VirtualObject* vo = state->createVirtualObject(path, bodyType, mass, 8);		// create new Virtual Object
 	if (random_offset != 0.0){
 		glm::vec3 randPos = position;	
 		randPos.x += ( (((float) std::rand() / (float) RAND_MAX) * random_offset) * 2.0 ) - random_offset; // randomize a little bit by adding [-random_offset, random_offset] to the mix 
@@ -180,7 +164,4 @@ void CreateVirtualObjectListener::update(){
 	else{
 		vo->translate(position);	// assign PhysicsComponent
 	}
-	state->		attachListenerOnBeginningProgramCycle(  new UpdatePhysicsComponentListener(			vo));	// update PhysicsComponent on every program cycle iteration
-	state->		attachListenerOnBeginningProgramCycle(  new UpdateVirtualObjectModelMatrixListener(	vo ));	// update VirtualObject Model Matrix on every program cycle iteration
-
 }

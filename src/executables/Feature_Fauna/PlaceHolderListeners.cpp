@@ -116,22 +116,6 @@ void AnimateSinusModelMatrixListener::update(){
     old_sinus = new_sinus;
 }
 
-UpdateVirtualObjectModelMatrixListener::UpdateVirtualObjectModelMatrixListener(VirtualObject* vo){
-	this->vo = vo;
-}
-
-void UpdateVirtualObjectModelMatrixListener::update(){
-	vo->updateModelMatrixViaPhysics();
-}
-#include "Physics/PhysicWorld.h"
-UpdatePhysicsWorldListener::UpdatePhysicsWorldListener(){
-}
-
-void UpdatePhysicsWorldListener::update(){
-	PhysicWorld* pw = PhysicWorld::getInstance();
-	pw->dynamicsWorld->stepSimulation(0.1,5,0.02);
-}
-
 SetCameraDirectionListener::SetCameraDirectionListener(Camera* cam, glm::vec3 direction){
 	this->cam = cam;
 	this->direction = direction;
@@ -178,9 +162,7 @@ void CreateVirtualObjectListener::update(){
 	else{
 		vo->translate(position);	// assign PhysicsComponent
 	}
-	state->		attachListenerOnBeginningProgramCycle(  new UpdatePhysicsComponentListener(			vo));	// update PhysicsComponent on every program cycle iteration
-	state->		attachListenerOnBeginningProgramCycle(  new UpdateVirtualObjectModelMatrixListener(	vo ));	// update VirtualObject Model Matrix on every program cycle iteration
-
+//	state->		attachListenerOnBeginningProgramCycle(  new UpdatePhysicsComponentListener(			vo));	// update PhysicsComponent on every program cycle iteration
 }
 
 
@@ -280,17 +262,14 @@ void ShootSphereListener::update(){
 	btVector3 dir = btVector3(view.x, view.y, view.z);
 	btScalar speed = 30;
 
+	VirtualObject* 	sphere = 	state->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 3.0, 8);
 
-	VirtualObject* 	sphere = 	VirtualObjectFactory::getInstance()->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 3.0, 8);
-
-	state->addVirtualObject(sphere);
 	sphere->translate(glm::vec3(start.x, start.y, start.z));
 	//sphere->setModelMatrix(glm::translate(glm::mat4(1.0f), glm::vec3(start.x, start.y, start.z)));
 	//sphere->getPhysicsComponent()->setPosition(start.x, start.y, start.z);
 
 	//sphere->setPhysicsComponent(1.0f,1.0f,1.0f,start.x, start.y, start.z, 3.0f, 8);
 	sphere->physicsComponent->getRigidBody()->setLinearVelocity(dir*speed);
-	state->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(sphere));
 
 
 	/*
@@ -310,6 +289,5 @@ void ShootSphereListener::update(){
 	cube->physicsComponent->getRigidBody()->setLinearVelocity(dir*speed);
 	std::cout << PhysicWorld::getInstance()->dynamicsWorld->getNumCollisionObjects() << endl;
 
-	state->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube));
 	*/
 }

@@ -27,17 +27,16 @@ void configureTestingApplication(){
 }
 
 void configureVirtualObjects(){
-	cowObject = testingState->createVirtualObject(RESOURCES_PATH "/cow.obj", VirtualObjectFactory::OTHER, 5.0f);	// to have something in the scene
+	cowObject = testingState->createVirtualObject(RESOURCES_PATH "/cow.obj", VirtualObjectFactory::OTHER, 5.0f, 8);	// to have something in the scene
 	cowObject->translate(glm::vec3(0.0f,4.0f,0.0f));
-	testingState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cowObject));
 	
 	VirtualObject* groundObject = testingState->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_ground.dae", VirtualObjectFactory::OTHER,0.0f,1,true);
 
 	VirtualObject* wallObject1 = testingState->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_wall1.dae", VirtualObjectFactory::OTHER,0.0f,1,true);	// to have something in the scene
 	VirtualObject* wallObject2 = testingState->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_wall2.dae", VirtualObjectFactory::OTHER,0.0f,1,true);	// to have something in the scene
-	VirtualObject* cubeObject2 = testingState->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::OTHER, 10.0f);	// to have something in the scene
-	cubeObject2->translate(glm::vec3(0.0f,2.0f,0.0f));
-	testingState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cubeObject2));
+	VirtualObject* cubeObject2 = testingState->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 10.0f, 8);	// to have something in the scene
+
+	cubeObject2->translate(glm::vec3(0.0f,7.0f,0.0f));
 	
 }
 

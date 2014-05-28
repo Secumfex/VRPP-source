@@ -77,15 +77,6 @@ public:
 	void update();
 };
 
-/// Listener which updates the VirtualObject Modelmatrix by reading the PhysicsComponent Modelmatrix
-class UpdateVirtualObjectModelMatrixListener : public Listener{
-private:
-	VirtualObject* vo;
-public:
-	UpdateVirtualObjectModelMatrixListener(VirtualObject* vo);
-	void update();
-};
-
 class btRigidBody; class btVector3;
 
 class ApplyLinearImpulseOnRigidBody : public Listener{

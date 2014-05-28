@@ -117,22 +117,6 @@ void AnimateSinusModelMatrixListener::update(){
     old_sinus = new_sinus;
 }
 
-UpdateVirtualObjectModelMatrixListener::UpdateVirtualObjectModelMatrixListener(VirtualObject* vo){
-	this->vo = vo;
-}
-
-void UpdateVirtualObjectModelMatrixListener::update(){
-	vo->updateModelMatrixViaPhysics();
-}
-#include "Physics/PhysicWorld.h"
-UpdatePhysicsWorldListener::UpdatePhysicsWorldListener(){
-}
-
-void UpdatePhysicsWorldListener::update(){
-	PhysicWorld* pw = PhysicWorld::getInstance();
-	pw->dynamicsWorld->stepSimulation(0.1,5,0.02);
-}
-
 SetCameraDirectionListener::SetCameraDirectionListener(Camera* cam, glm::vec3 direction){
 	this->cam = cam;
 	this->direction = direction;
@@ -211,8 +195,6 @@ void ShootSphereListener::update(){
 
 	//sphere->setPhysicsComponent(1.0f,1.0f,1.0f,start.x, start.y, start.z, 3.0f, 8);
 	sphere->physicsComponent->getRigidBody()->setLinearVelocity(dir*speed);
-	state->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(sphere));
-
 
 	/*
 	VirtualObject* sphere = new VirtualObject(0.2f, 0.2f, 0.2f, start.x, start.y, start.z, 1.0f);
@@ -231,7 +213,6 @@ void ShootSphereListener::update(){
 	cube->physicsComponent->getRigidBody()->setLinearVelocity(dir*speed);
 	std::cout << PhysicWorld::getInstance()->dynamicsWorld->getNumCollisionObjects() << endl;
 
-	state->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube));
 	*/
 }
 

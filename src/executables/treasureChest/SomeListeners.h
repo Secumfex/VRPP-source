@@ -74,15 +74,6 @@ public:
     void update();
 };
 
-// Listener which updates the VirtualObject Modelmatrix by reading the PhysicsComponent Modelmatrix
-class UpdateVirtualObjectModelMatrixListener : public Listener{
-private:
-	VirtualObject* vo;
-public:
-	UpdateVirtualObjectModelMatrixListener(VirtualObject* vo);
-	void update();
-};
-
 // Listener which sets the direction of the given Camera Object
 class SetCameraDirectionListener : public Listener {
 private:

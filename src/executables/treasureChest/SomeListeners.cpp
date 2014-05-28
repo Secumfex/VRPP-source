@@ -138,13 +138,6 @@ void AnimateGraphicComponentListener::update(){
     vo->setModelMatrix(new_modelMatrix);
 }
 
-UpdateVirtualObjectModelMatrixListener::UpdateVirtualObjectModelMatrixListener(VirtualObject* vo){
-	this->vo = vo;
-}
-void UpdateVirtualObjectModelMatrixListener::update(){
-	vo->updateModelMatrixViaPhysics();
-}
-
 SetCameraDirectionListener::SetCameraDirectionListener(Camera* cam, glm::vec3 direction){
 	this->cam = cam;
 	this->direction = direction;
@@ -246,9 +239,6 @@ void CreateVirtualObjectListener::update(){
 	else{
 		vo->translate(position);	// assign PhysicsComponent
 	}
-	state->		attachListenerOnBeginningProgramCycle(  new UpdatePhysicsComponentListener(			vo));	// update PhysicsComponent on every program cycle iteration
-	state->		attachListenerOnBeginningProgramCycle(  new UpdateVirtualObjectModelMatrixListener(	vo ));	// update VirtualObject Model Matrix on every program cycle iteration
-    
 }
 
 SetFrameBufferObjectListener::SetFrameBufferObjectListener( FrameBufferObject* fbo){

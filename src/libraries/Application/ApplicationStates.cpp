@@ -14,6 +14,8 @@ using namespace std;
 #include "IO/IngameHandler.h"
 #include "IO/IOListeners.h"
 
+#include "Physics/UpdatePhysicsComponentListener.h"
+
 ApplicationState::ApplicationState(){
 	camera = new Camera();
 	renderQueue = new RenderQueue();
@@ -96,6 +98,12 @@ void ApplicationState::bindObjects(){
 VirtualObject* ApplicationState::createVirtualObject(std::string path, VirtualObjectFactory::BodyType bodyType, float mass, int collisionFlag, bool blenderAxes){
 	VirtualObject* vo = VirtualObjectFactory::getInstance()->createVirtualObject(path, bodyType, mass, collisionFlag, blenderAxes);
 	renderQueue->addVirtualObject(vo);
+
+	// create a PhysicsComponent update Listener if object is dynamic ( collisionFlag != 1 --> static
+	if ( collisionFlag != 1)
+	{
+		attachListenerOnBeginningProgramCycle( new UpdatePhysicsComponentListener( vo ) );
+	}
 
 	notify("CREATE_VIRTUAL_OBJECT_LISTENER");	//in case someone cares
 

@@ -73,7 +73,7 @@ VirtualObject* createVirtualObject();
  * @param filename
  * @param bodyType
  * @param mass defines the behavior of the rigid body in the physics world
- * @param collisionFlag 
+ * @param collisionFlag a collision flag, see PhysicsComponent constructor for reference
  * @param blenderAxes defines whether the file uses world_axes of Blender ( Z is up, Y is depth ), which is common in Blender exported Collada files
  * @return virtual object
  */
