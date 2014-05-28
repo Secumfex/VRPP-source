@@ -313,17 +313,25 @@ void configureRendering(){
 	testingState->getRenderLoop()->addRenderPass( gbufferCompositingRenderPass );
 	
 	//TODO render god_rays with gbuffer information ( depth ) into seperate FBO
-	MixTexturesRenderPass* gbufferParticlesRenderPass = new MixTexturesRenderPass(gbuffer_particle_shader, UnderwaterScene::framebuffer_water_particles, gbuffer_fbo->getDepthBufferHandle());
-	
-	gbufferParticlesRenderPass->setMixTextureUniformName("uniformDepthMap");
-	gbufferParticlesRenderPass->attachListenerOnPostUniformUpload( new UploadUniformFloatListener("", gbuffer_fbo->getWidth(), "uniformWidth"));
-	gbufferParticlesRenderPass->attachListenerOnPostUniformUpload( new UploadUniformFloatListener("", gbuffer_fbo->getHeight(), "uniformHeight"));
+
+	// - 0.46125 render particles into a seperate fbo, use depth information of gbuffer as depth map
+	ParticlesRenderPass* gbufferParticlesRenderPass = new ParticlesRenderPass(gbuffer_particle_shader, UnderwaterScene::framebuffer_water_particles, UnderwaterScene::water_particles, vaoID[0]);
+
+	gbufferParticlesRenderPass->attachListenerOnPostUniformUpload( new UploadUniformTextureListener("", 7, "uniformDepthMap", gbuffer_fbo->getDepthBufferHandle( ) ) );
+	gbufferParticlesRenderPass->attachListenerOnPostUniformUpload( new UploadUniformResolutionXListener(""));
+	gbufferParticlesRenderPass->attachListenerOnPostUniformUpload( new UploadUniformResolutionYListener(""));
+
+	gbufferParticlesRenderPass->setUseAlphaBlending(true);	// enable alpha blending
+	gbufferParticlesRenderPass->setUseDepthTest(false);	// disable depth testing
+	gbufferParticlesRenderPass->setClearColorBufferBit(true); // clear color buffer bit on every frame
+	gbufferParticlesRenderPass->setCustomClearColor( glm::vec4 ( 0.0f, 0.0f, 0.0f, 0.0f) );// set clear color to transparent
+	gbufferParticlesRenderPass->attachListenerOnPostUniformUpload( uniPartText);	// upload Particles Texture
+	gbufferParticlesRenderPass->attachListenerOnPostUniformUpload( uniSinusWave);  // upload Sinus Wave value
 
 	testingState->getRenderLoop()->addRenderPass( gbufferParticlesRenderPass );
 
 	//TODO render waterobject into seperate FBO
 
-	//TODO render particles with gbuffer ( and waterobject fbo ) information ( depth ) into seperate FBO
 	//TODO render caustics with gbuffer information ( depth ) into seperate FBO
 	//TODO render reflected View into seperate GBuffer FBO
 	//TODO render refracted View into seperate GBuffer FBO
@@ -342,14 +350,19 @@ void configureRendering(){
 	testingState->getRenderLoop()->addRenderPass(addGodRays);
 
 /******************** Debug Views ************************/
-	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_refraction->getPositionTextureHandle() );
-	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_reflection->getPositionTextureHandle() );
-	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_god_rays->getPositionTextureHandle() );
+//	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_refraction->getPositionTextureHandle() );
+//	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_reflection->getPositionTextureHandle() );
+//	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_god_rays->getPositionTextureHandle() );
+//	addDebugView(simpleTex, testingState, preCompositingScene->getPositionTextureHandle() );
+
+	addDebugView(simpleTex, testingState, gbuffer_fbo->getDepthBufferHandle() );
 	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_particles->getPositionTextureHandle() );
-	addDebugView(simpleTex, testingState, preCompositingScene->getPositionTextureHandle() );
-	addDebugView(simpleTex, testingState, finalImage->getPositionTextureHandle() );
+
 	addDebugView(simpleTex, testingState, gbuffer_fbo->getNormalTextureHandle() );
 	addDebugView(simpleTex, testingState, gbuffer_compositing_fbo->getPositionTextureHandle() );
+	addDebugView(simpleTex, testingState, finalImage->getPositionTextureHandle() );
+
+
 }
 
 void configureOtherStuff(){

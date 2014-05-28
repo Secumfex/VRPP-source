@@ -9,8 +9,9 @@ in float passDistance;
 in vec3 passWorldPosition;
 
 uniform sampler2D uniformDepthMap;
-uniform float uniformWidth;
-uniform float uniformHeight;
+
+uniform float resX;
+uniform float resY;
 
 out vec4 fragmentColor;
 
@@ -21,10 +22,11 @@ void main() {
 	}
 
 	vec2 depthCoord = gl_FragCoord.xy;
-	depthCoord.x *= uniformWidth;
-	depthCoord.y *= uniformHeight;
 	
-	if (gl_FragDepth > texture2D(uniformDepthMap, depthCoord).x)
+	depthCoord.x *= 1.0 / resX;
+	depthCoord.y *= 1.0 / resY;  
+	
+	if (gl_FragCoord.z > texture2D(uniformDepthMap, depthCoord).x)
 	{
 		discard;
 	}

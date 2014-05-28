@@ -18,8 +18,11 @@ void UploadUniformModelMatrixListener::update(){
 	Shader* shader = RenderManager::getInstance()->getCurrentShader();
 	VirtualObject* currentVO = RenderManager::getInstance()->getCurrentVO();
 
-	glm::mat4 model = currentVO->getModelMatrix();
-	shader->uploadUniform(model, "uniformModel");
+	if (currentVO)
+	{
+		glm::mat4 model = currentVO->getModelMatrix();
+		shader->uploadUniform(model, "uniformModel");
+	}
 }
 
 UploadUniformViewMatrixListener::UploadUniformViewMatrixListener(std::string name){
