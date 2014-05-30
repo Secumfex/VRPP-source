@@ -13,6 +13,14 @@ uniform sampler2D uniformCausticsTexture;
 uniform float uniformTime;
 
 void main() { 
+	vec4 position = texture(positionMap, passUV);	// interpret as depth information
+	
+
+
+
+
+
+
     // CAUSTICS AND GOD RAY TEXTURE OFFSET //////////////////
     float tile_factor   = 3.0f;
     float noise_factor  = 0.3f;
