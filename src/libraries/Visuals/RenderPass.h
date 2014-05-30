@@ -52,15 +52,16 @@ public:
 	virtual void activate();
 
 	/** \brief deactivate this renderpass 
-	* disables the FBO, sets the RenderManager FBO and Shader to 0 and reenables / disables gl functions to default
+	* disables the FBO, sets the RenderManager FBO and Shader to 0 and re-enables / disables gl functions to default
 	* also calls Deactivation Listeners at the end */
 	virtual void deactivate();
 
 	/** \brief add a Request Flag to narrow down the list of objects to render */
 	void addRenderQueueRequestFlag(RenderQueueRequestFlag* renderQueueRequestFlag);
 
-	/** \brief !docu pls!
+	/** \brief extract the sub-list of valid graphics components from active render queue which would be rendered
 	 *
+	 * list of initial graphics components will be narrowed down by active render queue according to provided list of request flags
 	 * @return vector of graphic components references
 	 */
 	std::list<GraphicsComponent*> extractGCsFromRenderQueue();

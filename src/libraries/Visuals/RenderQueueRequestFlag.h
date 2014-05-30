@@ -194,10 +194,10 @@ public:
 	list<GraphicsComponent* > extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* > temp);
 };
 
-class CurrentRenderQueFlag : public RenderQueueRequestFlag{
+class CurrentRenderQueueFlag : public RenderQueueRequestFlag{
 private:
 public:
-	CurrentRenderQueFlag(bool invertedCondition = false);
+	CurrentRenderQueueFlag(bool invertedCondition = false);
 
 	/*! @brief flag visits the render queue
 	 *

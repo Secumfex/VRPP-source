@@ -118,3 +118,19 @@ SetVec3ValuesListener::SetVec3ValuesListener(glm::vec3* target, glm::vec3 source
 void SetVec3ValuesListener::update(){
 	*target = *source;
 }
+
+boolean DirtyFlagListener::getDirtyFlag() const {
+	return dirtyFlag;
+}
+
+void DirtyFlagListener::setDirtyFlag(boolean dirtyFlag) {
+	this->dirtyFlag = dirtyFlag;
+}
+
+DirtyFlagListener::DirtyFlagListener() {
+	dirtyFlag = false;
+}
+
+void DirtyFlagListener::update() {
+	dirtyFlag = true;
+}

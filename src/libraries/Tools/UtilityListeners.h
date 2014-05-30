@@ -167,4 +167,16 @@ public:
 	void update();
 };
 
+/// Listener which owns a boolean and will be set to dirty when called
+class DirtyFlagListener : public Listener{
+private:
+	boolean dirtyFlag;
+public:
+	DirtyFlagListener();
+	void update();	/**< will set the dirtyFlag to dirty */
+
+	boolean getDirtyFlag() const;
+	void setDirtyFlag(boolean dirtyFlag);
+};
+
 #endif

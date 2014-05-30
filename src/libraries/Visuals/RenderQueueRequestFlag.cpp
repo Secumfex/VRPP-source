@@ -86,10 +86,10 @@ list<GraphicsComponent*> FlagScreenFillingPolygon::extrudeGCsRequestFlagList(Ren
 	return rq->extrudeGCsForRequestFlag(this, temp);
 }
 
-CurrentRenderQueFlag::CurrentRenderQueFlag(bool invertedCondition){
+CurrentRenderQueueFlag::CurrentRenderQueueFlag(bool invertedCondition){
 	setInvertCondition(invertedCondition);
 }
 
-list<GraphicsComponent*> CurrentRenderQueFlag::extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* > temp){
+list<GraphicsComponent*> CurrentRenderQueueFlag::extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* > temp){
 	return rq->extrudeGCsForRequestFlag(this, temp);
 }

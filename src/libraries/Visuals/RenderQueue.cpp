@@ -49,6 +49,8 @@ void RenderQueue::addVirtualObject(VirtualObject* vo) {
 		gc2voMap[gcVector[i]] = vo;
 		gcList.push_back(gcVector[i]);
 	}
+
+	notify("ADD_VIRTUAL_OBJECT_LISTENER");
 }
 
 /** \brief removes a single VO from the member list of VOs
@@ -475,8 +477,9 @@ list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagUsesMesh* fl
 	return temp;
 }
 
-list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(CurrentRenderQueFlag* flag, list<GraphicsComponent* > temp){
-	// TODO
+list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(CurrentRenderQueueFlag* flag, list<GraphicsComponent* > temp){
+	// TODO in case list changed, return current GC list
+
 	return getGraphicsComponentList();
 }
 
@@ -522,4 +525,9 @@ list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagScreenFillin
 list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagInViewFrustum* flag, list<GraphicsComponent* > temp){
 	//TODO
 	return temp;
+}
+
+void RenderQueue::attachListenerOnAddVirtualObject(Listener* listener) {
+	listener->setName("ADD_VIRTUAL_OBJECT_LISTENER");
+	attach( listener );
 }

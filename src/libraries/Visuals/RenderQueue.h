@@ -7,6 +7,7 @@
 #include "VirtualObject.h"
 #include "Shader.h"
 #include "Patterns/Visitor.h"
+#include "Patterns/Subject.h"
 #include "RenderQueueRequestFlag.h"
 //#include "FlagInViewFrustum.h"
 //#include "FlagShadowCaster.h"
@@ -21,7 +22,7 @@ using namespace std;
  *
  *	@todo please write doxygen comments only in header file.
  */
-class RenderQueue {
+class RenderQueue : public Subject{
 public: 
 	/** \brief constructor
 	 *
@@ -189,7 +190,7 @@ public:
 		 *
 		 * overloaded method for any possible flag object. will extract a GC list depending on that object
 		 */
-	list<GraphicsComponent* > extrudeGCsForRequestFlag(CurrentRenderQueFlag* flag, list<GraphicsComponent* > temp);
+	list<GraphicsComponent* > extrudeGCsForRequestFlag(CurrentRenderQueueFlag* flag, list<GraphicsComponent* > temp);
 
 	/** \brief overloaded. returns GC-list depending on flag
 	 *
@@ -221,6 +222,16 @@ private:
 	list<Shader*> shaderListCopy;		/**< L2 of the sortByAttributes method */
 	list<Shader*> shaderListAlternate;	/**< L3 of the sortByAttributes method */
 	list<GraphicsComponent*> gcList;	/**< all GCs of the RQ */
+
+public:
+	/*	LISTENER INTERFACES		*/
+
+	/** \brief attach listener post add virtual object
+	 *
+	 * attach a listener to the event of the addition of an virtual object to the render queue
+	 * @param listener
+	 */
+	void attachListenerOnAddVirtualObject(Listener* listener);
 };
 
 #endif /* RENDERQUEUE_H */
