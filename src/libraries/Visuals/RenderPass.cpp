@@ -517,3 +517,35 @@ void MixTexturesRenderPass::setMixTextureUniformName(std::string name)
 {
 	mMixTextureUploader.setUniformName(name);
 }
+
+TextureRenderPass::TextureRenderPass( Shader* textureShader, FrameBufferObject* fbo, GLuint texture )
+{
+	mShader = textureShader;
+	mFBO = fbo;
+	setTexture( texture );
+
+	mTriangle = VirtualObjectFactory::getInstance()->getTriangle();
+
+	useDepthTest = false;
+
+	mInitialGraphicsComponentList.push_back( mTriangle );
+
+	mTextureUploader.setTextureUnit(7);
+	mTextureUploader.setUniformName("uniformTexture");
+}
+
+void TextureRenderPass::uploadUniforms()
+{
+	RenderPass::uploadUniforms();
+	mTextureUploader.update();
+}
+
+void TextureRenderPass::setTexture(GLuint baseTexture){
+	mTexture = baseTexture;
+	mTextureUploader.setTextureHandle(baseTexture);
+}
+
+void TextureRenderPass::setTextureUniformName( std::string name)
+{
+	mTextureUploader.setUniformName(name);
+}

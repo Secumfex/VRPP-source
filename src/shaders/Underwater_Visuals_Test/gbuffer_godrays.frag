@@ -1,26 +1,27 @@
 #version 330 
 
-in vec4 passProjectedPos;
-in vec3 passWorldPos;
+in vec2 passUV;
 
 out vec4 fragmentColor;
 
 uniform vec3 uniformCameraWorldPos;
+
+uniform mat4 uniformView;
 uniform mat4 uniformProjectorViewPerspective;
 
+uniform sampler2D positionMap;
 uniform sampler2D uniformCausticsTexture;
+uniform sampler2D uniformWaterObjectDepthMap;
 
 uniform float uniformTime;
 
 void main() { 
-	vec4 position = texture(positionMap, passUV);	// interpret as depth information
+	vec4 position = texture(positionMap, passUV);	// to be interpreted as depth information
+	float distanceToCamera = abs ( position.z );
+
+	// invert view matrix with camera position --> world position
+	vec4 worldPos = inverse ( uniformView ) *  position;
 	
-
-
-
-
-
-
     // CAUSTICS AND GOD RAY TEXTURE OFFSET //////////////////
     float tile_factor   = 3.0f;
     float noise_factor  = 0.3f;
@@ -37,10 +38,12 @@ void main() {
     float water_height = 10.0;
     vec3 god_ray_strength = vec3(0.0, 0.0, 0.0);
     
-    float mesh_distance_to_camera = dot ( passWorldPos - uniformCameraWorldPos, passWorldPos - uniformCameraWorldPos );
+//    float mesh_distance_to_camera = dot ( passWorldPos - uniformCameraWorldPos, passWorldPos - uniformCameraWorldPos );
+    float mesh_distance_to_camera = distanceToCamera;
 
     vec3 sample = uniformCameraWorldPos;
-    vec3 view_ray_direction = normalize( passWorldPos - uniformCameraWorldPos );
+//    vec3 view_ray_direction = normalize( passWorldPos - uniformCameraWorldPos );
+    vec3 view_ray_direction = normalize( worldPos.xyz - uniformCameraWorldPos );
 
     for ( int i = 0; i < samples; i++ )
     {

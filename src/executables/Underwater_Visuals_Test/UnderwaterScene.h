@@ -57,6 +57,8 @@ namespace UnderwaterScene{
 	FrameBufferObject* framebuffer_water_refraction;
 	FrameBufferObject* framebuffer_water_god_rays;
 	FrameBufferObject* framebuffer_water_particles;
+	FrameBufferObject* framebuffer_water_water_object;
+	FrameBufferObject* framebuffer_water_caustics;
 
 	Camera* reflectedCamera;
 
@@ -158,6 +160,18 @@ namespace UnderwaterScene{
 		framebuffer_water_particles->createPositionTexture();
 		framebuffer_water_particles->makeDrawBuffers();	// draw color to color attachment 0
 		framebuffer_water_particles->unbindFBO();
+
+		framebuffer_water_caustics = new FrameBufferObject(800,600);
+		framebuffer_water_caustics->bindFBO();
+		framebuffer_water_caustics->createPositionTexture();
+		framebuffer_water_caustics->makeDrawBuffers();	// draw color to color attachment 0
+		framebuffer_water_caustics->unbindFBO();
+
+		framebuffer_water_water_object = new FrameBufferObject(800,600);
+		framebuffer_water_water_object->bindFBO();
+		framebuffer_water_water_object->createPositionTexture();
+		framebuffer_water_water_object->makeDrawBuffers();	// draw color to color attachment 0
+		framebuffer_water_water_object->unbindFBO();
 		/*********************************************************************************/
 
 		/******************* textures creation	  ****************************************/

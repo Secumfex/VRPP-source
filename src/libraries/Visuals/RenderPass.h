@@ -322,6 +322,32 @@ public:
 	GraphicsComponent* mTriangle;	/**< Screen Filling Triangle to be rendered */
 };
 
+//TODO this could also be the parent class of MixTexturesRenderPass or Compositing RenderPass
+/// a Renderpass which will perform a screen filling polygon render pass and upload one texture and is suitable for presenting a texture or post processing involving only one texture
+class TextureRenderPass : public RenderPass {
+protected:
+	GLuint mTexture; /**< texture handle */
+
+	UploadUniformTextureListener mTextureUploader; /**< Listener to upload base texture */
+
+	GraphicsComponent* mTriangle; /**< screen filling polygon graphics component */
+public:
+	virtual void uploadUniforms(); /**< upload texture as uniform */
+
+	/** \brief constructor
+	 *
+	 * @param textureShader shader to be used in this render pass
+	 * @param fbo to be used as render target in this renderpass ( optional: set 0 or leave out to render to screen )
+	 * @param texture handle of texture
+	 */
+	TextureRenderPass( Shader* textureShader, FrameBufferObject* fbo = 0, GLuint texture = 0 );
+
+	void setTexture(GLuint texture); /**< set texture handle*/
+
+	void setTextureUniformName(std::string name);	/**< set uniform target name of texture uploader ( uniform to which texture will attempt to upload )*/
+
+};
+
 /// a Renderpass which will perform a screen filling polygon render pass and upload two textures and is suitable for compositing of two textures, i.e. frames
 class MixTexturesRenderPass : public RenderPass {
 protected:
