@@ -13,6 +13,8 @@ int lastID = 0;
 VirtualObject::VirtualObject() {
 	modelMatrix = glm::mat4(); 	//loadidentity
 
+	mCenterOfMassOffsetMatrix = glm::mat4(); 	//loadidentity
+
 	physicsComponent = new PhysicsComponent();
 }
 
@@ -168,4 +170,13 @@ void VirtualObject::setModelMatrix(glm::mat4 modelmatrix){
 
 PhysicsComponent* VirtualObject::getPhysicsComponent(){
 	return physicsComponent;
+}
+
+const glm::mat4& VirtualObject::getCenterOfMassOffsetMatrix() const {
+	return mCenterOfMassOffsetMatrix;
+}
+
+void VirtualObject::setCenterOfMassOffsetMatrix(
+		const glm::mat4& centerOfMassOffsetMatrix) {
+	mCenterOfMassOffsetMatrix = centerOfMassOffsetMatrix;
 }

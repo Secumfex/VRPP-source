@@ -14,6 +14,8 @@ class VirtualObject{
 	private:
 	glm::mat4 modelMatrix;							/**< 4x4Matrix */
 
+	glm::mat4 mCenterOfMassOffsetMatrix;			/**< translational matrix of center of mass into model space origin of mesh >*/
+
 	vector<GraphicsComponent*> mGraphComponent;		/**< vector of graphic-components */
 
 public:
@@ -192,6 +194,8 @@ public:
 	 * @return the virtual objects physic component
 	 */
 	PhysicsComponent* getPhysicsComponent();
+	const glm::mat4& getCenterOfMassOffsetMatrix() const;
+	void setCenterOfMassOffsetMatrix(const glm::mat4& centerOfMassOffsetMatrix);
 };
 
 

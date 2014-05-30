@@ -297,11 +297,15 @@ void PhysicsComponent::update(VirtualObject* vo){
 
 	btRigidBody* body = rigidBody;
 
-
 		btTransform t;
 		body->getMotionState()->getWorldTransform(t);
 		float mat[16];
 		t.getOpenGLMatrix(mat);
 
-		vo->setModelMatrix(glm::make_mat4(mat));
+		// in case the model is not symmetrical, the offset of the rigid body center of mass to the model space origin must be taken into account
+		// to prevent applying a double model matrix offset
+		const glm::mat4 centerOfMassOffset = vo->getCenterOfMassOffsetMatrix();
+
+		// first move origin into center of mass, then apply rigid body model matrix
+		vo->setModelMatrix( glm::make_mat4(mat) * centerOfMassOffset );
 }

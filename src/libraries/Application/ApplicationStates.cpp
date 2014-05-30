@@ -96,10 +96,17 @@ void ApplicationState::bindObjects(){
 
 
 VirtualObject* ApplicationState::createVirtualObject(std::string path, VirtualObjectFactory::BodyType bodyType, float mass, int collisionFlag, bool blenderAxes){
+
+	// if collision flag is 1 ( static ), ignore mass parameter value and set to 0.0f
+	if ( collisionFlag == 1 && mass != 0.0f )
+	{
+		mass = 0.0f;
+	}
+
 	VirtualObject* vo = VirtualObjectFactory::getInstance()->createVirtualObject(path, bodyType, mass, collisionFlag, blenderAxes);
 	renderQueue->addVirtualObject(vo);
 
-	// create a PhysicsComponent update Listener if object is dynamic ( collisionFlag != 1 --> static
+	// create a PhysicsComponent update Listener if object is dynamic ( collisionFlag != 1 --> static )
 	if ( collisionFlag != 1)
 	{
 		attachListenerOnBeginningProgramCycle( new UpdatePhysicsComponentListener( vo ) );

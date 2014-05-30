@@ -8,6 +8,7 @@
 
 #include <Visuals/VirtualObjectFactory.h>
 #include <string>
+#include <glm/gtx/transform.hpp>
 
 #ifndef PI
 	#define PI  3.14159265359
@@ -370,6 +371,8 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 		}
 		aMesh->setVertexPosition(vertexPositions);
 
+		// save center of mass offset matrix
+		aMesh->setCenterOfMassOffsetMatrix( glm::translate( -1.0f * ( aabbMin + ( (aabbMax - aabbMin) / 2.0f ) ) ) );
 
 		glGenBuffers(1, &buffer);
 		glBindBuffer(GL_ARRAY_BUFFER, buffer);
@@ -578,6 +581,9 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 	float y = physics_min.y + height / 2.0f;
 	float z = physics_min.z + depth / 2.0f;
 
+	// save center of mass offset matrix
+	virtualObject->setCenterOfMassOffsetMatrix( glm::translate( -x, -y, -z ) );
+
 	glm::vec3 normal;
 	normal.x= physics_min.y*physics_max.z - physics_min.z*physics_max.y;
 	normal.y= physics_min.z*physics_max.x - physics_min.x*physics_max.z;
@@ -604,14 +610,15 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename, B
 	{
 		std::cout << "BLENDER FILE... rotating Object..." << std::endl;
 		btRigidBody* rigidBody = virtualObject->getPhysicsComponent()->getRigidBody();
-		btMotionState* motion = rigidBody->getMotionState();
+//		btMotionState* motion = rigidBody->getMotionState();
 
 		btTransform worldTrans;
 		worldTrans.setIdentity();
 		worldTrans.setRotation( btQuaternion( btVector3(1.0f, 0.0f, 0.0f), ( (-1.0f) * PI ) / 2.0f));
 		std::cout << "BLENDER FILE... updating ModelMatrix" << std::endl;
 
-		motion->setWorldTransform(worldTrans);
+//		motion->setWorldTransform(worldTrans);
+		rigidBody->setCenterOfMassTransform(worldTrans);
 
 		virtualObject->updateModelMatrixViaPhysics();
 	}
