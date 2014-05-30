@@ -100,7 +100,15 @@ VirtualObject* ApplicationState::createVirtualObject(std::string path, VirtualOb
 	// if collision flag is 1 ( static ), ignore mass parameter value and set to 0.0f
 	if ( collisionFlag == 1 && mass != 0.0f )
 	{
+		std::cout << "WARNING: Collision Flag was 1 (static), but Mass was > 0.0. Mass will be set to 0.0"<< std::endl;
 		mass = 0.0f;
+	}
+
+	// if collision flag is 1 ( static ) but model has to be rotated due to Blender axes, ignore flag parameter and set to 8
+	if ( collisionFlag == 1 && blenderAxes == true )
+	{
+		std::cout << "WARNING: Collision Flag was 1 (static), but Blender-Axes was true. Collision Flag will be set to 8 (custom material)"<< std::endl;
+		collisionFlag = 8;	// to ensure model can be correctly rotated
 	}
 
 	VirtualObject* vo = VirtualObjectFactory::getInstance()->createVirtualObject(path, bodyType, mass, collisionFlag, blenderAxes);
