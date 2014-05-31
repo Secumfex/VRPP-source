@@ -14,7 +14,7 @@ uniform sampler2D uniformCausticsTexture;
 uniform float uniformTime;
 
 void main() { 
-	vec4 normal = texture (normalMap, passUV);
+	vec4 normal = texture(normalMap, passUV);
 	vec4 position = texture(positionMap, passUV);	// to be interpreted as depth information
 //	float distanceToCamera = abs ( position.z );
 
@@ -23,7 +23,7 @@ void main() {
 	
 	vec4 projectedPos = uniformProjectorViewPerspective * worldPos;
 	
-	float angle = dot ( position, )
+//  float angle = dot ( position, )
 	
     // CAUSTICS AND GOD RAY TEXTURE OFFSET //////////////////
     float tile_factor   = 3.0f;
