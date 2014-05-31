@@ -1,22 +1,30 @@
 #version 330 
 
-in vec2 passUVs;
+in vec2 passUV;
 
-in vec4 passProjectedPos;
-in vec3 passWorldPos;
-
-uniform vec3 uniformCameraWorldPos;
+uniform mat4 uniformView;
 uniform mat4 uniformProjectorViewPerspective;
 
 out vec4 fragmentColor;
 
-uniform sampler2D uniformDepthMap;
+uniform sampler2D positionMap;	// GBuffer position map
+uniform sampler2D normalMap;	// GBuffer normal map
 uniform sampler2D uniformCausticsTexture;
 
 uniform float uniformTime;
 
 void main() { 
+	vec4 normal = texture (normalMap, passUV);
+	vec4 position = texture(positionMap, passUV);	// to be interpreted as depth information
+//	float distanceToCamera = abs ( position.z );
 
+	// invert view matrix with camera position --> world position
+	vec4 worldPos = inverse ( uniformView ) *  position;
+	
+	vec4 projectedPos = uniformProjectorViewPerspective * worldPos;
+	
+	float angle = dot ( position, )
+	
     // CAUSTICS AND GOD RAY TEXTURE OFFSET //////////////////
     float tile_factor   = 3.0f;
     float noise_factor  = 0.3f;
@@ -28,7 +36,7 @@ void main() {
 
     /////////////////////////////////////////////////////////
     // CAUSTICS /////////////////////////////////////////////
-    vec2 projectedUVCoords0 = (passProjectedPos.xy) / passProjectedPos.w ;
+    vec2 projectedUVCoords0 = (projectedPos.xy) / projectedPos.w ;
     vec2 projectedUVCoords1 = projectedUVCoords0;
 
     projectedUVCoords0 *= tile_factor;
@@ -41,16 +49,7 @@ void main() {
     vec3 caustics1   = texture2D( uniformCausticsTexture, projectedUVCoords1 ).rgb;
     vec3 caustics    = ( caustics0 + caustics1 ) / 1.5; 
 
-    diffuse_color += diffuse_color * caustics;
     // ////// /////////////////////////////////////////////
     
-    fragmentColor = vec4(
-        vec3(
-        diffuse  * diffuse_color +
-        specular * vec3(1, 1, 1) + 
-        ambient  * diffuse_color 
-        ) 
-        * diff_strength + fog_strength *uniformFogColor
-        + emissiveColor 
-        ,1);
+    fragmentColor = vec4( caustics, 1);
 }

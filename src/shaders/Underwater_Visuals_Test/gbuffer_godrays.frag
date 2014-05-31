@@ -11,7 +11,7 @@ uniform mat4 uniformProjectorViewPerspective;
 
 uniform sampler2D positionMap;
 uniform sampler2D uniformCausticsTexture;
-uniform sampler2D uniformWaterObjectDepthMap;
+// uniform sampler2D uniformWaterObjectDepthMap;
 
 uniform float uniformTime;
 

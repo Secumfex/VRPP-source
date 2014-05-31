@@ -346,8 +346,15 @@ void configureRendering(){
 
 	testingState->getRenderLoop()->addRenderPass( gbufferParticlesRenderPass );
 
-	//TODO render caustics with gbuffer information ( depth ) into seperate FBO
-	TextureRenderPass* gbufferCausticsRenderPass = new TextureRenderPass( gbuffer_caustics_shader, UnderwaterScene::framebuffer_water_caustics)
+	// -0.39623 render caustics with gbuffer information ( depth ) into seperate FBO
+	CompositingPass* gbufferCausticsRenderPass = new CompositingPass( gbuffer_caustics_shader, UnderwaterScene::framebuffer_water_caustics);
+	gbufferCausticsRenderPass->setPositionMap( gbuffer_fbo->getPositionTextureHandle( ) ); // use position texture handle as depth information
+	gbufferCausticsRenderPass->setNormalMap( gbuffer_fbo->getNormalTextureHandle() );	// use normal texture
+
+	gbufferCausticsRenderPass->attachListenerOnPostUniformUpload( uniCausticsTex2);		// upload caustics texture used for god ray sampling
+	gbufferCausticsRenderPass->attachListenerOnPostUniformUpload( uniSunVPersp );		// upload sun view perspective matrix
+
+	testingState->getRenderLoop()->addRenderPass( gbufferCausticsRenderPass );
 
 	//TODO render reflected View into seperate GBuffer FBO
 	//TODO render refracted View into seperate GBuffer FBO
@@ -359,6 +366,12 @@ void configureRendering(){
 	MixTexturesRenderPass* overlayParticles = new MixTexturesRenderPass( overlay_shader, finalImage, gbuffer_compositing_fbo->getPositionTextureHandle(), UnderwaterScene::framebuffer_water_particles->getPositionTextureHandle() );
 	overlayParticles->setMixTextureUniformName("uniformOverlayTexture");
 	testingState->getRenderLoop()->addRenderPass(overlayParticles);
+
+	//-0.18125 : add caustics on top of scene fbo
+	MixTexturesRenderPass* addCaustics = new MixTexturesRenderPass( add_shader, finalImage, finalImage->getPositionTextureHandle(), UnderwaterScene::framebuffer_water_caustics->getPositionTextureHandle() );
+	addCaustics->setMixTextureUniformName("uniformAddTexture");
+	testingState->getRenderLoop()->addRenderPass(addCaustics);
+
 
 	//-0.125 : add god rays ontop of scene fbo
 	MixTexturesRenderPass* addGodRays = new MixTexturesRenderPass( add_shader, finalImage, finalImage->getPositionTextureHandle(), UnderwaterScene::framebuffer_water_god_rays->getPositionTextureHandle() );
@@ -383,6 +396,7 @@ void configureRendering(){
 	addDebugView(simpleTex, testingState, gbuffer_compositing_fbo->getPositionTextureHandle() );						// GBuffer Compositing
 
 	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_god_rays->getPositionTextureHandle() );	// God Rays
+	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_caustics->getPositionTextureHandle() );	// Caustics
 
 //	addDebugView(simpleTex, testingState, finalImage->getPositionTextureHandle() );										// Final Image
 
