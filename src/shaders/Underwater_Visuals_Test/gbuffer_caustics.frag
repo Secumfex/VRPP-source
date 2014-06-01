@@ -5,6 +5,8 @@ in vec2 passUV;
 uniform mat4 uniformView;
 uniform mat4 uniformProjectorViewPerspective;
 
+uniform vec3 uniformSunDirection;
+
 out vec4 fragmentColor;
 
 uniform sampler2D positionMap;	// GBuffer position map
@@ -16,14 +18,22 @@ uniform float uniformTime;
 void main() { 
 	vec4 normal = texture(normalMap, passUV);
 	vec4 position = texture(positionMap, passUV);	// to be interpreted as depth information
-//	float distanceToCamera = abs ( position.z );
+
+	//	float distanceToCamera = abs ( position.z );
 
 	// invert view matrix with camera position --> world position
 	vec4 worldPos = inverse ( uniformView ) *  position;
 	
+	if ( worldPos.y > 10.0f )
+	{
+		discard;
+	}
+	
 	vec4 projectedPos = uniformProjectorViewPerspective * worldPos;
 	
-//  float angle = dot ( position, )
+	vec4 sunDirection = ( uniformView * vec4( uniformSunDirection, 0) );
+	
+	float lightIntensity = max( 0.0, dot ( normal.xyz, sunDirection.xyz ) * ( - 1.0 ) );
 	
     // CAUSTICS AND GOD RAY TEXTURE OFFSET //////////////////
     float tile_factor   = 3.0f;
@@ -51,5 +61,5 @@ void main() {
 
     // ////// /////////////////////////////////////////////
     
-    fragmentColor = vec4( caustics, 1);
+    fragmentColor = vec4( caustics * lightIntensity, 1);
 }

@@ -42,6 +42,9 @@ namespace UnderwaterScene{
 	glm::vec3 water_plane_normal_under_water_inverse( 0.0f, 1.0f, 0.0f );
 	glm::vec3 water_plane_normal_above_water_inverse( 0.0f, -1.0f, 0.0f );
 
+	glm::vec3 sunLightDirection( -1.0f, -1.0f, 0.0f );	// light direction
+	glm::mat4 sunView;
+	glm::mat4 sunPerspective;
 	glm::mat4 sunViewPerspective;
 
 	VirtualObject* scene_groundObject;
@@ -123,7 +126,9 @@ namespace UnderwaterScene{
 //		scene_sky_dome			= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_sky_dome.dae", 	VirtualObjectFactory::OTHER);
 		scene_sun_Object 		= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_sun_shape.dae", 	VirtualObjectFactory::OTHER, 0.0f, 1, true);
 
-		sunViewPerspective 		= glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 1000.0f) * glm::lookAt( glm::vec3(100.0f, 100.0f, 0.0f), glm::vec3 (0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)) * glm::mat4(1.0f); 
+		sunView = glm::lookAt( - sunLightDirection , glm::vec3 (0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f) );
+		sunPerspective = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 1000.0f);
+		sunViewPerspective 		= sunPerspective * sunView;
 
 		if (scene_sun_Object->getGraphicsComponent().size() > 0){
 				scene_sun_Object->getGraphicsComponent()[0]->setEmission(true);
