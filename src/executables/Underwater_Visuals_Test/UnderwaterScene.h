@@ -56,8 +56,10 @@ namespace UnderwaterScene{
 	VirtualObject* scene_waterPlaneObject;
 	VirtualObject* scene_mountainObject1;
 
-	FrameBufferObject* framebuffer_water_reflection;
-	FrameBufferObject* framebuffer_water_refraction;
+	FrameBufferObject* framebuffer_water_reflection_gbuffer;
+	FrameBufferObject* framebuffer_water_reflection_compositing;
+	FrameBufferObject* framebuffer_water_refraction_gbuffer;
+	FrameBufferObject* framebuffer_water_refraction_compositing;
 	FrameBufferObject* framebuffer_water_god_rays;
 	FrameBufferObject* framebuffer_water_particles;
 	FrameBufferObject* framebuffer_water_water_object;
@@ -142,17 +144,33 @@ namespace UnderwaterScene{
 		/*********************************************************************************/
 
 		/******************* framebuffer objects *****************************************/
-		framebuffer_water_reflection = new FrameBufferObject(800,600);
-		framebuffer_water_reflection->bindFBO();
-		framebuffer_water_reflection->createPositionTexture();
-		framebuffer_water_reflection->makeDrawBuffers();	// draw color to color attachment 0
-		framebuffer_water_reflection->unbindFBO();
+		framebuffer_water_reflection_compositing = new FrameBufferObject(800,600);
+		framebuffer_water_reflection_compositing ->bindFBO();
+		framebuffer_water_reflection_compositing ->createPositionTexture();
+		framebuffer_water_reflection_compositing ->makeDrawBuffers();	// draw color to color attachment 0
+		framebuffer_water_reflection_compositing ->unbindFBO();
 
-		framebuffer_water_refraction = new FrameBufferObject(800,600);
-		framebuffer_water_refraction->bindFBO();
-		framebuffer_water_refraction->createPositionTexture();
-		framebuffer_water_refraction->makeDrawBuffers();	// draw color to color attachment 0
-		framebuffer_water_refraction->unbindFBO();
+		framebuffer_water_refraction_compositing = new FrameBufferObject(800,600);
+		framebuffer_water_refraction_compositing ->bindFBO();
+		framebuffer_water_refraction_compositing ->createPositionTexture();
+		framebuffer_water_refraction_compositing ->makeDrawBuffers();	// draw color to color attachment 0
+		framebuffer_water_refraction_compositing ->unbindFBO();
+
+		framebuffer_water_reflection_gbuffer = new FrameBufferObject(800,600);
+		framebuffer_water_reflection_gbuffer->bindFBO();
+		framebuffer_water_reflection_gbuffer->createPositionTexture();
+		framebuffer_water_reflection_gbuffer->createNormalTexture();
+		framebuffer_water_reflection_gbuffer->createColorTexture();
+		framebuffer_water_reflection_gbuffer->makeDrawBuffers();
+		framebuffer_water_reflection_gbuffer->unbindFBO();
+
+		framebuffer_water_refraction_gbuffer = new FrameBufferObject(800,600);
+		framebuffer_water_refraction_gbuffer->bindFBO();
+		framebuffer_water_refraction_gbuffer->createPositionTexture();
+		framebuffer_water_refraction_gbuffer->createNormalTexture();
+		framebuffer_water_refraction_gbuffer->createColorTexture();
+		framebuffer_water_refraction_gbuffer->makeDrawBuffers();
+		framebuffer_water_refraction_gbuffer->unbindFBO();
 
 		framebuffer_water_god_rays = new FrameBufferObject(200,150);
 		framebuffer_water_god_rays->bindFBO();
