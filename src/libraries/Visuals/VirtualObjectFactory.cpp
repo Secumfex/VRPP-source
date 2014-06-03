@@ -700,25 +700,28 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 	std::cout << "BLENDER FILE ... :" << blenderAxes << std::endl;
 	if (blenderAxes) {
 		std::cout << "BLENDER FILE... rotating Object..." << std::endl;
-//<<<<<<< HEAD
-		btRigidBody* rigidBody = virtualObject->getPhysicsComponent()->getRigidBody();
-//		btMotionState* motion = rigidBody->getMotionState();
 
-//=======
-//		btRigidBody* rigidBody =
-//				virtualObject->getPhysicsComponent()->getRigidBody();
-//		btMotionState* motion = rigidBody->getMotionState();
-//>>>>>>> origin/AkropolisUnderWater
+		btRigidBody* rigidBody = virtualObject->getPhysicsComponent()->getRigidBody();	// rigid body object
+		btMotionState* motion = rigidBody->getMotionState();							// current motion state of rigid body
 
 		btTransform worldTrans;
 		worldTrans.setIdentity();
-		worldTrans.setRotation(
+		motion->getWorldTransform( worldTrans );			// current transformation
+
+		btTransform blenderCorrectionTransform;				// correction : rotation
+		blenderCorrectionTransform.setIdentity();
+
+		blenderCorrectionTransform.setRotation(
 				btQuaternion(btVector3(1.0f, 0.0f, 0.0f),
 						((-1.0f) * PI) / 2.0f));
+
+		btTransform newTransform;
+		newTransform.setIdentity();							// transformation after correction
+		newTransform.mult( blenderCorrectionTransform, worldTrans);	// apply offset then rotation
+
 		std::cout << "BLENDER FILE... updating ModelMatrix" << std::endl;
 
-//		motion->setWorldTransform(worldTrans);
-		rigidBody->setCenterOfMassTransform(worldTrans);
+		rigidBody->setCenterOfMassTransform(newTransform);	// set corrected transform
 
 		virtualObject->updateModelMatrixViaPhysics();
 	}
