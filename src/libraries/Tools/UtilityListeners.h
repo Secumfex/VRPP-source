@@ -170,13 +170,13 @@ public:
 /// Listener which owns a boolean and will be set to dirty when called
 class DirtyFlagListener : public Listener{
 private:
-	boolean dirtyFlag;
+	bool dirtyFlag;
 public:
 	DirtyFlagListener();
 	void update();	/**< will set the dirtyFlag to dirty */
 
-	boolean getDirtyFlag() const;
-	void setDirtyFlag(boolean dirtyFlag);
+	bool getDirtyFlag() const;
+	void setDirtyFlag(bool dirtyFlag);
 };
 
 #endif

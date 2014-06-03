@@ -53,11 +53,14 @@ void configureMyApp(){
 	/*	load some virtual objects into vr state scene*/
 
 	VirtualObject* 	myCowObject1 = 		myVRState->			createVirtualObject(RESOURCES_PATH "/cow.obj", VirtualObjectFactory::OTHER);	 		// create a Virtual Object by reading an .obj file and add it to VRState automatically
-	myCowObject1->	setPhysicsComponent(0.5,0.5,7.5,0.5,0.5,2);
+
+//	myCowObject1->	setPhysicsComponent(0.5,0.5,7.5,0.5,0.5,2);
+
 	PhysicsComponent* myCowObject1PhysicsComponent = 		myCowObject1->getPhysicsComponent();					// get PhysicsComponent pointer
 
 	VirtualObject* 	myCowObject2 = 		myVRState->			createVirtualObject(RESOURCES_PATH "/cow.obj", VirtualObjectFactory::OTHER);	 		// create a Virtual Object by reading an .obj file and add it to VRState automatically
-	myCowObject2->	setPhysicsComponent(0.5,0.75,15.0,0.75,0.5,4);
+//	myCowObject2->	setPhysicsComponent(0.5,0.75,15.0,0.75,0.5,4);
+
 	PhysicsComponent* myCowObject2PhysicsComponent = 		myCowObject2->getPhysicsComponent();					// get PhysicsComponent pointer
 
 		btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,1,0),0);

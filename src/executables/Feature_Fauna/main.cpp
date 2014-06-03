@@ -131,7 +131,7 @@ void createVirtualObject(int height) {
 	RenderPass* pass1 = new RenderPass(new Shader(SHADERS_PATH "/Phong/phong.vert", SHADERS_PATH "/Phong/phong.frag"));
 	pass1->setClearColorBufferBit(true);
 	pass1->setInitialGraphicsComponentList(testingState->getRenderQueue()->getGraphicsComponentList());
-	pass1->addRenderQueueRequestFlag(new CurrentRenderQueFlag());
+	pass1->addRenderQueueRequestFlag(new CurrentRenderQueueFlag());
 //	pass1->addRenderQueueRequestFlag(new FlagPartOfVirtualObject (voVec[0], true));
 //	pass1->addRenderQueueRequestFlag(new FlagPartOfVirtualObject (voVec[1], true));
 //	pass1->addRenderQueueRequestFlag(new FlagPartOfVirtualObject (voVec[2], true));

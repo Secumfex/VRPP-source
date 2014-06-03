@@ -1,5 +1,7 @@
 #ifndef VIRTUALOBJECT_H
 #define VIRTUALOBJECT_H
+#include "Visuals/Resource.h"
+
 #include "Physics/PhysicsComponent.h"
 #include "Visuals/GraphicsComponent.h"
 
@@ -130,6 +132,16 @@ public:
 
 	/** \brief sets PhysicsComponent
 	 *
+	 * creates PhysicComponent of a mesh model
+	 * @param x,y,z position in world
+	 * @param btMesh btTriangleMesh of loaded model ->VarA
+	 * @param btTIVA btTriangleIndexVertexArray of loaded model ->VarB
+	 * @return void
+	 */
+	void setPhysicsComponent(float x, float y, float z, btTriangleMesh btMesh, btTriangleIndexVertexArray* btTIVA);
+
+	/** \brief sets PhysicsComponent
+	 *
 	 * creates PhysicComponent with box shaped rigid Body
 	 * @param min,max smallest and largest x, y, z values of a given model
 	 * @param mass
@@ -170,7 +182,7 @@ public:
  	 * @return void
 	 */
 
-	void setPhysicComponent(float x, float y, float z, glm::vec3 normal, float mass = 0.0f, int collisionFlag = 1);
+	void setPhysicsComponent(float x, float y, float z, glm::vec3 normal, float mass = 0.0f, int collisionFlag = 1);
 
 	/** \brief getter
 	 *

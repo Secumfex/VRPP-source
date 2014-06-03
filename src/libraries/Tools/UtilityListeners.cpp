@@ -119,11 +119,11 @@ void SetVec3ValuesListener::update(){
 	*target = *source;
 }
 
-boolean DirtyFlagListener::getDirtyFlag() const {
+bool DirtyFlagListener::getDirtyFlag() const {
 	return dirtyFlag;
 }
 
-void DirtyFlagListener::setDirtyFlag(boolean dirtyFlag) {
+void DirtyFlagListener::setDirtyFlag(bool dirtyFlag) {
 	this->dirtyFlag = dirtyFlag;
 }
 
