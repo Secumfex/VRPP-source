@@ -100,17 +100,26 @@ GraphicsComponent* VirtualObjectFactory::getQuad() {
 
 		float size = 0.5;
 
-		GLfloat positions[] = { -size, -size, 0.0f, size, -size, 0.0f, size,
-				size, 0.0f, size, size, 0.0f, -size, size, 0.0f, -size, -size,
-				0.0f };
+	    GLfloat positions[] = {
+	    	-size,-size,0.0f, size,-size,0.0f, size,size,0.0f,
+        	size,size,0.0f, -size,size,0.0f, -size,-size,0.0f
+	    };
 
-		GLfloat normals[] = { 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0,
-				0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0 };
 
-		GLfloat tangents[] = { 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0,
-				0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0 };
+	    GLfloat normals[] = {
+	        0.0,  0.0,  1.0,    0.0,  0.0,  1.0,    0.0,  0.0,  1.0,
+        	0.0,  0.0,  1.0,    0.0,  0.0,  1.0,    0.0,  0.0,  1.0
+	    };
 
-		GLfloat uvCoordinates[] = { 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0 };
+	    GLfloat tangents[] = {
+	        0.0, -1.0,  0.0,    0.0, -1.0,  0.0,    0.0, -1.0,  0.0,
+        	0.0, -1.0,  0.0,    0.0, -1.0,  0.0,    0.0, -1.0,  0.0
+	    };
+
+	    GLfloat uvCoordinates[] = {
+	        0,0, 1,0, 1,1,
+        	1,1, 0,1, 0,0
+	    };
 
 		std::cout
 				<< " VirutalObjectFactory : creating QuadObject... VertexArrayObject..."
