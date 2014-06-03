@@ -689,6 +689,10 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 		break;
 	case MESH:
 		virtualObject->setPhysicsComponent(x, y, z, btMesh, btTIVA);
+
+		// ignore offset, since mesh collision shape encapsules it perfectly
+		virtualObject->setCenterOfMassOffsetMatrix(glm::mat4(1.0f));
+
 		break;
 	case OTHER:
 		virtualObject->setPhysicsComponent(physics_min, physics_max, mass,
