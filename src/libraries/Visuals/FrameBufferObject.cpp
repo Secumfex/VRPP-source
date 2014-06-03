@@ -141,6 +141,28 @@ void FrameBufferObject::createGuiTexture(){
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+void FrameBufferObject::setDepthBufferHandle( GLuint sharedDepthBufferHandle )
+{
+	int width,height;
+
+	glBindTexture( GL_TEXTURE_2D, sharedDepthBufferHandle );
+
+	glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &width);
+	glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &height);
+	if ( width == mWidth && height == mHeight)
+	{
+		mDepthbufferHandle = sharedDepthBufferHandle;
+		glBindFramebuffer(GL_FRAMEBUFFER, mFramebufferHandle);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, mDepthbufferHandle, 0);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+	else{
+		std::cout << "ERROR: Depth Buffer has different resolution than Frame Buffer Object. Depth Buffer cannot be shared.";;
+	}
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
 GLuint FrameBufferObject::getFboHandle(){
 	return mFramebufferHandle;
 }

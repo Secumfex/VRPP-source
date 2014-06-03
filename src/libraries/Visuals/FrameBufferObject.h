@@ -150,6 +150,14 @@ public:
 	 */
 	void bindDepthBuffer();
 
+	/** \brief setter for depthbuffer of this fbo
+	 *
+	 *	to use a shared depth buffer amongst multiple frame buffer objects
+	 *	the shared depth buffer and frame buffer object MUST have the same size
+	 *	or an error message is printed and nothing will be set
+	 */
+	void setDepthBufferHandle(GLuint sharedDepthBufferHandle);
+
 	/** \brief binds normal map of this fbo
 	 *
 	 */
