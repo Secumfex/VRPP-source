@@ -10,12 +10,14 @@ uniform vec3 uniformSunDirection;
 out vec4 fragmentColor;
 
 uniform sampler2D positionMap;	// GBuffer position map
-uniform sampler2D normalMap;	// GBuffer normal map
+uniform sampler2D normalMap;	// GBuffer normal 	map
+uniform sampler2D colorMap;		// GBuffer color 	map
 uniform sampler2D uniformCausticsTexture;
 
 uniform float uniformTime;
 
 void main() { 
+	vec4 color = texture(colorMap, passUV);
 	vec4 normal = texture(normalMap, passUV);
 	vec4 position = texture(positionMap, passUV);	// to be interpreted as depth information
 
@@ -61,5 +63,5 @@ void main() {
 
     // ////// /////////////////////////////////////////////
     
-    fragmentColor = vec4( caustics * lightIntensity, 1);
+    fragmentColor = vec4( caustics * 2.0 * color.rgb * lightIntensity, 1);
 }

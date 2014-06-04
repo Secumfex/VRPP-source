@@ -10,14 +10,16 @@ uniform mat4 uniformView;
 uniform mat4 uniformProjectorViewPerspective;
 
 uniform sampler2D positionMap;
+
 uniform sampler2D uniformCausticsTexture;
+
 // uniform sampler2D uniformWaterObjectDepthMap;
 
 uniform float uniformTime;
 
 void main() { 
 	vec4 position = texture(positionMap, passUV);	// to be interpreted as depth information
-	float distanceToCamera = abs ( position.z );
+	float distanceToCamera = abs ( position.z );	
 
 	// invert view matrix with camera position --> world position
 	vec4 worldPos = inverse ( uniformView ) *  position;
