@@ -64,6 +64,7 @@ namespace UnderwaterScene{
 	FrameBufferObject* framebuffer_water_particles;
 	FrameBufferObject* framebuffer_water_water_object;
 	FrameBufferObject* framebuffer_water_caustics;
+	FrameBufferObject* framebuffer_scene_sky_sun;
 
 	Camera* reflectedCamera;
 
@@ -125,7 +126,7 @@ namespace UnderwaterScene{
 		scene_stoneObject1 		= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_stone_01.dae", 	VirtualObjectFactory::OTHER, 0.0f, 1, true);
 		scene_mountainObject1	= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_mountain_01.dae", 	VirtualObjectFactory::OTHER, 0.0f, 1, true);
 		
-//		scene_sky_dome			= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_sky_dome.dae", 	VirtualObjectFactory::OTHER);
+		scene_sky_dome			= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_sky_dome.dae", 	VirtualObjectFactory::OTHER, 0.0f, 1, true);
 		scene_sun_Object 		= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_sun_shape.dae", 	VirtualObjectFactory::OTHER, 0.0f, 1, true);
 
 		sunView = glm::lookAt( - sunLightDirection , glm::vec3 (0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f) );
@@ -135,6 +136,11 @@ namespace UnderwaterScene{
 		if (scene_sun_Object->getGraphicsComponent().size() > 0){
 				scene_sun_Object->getGraphicsComponent()[0]->setEmission(true);
 		}
+
+		// sun & sky dome must keep an offset to Camera
+		target->attachListenerOnBeginningProgramCycle( new KeepOffsetListener(scene_sky_dome, target->getCamera()->getPositionPointer(), new glm::vec3( 0.0f, 0.0f, 0.0f) ) );
+		glm::vec3 offset = glm::normalize(sunLightDirection) * -32.5f;
+		target->attachListenerOnBeginningProgramCycle( new KeepOffsetListener(scene_sun_Object, target->getCamera()->getPositionPointer(), new glm::vec3( offset ) ) );
 		/*********************************************************************************/
 
 		/******************* particle System objects *****************************************/
@@ -195,6 +201,15 @@ namespace UnderwaterScene{
 		framebuffer_water_water_object->createPositionTexture();
 		framebuffer_water_water_object->makeDrawBuffers();	// draw color to color attachment 0
 		framebuffer_water_water_object->unbindFBO();
+
+		framebuffer_scene_sky_sun	= new FrameBufferObject(800,600);
+		framebuffer_scene_sky_sun->bindFBO();
+		framebuffer_scene_sky_sun->createPositionTexture();
+		framebuffer_scene_sky_sun->createNormalTexture();
+		framebuffer_scene_sky_sun->createColorTexture();
+		framebuffer_scene_sky_sun->makeDrawBuffers();
+		framebuffer_scene_sky_sun->unbindFBO();
+
 		/*********************************************************************************/
 
 		/******************* textures creation	  ****************************************/

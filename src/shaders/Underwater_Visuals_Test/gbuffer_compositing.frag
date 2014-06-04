@@ -31,6 +31,8 @@ void main() {
     vec3  reflection = normalize(reflect(-nPosToLight,normal.xyz));
     float ambient = 0.2;
     float diffuse = max(dot(normal.xyz, nPosToLight), 0);
-  
-    fragmentColor = color * ambient + (color * diffuse );
+  	
+  	color.rgb *= ambient;
+  	color.rgb += color.rgb * diffuse;
+    fragmentColor = color;
 }

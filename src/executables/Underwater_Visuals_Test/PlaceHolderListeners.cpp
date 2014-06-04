@@ -460,4 +460,20 @@ void UpdateParticleSystemListener::update(){
 	particleSystem->update(*t);
 }
 
+KeepOffsetListener::KeepOffsetListener(VirtualObject* vo, glm::vec3* target,
+		glm::vec3* offset) {
 
+	this->vo = vo;
+	this->target = target;
+	this->offset = offset;
+
+	if (!offset)
+	{
+		offset = new glm::vec3(0.0f, 0.0f, 0.0f);
+	}
+}
+
+void KeepOffsetListener::update() {
+	glm::vec3 targetPosition = *target + *offset;
+	vo->getPhysicsComponent()->setPosition(targetPosition.x, targetPosition.y, targetPosition.z);
+}

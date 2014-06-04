@@ -121,6 +121,7 @@ void configureRendering(){
 	Shader* gbuffer_shader		= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/GBuffer.vert"      , SHADERS_PATH  "/Underwater_Visuals_Test/GBuffer_normalTexture.frag");
 	Shader* gbuffer_caustics_shader = new Shader( SHADERS_PATH "/Underwater_visuals_Test/screenFill.vert"      , SHADERS_PATH  "/Underwater_Visuals_Test/gbuffer_caustics.frag");
 	Shader* gbuffer_compositing_shader = new Shader( SHADERS_PATH "/Underwater_visuals_Test/screenFill.vert"      , SHADERS_PATH  "/Underwater_Visuals_Test/gbuffer_compositing.frag");
+	Shader* gbuffer_compositing_shadeless_shader = new Shader( SHADERS_PATH "/Underwater_visuals_Test/screenFill.vert"      , SHADERS_PATH  "/Underwater_Visuals_Test/gbuffer_compositing_shadeless.frag");
 	Shader* gbuffer_culling_shader	= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/GBuffer_culling.vert", SHADERS_PATH "/Underwater_Visuals_Test/GBuffer_culling.frag");
 	Shader* gbuffer_particle_shader = new Shader( SHADERS_PATH "/Underwater_visuals_Test/particles.vert" , SHADERS_PATH "/Underwater_Visuals_Test/particles.frag");
 	Shader* gbuffer_god_rays_shader = new Shader( SHADERS_PATH "/Underwater_visuals_Test/screenFill.vert" , SHADERS_PATH "/Underwater_Visuals_Test/gbuffer_godrays.frag");
@@ -183,22 +184,40 @@ void configureRendering(){
 
 /******************** GBuffer Alternative Rendering ************************/
 	
-	// 1.1: render scene into GBuffer
+	//1.1.1: render sky and sun into GBuffer
+	GBufferRenderPass* gbufferSunSkyRenderPass = new GBufferRenderPass(gbuffer_shader, UnderwaterScene::framebuffer_scene_sky_sun);
+	gbufferSunSkyRenderPass->setClearColorBufferBit(true);
+	gbufferSunSkyRenderPass->addInitialGraphicsComponent(UnderwaterScene::scene_sky_dome);
+	gbufferSunSkyRenderPass->addInitialGraphicsComponent(UnderwaterScene::scene_sun_Object);
+
+	testingState->getRenderLoop()->addRenderPass( gbufferSunSkyRenderPass );
+
+	//1.1.2: light sky and sun
+	CompositingPass* gbufferCompositingSkySunRenderPass = new CompositingPass(gbuffer_compositing_shadeless_shader, gbuffer_compositing_fbo );
+	gbufferCompositingSkySunRenderPass->setColorMap(    UnderwaterScene::framebuffer_scene_sky_sun->getColorTextureHandle());
+
+	testingState->getRenderLoop()->addRenderPass( gbufferCompositingSkySunRenderPass );
+
+	// 1.2.1: render scene into GBuffer
 	GBufferRenderPass* gbufferRenderPass = new GBufferRenderPass(gbuffer_shader, gbuffer_fbo);
 	gbufferRenderPass->setClearColorBufferBit(true);
 	gbufferRenderPass->setInitialGraphicsComponentList ( ( testingState->getRenderQueue() )->getGraphicsComponentList( ) );
 	gbufferRenderPass->addRenderQueueRequestFlag( new FlagPartOfVirtualObject(UnderwaterScene::scene_waterPlaneObject, true ) );
+	gbufferRenderPass->addRenderQueueRequestFlag( new FlagPartOfVirtualObject(UnderwaterScene::scene_sky_dome, true) );
+	gbufferRenderPass->addRenderQueueRequestFlag( new FlagPartOfVirtualObject(UnderwaterScene::scene_sun_Object, true) );
 
 	testingState->getRenderLoop()->addRenderPass( gbufferRenderPass);
 
-	// 1.2: light GBuffer scene
+	// 1.2.2: light GBuffer scene
 	CompositingPass* gbufferCompositingRenderPass = new CompositingPass(gbuffer_compositing_shader, gbuffer_compositing_fbo);
+	gbufferCompositingRenderPass->setClearColorBufferBit(false);
+	gbufferCompositingRenderPass->setUseAlphaBlending(true);
 	gbufferCompositingRenderPass->setColorMap(    gbuffer_fbo->getColorTextureHandle());
 	gbufferCompositingRenderPass->setPositionMap( gbuffer_fbo->getPositionTextureHandle());
 	gbufferCompositingRenderPass->setNormalMap(   gbuffer_fbo->getNormalTextureHandle());
 	
 	testingState->getRenderLoop()->addRenderPass( gbufferCompositingRenderPass );
-	
+
 	/************* WATER: Rendering everything needed to render the WaterObject***********/
 
 
