@@ -42,6 +42,9 @@ namespace UnderwaterScene{
 	glm::vec3 water_plane_normal_under_water_inverse( 0.0f, 1.0f, 0.0f );
 	glm::vec3 water_plane_normal_above_water_inverse( 0.0f, -1.0f, 0.0f );
 
+	glm::vec3 sunLightDirection( -1.0f, -1.0f, 0.0f );	// light direction
+	glm::mat4 sunView;
+	glm::mat4 sunPerspective;
 	glm::mat4 sunViewPerspective;
 
 	VirtualObject* scene_groundObject;
@@ -53,10 +56,14 @@ namespace UnderwaterScene{
 	VirtualObject* scene_waterPlaneObject;
 	VirtualObject* scene_mountainObject1;
 
-	FrameBufferObject* framebuffer_water_reflection;
-	FrameBufferObject* framebuffer_water_refraction;
+	FrameBufferObject* framebuffer_water_reflection_gbuffer;
+	FrameBufferObject* framebuffer_water_reflection_compositing;
+	FrameBufferObject* framebuffer_water_refraction_gbuffer;
+	FrameBufferObject* framebuffer_water_refraction_compositing;
 	FrameBufferObject* framebuffer_water_god_rays;
 	FrameBufferObject* framebuffer_water_particles;
+	FrameBufferObject* framebuffer_water_water_object;
+	FrameBufferObject* framebuffer_water_caustics;
 
 	Camera* reflectedCamera;
 
@@ -121,7 +128,9 @@ namespace UnderwaterScene{
 //		scene_sky_dome			= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_sky_dome.dae", 	VirtualObjectFactory::OTHER);
 		scene_sun_Object 		= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_sun_shape.dae", 	VirtualObjectFactory::OTHER, 0.0f, 1, true);
 
-		sunViewPerspective 		= glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 1000.0f) * glm::lookAt( glm::vec3(100.0f, 100.0f, 0.0f), glm::vec3 (0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)) * glm::mat4(1.0f); 
+		sunView = glm::lookAt( - sunLightDirection , glm::vec3 (0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f) );
+		sunPerspective = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 1000.0f);
+		sunViewPerspective 		= sunPerspective * sunView;
 
 		if (scene_sun_Object->getGraphicsComponent().size() > 0){
 				scene_sun_Object->getGraphicsComponent()[0]->setEmission(true);
@@ -135,17 +144,33 @@ namespace UnderwaterScene{
 		/*********************************************************************************/
 
 		/******************* framebuffer objects *****************************************/
-		framebuffer_water_reflection = new FrameBufferObject(800,600);
-		framebuffer_water_reflection->bindFBO();
-		framebuffer_water_reflection->createPositionTexture();
-		framebuffer_water_reflection->makeDrawBuffers();	// draw color to color attachment 0
-		framebuffer_water_reflection->unbindFBO();
+		framebuffer_water_reflection_compositing = new FrameBufferObject(800,600);
+		framebuffer_water_reflection_compositing ->bindFBO();
+		framebuffer_water_reflection_compositing ->createPositionTexture();
+		framebuffer_water_reflection_compositing ->makeDrawBuffers();	// draw color to color attachment 0
+		framebuffer_water_reflection_compositing ->unbindFBO();
 
-		framebuffer_water_refraction = new FrameBufferObject(800,600);
-		framebuffer_water_refraction->bindFBO();
-		framebuffer_water_refraction->createPositionTexture();
-		framebuffer_water_refraction->makeDrawBuffers();	// draw color to color attachment 0
-		framebuffer_water_refraction->unbindFBO();
+		framebuffer_water_refraction_compositing = new FrameBufferObject(800,600);
+		framebuffer_water_refraction_compositing ->bindFBO();
+		framebuffer_water_refraction_compositing ->createPositionTexture();
+		framebuffer_water_refraction_compositing ->makeDrawBuffers();	// draw color to color attachment 0
+		framebuffer_water_refraction_compositing ->unbindFBO();
+
+		framebuffer_water_reflection_gbuffer = new FrameBufferObject(800,600);
+		framebuffer_water_reflection_gbuffer->bindFBO();
+		framebuffer_water_reflection_gbuffer->createPositionTexture();
+		framebuffer_water_reflection_gbuffer->createNormalTexture();
+		framebuffer_water_reflection_gbuffer->createColorTexture();
+		framebuffer_water_reflection_gbuffer->makeDrawBuffers();
+		framebuffer_water_reflection_gbuffer->unbindFBO();
+
+		framebuffer_water_refraction_gbuffer = new FrameBufferObject(800,600);
+		framebuffer_water_refraction_gbuffer->bindFBO();
+		framebuffer_water_refraction_gbuffer->createPositionTexture();
+		framebuffer_water_refraction_gbuffer->createNormalTexture();
+		framebuffer_water_refraction_gbuffer->createColorTexture();
+		framebuffer_water_refraction_gbuffer->makeDrawBuffers();
+		framebuffer_water_refraction_gbuffer->unbindFBO();
 
 		framebuffer_water_god_rays = new FrameBufferObject(200,150);
 		framebuffer_water_god_rays->bindFBO();
@@ -158,6 +183,18 @@ namespace UnderwaterScene{
 		framebuffer_water_particles->createPositionTexture();
 		framebuffer_water_particles->makeDrawBuffers();	// draw color to color attachment 0
 		framebuffer_water_particles->unbindFBO();
+
+		framebuffer_water_caustics = new FrameBufferObject(800,600);
+		framebuffer_water_caustics->bindFBO();
+		framebuffer_water_caustics->createPositionTexture();
+		framebuffer_water_caustics->makeDrawBuffers();	// draw color to color attachment 0
+		framebuffer_water_caustics->unbindFBO();
+
+		framebuffer_water_water_object = new FrameBufferObject(800,600);
+		framebuffer_water_water_object->bindFBO();
+		framebuffer_water_water_object->createPositionTexture();
+		framebuffer_water_water_object->makeDrawBuffers();	// draw color to color attachment 0
+		framebuffer_water_water_object->unbindFBO();
 		/*********************************************************************************/
 
 		/******************* textures creation	  ****************************************/

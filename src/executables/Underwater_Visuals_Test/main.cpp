@@ -80,22 +80,54 @@ void configureInputHandler(){
 
 }
 
+std::vector< RenderPass* > debugViews;
+
+/**
+ * Create a tiny view at the top of the window
+ * @param shader to be used ( should be simpleTex )
+ * @param state to use to add the renderpass to
+ * @param imageHandle of texture to be presented
+ */
+void addDebugView(Shader* shader, ApplicationState* state, GLuint imageHandle)
+{
+	int x = 0;
+	int y = 500;
+
+	// max debug views : 8
+	if ( debugViews.size() < 8)
+	{
+		x = debugViews.size() * 100;
+	}
+	else{
+		std::cout << "Maximum amount of debug views reached." << std::endl;
+		return;
+	}
+
+	MixTexturesRenderPass* renderTinyView = new MixTexturesRenderPass(shader, 0, imageHandle);
+	renderTinyView->setBaseTextureUniformName("diffuseTexture");
+	renderTinyView->setViewPortY(y);
+	renderTinyView->setViewPortX(x);
+	renderTinyView->setViewPortWidth(100);
+	renderTinyView->setViewPortHeight(100);
+	state->getRenderLoop()->addRenderPass(renderTinyView);
+
+	debugViews.push_back(renderTinyView);
+}
+
 void configureRendering(){
-	Shader* phong_shader 		= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/phong.vert"		, SHADERS_PATH 	"/Underwater_Visuals_Test/phong.frag");
-	Shader* underwater_shader 	= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/phong_caustics.vert",SHADERS_PATH  "/Underwater_Visuals_Test/phong_caustics.frag");
-	Shader* reflection_shader 	= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/phong.vert"		, SHADERS_PATH 	"/Underwater_Visuals_Test/phong_clipping.frag");
-	Shader* refraction_shader 	= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/phong.vert"		, SHADERS_PATH 	"/Underwater_Visuals_Test/phong_clipping.frag");
-	Shader* godRay_shader 		= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/godrays.vert"		, SHADERS_PATH 	"/Underwater_Visuals_Test/godrays.frag");
-	Shader* water_shader 		= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/water.vert"		, SHADERS_PATH 	"/Underwater_Visuals_Test/water.frag");
-	Shader* particles_shader	= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/particles.vert"	, SHADERS_PATH  "/Underwater_Visuals_Test/particles.frag");
-	Shader *composition_shader  = new Shader( SHADERS_PATH "/Underwater_Visuals_Test/screenFill.vert"	, SHADERS_PATH  "/Underwater_Visuals_Test/finalCompositing.frag");
-	Shader *simpleTex			= new Shader( SHADERS_PATH "/Underwater_visuals_Test/screenFill.vert"   , SHADERS_PATH  "/GBuffer/simpleTexture.frag");
 
-	Shader* gbuffer_shader		= new Shader( SHADERS_PATH "/Underwater_visuals_Test/GBuffer.vert"      , SHADERS_PATH  "/Underwater_visuals_Test/GBuffer_normalTexture.frag");
-	Shader* gbuffer_compositing_shader= new Shader( SHADERS_PATH "/Underwater_visuals_Test/screenFill.vert"      , SHADERS_PATH  "/Underwater_visuals_Test/gbuffer_compositing.frag");
+	Shader *simpleTex			= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/screenFill.vert"   , SHADERS_PATH  "/Underwater_Visuals_Test/simpleTexture.frag");
 
-	Shader* add_shader 			= new Shader( SHADERS_PATH "/Underwater_visuals_Test/screenFill.vert"   , SHADERS_PATH "/Underwater_visuals_Test/add.frag ");
-	Shader* overlay_shader 		= new Shader( SHADERS_PATH "/Underwater_visuals_Test/screenFill.vert"   , SHADERS_PATH "/Underwater_visuals_Test/overlay.frag ");
+	Shader* gbuffer_shader		= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/GBuffer.vert"      , SHADERS_PATH  "/Underwater_Visuals_Test/GBuffer_normalTexture.frag");
+	Shader* gbuffer_caustics_shader = new Shader( SHADERS_PATH "/Underwater_visuals_Test/screenFill.vert"      , SHADERS_PATH  "/Underwater_Visuals_Test/gbuffer_caustics.frag");
+	Shader* gbuffer_compositing_shader = new Shader( SHADERS_PATH "/Underwater_visuals_Test/screenFill.vert"      , SHADERS_PATH  "/Underwater_Visuals_Test/gbuffer_compositing.frag");
+	Shader* gbuffer_culling_shader	= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/GBuffer_culling.vert", SHADERS_PATH "/Underwater_Visuals_Test/GBuffer_culling.frag");
+	Shader* gbuffer_particle_shader = new Shader( SHADERS_PATH "/Underwater_visuals_Test/particles.vert" , SHADERS_PATH "/Underwater_Visuals_Test/particles.frag");
+	Shader* gbuffer_god_rays_shader = new Shader( SHADERS_PATH "/Underwater_visuals_Test/screenFill.vert" , SHADERS_PATH "/Underwater_Visuals_Test/gbuffer_godrays.frag");
+	Shader* gbuffer_water_shader 	= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/gbuffer_water.vert", SHADERS_PATH "/Underwater_Visuals_Test/gbuffer_water.frag");
+
+	Shader* add_shader 			= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/screenFill.vert"   , SHADERS_PATH "/Underwater_Visuals_Test/add.frag ");
+	Shader* overlay_shader 		= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/screenFill.vert"   , SHADERS_PATH "/Underwater_Visuals_Test/overlay.frag ");
 
 	FrameBufferObject* gbuffer_fbo = new FrameBufferObject(800,600);
 	gbuffer_fbo->bindFBO();
@@ -111,13 +143,6 @@ void configureRendering(){
 	gbuffer_compositing_fbo->makeDrawBuffers();
 	gbuffer_compositing_fbo->unbindFBO();
 
-	FrameBufferObject* preCompositingScene = new FrameBufferObject(800, 600);
-
-	preCompositingScene->bindFBO();
-	preCompositingScene->createPositionTexture();
-	preCompositingScene->makeDrawBuffers();	// draw color to color attachment 0
-	preCompositingScene->unbindFBO();
-
 	// Image to be used to assemble the final image
 	FrameBufferObject* finalImage = new FrameBufferObject(800, 600);
 	finalImage->bindFBO();
@@ -132,9 +157,10 @@ void configureRendering(){
 	Listener* uniFogColor 	= new UploadUniformVec3Listener 	("UNIFORMUPLOADLISTENER", &UnderwaterScene::fog_color, 							"uniformFogColor");
 	Listener* uniFogColorInv= new UploadUniformVec3Listener 	("UNIFORMUPLOADLISTENER", &UnderwaterScene::fog_color_inverse, 					"uniformFogColor");
 	Listener* uniLightPos 	= new UploadUniformVec3Listener 	("UNIFORMUPLOADLISTENER", &UnderwaterScene::lightPosition, 						"uniformLightPosition");
+	Listener* uniSunDir		= new UploadUniformVec3Listener		("UNIFORMUPLOADLISTENER", &UnderwaterScene::sunLightDirection,					"uniformSunDirection");
 
-	Listener* uniRefrText   = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 10, "uniformRefractionMap", 	UnderwaterScene::framebuffer_water_refraction->getPositionTextureHandle());
-	Listener* uniReflText   = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 11, "uniformReflectionMap", 	UnderwaterScene::framebuffer_water_reflection->getPositionTextureHandle());
+	Listener* uniRefrText   = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 10, "uniformRefractionMap", 	UnderwaterScene::framebuffer_water_refraction_compositing->getPositionTextureHandle());
+	Listener* uniReflText   = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 11, "uniformReflectionMap", 	UnderwaterScene::framebuffer_water_reflection_compositing->getPositionTextureHandle());
 	Listener* uniCausticsTex= new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 12, "uniformCausticsTexture", UnderwaterScene::causticsTexture->getTextureHandle());
 	Listener* uniCausticsTex2=new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 12, "uniformCausticsTexture", UnderwaterScene::causticsTexture->getTextureHandle());
 	Listener* uniPartMap	= new UploadUniformTextureListener 	("UNIFORMUPLOADLISTENER", 14,"uniformParticlesMap", 	UnderwaterScene::framebuffer_water_particles->getPositionTextureHandle());
@@ -154,114 +180,9 @@ void configureRendering(){
 	Listener* setClearColor2 	= new SetClearColorListener 		( &UnderwaterScene::fog_color, 1.0);
 	Listener* setClearColorInv 	= new SetClearColorListener 		( &UnderwaterScene::fog_color_inverse, 1.0);
 
-	testingApp->attachListenerOnProgramInitialization(	new SetCurrentShaderListener( reflection_shader ));
-
-
-	// 1: render Reflection Map
-	// use reflection_shader, render into framebuffer_water_reflection framebuffer object
-	RenderPass* reflectionMapRenderPass = new RenderPass( reflection_shader, UnderwaterScene::framebuffer_water_reflection );
-	reflectionMapRenderPass->setClearColorBufferBit( true );	// clear color buffer on every frame
-	reflectionMapRenderPass->setInitialGraphicsComponentList ( ( testingState->getRenderQueue() )->getGraphicsComponentList());			// start with all scene objects as render candidates
-	reflectionMapRenderPass->addRenderQueueRequestFlag( new FlagPartOfVirtualObject(UnderwaterScene::scene_waterPlaneObject, true));	// render if not part of waterplaneobject
-	reflectionMapRenderPass->attachListenerOnActivation( setClearColor );// set clear color on activation, before bits are cleared
-	reflectionMapRenderPass->attachListenerOnPostUniformUpload( uniLightPos );	 // Upload custom uniforms already on activation, since they cannot not be automatically overridden
-	reflectionMapRenderPass->attachListenerOnPostUniformUpload( uniFogColor );	 // upload fog color
-	reflectionMapRenderPass->attachListenerOnPostUniformUpload( uniFogBegin );  // upload fog begin distance
-	reflectionMapRenderPass->attachListenerOnPostUniformUpload( uniFogEnd );    // upload fog end distance
-	reflectionMapRenderPass->attachListenerOnPostUniformUpload( uniClipPoint ); // upload clipping plane support point
-	reflectionMapRenderPass->attachListenerOnPostUniformUpload( uniClipNorm );  // upload clipping plane normal
-	reflectionMapRenderPass->attachListenerOnActivation( new SetCameraListener( UnderwaterScene::reflectedCamera )); // set camera to reflected camera before rendering
-	reflectionMapRenderPass->attachListenerOnDeactivation( new SetCameraListener( testingState->getCamera() ));		 // set camera to regular camera after rendering (undo above)
-
-	testingState->getRenderLoop()->addRenderPass(	reflectionMapRenderPass );	//add ReflectionMap RenderPass
-	
-	// 2: render Refraction Map
-	// use refraction_shader, render into framebuffer_water_refraction
-	RenderPass* refractionMapRenderPass = new RenderPass(refraction_shader, UnderwaterScene::framebuffer_water_refraction);
-	refractionMapRenderPass->setClearColorBufferBit(true); // clear color buffer on every frame
-	refractionMapRenderPass->setInitialGraphicsComponentList ( (testingState->getRenderQueue() )->getGraphicsComponentList()); 			// start with all scene objects as render candidates
-	refractionMapRenderPass->addRenderQueueRequestFlag( new FlagPartOfVirtualObject(UnderwaterScene::scene_waterPlaneObject, true));	// render if not part of waterplaneobject
-	refractionMapRenderPass->attachListenerOnActivation( setClearColorInv );//set clear color on activation, before bits are cleared
-	refractionMapRenderPass->attachListenerOnPostUniformUpload( uniLightPos  );	//upload custom uniforms
-	refractionMapRenderPass->attachListenerOnPostUniformUpload( uniFogColorInv  );	//upload fog color
-	refractionMapRenderPass->attachListenerOnPostUniformUpload( uniFogBeginInv  );	//upload fog begin distance
-	refractionMapRenderPass->attachListenerOnPostUniformUpload( uniFogEndInv    );	//upload fog end distance
-	refractionMapRenderPass->attachListenerOnPostUniformUpload( uniClipPoint );	//upload clipping plane support point
-	refractionMapRenderPass->attachListenerOnPostUniformUpload( uniClipNormInv  );	//upload clipping plane normal
-	
-	testingState->getRenderLoop()->addRenderPass (refractionMapRenderPass);		//add RefractionMap RenderPass
-	
-	// 3: render Godrays into FBO
-	// use godRay_Shader, render into framebuffer_water_god_rays Framebuffer Object
-	RenderPass* godraysRenderPass = new RenderPass( godRay_shader, UnderwaterScene::framebuffer_water_god_rays );
-	godraysRenderPass->setClearColorBufferBit(true);
-	godraysRenderPass->setInitialGraphicsComponentList( testingState->getRenderQueue()->getGraphicsComponentList()); // start with all scene objects as render candidates
-	// dont add any renderqueuerequest flags since all scene objects shall be rendered
-	godraysRenderPass->attachListenerOnPostUniformUpload( uniCausticsTex2);	// upload caustics texture used for god ray sampling
-	godraysRenderPass->attachListenerOnPostUniformUpload( uniSunVPersp );		// upload sun view perspective matrix
-	godraysRenderPass->attachListenerOnPostUniformUpload( uniCamPos );			// upload cam world position
-
-	testingState->getRenderLoop()->addRenderPass( godraysRenderPass );			//add God Rays Render Pass
-
-	// 4: render regular Scene
-	// use underwater_shader, render into preCompositingScene Framebuffer Object
-	RenderPass* regularSceneRenderPass = new RenderPass( underwater_shader, preCompositingScene );
-	regularSceneRenderPass->setClearColorBufferBit(true);	//clear color buffer on every frame
-	regularSceneRenderPass->setInitialGraphicsComponentList ( ( testingState->getRenderQueue() )->getGraphicsComponentList()); // start with all scene objects as render candidates
-	regularSceneRenderPass->addRenderQueueRequestFlag( new FlagPartOfVirtualObject(UnderwaterScene::scene_waterPlaneObject, true));	//render if not part of waterplaneobject
-	regularSceneRenderPass->attachListenerOnActivation( setClearColor2 ); // set clear color on activation, before bits are cleared
-	regularSceneRenderPass->attachListenerOnPostUniformUpload( uniLightPos );	  // upload light position
-	regularSceneRenderPass->attachListenerOnPostUniformUpload( uniFogColor );	  // upload fog color
-	regularSceneRenderPass->attachListenerOnPostUniformUpload( uniFogBegin );	  // upload fog begin distance
-	regularSceneRenderPass->attachListenerOnPostUniformUpload( uniFogEnd );  	  // upload fog end distance
-	regularSceneRenderPass->attachListenerOnPostUniformUpload( uniCausticsTex ); // upload caustics texture
-	regularSceneRenderPass->attachListenerOnPostUniformUpload( uniSunVPersp );   // upload sun view perspecitve matrix
-
-	testingState->getRenderLoop()->addRenderPass( regularSceneRenderPass );		//add regular Scene Render pass
-	
-	// 5: render Water Surface with Reflection Map and RefractionMap
-	// use water_shader, render into preCompositingScene Framebuffer Object
-	RenderPass* waterRenderPass = new RenderPass( water_shader, preCompositingScene );
-	waterRenderPass->setClearColorBufferBit(false);	// do NOT clear Color buffer bit, since it has already been partially filled by the preceding render pass
-	waterRenderPass->setClearDepthBufferBit(false); // do NOT clear Depth buffer bit, since it has already been filled by the preceding render pass
-	waterRenderPass->addInitialGraphicsComponent ( UnderwaterScene::scene_waterPlaneObject );	// set only the water plane object as render candidate
-	waterRenderPass->attachListenerOnPostUniformUpload( uniLightPos );	// upload light position
-	waterRenderPass->attachListenerOnPostUniformUpload( uniReflMatr );	// upload reflective view matrix
-	waterRenderPass->attachListenerOnPostUniformUpload( uniFogColor );	// upload fog color
-	waterRenderPass->attachListenerOnPostUniformUpload( uniFogBegin );	// upload fog begin distancce
-	waterRenderPass->attachListenerOnPostUniformUpload( uniFogEnd );	// upload fog end distance
-	waterRenderPass->attachListenerOnPostUniformUpload( uniReflText ); // upload reflection map
-	waterRenderPass->attachListenerOnPostUniformUpload( uniRefrText ); // upload refraction map
-
-	testingState->getRenderLoop()->addRenderPass( waterRenderPass);				//add Water Render Pass
-
-	// 6: render Particles in the water
-	// use particles_shader, use framebuffer_water_particles Framebuffer object as render target, use water_particles as particle system, use quad as vao
-	ParticlesRenderPass* particlesRenderPass = new ParticlesRenderPass(particles_shader, UnderwaterScene::framebuffer_water_particles, UnderwaterScene::water_particles, vaoID[0]);
-	// do not use any graphics components or render flags, since this is a custom render pass for particle systems which doesn't use either
-	particlesRenderPass->setUseAlphaBlending(true);	// enable alpha blending
-	particlesRenderPass->setUseDepthTest(false);	// disable depth testing
-	particlesRenderPass->setClearColorBufferBit(true); // clear color buffer bit on every frame
-	particlesRenderPass->attachListenerOnActivation(new SetClearColorListener(0.0f,0.0f,0.0f,0.0f));	// set clear color to transparent
-	particlesRenderPass->attachListenerOnPostUniformUpload( uniPartText);	// upload Particles Texture
-	particlesRenderPass->attachListenerOnPostUniformUpload( uniSinusWave);  // upload Sinus Wave value
-
-	testingState->getRenderLoop()->addRenderPass(particlesRenderPass);			//add particles render pass
-
-	// 7: Compositing
-	// use a MixTexturesRenderPass to perform a compositing pass of three frame buffer textures, keep in mind that MixTexturesRenderPass is designed for two textures, therefore another custom uniform texture upload is necessary
-	// use composition_shader, render to window (fbo = 0), use preCompositingScene-Texture as base texture, use framebuffer_water_god_rays as texture to mix with
-	MixTexturesRenderPass* compositingRenderPass = new MixTexturesRenderPass(composition_shader, 0, preCompositingScene->getPositionTextureHandle(), UnderwaterScene::framebuffer_water_god_rays->getPositionTextureHandle());
-	// MixTexturesRenderPasses do not need any RenderQueueRequestFlags or GraphicsComponent, since only a ScreenFillingTriangle will be rendered by default
-	compositingRenderPass->setBaseTextureUniformName( "uniformPreCompositionMap" );	// set custom uniform name for base texture
-	compositingRenderPass->setMixTextureUniformName(  "uniformGodRayMap" );			// set custom uniform name for mix texture
-		// add a third texture as a listener
-		compositingRenderPass->attachListenerOnPostUniformUpload(uniPartMap);
-	testingState->getRenderLoop()->addRenderPass( compositingRenderPass );		// add compositing render Pass
-
 /******************** GBuffer Alternative Rendering ************************/
 	
-	// -1: render into GBuffer
+	// 1.1: render scene into GBuffer
 	GBufferRenderPass* gbufferRenderPass = new GBufferRenderPass(gbuffer_shader, gbuffer_fbo);
 	gbufferRenderPass->setClearColorBufferBit(true);
 	gbufferRenderPass->setInitialGraphicsComponentList ( ( testingState->getRenderQueue() )->getGraphicsComponentList( ) );
@@ -269,7 +190,7 @@ void configureRendering(){
 
 	testingState->getRenderLoop()->addRenderPass( gbufferRenderPass);
 
-	//-0.5 : light GBuffer scene
+	// 1.2: light GBuffer scene
 	CompositingPass* gbufferCompositingRenderPass = new CompositingPass(gbuffer_compositing_shader, gbuffer_compositing_fbo);
 	gbufferCompositingRenderPass->setColorMap(    gbuffer_fbo->getColorTextureHandle());
 	gbufferCompositingRenderPass->setPositionMap( gbuffer_fbo->getPositionTextureHandle());
@@ -277,98 +198,163 @@ void configureRendering(){
 	
 	testingState->getRenderLoop()->addRenderPass( gbufferCompositingRenderPass );
 	
-	//TODO render god_rays with gbuffer information ( depth ) into seperate FBO
-	// MixTexturesRenderPass* gbufferParticlesRenderPass = new MixTexturesRenderPass(gbuffer_particle_shader, UnderwaterScene::framebuffer_water_particles, gbuffer_fbo->getDepthBufferHandle());
-	// gbufferParticlesRenderPass->setMixTextureUniformName("uniformDepthMap");
+	/************* WATER ***********/
+
+	// 2.1. render reflected View into seperate GBuffer FBO
+	GBufferRenderPass* gbufferReflectionMapRenderPass = new GBufferRenderPass(gbuffer_culling_shader, UnderwaterScene::framebuffer_water_reflection_gbuffer);
+	gbufferReflectionMapRenderPass->setClearColorBufferBit(true);
+	gbufferReflectionMapRenderPass->setInitialGraphicsComponentList( testingState->getRenderQueue()->getGraphicsComponentList() );
+	gbufferReflectionMapRenderPass->addRenderQueueRequestFlag( new FlagPartOfVirtualObject( UnderwaterScene::scene_waterPlaneObject, true ) ); // render everything but the water plane object
+	gbufferReflectionMapRenderPass->attachListenerOnPostUniformUpload( uniClipPoint ); // upload clipping plane support point
+	gbufferReflectionMapRenderPass->attachListenerOnPostUniformUpload( uniClipNorm );  // upload clipping plane normal
+
+	gbufferReflectionMapRenderPass->attachListenerOnActivation( new SetCameraListener( UnderwaterScene::reflectedCamera )); // set camera to reflected camera before rendering
+	gbufferReflectionMapRenderPass->attachListenerOnDeactivation( new SetCameraListener( testingState->getCamera() ));		 // set camera to regular camera after rendering (undo above)
+
+	testingState->getRenderLoop()->addRenderPass( gbufferReflectionMapRenderPass );
+
+	// 2.2. render refracted View into seperate GBuffer FBO
+	GBufferRenderPass* gbufferRefractionMapRenderPass = new GBufferRenderPass(gbuffer_culling_shader, UnderwaterScene::framebuffer_water_refraction_gbuffer);
+	gbufferRefractionMapRenderPass->setClearColorBufferBit(true);
+	gbufferRefractionMapRenderPass->setInitialGraphicsComponentList( testingState->getRenderQueue()->getGraphicsComponentList() );	// render everything but the water plane object
+	gbufferRefractionMapRenderPass->addRenderQueueRequestFlag( new FlagPartOfVirtualObject( UnderwaterScene::scene_waterPlaneObject, true ) );
+	gbufferRefractionMapRenderPass->attachListenerOnPostUniformUpload( uniClipPoint ); // upload clipping plane support point
+	gbufferRefractionMapRenderPass->attachListenerOnPostUniformUpload( uniClipNormInv );  // upload clipping plane normal
+
+	testingState->getRenderLoop()->addRenderPass( gbufferRefractionMapRenderPass );
+
+	// 2.3. light gbuffer reflection map
+	CompositingPass* gbufferReflectionMapCompositingPass = new CompositingPass(gbuffer_compositing_shader, UnderwaterScene::framebuffer_water_reflection_compositing);
+	gbufferReflectionMapCompositingPass->setColorMap( 	UnderwaterScene::framebuffer_water_reflection_gbuffer->getColorTextureHandle());
+	gbufferReflectionMapCompositingPass->setNormalMap( 	UnderwaterScene::framebuffer_water_reflection_gbuffer->getNormalTextureHandle());
+	gbufferReflectionMapCompositingPass->setPositionMap(UnderwaterScene::framebuffer_water_reflection_gbuffer->getPositionTextureHandle());
+
+//	gbufferReflectionMapCompositingPass->attachListenerOnActivation( new SetCameraListener( UnderwaterScene::reflectedCamera )); // set camera to reflected camera before composing
+//	gbufferReflectionMapCompositingPass->attachListenerOnDeactivation( new SetCameraListener( testingState->getCamera() ));		 // set camera to regular camera after composing (undo above)
+
+	testingState->getRenderLoop()->addRenderPass( gbufferReflectionMapCompositingPass);
+
+	// 2.4. light gbuffer refraction map
+	CompositingPass* gbufferRefractionMapCompositingPass = new CompositingPass(gbuffer_compositing_shader, UnderwaterScene::framebuffer_water_refraction_compositing);
+	gbufferRefractionMapCompositingPass->setColorMap( 	UnderwaterScene::framebuffer_water_refraction_gbuffer->getColorTextureHandle());
+	gbufferRefractionMapCompositingPass->setNormalMap( 	UnderwaterScene::framebuffer_water_refraction_gbuffer->getNormalTextureHandle());
+	gbufferRefractionMapCompositingPass->setPositionMap(UnderwaterScene::framebuffer_water_refraction_gbuffer->getPositionTextureHandle());
+
+	testingState->getRenderLoop()->addRenderPass( gbufferRefractionMapCompositingPass);
 
 
-	//TODO render waterobject into seperate FBO
+	// 2.5. render waterobject into seperate Gbuffer FBO and use
+	RenderPass* gbufferWaterRenderPass = new RenderPass(gbuffer_water_shader, UnderwaterScene::framebuffer_water_water_object);
 
-	//TODO render particles with gbuffer ( and waterobject fbo ) information ( depth ) into seperate FBO
-	//TODO render caustics with gbuffer information ( depth ) into seperate FBO
-	//TODO render reflected View into seperate GBuffer FBO
-	//TODO render refracted View into seperate GBuffer FBO
+	gbufferWaterRenderPass->addInitialGraphicsComponent(UnderwaterScene::scene_waterPlaneObject);	// render only water plane object
+	gbufferWaterRenderPass->setClearColorBufferBit(true);	// clear color
+	gbufferWaterRenderPass->setClearDepthBufferBit(true);
+	gbufferWaterRenderPass->setUseDepthTest(true);
+	gbufferWaterRenderPass->setCustomClearColor(glm::vec4( 0.0f, 0.0f, 0.0f, 0.0f) );	// clear with 0 alpha to use for overlay later
 
+	gbufferWaterRenderPass->attachListenerOnPostUniformUpload( new UploadUniformTextureListener("", 7, "uniformDepthMap", gbuffer_fbo->getDepthBufferHandle( ) ) );	// use depth buffer of gbuffer
+	gbufferWaterRenderPass->attachListenerOnPostUniformUpload( uniReflText );	// reflectionmap
+	gbufferWaterRenderPass->attachListenerOnPostUniformUpload( uniRefrText );	// refractionmap
+	gbufferWaterRenderPass->attachListenerOnPostUniformUpload( uniLightPos );	// upload light position
+	gbufferWaterRenderPass->attachListenerOnPostUniformUpload( uniReflMatr );	// upload reflective view matrix
 
-	//-0.3125 add caustics ontop of scene FBO
+	testingState->getRenderLoop()->addRenderPass( gbufferWaterRenderPass );
 
-	//-0.25 : overlay particles ontop of scene fbo
-	MixTexturesRenderPass* overlayParticles = new MixTexturesRenderPass( overlay_shader, finalImage, gbuffer_compositing_fbo->getPositionTextureHandle(), UnderwaterScene::framebuffer_water_particles->getPositionTextureHandle() );
+	/******** OTHER EFFECTS ***********/
+
+	// 3. render god_rays with gbuffer information ( depth ) into seperate FBO
+	CompositingPass* gbufferGodraysRenderPass = new CompositingPass(gbuffer_god_rays_shader, UnderwaterScene::framebuffer_water_god_rays);	// compositing
+	gbufferGodraysRenderPass->setPositionMap( gbuffer_fbo->getPositionTextureHandle( ) );	// use gbuffer position information for depth testing
+
+	//TODO check the water object depth map aswell
+	gbufferGodraysRenderPass->attachListenerOnPostUniformUpload( uniCausticsTex2);		// upload caustics texture used for god ray sampling
+	gbufferGodraysRenderPass->attachListenerOnPostUniformUpload( uniSunVPersp );		// upload sun view perspective matrix
+	gbufferGodraysRenderPass->attachListenerOnPostUniformUpload( uniCamPos );			// upload cam world position
+
+	testingState->getRenderLoop()->addRenderPass(gbufferGodraysRenderPass);
+
+	// 4. render particles into a seperate fbo, use depth information of gbuffer as depth map
+	ParticlesRenderPass* gbufferParticlesRenderPass = new ParticlesRenderPass(gbuffer_particle_shader, UnderwaterScene::framebuffer_water_particles, UnderwaterScene::water_particles, vaoID[0]);
+
+	gbufferParticlesRenderPass->attachListenerOnPostUniformUpload( new UploadUniformTextureListener("", 7, "uniformDepthMap", gbuffer_fbo->getDepthBufferHandle( ) ) );
+
+	gbufferParticlesRenderPass->setUseAlphaBlending(true);	// enable alpha blending
+	gbufferParticlesRenderPass->setUseDepthTest(false);	// disable depth testing
+	gbufferParticlesRenderPass->setClearColorBufferBit(true); // clear color buffer bit on every frame
+	gbufferParticlesRenderPass->setCustomClearColor( glm::vec4 ( 0.0f, 0.0f, 0.0f, 0.0f) );// set clear color to transparent
+	gbufferParticlesRenderPass->attachListenerOnPostUniformUpload( uniPartText);	// upload Particles Texture
+	gbufferParticlesRenderPass->attachListenerOnPostUniformUpload( uniSinusWave);  // upload Sinus Wave value
+
+	testingState->getRenderLoop()->addRenderPass( gbufferParticlesRenderPass );
+
+	// 5. render caustics with gbuffer information ( depth ) into seperate FBO
+	CompositingPass* gbufferCausticsRenderPass = new CompositingPass( gbuffer_caustics_shader, UnderwaterScene::framebuffer_water_caustics);
+	gbufferCausticsRenderPass->setPositionMap( gbuffer_fbo->getPositionTextureHandle( ) ); // use position texture handle as depth information
+	gbufferCausticsRenderPass->setNormalMap( gbuffer_fbo->getNormalTextureHandle() );	// use normal texture
+
+	gbufferCausticsRenderPass->attachListenerOnPostUniformUpload( uniCausticsTex2);		// upload caustics texture used for god ray sampling
+	gbufferCausticsRenderPass->attachListenerOnPostUniformUpload( uniSunVPersp );		// upload sun view perspective matrix
+	gbufferCausticsRenderPass->attachListenerOnPostUniformUpload( uniSunDir );	// upload sun light direction
+
+	testingState->getRenderLoop()->addRenderPass( gbufferCausticsRenderPass );
+
+	/******** COMPOSITING ***********/
+
+	// 6.0.1 : overlay Water ontop of scene fbo
+	MixTexturesRenderPass* overlayWaterObject = new MixTexturesRenderPass( overlay_shader, finalImage, gbuffer_compositing_fbo->getPositionTextureHandle(), UnderwaterScene::framebuffer_water_water_object->getPositionTextureHandle());
+	overlayWaterObject->setMixTextureUniformName("uniformOverlayTexture");
+	testingState->getRenderLoop()->addRenderPass(overlayWaterObject);
+
+	// 6.1. : overlay particles ontop of scene fbo
+	MixTexturesRenderPass* overlayParticles = new MixTexturesRenderPass( overlay_shader, finalImage, finalImage->getPositionTextureHandle(), UnderwaterScene::framebuffer_water_particles->getPositionTextureHandle() );
 	overlayParticles->setMixTextureUniformName("uniformOverlayTexture");
 	testingState->getRenderLoop()->addRenderPass(overlayParticles);
 
-	//-0.125 : add god rays ontop of scene fbo
+	// 6.2. : add caustics on top of scene fbo
+	MixTexturesRenderPass* addCaustics = new MixTexturesRenderPass( add_shader, finalImage, finalImage->getPositionTextureHandle(), UnderwaterScene::framebuffer_water_caustics->getPositionTextureHandle() );
+	addCaustics->setMixTextureUniformName("uniformAddTexture");
+	testingState->getRenderLoop()->addRenderPass(addCaustics);
+
+
+	// 6.3. : add god rays ontop of scene fbo
 	MixTexturesRenderPass* addGodRays = new MixTexturesRenderPass( add_shader, finalImage, finalImage->getPositionTextureHandle(), UnderwaterScene::framebuffer_water_god_rays->getPositionTextureHandle() );
 	addGodRays->setMixTextureUniformName("uniformAddTexture");
 	testingState->getRenderLoop()->addRenderPass(addGodRays);
 
+	/********* Present Final Image ***************/
+	TextureRenderPass* presentFinalImage = new TextureRenderPass(simpleTex,0,finalImage->getPositionTextureHandle());
+	presentFinalImage->setTextureUniformName("diffuseTexture");
+
+	testingState->getRenderLoop()->addRenderPass(presentFinalImage);
+
 /******************** Debug Views ************************/
+//	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_refraction->getPositionTextureHandle() );
+//	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_reflection->getPositionTextureHandle() );
+//	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_god_rays->getPositionTextureHandle() );
+//	addDebugView(simpleTex, testingState, preCompositingScene->getPositionTextureHandle() );
 
-	MixTexturesRenderPass* renderTinyView = new MixTexturesRenderPass(simpleTex, 0, UnderwaterScene::framebuffer_water_refraction->getPositionTextureHandle());
-	renderTinyView->setBaseTextureUniformName("diffuseTexture");
-	renderTinyView->setViewPortY(500);
-	renderTinyView->setViewPortX(0);
+//	addDebugView(simpleTex, testingState, gbuffer_fbo->getDepthBufferHandle() );										// Depth Texture
+//	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_particles->getPositionTextureHandle() );	// Particles
+//	addDebugView(simpleTex, testingState, gbuffer_fbo->getNormalTextureHandle() );										// Normals
+//	addDebugView(simpleTex, testingState, gbuffer_compositing_fbo->getPositionTextureHandle() );						// GBuffer Compositing
 
-	renderTinyView->setViewPortWidth(100);
-	renderTinyView->setViewPortHeight(100);
-	testingState->getRenderLoop()->addRenderPass(renderTinyView);
+//	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_god_rays->getPositionTextureHandle() );	// God Rays
+//	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_caustics->getPositionTextureHandle() );	// Caustics
 
-	MixTexturesRenderPass* renderTinyView2 = new MixTexturesRenderPass(simpleTex, 0, UnderwaterScene::framebuffer_water_reflection->getPositionTextureHandle());
-	renderTinyView2->setBaseTextureUniformName("diffuseTexture");
-	renderTinyView2->setViewPortY(500);
+//	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_reflection_gbuffer->getPositionTextureHandle()); // Refraction Position
+	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_reflection_gbuffer->getNormalTextureHandle()); // Refraction Normal
+	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_reflection_gbuffer->getColorTextureHandle()); // Refraction Color
 
-	renderTinyView2->setViewPortX(100);
-	renderTinyView2->setViewPortWidth(100);
-	renderTinyView2->setViewPortHeight(100);
-	testingState->getRenderLoop()->addRenderPass(renderTinyView2);
+//	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_refraction_gbuffer->getPositionTextureHandle()); // Refraction Position
+	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_refraction_gbuffer->getNormalTextureHandle()); // Refraction Normal
+	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_refraction_gbuffer->getColorTextureHandle()); // Refraction Color
 
-	MixTexturesRenderPass* renderTinyView3= new MixTexturesRenderPass(simpleTex, 0, UnderwaterScene::framebuffer_water_god_rays->getPositionTextureHandle());
-	renderTinyView3->setBaseTextureUniformName("diffuseTexture");
-	renderTinyView3->setViewPortY(500);
-	renderTinyView3->setViewPortX(200);
-	renderTinyView3->setViewPortWidth(100);
-	renderTinyView3->setViewPortHeight(100);
-	testingState->getRenderLoop()->addRenderPass(renderTinyView3);
 
-	MixTexturesRenderPass* renderTinyView4 = new MixTexturesRenderPass(simpleTex, 0, UnderwaterScene::framebuffer_water_particles->getPositionTextureHandle());
-	renderTinyView4->setBaseTextureUniformName("diffuseTexture");
-	renderTinyView4->setViewPortY(500);
-	renderTinyView4->setViewPortX(300);
-	renderTinyView4->setViewPortWidth(100);
-	renderTinyView4->setViewPortHeight(100);
-	testingState->getRenderLoop()->addRenderPass(renderTinyView4);
+	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_reflection_compositing->getPositionTextureHandle());	// Reflection Compositing
+	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_refraction_compositing->getPositionTextureHandle());	// Refraction Compositing
+	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_water_object->getPositionTextureHandle());	// Water Object
 
-	MixTexturesRenderPass* renderTinyView5 = new MixTexturesRenderPass(simpleTex, 0, preCompositingScene->getPositionTextureHandle());
-	renderTinyView5->setBaseTextureUniformName("diffuseTexture");
-	renderTinyView5->setViewPortY(500);
-	renderTinyView5->setViewPortX(400);
-	renderTinyView5->setViewPortWidth(100);
-	renderTinyView5->setViewPortHeight(100);
-	testingState->getRenderLoop()->addRenderPass(renderTinyView5);
-
-	MixTexturesRenderPass* renderTinyView6 = new MixTexturesRenderPass(simpleTex, 0, finalImage->getPositionTextureHandle());
-	renderTinyView6->setBaseTextureUniformName("diffuseTexture");
-	renderTinyView6->setViewPortY(500);
-	renderTinyView6->setViewPortX(500);
-	renderTinyView6->setViewPortWidth(100);
-	renderTinyView6->setViewPortHeight(100);
-	testingState->getRenderLoop()->addRenderPass(renderTinyView6);
-
-	MixTexturesRenderPass* renderTinyView7 = new MixTexturesRenderPass(simpleTex, 0, gbuffer_fbo->getNormalTextureHandle());
-	renderTinyView7->setBaseTextureUniformName("diffuseTexture");
-	renderTinyView7->setViewPortY(500);
-	renderTinyView7->setViewPortX(600);
-	renderTinyView7->setViewPortWidth(100);
-	renderTinyView7->setViewPortHeight(100);
-	testingState->getRenderLoop()->addRenderPass(renderTinyView7);
-
-	MixTexturesRenderPass* renderTinyView8 = new MixTexturesRenderPass(simpleTex, 0, gbuffer_compositing_fbo->getPositionTextureHandle());
-	renderTinyView8->setBaseTextureUniformName("diffuseTexture");
-	renderTinyView8->setViewPortY(500);
-	renderTinyView8->setViewPortX(700);
-	renderTinyView8->setViewPortWidth(100);
-	renderTinyView8->setViewPortHeight(100);
-	testingState->getRenderLoop()->addRenderPass(renderTinyView8);
+//	addDebugView(simpleTex, testingState, finalImage->getPositionTextureHandle() );										// Final Image
 }
 
 void configureOtherStuff(){

@@ -43,6 +43,10 @@ public:
 
 #include "Visuals/RenderPass.h"
 
+/**
+ * A Render Pass specifically for Particlesystems
+ * note that there is no regular shader-uniform-upload call, so most uniforms must be uploaded manually
+ */
 class ParticlesRenderPass : public RenderPass
 {
 private:
@@ -57,6 +61,13 @@ public:
 	 */
 	ParticlesRenderPass(Shader* particle_shader, FrameBufferObject* fbo, ParticleSystem* particleSystem, GLint vao);
 	void render();
+};
+
+
+
+class ParticlesGBufferRenderPass : public GBufferRenderPass
+{
+	//TODO like above, but rendering into Draw Buffers and using the FBO's native Depth Buffer, instead of a uniform Texture
 };
 
 #endif
