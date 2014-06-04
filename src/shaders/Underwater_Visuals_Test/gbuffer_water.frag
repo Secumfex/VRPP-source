@@ -33,8 +33,6 @@ void main() {
 		discard;
 	}
 	
-	// TODO ONLY IF PROJECTED ONTO PLANE
-	
     float distance 		= dot( ( passLightPosition - passPosition ), ( passLightPosition - passPosition ) );
     float frag_distance = dot( passPosition , passPosition );
     float diff_strength = 1.0;

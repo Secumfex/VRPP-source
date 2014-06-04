@@ -330,7 +330,7 @@ void UploadUniformResolutionYListener::update(){
 		shader->uploadUniform(IOManager::getInstance()->getHeight(), "resY");
 	}
 	else{
-		shader->uploadUniform(fbo->getWidth(), "resY");
+		shader->uploadUniform(fbo->getHeight(), "resY");
 	}
 }
 
