@@ -182,7 +182,7 @@ void configureRendering(){
 	Listener* setClearColor2 	= new SetClearColorListener 		( &UnderwaterScene::fog_color, 1.0);
 	Listener* setClearColorInv 	= new SetClearColorListener 		( &UnderwaterScene::fog_color_inverse, 1.0);
 
-/******************** GBuffer Alternative Rendering ************************/
+/******************** 1 GBuffer Alternative Rendering ************************/
 	
 	//1.1.1: render sky and sun into GBuffer
 	GBufferRenderPass* gbufferSunSkyRenderPass = new GBufferRenderPass(gbuffer_shader, UnderwaterScene::framebuffer_scene_sky_sun);
@@ -218,61 +218,158 @@ void configureRendering(){
 	
 	testingState->getRenderLoop()->addRenderPass( gbufferCompositingRenderPass );
 
-	/************* WATER: Rendering everything needed to render the WaterObject***********/
+	/************* 2 WATER: Rendering everything needed to render the WaterObject***********/
 
+	/***********  2.1 Render Reflection Map	*********/
 
-	/*********** Filling GBUFFERS  of reflection / refraction maps *********/
+	//2.1.1: render sky and sun into GBuffer with reflected camera view
+	GBufferRenderPass* gbufferReflectionMapSunSkyRenderPass = new GBufferRenderPass(gbuffer_shader, UnderwaterScene::framebuffer_water_reflection_gbuffer);
+	gbufferReflectionMapSunSkyRenderPass->setClearColorBufferBit(true);
+	gbufferReflectionMapSunSkyRenderPass->addInitialGraphicsComponent(UnderwaterScene::scene_sky_dome);
+	gbufferReflectionMapSunSkyRenderPass->addInitialGraphicsComponent(UnderwaterScene::scene_sun_Object);
 
-	// 2.1.1 GBUFFERS : render reflected View into seperate GBuffer FBO
+	gbufferReflectionMapSunSkyRenderPass->attachListenerOnActivation( new SetCameraListener( UnderwaterScene::reflectedCamera )); // set camera to reflected camera before rendering
+	gbufferReflectionMapSunSkyRenderPass->attachListenerOnDeactivation( new SetCameraListener( testingState->getCamera() ));		 // set camera to regular camera after rendering (undo above)
+
+	testingState->getRenderLoop()->addRenderPass( gbufferReflectionMapSunSkyRenderPass );
+
+	//2.1.2: light sky and sun
+	CompositingPass* gbufferCompositingReflectionMapSkySunRenderPass = new CompositingPass(gbuffer_compositing_shadeless_shader, UnderwaterScene::framebuffer_water_reflection_compositing );
+	gbufferCompositingReflectionMapSkySunRenderPass->setColorMap(    UnderwaterScene::framebuffer_water_reflection_gbuffer->getColorTextureHandle());
+
+	testingState->getRenderLoop()->addRenderPass( gbufferCompositingReflectionMapSkySunRenderPass );
+
+	// back ground is done, now render, light and overlay the rest of the scene
+
+	//2.1.3: render the rest of the scene into GBuffer
 	GBufferRenderPass* gbufferReflectionMapRenderPass = new GBufferRenderPass(gbuffer_culling_shader, UnderwaterScene::framebuffer_water_reflection_gbuffer);
-	gbufferReflectionMapRenderPass->setClearColorBufferBit(true);
-	gbufferReflectionMapRenderPass->setInitialGraphicsComponentList( testingState->getRenderQueue()->getGraphicsComponentList() );
-	gbufferReflectionMapRenderPass->addRenderQueueRequestFlag( new FlagPartOfVirtualObject( UnderwaterScene::scene_waterPlaneObject, true ) ); // render everything but the water plane object
+	gbufferReflectionMapRenderPass->setClearColorBufferBit(true);	// clear background information
+	gbufferReflectionMapRenderPass->setInitialGraphicsComponentList( testingState->getRenderQueue()->getGraphicsComponentList() );	// render scene without background
+	gbufferReflectionMapRenderPass->addRenderQueueRequestFlag( new FlagPartOfVirtualObject( UnderwaterScene::scene_waterPlaneObject, true ) );  // render everything but the water plane object
+	gbufferReflectionMapRenderPass->addRenderQueueRequestFlag( new FlagPartOfVirtualObject(UnderwaterScene::scene_sky_dome, true) );			// render everything left but the sky dome object
+	gbufferReflectionMapRenderPass->addRenderQueueRequestFlag( new FlagPartOfVirtualObject(UnderwaterScene::scene_sun_Object, true) ); 			// render everything left but the sun object
 	gbufferReflectionMapRenderPass->attachListenerOnPostUniformUpload( uniClipPoint ); // upload clipping plane support point
 	gbufferReflectionMapRenderPass->attachListenerOnPostUniformUpload( uniClipNorm );  // upload clipping plane normal
 
 	gbufferReflectionMapRenderPass->attachListenerOnActivation( new SetCameraListener( UnderwaterScene::reflectedCamera )); // set camera to reflected camera before rendering
-	gbufferReflectionMapRenderPass->attachListenerOnDeactivation( new SetCameraListener( testingState->getCamera() ));		 // set camera to regular camera after rendering (undo above)
+	gbufferReflectionMapRenderPass->attachListenerOnDeactivation( new SetCameraListener( testingState->getCamera() ));		// set camera to regular camera after rendering (undo above)
 
 	testingState->getRenderLoop()->addRenderPass( gbufferReflectionMapRenderPass );
 
-	// 2.1.2 GBUFFERS : render refracted View into seperate GBuffer FBO
+	// 2.1.4 : light gbuffer reflection map and write into partially filled compositing fbo
+	CompositingPass* gbufferReflectionMapCompositingPass = new CompositingPass(gbuffer_compositing_shader, UnderwaterScene::framebuffer_water_reflection_compositing);
+	gbufferReflectionMapCompositingPass->setClearColorBufferBit(false);	// dont clear color buffer, since background is already rendered
+	gbufferReflectionMapCompositingPass->setUseAlphaBlending(true);		// use blending, to overlay image
+	gbufferReflectionMapCompositingPass->setColorMap( 	UnderwaterScene::framebuffer_water_reflection_gbuffer->getColorTextureHandle());
+	gbufferReflectionMapCompositingPass->setNormalMap( 	UnderwaterScene::framebuffer_water_reflection_gbuffer->getNormalTextureHandle());
+	gbufferReflectionMapCompositingPass->setPositionMap(UnderwaterScene::framebuffer_water_reflection_gbuffer->getPositionTextureHandle());
+
+	// TODO find a way to light the reflection map correctly
+	//	gbufferReflectionMapCompositingPass->attachListenerOnActivation( new SetCameraListener( UnderwaterScene::reflectedCamera )); // set camera to reflected camera before composing
+	//	gbufferReflectionMapCompositingPass->attachListenerOnDeactivation( new SetCameraListener( testingState->getCamera() ));		 // set camera to regular camera after composing (undo above)
+
+	testingState->getRenderLoop()->addRenderPass( gbufferReflectionMapCompositingPass );
+
+	/*************** 2.2 Render Refraction Map *********/
+
+	//2.2.1: render sky and sun into GBuffer
+	GBufferRenderPass* gbufferRefractionMapSunSkyRenderPass = new GBufferRenderPass(gbuffer_shader, UnderwaterScene::framebuffer_water_refraction_gbuffer);
+	gbufferRefractionMapSunSkyRenderPass->setClearColorBufferBit(true);
+	gbufferRefractionMapSunSkyRenderPass->addInitialGraphicsComponent(UnderwaterScene::scene_sky_dome);
+	gbufferRefractionMapSunSkyRenderPass->addInitialGraphicsComponent(UnderwaterScene::scene_sun_Object);
+
+	testingState->getRenderLoop()->addRenderPass( gbufferRefractionMapSunSkyRenderPass );
+
+	//2.2.2: light sky and sun
+	CompositingPass* gbufferCompositingRefractionMapSkySunRenderPass = new CompositingPass(gbuffer_compositing_shadeless_shader, UnderwaterScene::framebuffer_water_refraction_compositing );
+	gbufferCompositingRefractionMapSkySunRenderPass->setColorMap(    UnderwaterScene::framebuffer_water_refraction_gbuffer->getColorTextureHandle());
+
+	testingState->getRenderLoop()->addRenderPass( gbufferCompositingRefractionMapSkySunRenderPass );
+
+	// back ground is done, now render, light and overlay the rest of the scene
+
+	// 2.2.3 : render refracted View into seperate GBuffer FBO
 	GBufferRenderPass* gbufferRefractionMapRenderPass = new GBufferRenderPass(gbuffer_culling_shader, UnderwaterScene::framebuffer_water_refraction_gbuffer);
 	gbufferRefractionMapRenderPass->setClearColorBufferBit(true);
-	gbufferRefractionMapRenderPass->setInitialGraphicsComponentList( testingState->getRenderQueue()->getGraphicsComponentList() );	// render everything but the water plane object
-	gbufferRefractionMapRenderPass->addRenderQueueRequestFlag( new FlagPartOfVirtualObject( UnderwaterScene::scene_waterPlaneObject, true ) );
+	gbufferRefractionMapRenderPass->setInitialGraphicsComponentList( testingState->getRenderQueue()->getGraphicsComponentList() );
+	gbufferRefractionMapRenderPass->addRenderQueueRequestFlag( new FlagPartOfVirtualObject( UnderwaterScene::scene_waterPlaneObject, true ) );  // render everything but the water plane object
+	gbufferRefractionMapRenderPass->addRenderQueueRequestFlag( new FlagPartOfVirtualObject(UnderwaterScene::scene_sky_dome, true) );			// render everything left but the sky dome object
+	gbufferRefractionMapRenderPass->addRenderQueueRequestFlag( new FlagPartOfVirtualObject(UnderwaterScene::scene_sun_Object, true) ); 			// render everything left but the sun object
 	gbufferRefractionMapRenderPass->attachListenerOnPostUniformUpload( uniClipPoint ); // upload clipping plane support point
 	gbufferRefractionMapRenderPass->attachListenerOnPostUniformUpload( uniClipNormInv );  // upload clipping plane normal
 
 	testingState->getRenderLoop()->addRenderPass( gbufferRefractionMapRenderPass );
 
-	/********* COMPOSING reflection / refraction maps ************/
-
-	// 2.2.1 COMPOSITING : light gbuffer reflection map
-	CompositingPass* gbufferReflectionMapCompositingPass = new CompositingPass(gbuffer_compositing_shader, UnderwaterScene::framebuffer_water_reflection_compositing);
-	gbufferReflectionMapCompositingPass->setColorMap( 	UnderwaterScene::framebuffer_water_reflection_gbuffer->getColorTextureHandle());
-	gbufferReflectionMapCompositingPass->setNormalMap( 	UnderwaterScene::framebuffer_water_reflection_gbuffer->getNormalTextureHandle());
-	gbufferReflectionMapCompositingPass->setPositionMap(UnderwaterScene::framebuffer_water_reflection_gbuffer->getPositionTextureHandle());
-
-// TODO find a way to light the reflection map correctly
-//	gbufferReflectionMapCompositingPass->attachListenerOnActivation( new SetCameraListener( UnderwaterScene::reflectedCamera )); // set camera to reflected camera before composing
-//	gbufferReflectionMapCompositingPass->attachListenerOnDeactivation( new SetCameraListener( testingState->getCamera() ));		 // set camera to regular camera after composing (undo above)
-
-	testingState->getRenderLoop()->addRenderPass( gbufferReflectionMapCompositingPass);
-
-	// 2.2.2 COMPOSITING : light gbuffer refraction map
+	// 2.2.4 COMPOSITING : light gbuffer refraction map
 	CompositingPass* gbufferRefractionMapCompositingPass = new CompositingPass(gbuffer_compositing_shader, UnderwaterScene::framebuffer_water_refraction_compositing);
+	gbufferRefractionMapCompositingPass->setClearColorBufferBit( false );	// dont clear color buffer, since background is already rendered
+	gbufferRefractionMapCompositingPass->setUseAlphaBlending( true );		// use blending, to overlay image
 	gbufferRefractionMapCompositingPass->setColorMap( 	UnderwaterScene::framebuffer_water_refraction_gbuffer->getColorTextureHandle());
 	gbufferRefractionMapCompositingPass->setNormalMap( 	UnderwaterScene::framebuffer_water_refraction_gbuffer->getNormalTextureHandle());
 	gbufferRefractionMapCompositingPass->setPositionMap(UnderwaterScene::framebuffer_water_refraction_gbuffer->getPositionTextureHandle());
 
 	testingState->getRenderLoop()->addRenderPass( gbufferRefractionMapCompositingPass);
 
+	/******** 2.3 Render other Water Effects ***********/
 
-	/********* RENDERING WATER OBJECT ***************/
+	// 2.3.1 render god_rays with gbuffer information ( depth ) into seperate FBO
+	CompositingPass* gbufferGodraysRenderPass = new CompositingPass(gbuffer_god_rays_shader, UnderwaterScene::framebuffer_water_god_rays);	// compositing
+	gbufferGodraysRenderPass->setPositionMap( gbuffer_fbo->getPositionTextureHandle( ) );	// use gbuffer position information for depth testing
 
+	//TODO check the water object depth map aswell
+	gbufferGodraysRenderPass->attachListenerOnPostUniformUpload( uniCausticsTex2);		// upload caustics texture used for god ray sampling
+	gbufferGodraysRenderPass->attachListenerOnPostUniformUpload( uniSunVPersp );		// upload sun view perspective matrix
+	gbufferGodraysRenderPass->attachListenerOnPostUniformUpload( uniCamPos );			// upload cam world position
+	gbufferGodraysRenderPass->attachListenerOnPostUniformUpload( uniCamPos );			// upload cam world position
 
-	// 2.3. render waterobject into seperate Gbuffer FBO
+	testingState->getRenderLoop()->addRenderPass(gbufferGodraysRenderPass);
+
+	// 2.3.1 render particles into a seperate fbo, use depth information of gbuffer as depth map
+	ParticlesRenderPass* gbufferParticlesRenderPass = new ParticlesRenderPass(gbuffer_particle_shader, UnderwaterScene::framebuffer_water_particles, UnderwaterScene::water_particles, vaoID[0]);
+
+	gbufferParticlesRenderPass->attachListenerOnPostUniformUpload( uniGBufferDepthMap );
+
+	gbufferParticlesRenderPass->setUseAlphaBlending(true);	// enable alpha blending
+	gbufferParticlesRenderPass->setUseDepthTest(false);	// disable depth testing
+	gbufferParticlesRenderPass->setClearColorBufferBit(true); // clear color buffer bit on every frame
+	gbufferParticlesRenderPass->setCustomClearColor( glm::vec4 ( 0.0f, 0.0f, 0.0f, 0.0f) );// set clear color to transparent
+	gbufferParticlesRenderPass->attachListenerOnPostUniformUpload( uniPartText);	// upload Particles Texture
+	gbufferParticlesRenderPass->attachListenerOnPostUniformUpload( uniSinusWave);  // upload Sinus Wave value
+
+	testingState->getRenderLoop()->addRenderPass( gbufferParticlesRenderPass );
+
+	// 2.3.1 render caustics with gbuffer information ( depth ) into seperate FBO
+	CompositingPass* gbufferCausticsRenderPass = new CompositingPass( gbuffer_caustics_shader, UnderwaterScene::framebuffer_water_caustics);
+	gbufferCausticsRenderPass->setPositionMap( gbuffer_fbo->getPositionTextureHandle( ) ); // use position texture handle as depth information
+	gbufferCausticsRenderPass->setNormalMap( gbuffer_fbo->getNormalTextureHandle() );	// use normal texture
+	gbufferCausticsRenderPass->setColorMap( gbuffer_fbo->getColorTextureHandle() );		// use color texture
+
+	gbufferCausticsRenderPass->attachListenerOnPostUniformUpload( uniCausticsTex2);		// upload caustics texture used for god ray sampling
+	gbufferCausticsRenderPass->attachListenerOnPostUniformUpload( uniSunVPersp );		// upload sun view perspective matrix
+	gbufferCausticsRenderPass->attachListenerOnPostUniformUpload( uniSunDir );	// upload sun light direction
+
+	testingState->getRenderLoop()->addRenderPass( gbufferCausticsRenderPass );
+
+	/************** 2.4 Overlay Effects if above water*********/
+
+	// 2.4.1 add caustics ontop of refracted view if above water
+	MixTexturesRenderPass* addCausticsRefraction = new MixTexturesRenderPass( add_shader, UnderwaterScene::framebuffer_water_refraction_compositing, UnderwaterScene::framebuffer_water_refraction_compositing->getPositionTextureHandle(), UnderwaterScene::framebuffer_water_caustics->getPositionTextureHandle() );
+	addCausticsRefraction->setMixTextureUniformName("uniformAddTexture");
+	testingState->getRenderLoop()->addRenderPass( new ConditionalRenderPassProxy (addCausticsRefraction, &UnderwaterScene::is_underwater, true) );
+
+	// 2.4.2 overlay god rays ontop of refracted view if above water
+	MixTexturesRenderPass* addGodRaysRefraction = new MixTexturesRenderPass( add_shader, UnderwaterScene::framebuffer_water_refraction_compositing, UnderwaterScene::framebuffer_water_refraction_compositing->getPositionTextureHandle(), UnderwaterScene::framebuffer_water_god_rays->getPositionTextureHandle() );
+	addGodRaysRefraction->setMixTextureUniformName("uniformAddTexture");
+	testingState->getRenderLoop()->addRenderPass( new ConditionalRenderPassProxy (addGodRaysRefraction, &UnderwaterScene::is_underwater, true) );
+
+	// 2.4.3 overlay particles ontop of refracted view if above water
+	MixTexturesRenderPass* overlayParticlesRefraction = new MixTexturesRenderPass( overlay_shader, UnderwaterScene::framebuffer_water_refraction_compositing, UnderwaterScene::framebuffer_water_refraction_compositing->getPositionTextureHandle(), UnderwaterScene::framebuffer_water_particles->getPositionTextureHandle() );
+	overlayParticlesRefraction->setMixTextureUniformName("uniformAddTexture");
+	testingState->getRenderLoop()->addRenderPass( new ConditionalRenderPassProxy (overlayParticlesRefraction, &UnderwaterScene::is_underwater, true) );
+
+	/**************	2.6 Render Water Object ***************/
+
+	// 2.6. render waterobject into seperate FBO
 	RenderPass* gbufferWaterRenderPass = new RenderPass(gbuffer_water_shader, UnderwaterScene::framebuffer_water_water_object);
 
 	gbufferWaterRenderPass->addInitialGraphicsComponent(UnderwaterScene::scene_waterPlaneObject);	// render only water plane object
@@ -289,46 +386,6 @@ void configureRendering(){
 
 	testingState->getRenderLoop()->addRenderPass( gbufferWaterRenderPass );
 
-	/******** OTHER EFFECTS ***********/
-
-	// 3. render god_rays with gbuffer information ( depth ) into seperate FBO
-	CompositingPass* gbufferGodraysRenderPass = new CompositingPass(gbuffer_god_rays_shader, UnderwaterScene::framebuffer_water_god_rays);	// compositing
-	gbufferGodraysRenderPass->setPositionMap( gbuffer_fbo->getPositionTextureHandle( ) );	// use gbuffer position information for depth testing
-
-	//TODO check the water object depth map aswell
-	gbufferGodraysRenderPass->attachListenerOnPostUniformUpload( uniCausticsTex2);		// upload caustics texture used for god ray sampling
-	gbufferGodraysRenderPass->attachListenerOnPostUniformUpload( uniSunVPersp );		// upload sun view perspective matrix
-	gbufferGodraysRenderPass->attachListenerOnPostUniformUpload( uniCamPos );			// upload cam world position
-	gbufferGodraysRenderPass->attachListenerOnPostUniformUpload( uniCamPos );			// upload cam world position
-
-	testingState->getRenderLoop()->addRenderPass(gbufferGodraysRenderPass);
-
-	// 4. render particles into a seperate fbo, use depth information of gbuffer as depth map
-	ParticlesRenderPass* gbufferParticlesRenderPass = new ParticlesRenderPass(gbuffer_particle_shader, UnderwaterScene::framebuffer_water_particles, UnderwaterScene::water_particles, vaoID[0]);
-
-	gbufferParticlesRenderPass->attachListenerOnPostUniformUpload( uniGBufferDepthMap );
-
-	gbufferParticlesRenderPass->setUseAlphaBlending(true);	// enable alpha blending
-	gbufferParticlesRenderPass->setUseDepthTest(false);	// disable depth testing
-	gbufferParticlesRenderPass->setClearColorBufferBit(true); // clear color buffer bit on every frame
-	gbufferParticlesRenderPass->setCustomClearColor( glm::vec4 ( 0.0f, 0.0f, 0.0f, 0.0f) );// set clear color to transparent
-	gbufferParticlesRenderPass->attachListenerOnPostUniformUpload( uniPartText);	// upload Particles Texture
-	gbufferParticlesRenderPass->attachListenerOnPostUniformUpload( uniSinusWave);  // upload Sinus Wave value
-
-	testingState->getRenderLoop()->addRenderPass( gbufferParticlesRenderPass );
-
-	// 5. render caustics with gbuffer information ( depth ) into seperate FBO
-	CompositingPass* gbufferCausticsRenderPass = new CompositingPass( gbuffer_caustics_shader, UnderwaterScene::framebuffer_water_caustics);
-	gbufferCausticsRenderPass->setPositionMap( gbuffer_fbo->getPositionTextureHandle( ) ); // use position texture handle as depth information
-	gbufferCausticsRenderPass->setNormalMap( gbuffer_fbo->getNormalTextureHandle() );	// use normal texture
-	gbufferCausticsRenderPass->setColorMap( gbuffer_fbo->getColorTextureHandle() );		// use color texture
-
-	gbufferCausticsRenderPass->attachListenerOnPostUniformUpload( uniCausticsTex2);		// upload caustics texture used for god ray sampling
-	gbufferCausticsRenderPass->attachListenerOnPostUniformUpload( uniSunVPersp );		// upload sun view perspective matrix
-	gbufferCausticsRenderPass->attachListenerOnPostUniformUpload( uniSunDir );	// upload sun light direction
-
-	testingState->getRenderLoop()->addRenderPass( gbufferCausticsRenderPass );
-
 	/******** COMPOSITING ***********/
 
 	// 6.0.1 : overlay Water ontop of scene fbo
@@ -339,17 +396,20 @@ void configureRendering(){
 	// 6.1. : add caustics on top of scene fbo
 	MixTexturesRenderPass* addCaustics = new MixTexturesRenderPass( add_shader, finalImage, finalImage->getPositionTextureHandle(), UnderwaterScene::framebuffer_water_caustics->getPositionTextureHandle() );
 	addCaustics->setMixTextureUniformName("uniformAddTexture");
-	testingState->getRenderLoop()->addRenderPass(addCaustics);
+	// add only, if camera is underwater
+	testingState->getRenderLoop()->addRenderPass( new ConditionalRenderPassProxy (addCaustics, &UnderwaterScene::is_underwater) );
 
 	// 6.2. : add god rays ontop of scene fbo
 	MixTexturesRenderPass* addGodRays = new MixTexturesRenderPass( add_shader, finalImage, finalImage->getPositionTextureHandle(), UnderwaterScene::framebuffer_water_god_rays->getPositionTextureHandle() );
 	addGodRays->setMixTextureUniformName("uniformAddTexture");
-	testingState->getRenderLoop()->addRenderPass(addGodRays);
+	// add only, if camera is underwater
+	testingState->getRenderLoop()->addRenderPass( new ConditionalRenderPassProxy (addGodRays, &UnderwaterScene::is_underwater) );
 
 	// 6.3. : overlay particles ontop of scene fbo
 	MixTexturesRenderPass* overlayParticles = new MixTexturesRenderPass( overlay_shader, finalImage, finalImage->getPositionTextureHandle(), UnderwaterScene::framebuffer_water_particles->getPositionTextureHandle() );
 	overlayParticles->setMixTextureUniformName("uniformOverlayTexture");
-	testingState->getRenderLoop()->addRenderPass(overlayParticles);
+	// add only, if camera is underwater
+	testingState->getRenderLoop()->addRenderPass( new ConditionalRenderPassProxy (overlayParticles, &UnderwaterScene::is_underwater) );
 
 	/********* Present Final Image ***************/
 	TextureRenderPass* presentFinalImage = new TextureRenderPass(simpleTex,0,finalImage->getPositionTextureHandle());
@@ -373,11 +433,11 @@ void configureRendering(){
 //	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_caustics->getPositionTextureHandle() );	// Caustics
 
 //	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_reflection_gbuffer->getPositionTextureHandle()); // Refraction Position
-	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_reflection_gbuffer->getNormalTextureHandle()); // Refraction Normal
+//	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_reflection_gbuffer->getNormalTextureHandle()); // Refraction Normal
 //	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_reflection_gbuffer->getColorTextureHandle()); // Refraction Color
 
 //	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_refraction_gbuffer->getPositionTextureHandle()); // Refraction Position
-	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_refraction_gbuffer->getNormalTextureHandle()); // Refraction Normal
+//	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_refraction_gbuffer->getNormalTextureHandle()); // Refraction Normal
 //	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_refraction_gbuffer->getColorTextureHandle()); // Refraction Color
 
 

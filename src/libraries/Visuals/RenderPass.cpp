@@ -555,3 +555,38 @@ void TextureRenderPass::setTextureUniformName( std::string name)
 {
 	mTextureUploader.setUniformName(name);
 }
+
+RenderPass* ConditionalRenderPassProxy::getRenderPass(){
+	return mRenderPass;
+}
+
+void ConditionalRenderPassProxy::setRenderPass( RenderPass* renderPass) {
+	mRenderPass = renderPass;
+}
+
+ConditionalRenderPassProxy::ConditionalRenderPassProxy(RenderPass* renderPass, bool* condition, bool invert) {
+	mCondition = condition;
+	mRenderPass = renderPass;
+	mInvert = invert;
+}
+
+void ConditionalRenderPassProxy::activate() {
+	if ( (mInvert) ? !*mCondition : *mCondition )
+	{
+		mRenderPass->activate();
+	}
+}
+
+void ConditionalRenderPassProxy::render() {
+	if ( (mInvert) ? !*mCondition : *mCondition )
+	{
+		mRenderPass->render();
+	}
+}
+
+void ConditionalRenderPassProxy::deactivate() {
+	if ( (mInvert) ? !*mCondition : *mCondition )
+	{
+		mRenderPass->deactivate();
+	}
+}

@@ -379,4 +379,27 @@ public:
 	void setMixTextureUniformName(std::string name);    /**< set uniform target name of mix texture uploader ( uniform to which mix texture will attempt to upload )*/
 };
 
+/// a Renderpass which will only call a render call if a condition is true
+class ConditionalRenderPassProxy : public RenderPass
+{
+protected:
+	bool* mCondition; 	 /**< condition to be checked*/
+	bool mInvert;	 /**< whether condition should be inverted */
+	RenderPass* mRenderPass;  /**< actual RenderPass to be rendered */
+public:
+	/** \brief constructor
+	 *
+	 * @param renderPass to be called if condition is true
+	 * @param condition to be checked against
+	 * @param invert boolean whether condition should be inverted
+	 */
+	ConditionalRenderPassProxy( RenderPass* renderPass, bool* condition, bool invert = false);
+	virtual void activate();	/**< calls mRenderPass->render() if condition is true */
+	virtual void render();	/**< calls mRenderPass->render() if condition is true */
+	virtual void deactivate();	/**< calls mRenderPass->render() if condition is true */
+
+	RenderPass* getRenderPass(); /**< getter */
+	void setRenderPass(RenderPass* renderPass); /**< setter */
+};
+
 #endif /* RENDERPASS_H_ */

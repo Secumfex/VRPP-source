@@ -9,6 +9,8 @@
 
 namespace UnderwaterScene{
 
+	bool is_underwater;
+
 	float water_height = 10.0f;
 
 	float fog_begin = 2.0f;
@@ -75,6 +77,9 @@ namespace UnderwaterScene{
 
 	static void createScene(ApplicationState* target){
 		/******************* above or underneath water surface handling *****************/
+		SetBoolValueListener* enterWater_0 = new SetBoolValueListener( &is_underwater, true );
+		SetBoolValueListener*  exitWater_0 = new SetBoolValueListener( &is_underwater, false );
+
 		SetClearColorListener* enterWater_1 = new SetClearColorListener( &watercolor );
 		SetClearColorListener*  exitWater_1 = new SetClearColorListener( &skycolor );
 
@@ -96,6 +101,8 @@ namespace UnderwaterScene{
 		SetVec3ValuesListener* enterWater_9 = new SetVec3ValuesListener( &fog_color_inverse, &fog_color_above_water );
 		SetVec3ValuesListener*  exitWater_9 = new SetVec3ValuesListener( &fog_color_inverse, &fog_color_under_water );
 
+		UnderOrAboveWaterListener* waterlistener0 = new UnderOrAboveWaterListener(target->getCamera(), &water_height, enterWater_0, exitWater_0);
+
 		UnderOrAboveWaterListener* waterlistener1 = new UnderOrAboveWaterListener(target->getCamera(), &water_height, enterWater_1, exitWater_1);
 		UnderOrAboveWaterListener* waterlistener2 = new UnderOrAboveWaterListener(target->getCamera(), &water_height, enterWater_2, exitWater_2);
 		UnderOrAboveWaterListener* waterlistener3 = new UnderOrAboveWaterListener(target->getCamera(), &water_height, enterWater_3, exitWater_3);
@@ -106,6 +113,7 @@ namespace UnderwaterScene{
 		UnderOrAboveWaterListener* waterlistener8 = new UnderOrAboveWaterListener(target->getCamera(), &water_height, enterWater_8, exitWater_8);
 		UnderOrAboveWaterListener* waterlistener9 = new UnderOrAboveWaterListener(target->getCamera(), &water_height, enterWater_9, exitWater_9);
 		
+		target->attachListenerOnBeginningProgramCycle(waterlistener0);
 		target->attachListenerOnBeginningProgramCycle(waterlistener1);
 		target->attachListenerOnBeginningProgramCycle(waterlistener2);
 		target->attachListenerOnBeginningProgramCycle(waterlistener3);

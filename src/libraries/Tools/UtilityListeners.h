@@ -145,6 +145,17 @@ public:
 	void update();
 };
 
+/// Listener which sets target boolean to value pointed at
+class SetBoolValueListener : public Listener{
+private:
+	bool* source;
+	bool* target;
+public:
+	SetBoolValueListener(bool* target, bool* value);	 /**< copies value to target on update*/
+	SetBoolValueListener(bool* target, bool value);	 /**< sets target to value on update */
+	void update();
+};
+
 /// Listener which sets target to value pointed at
 class SetFloatValueListener : public Listener{
 private:

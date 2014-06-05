@@ -134,3 +134,17 @@ DirtyFlagListener::DirtyFlagListener() {
 void DirtyFlagListener::update() {
 	dirtyFlag = true;
 }
+
+SetBoolValueListener::SetBoolValueListener(bool* target, bool* value) {
+	this->source = value;
+	this->target = target;
+}
+
+SetBoolValueListener::SetBoolValueListener(bool* target, bool value) {
+	this->source = new bool(value);
+	this->target = target;
+}
+
+void SetBoolValueListener::update() {
+	*target = *source;
+}
