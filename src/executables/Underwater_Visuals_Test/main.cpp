@@ -117,6 +117,7 @@ void addDebugView(Shader* shader, ApplicationState* state, GLuint imageHandle)
 void configureRendering(){
 
 	Shader *simpleTex			= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/screenFill.vert"   , SHADERS_PATH  "/Underwater_Visuals_Test/simpleTexture.frag");
+	Shader *clearGBuffer		= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/screenFill.vert"   , SHADERS_PATH  "/Underwater_Visuals_Test/clearGBuffer.frag");
 
 	Shader* gbuffer_shader		= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/GBuffer.vert"      , SHADERS_PATH  "/Underwater_Visuals_Test/GBuffer_normalTexture.frag");
 	Shader* gbuffer_caustics_shader = new Shader( SHADERS_PATH "/Underwater_visuals_Test/screenFill.vert"      , SHADERS_PATH  "/Underwater_Visuals_Test/gbuffer_caustics.frag");
@@ -129,6 +130,7 @@ void configureRendering(){
 
 	Shader* add_shader 			= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/screenFill.vert"   , SHADERS_PATH "/Underwater_Visuals_Test/add.frag ");
 	Shader* overlay_shader 		= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/screenFill.vert"   , SHADERS_PATH "/Underwater_Visuals_Test/overlay.frag ");
+	Shader *combine_GBuffers	= new Shader( SHADERS_PATH "/Underwater_Visuals_Test/screenFill.vert"   , SHADERS_PATH "/Underwater_Visuals_Test/combineGBuffers.frag ");
 
 	FrameBufferObject* gbuffer_fbo = new FrameBufferObject(800,600);
 	gbuffer_fbo->bindFBO();
@@ -183,7 +185,7 @@ void configureRendering(){
 	Listener* setClearColorInv 	= new SetClearColorListener 		( &UnderwaterScene::fog_color_inverse, 1.0);
 
 /******************** 1 GBuffer Alternative Rendering ************************/
-	
+
 	//1.1.1: render sky and sun into GBuffer
 	GBufferRenderPass* gbufferSunSkyRenderPass = new GBufferRenderPass(gbuffer_shader, UnderwaterScene::framebuffer_scene_sky_sun);
 	gbufferSunSkyRenderPass->setClearColorBufferBit(true);
@@ -313,8 +315,20 @@ void configureRendering(){
 	/******** 2.3 Render other Water Effects ***********/
 
 	// 2.3.1 render god_rays with gbuffer information ( depth ) into seperate FBO
+
+	// 2.3.1.1 before rendering god_rays, combine gbuffers
+	ScreenFillingTriangleRenderPass* gbufferCombineGBuffersOfBackGroundAndForeGround = new ScreenFillingTriangleRenderPass(combine_GBuffers, UnderwaterScene::framebuffer_scene_sky_sun);
+	gbufferCombineGBuffersOfBackGroundAndForeGround->attachListenerOnPostUniformUpload(new UploadUniformTextureListener("", 6 , "colorMap", gbuffer_fbo->getColorTextureHandle() ) );
+	gbufferCombineGBuffersOfBackGroundAndForeGround->attachListenerOnPostUniformUpload(new UploadUniformTextureListener("", 5 , "normalMap", gbuffer_fbo->getNormalTextureHandle() ) );
+	gbufferCombineGBuffersOfBackGroundAndForeGround->attachListenerOnPostUniformUpload(new UploadUniformTextureListener("", 4 , "positionMap", gbuffer_fbo->getPositionTextureHandle() ) );
+	gbufferCombineGBuffersOfBackGroundAndForeGround->attachListenerOnPostUniformUpload(new UploadUniformTextureListener("", 10, "colorMap_2", UnderwaterScene::framebuffer_scene_sky_sun->getColorTextureHandle() ) );
+	gbufferCombineGBuffersOfBackGroundAndForeGround->attachListenerOnPostUniformUpload(new UploadUniformTextureListener("", 11, "normalMap_2", UnderwaterScene::framebuffer_scene_sky_sun->getNormalTextureHandle() ) );
+	gbufferCombineGBuffersOfBackGroundAndForeGround->attachListenerOnPostUniformUpload(new UploadUniformTextureListener("", 12, "positionMap_2", UnderwaterScene::framebuffer_scene_sky_sun->getPositionTextureHandle() ) );
+
+	testingState->getRenderLoop()->addRenderPass(gbufferCombineGBuffersOfBackGroundAndForeGround);
+
 	CompositingPass* gbufferGodraysRenderPass = new CompositingPass(gbuffer_god_rays_shader, UnderwaterScene::framebuffer_water_god_rays);	// compositing
-	gbufferGodraysRenderPass->setPositionMap( gbuffer_fbo->getPositionTextureHandle( ) );	// use gbuffer position information for depth testing
+	gbufferGodraysRenderPass->setPositionMap( UnderwaterScene::framebuffer_scene_sky_sun->getPositionTextureHandle( ) );	// use gbuffer position information for depth testing
 
 	//TODO check the water object depth map aswell
 	gbufferGodraysRenderPass->attachListenerOnPostUniformUpload( uniCausticsTex2);		// upload caustics texture used for god ray sampling
@@ -440,6 +454,7 @@ void configureRendering(){
 //	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_refraction_gbuffer->getNormalTextureHandle()); // Refraction Normal
 //	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_refraction_gbuffer->getColorTextureHandle()); // Refraction Color
 
+	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_scene_sky_sun->getPositionTextureHandle());	// Combination
 
 	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_reflection_compositing->getPositionTextureHandle());	// Reflection Compositing
 	addDebugView(simpleTex, testingState, UnderwaterScene::framebuffer_water_refraction_compositing->getPositionTextureHandle());	// Refraction Compositing

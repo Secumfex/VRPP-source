@@ -324,7 +324,20 @@ public:
 	GraphicsComponent* mTriangle;	/**< Screen Filling Triangle to be rendered */
 };
 
-//TODO this could also be the parent class of MixTexturesRenderPass or Compositing RenderPass
+/// a RenderPass which will perform a screen filling polygon render pass
+class ScreenFillingTriangleRenderPass : public RenderPass
+{
+protected:
+	GraphicsComponent* mTriangle;
+public:
+	/** \brief constructor
+	 *
+	 * @param shader to be used in this render pass
+	 * @param fbo to be used as rendertrget in this renderpass ( optional set 0 or leave out to render to screen )
+	 */
+	ScreenFillingTriangleRenderPass(Shader* shader, FrameBufferObject* fbo = 0);
+};
+
 /// a Renderpass which will perform a screen filling polygon render pass and upload one texture and is suitable for presenting a texture or post processing involving only one texture
 class TextureRenderPass : public RenderPass {
 protected:

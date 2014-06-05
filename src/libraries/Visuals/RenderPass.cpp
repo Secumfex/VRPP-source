@@ -590,3 +590,13 @@ void ConditionalRenderPassProxy::deactivate() {
 		mRenderPass->deactivate();
 	}
 }
+
+ScreenFillingTriangleRenderPass::ScreenFillingTriangleRenderPass(Shader* shader, FrameBufferObject* fbo)
+  : RenderPass(shader, fbo)
+{
+	mTriangle = VirtualObjectFactory::getInstance()->getTriangle();
+
+	useDepthTest = false;
+
+	mInitialGraphicsComponentList.push_back( mTriangle );
+}

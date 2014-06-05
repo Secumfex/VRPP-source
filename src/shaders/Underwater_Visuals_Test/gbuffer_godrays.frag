@@ -13,11 +13,16 @@ uniform sampler2D positionMap;
 
 uniform sampler2D uniformCausticsTexture;
 
+//uniform sampler2D uniformDepthMap;
+
 // uniform sampler2D uniformWaterObjectDepthMap;
 
 uniform float uniformTime;
 
 void main() { 
+//	float depth = texture(uniformDepthMap, passUV).r;
+//	float distanceToCamera = depth;
+	
 	vec4 position = texture(positionMap, passUV);	// to be interpreted as depth information
 	float distanceToCamera = abs ( position.z );	
 

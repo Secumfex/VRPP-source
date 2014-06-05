@@ -26,7 +26,7 @@ ApplicationState::ApplicationState(){
 	attachListenerOnBeginningProgramCycle(	new UpdateCameraPositionListener(camera, IOManager::getInstance()->getDeltaTimePointer()));
 	
 
-	perspectiveMatrix = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
+	perspectiveMatrix = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 250.f);
 }
 
 Frustum* ApplicationState::getFrustum(){
@@ -84,7 +84,7 @@ void ApplicationState::bindObjects(){
 	
 	rm->setCamera(camera);
 	rm->setCurrentFrustum(frustum);
-	rm->setPerspectiveMatrix(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
+	rm->setPerspectiveMatrix(45.0f, 4.0f / 3.0f, 0.1f, 200.f);
 	rm->setRenderQueue(renderQueue);
 	rm->setRenderLoop(renderLoop);
 
