@@ -476,4 +476,5 @@ KeepOffsetListener::KeepOffsetListener(VirtualObject* vo, glm::vec3* target,
 void KeepOffsetListener::update() {
 	glm::vec3 targetPosition = *target + *offset;
 	vo->getPhysicsComponent()->setPosition(targetPosition.x, targetPosition.y, targetPosition.z);
+	vo->updateModelMatrixViaPhysics();
 }

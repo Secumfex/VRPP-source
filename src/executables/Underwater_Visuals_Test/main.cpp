@@ -186,8 +186,10 @@ void configureRendering(){
 
 /******************** 1 GBuffer Alternative Rendering ************************/
 
+	// sun & sky dome must keep an offset to Camera
 	//1.1.1: render sky and sun into GBuffer
 	GBufferRenderPass* gbufferSunSkyRenderPass = new GBufferRenderPass(gbuffer_shader, UnderwaterScene::framebuffer_scene_sky_sun);
+
 	gbufferSunSkyRenderPass->setClearColorBufferBit(true);
 	gbufferSunSkyRenderPass->addInitialGraphicsComponent(UnderwaterScene::scene_sky_dome);
 	gbufferSunSkyRenderPass->addInitialGraphicsComponent(UnderwaterScene::scene_sun_Object);
@@ -234,6 +236,12 @@ void configureRendering(){
 
 	gbufferReflectionMapSunSkyRenderPass->attachListenerOnActivation( new SetCameraListener( UnderwaterScene::reflectedCamera )); // set camera to reflected camera before rendering
 	gbufferReflectionMapSunSkyRenderPass->attachListenerOnDeactivation( new SetCameraListener( testingState->getCamera() ));		 // set camera to regular camera after rendering (undo above)
+
+	// make sure Sky Dome and sun is at the correct positon
+	gbufferReflectionMapSunSkyRenderPass->attachListenerOnActivation( UnderwaterScene::scene_listener_keep_offset_sky_reflection );
+	gbufferReflectionMapSunSkyRenderPass->attachListenerOnActivation( UnderwaterScene::scene_listener_keep_offset_sun_reflection );
+	gbufferReflectionMapSunSkyRenderPass->attachListenerOnDeactivation( UnderwaterScene::scene_listener_keep_offset_sky );
+	gbufferReflectionMapSunSkyRenderPass->attachListenerOnDeactivation( UnderwaterScene::scene_listener_keep_offset_sun );
 
 	testingState->getRenderLoop()->addRenderPass( gbufferReflectionMapSunSkyRenderPass );
 

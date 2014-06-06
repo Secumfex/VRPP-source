@@ -74,6 +74,11 @@ namespace UnderwaterScene{
 
 	ParticleSystem* water_particles;
 
+	Listener* scene_listener_keep_offset_sun_reflection;
+	Listener* scene_listener_keep_offset_sky_reflection;
+	Listener* scene_listener_keep_offset_sun;
+	Listener* scene_listener_keep_offset_sky;
+
 	static void createScene(ApplicationState* target){
 		/******************* above or underneath water surface handling *****************/
 		SetBoolValueListener* enterWater_0 = new SetBoolValueListener( &is_underwater, true );
@@ -143,11 +148,6 @@ namespace UnderwaterScene{
 		if (scene_sun_Object->getGraphicsComponent().size() > 0){
 				scene_sun_Object->getGraphicsComponent()[0]->setEmission(true);
 		}
-
-		// sun & sky dome must keep an offset to Camera
-		target->attachListenerOnBeginningProgramCycle( new KeepOffsetListener(scene_sky_dome, target->getCamera()->getPositionPointer(), new glm::vec3( 0.0f, 0.0f, 0.0f) ) );
-		glm::vec3 offset = glm::normalize(sunLightDirection) * -32.5f;
-		target->attachListenerOnBeginningProgramCycle( new KeepOffsetListener(scene_sun_Object, target->getCamera()->getPositionPointer(), new glm::vec3( offset ) ) );
 		/*********************************************************************************/
 
 		/******************* particle System objects *****************************************/
@@ -231,6 +231,15 @@ namespace UnderwaterScene{
 		reflectedCamera = new Camera();
 		reflectedCamera->setTopDown( true );
 		target->attachListenerOnBeginningProgramCycle(new UpdateReflectedCameraPositionListener(cam, reflectedCamera, &water_height));
+		/*********************************************************************************/
+
+		/******************* offset listeners for sky and sun ****************************/
+		glm::vec3 offset = glm::normalize(sunLightDirection) * -32.5f;
+		scene_listener_keep_offset_sky = new KeepOffsetListener( scene_sky_dome, target->getCamera()->getPositionPointer(), new glm::vec3( 0.0f, 0.0f, 0.0f));
+		scene_listener_keep_offset_sun = new KeepOffsetListener(scene_sun_Object, target->getCamera()->getPositionPointer(), new glm::vec3( offset ) );
+
+		scene_listener_keep_offset_sun_reflection = new KeepOffsetListener( scene_sky_dome, reflectedCamera->getPositionPointer(), new glm::vec3( 0.0f, 0.0f, 0.0f));
+		scene_listener_keep_offset_sky_reflection = new KeepOffsetListener( scene_sun_Object, reflectedCamera->getPositionPointer(), new glm::vec3( offset ) );
 		/*********************************************************************************/
 	}
 
