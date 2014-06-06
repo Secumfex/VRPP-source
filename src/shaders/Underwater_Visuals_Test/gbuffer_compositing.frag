@@ -23,7 +23,7 @@ void main() {
     // sun light direction
  //   vec4 lightDir = uniformView * vec4(1,1,0,0);  
     
-    vec3 lightDir = normalize ( (uniformView * vec4 (uniformSunDirection, 0 ) ).xyz );
+    vec3 lightDir = normalize ( (transpose(inverse(uniformView)) * vec4 (uniformSunDirection, 0 ) ).xyz );
     
     //calculate lighting with given position, normal and lightposition
     //vec3 nPosToLight = normalize(vec3(lightPos.xyz - position.xyz));
@@ -36,7 +36,9 @@ void main() {
     float ambient = 0.2;
     float diffuse = max(dot(normal.xyz, -lightDir ), 0);
   	
-  	color.rgb *= ambient;
-  	color.rgb += color.rgb * diffuse;
-    fragmentColor = color;
+  	vec4 finalColor = vec4( 0,0,0,0);
+    finalColor.rgb = ambient * color.rgb;
+  	finalColor.rgb +=  color.rgb * ( max(diffuse - ambient, 0 ) );
+  	finalColor.a = color.a;
+    fragmentColor = finalColor;
 }
