@@ -6,7 +6,9 @@ in vec3 passLightPosition;
 in vec2 passUVCoords;
 in vec4 passReflectionPosition;
 
-out vec4 fragmentColor;
+layout(location = 0) out vec4 positionOutput;
+layout(location = 1) out vec4 normalOutput;
+layout(location = 2) out vec4 colorOutput;
 
 uniform sampler2D uniformReflectionMap;
 uniform sampler2D uniformRefractionMap;
@@ -23,6 +25,9 @@ uniform float uniformTime;
 uniform mat4 uniformInverse;
 
 void main() { 
+	positionOutput = vec4( passPosition, 1.0 );
+
+	
 	vec2 depthCoord = gl_FragCoord.xy;
 	
 	depthCoord.x *= 1.0 / resX;
@@ -50,6 +55,8 @@ void main() {
     vec3 normal1 	= texture2D( normalTexture, texCoordNormal1 ).rgb * 2.0 - 1.0;
     vec3 normal_raw	= normalize( normal0 + normal1 );	// r == x-axis, g == z-axis, b == y-axis 
     vec3 normal 	= ( uniformInverse * vec4 ( normalize( vec3 ( normal_raw.x, normal_raw.y, normal_raw.z) ), 1.0 ) ).xyz;
+    
+	normalOutput = vec4( normal, 0 );
     
     vec2 texCoordReflection;
     vec2 texCoordRefraction;
@@ -80,7 +87,7 @@ void main() {
 //    / 1.5f
     ;
     
-    fragmentColor 	= vec4(
+    colorOutput 	= vec4(
         ( diffuse  * diffuse_color   +
           specular * vec3( 1, 1, 1 ) + 
           ambient  * diffuse_color ) 
