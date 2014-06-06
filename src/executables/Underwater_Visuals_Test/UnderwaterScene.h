@@ -27,11 +27,9 @@ namespace UnderwaterScene{
 	float particle_distance_max = 3.5f;
 
 	glm::vec4 watercolor(95.0f / 255.0f * 0.7f, 158.0f / 255.0f * 0.7f, 160.0f/ 255.0f * 0.7f, 0.0f);
-	glm::vec3 lightPosition(0.0f,1000.0f,0.0f);
 	glm::vec4 skycolor(135.0f / 255.0f, 206.0f / 255.0f, 250.0f / 255.0f, 0.0f);
 	glm::vec3 fog_color(95.0f / 255.0f * 0.7f, 158.0f / 255.0f * 0.7f, 160.0f/ 255.0f * 0.7f);
 	glm::vec3 fog_color_inverse(135.0f / 255.0f, 206.0f / 255.0f, 250.0f / 255.0f);
-
 	glm::vec3 fog_color_above_water(135.0f / 255.0f, 206.0f / 255.0f, 250.0f / 255.0f);
 	glm::vec3 fog_color_under_water(95.0f / 255.0f * 0.7f, 158.0f / 255.0f * 0.7f, 160.0f/ 255.0f * 0.7f);
 
@@ -44,6 +42,7 @@ namespace UnderwaterScene{
 	glm::vec3 water_plane_normal_under_water_inverse( 0.0f, 1.0f, 0.0f );
 	glm::vec3 water_plane_normal_above_water_inverse( 0.0f, -1.0f, 0.0f );
 
+	glm::vec3 lightPosition(1000.0f,1000.0f,0.0f);
 	glm::vec3 sunLightDirection( -1.0f, -1.0f, 0.0f );	// light direction
 	glm::mat4 sunView;
 	glm::mat4 sunPerspective;

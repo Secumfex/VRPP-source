@@ -147,6 +147,16 @@ glm::mat4 RenderManager::getLightPerspectiveMatrix(int index){
 	}
 }
 
+glm::vec3 RenderManager::getLightPosition( int index )
+{
+	if ( !mLightPositions.empty() && index < mLightPositions.size() - 1 && index > 0 ){
+		return mLightPositions[index];
+	}
+	else{
+		return glm::vec3();
+	}
+}
+
 //glfw error-callback function
 void errorCallback(int error, const char* description){
 	fputs(description, stderr);

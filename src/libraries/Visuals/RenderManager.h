@@ -159,6 +159,11 @@ public:
 	 */
 	glm::mat4 getLightPerspectiveMatrix(int index);
 
+	/** \brief getter
+	 *
+	 * @return position of light at index
+	 */
+	glm::vec3 getLightPosition(int index);
 
 	/** \brief !docu pls!
 	 *

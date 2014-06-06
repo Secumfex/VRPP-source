@@ -218,6 +218,8 @@ void configureRendering(){
 	gbufferCompositingRenderPass->setPositionMap( gbuffer_fbo->getPositionTextureHandle());
 	gbufferCompositingRenderPass->setNormalMap(   gbuffer_fbo->getNormalTextureHandle());
 	
+	gbufferCompositingRenderPass->attachListenerOnPostUniformUpload( uniSunDir );	// attach sun direction
+
 	testingState->getRenderLoop()->addRenderPass( gbufferCompositingRenderPass );
 
 	/************* 2 WATER: Rendering everything needed to render the WaterObject***********/
@@ -266,9 +268,10 @@ void configureRendering(){
 	gbufferReflectionMapCompositingPass->setNormalMap( 	UnderwaterScene::framebuffer_water_reflection_gbuffer->getNormalTextureHandle());
 	gbufferReflectionMapCompositingPass->setPositionMap(UnderwaterScene::framebuffer_water_reflection_gbuffer->getPositionTextureHandle());
 
-	// TODO find a way to light the reflection map correctly
-	//	gbufferReflectionMapCompositingPass->attachListenerOnActivation( new SetCameraListener( UnderwaterScene::reflectedCamera )); // set camera to reflected camera before composing
-	//	gbufferReflectionMapCompositingPass->attachListenerOnDeactivation( new SetCameraListener( testingState->getCamera() ));		 // set camera to regular camera after composing (undo above)
+	gbufferReflectionMapCompositingPass->attachListenerOnPostUniformUpload( uniSunDir );	// attach sun direction
+
+	gbufferReflectionMapCompositingPass->attachListenerOnActivation( new SetCameraListener( UnderwaterScene::reflectedCamera )); // set camera to reflected camera before composing
+	gbufferReflectionMapCompositingPass->attachListenerOnDeactivation( new SetCameraListener( testingState->getCamera() ));		 // set camera to regular camera after composing (undo above)
 
 	testingState->getRenderLoop()->addRenderPass( gbufferReflectionMapCompositingPass );
 
@@ -309,6 +312,8 @@ void configureRendering(){
 	gbufferRefractionMapCompositingPass->setColorMap( 	UnderwaterScene::framebuffer_water_refraction_gbuffer->getColorTextureHandle());
 	gbufferRefractionMapCompositingPass->setNormalMap( 	UnderwaterScene::framebuffer_water_refraction_gbuffer->getNormalTextureHandle());
 	gbufferRefractionMapCompositingPass->setPositionMap(UnderwaterScene::framebuffer_water_refraction_gbuffer->getPositionTextureHandle());
+
+	gbufferRefractionMapCompositingPass->attachListenerOnPostUniformUpload( uniSunDir );	// attach sun direction
 
 	testingState->getRenderLoop()->addRenderPass( gbufferRefractionMapCompositingPass);
 
