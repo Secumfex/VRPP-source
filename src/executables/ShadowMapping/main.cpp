@@ -102,6 +102,10 @@ void configureRendering(){
 	/*Shader *ssaoShader = new Shader (	SHADERS_PATH "/Postprocessing/screenFill.vert",
 			SHADERS_PATH "/Postprocessing/ssao.frag");*/
 
+	Shader *shadowShader = new Shader( 	SHADERS_PATH "/Postprocessing/screenFill.vert",
+			SHADERS_PATH "/Postprocessing/shadow.frag");
+
+
 
 	/* creating and seting up fbos */
 	FrameBufferObject *fbo = new FrameBufferObject(800, 600);
