@@ -21,6 +21,7 @@ protected:
 	/*Member variables*/
 	Frustum* frustum;				/**< frustum associated with camera, used for frustum culling */
 	Camera* camera;					/**< camera to be used for view in this state */
+	Camera* altCamera;				/**< camera to be used if multiple cams are needed */
 	RenderQueue* renderQueue;		/**< renderqueue to be used for rendering in this state */
 	IOHandler* iOHandler;			/**< IOHandler to be used for input interpretation */
 	RenderLoop* renderLoop;			/**< RenderLoop to be used for rendering */
@@ -47,6 +48,12 @@ public:
 	 * @return camera
 	 */
 	Camera* 		getCamera();
+
+	/** \brief getter
+	 *
+	 * @return alternative camera
+	 */
+	Camera* 		getAltCamera();
 
 	/** \brief getter
 	 *
@@ -79,6 +86,12 @@ public:
 	 * @param camera
 	 */
 	void setCamera(				Camera* camera);
+
+	/** \brief setter
+	 *
+	 * @param alternative camera
+	 */
+	void setAltCamera(				Camera* camera);
 
 	/** \brief setter
 	 *
