@@ -63,7 +63,7 @@ protected:
 	
 	int windowWidth, windowHeight;
 
-    FrameBufferObject renderBuffer;
+    FrameBufferObject* renderBuffer;
 
     const float  YawInitial;
     float LastSensorYaw;
@@ -138,6 +138,8 @@ public:
 	float getEyeYaw();
 	float getEyePitch();
 	float getEyeRoll();
+
+	FrameBufferObject* getRenderBuffer();
 };
 
 #endif
