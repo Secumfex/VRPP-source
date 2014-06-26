@@ -134,10 +134,9 @@ GraphicsComponent* VirtualObjectFactory::getHalfScreenQuad(HalfScreen side) {
 		GLfloat uvCoordinatesLeft[] = {
 				0.0f, 0.0f,
 				0.5f, 0.0f,
-
-				0.5f, 1.0f,
 				0.5f, 1.0f,
 
+				0.5f, 1.0f,
 				0.0f, 1.0f,
 				0.0f, 0.0f };
 
@@ -185,9 +184,9 @@ GraphicsComponent* VirtualObjectFactory::getHalfScreenQuad(HalfScreen side) {
 				<< " VirutalObjectFactory : creating HalfScreenQuadObjects... releasing buffers..."
 				<< std::endl;
 
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindVertexArray(0);
+//		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+//		glBindBuffer(GL_ARRAY_BUFFER, 0);
+//		glBindVertexArray(0);
 
 		std::cout
 				<< " VirutalObjectFactory : creating HalfScreenQuadObjects... GraphicsComponent..."
@@ -295,9 +294,9 @@ GraphicsComponent* VirtualObjectFactory::getHalfScreenQuad(HalfScreen side) {
 				<< " VirutalObjectFactory : creating HalfScreenQuadObjects... releasing buffers..."
 				<< std::endl;
 
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindVertexArray(0);
+//		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+//		glBindBuffer(GL_ARRAY_BUFFER, 0);
+//		glBindVertexArray(0);
 
 		std::cout
 				<< " VirutalObjectFactory : creating HalfScreenQuadObjects... GraphicsComponent..."
@@ -310,7 +309,6 @@ GraphicsComponent* VirtualObjectFactory::getHalfScreenQuad(HalfScreen side) {
 
 		mHalfScreenQuadRight = new GraphicsComponent(quadMeshRight,
 				quadMatRight);
-
 	}
 
 	if ( side == LEFT )
@@ -402,9 +400,9 @@ GraphicsComponent* VirtualObjectFactory::getQuad() {
 		
 		std::cout << " VirutalObjectFactory : creating QuadObject... releasing buffers..." << std::endl;
 
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindVertexArray(0);
+//		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+//		glBindBuffer(GL_ARRAY_BUFFER, 0);
+//		glBindVertexArray(0);
 
 		std::cout << " VirutalObjectFactory : creating QuadObject... GraphicsComponent..." << std::endl;
 
