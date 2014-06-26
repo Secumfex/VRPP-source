@@ -7,7 +7,7 @@
     uniform vec4 HmdWarpParam;
     uniform sampler2D Texture0;
  
-    out vec2 oTexCoord;
+    in vec2 oTexCoord;
     
     vec2 HmdWarp(vec2 in01)
     {
@@ -22,7 +22,7 @@
     {
        vec2 tc = HmdWarp(oTexCoord);
        if (!all(equal(clamp(tc, ScreenCenter-vec2(0.25,0.5), ScreenCenter+vec2(0.25,0.5)), tc)))
-           gl_FragColor = vec4(0);
+           gl_FragColor = vec4(1.0,0.0,0.0,1.0);
        else
            gl_FragColor = texture2D(Texture0, tc);
     }

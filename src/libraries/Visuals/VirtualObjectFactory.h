@@ -35,6 +35,8 @@ class VirtualObjectFactory : public Singleton<VirtualObjectFactory> {
 VirtualObject* mCube;					/**< !docu pls! */
 GraphicsComponent* mScreenFillTriangle;	/**< !docu pls! */
 GraphicsComponent* mQuad;				/**< a Quad GraphicsComponent */
+GraphicsComponent* mHalfScreenQuadLeft;	/**< a Half Screen filling Quad GraphicsComponent the left side of the screen*/
+GraphicsComponent* mHalfScreenQuadRight;	/**< a Half Screen filling Quad GraphicsComponent for the right side of the screen */
 
 //---------------MEMBER FUNCTIONS--------------------
 public:
@@ -53,6 +55,14 @@ VirtualObject* createNonAssimpVO(float mass = 0.0f);
  * @return
  */
 GraphicsComponent* getTriangle();
+
+enum HalfScreen {LEFT,RIGHT};
+
+/** \brief getter
+ *
+ * @return
+ */
+GraphicsComponent* getHalfScreenQuad( HalfScreen side);
 
 /** \brief getter
  *

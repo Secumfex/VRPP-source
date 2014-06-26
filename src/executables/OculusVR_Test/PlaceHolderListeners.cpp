@@ -101,9 +101,9 @@ void OculusPostProcessingRenderpass::update()
 	if (oculus)
 	{
 		// just draw this on the active FBO
-	//	oculus->PresentFbo(Oculus::PostProcess_Distortion, RiftDistortionParams());
+		oculus->PresentFbo(Oculus::PostProcess_Distortion, RiftDistortionParams());
 
-		oculus->PresentFbo_NoDistortion();
+	//	oculus->PresentFbo_NoDistortion();
 	}
 }
 

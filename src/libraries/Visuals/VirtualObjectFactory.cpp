@@ -18,6 +18,8 @@ VirtualObjectFactory::VirtualObjectFactory() {
 	mCube = 0;
 	mScreenFillTriangle = 0;
 	mQuad = 0;
+	mHalfScreenQuadLeft = 0;
+	mHalfScreenQuadRight = 0;
 }
 
 //eingefügt
@@ -78,6 +80,247 @@ GraphicsComponent* VirtualObjectFactory::getTriangle() {
 
 	}
 	return mScreenFillTriangle;
+}
+
+GraphicsComponent* VirtualObjectFactory::getHalfScreenQuad(HalfScreen side) {
+	if (mHalfScreenQuadLeft == 0 || mHalfScreenQuadRight == 0) {
+
+		std::cout << " VirutalObjectFactory : creating HalfScreenQuadObjects..."
+						<< std::endl;
+
+		/**
+		 *  LEFT HALF SCREEN QUAD
+		 */
+
+		Mesh* quadMeshLeft = new Mesh();
+		Material* quadMatLeft = new Material();
+
+		quadMatLeft->setName("default_quad_material");
+		GLuint quadVertexArrayHandleLeft;
+
+		glGenVertexArrays(1, &quadVertexArrayHandleLeft);
+		glBindVertexArray(quadVertexArrayHandleLeft);
+
+		int indicesLeft[] = { 0, 1, 2, 3, 4, 5 };
+
+		GLfloat positionsLeft[] = {
+				-1.0f, -1.0f, 0.0f,
+				0.0, -1.0f, 0.0f,
+				0.0, 1.0f, 0.0f,
+
+				0.0f, 1.0f, 0.0f,
+				-1.0f, 1.0f, 0.0f,
+				-1.0f, -1.0f, 0.0f
+		};
+
+		GLfloat normalsLeft[] = {
+				0.0, 0.0, 1.0,
+				0.0, 0.0, 1.0,
+				0.0, 0.0, 1.0,
+
+				0.0, 0.0, 1.0,
+				0.0, 0.0, 1.0,
+				0.0, 0.0, 1.0 };
+
+		GLfloat tangentsLeft[] = {
+				0.0, -1.0, 0.0,
+				0.0, -1.0, 0.0,
+				0.0, -1.0, 0.0,
+
+				0.0, -1.0, 0.0,
+				0.0, -1.0, 0.0,
+				0.0, -1.0, 0.0 };
+
+		GLfloat uvCoordinatesLeft[] = {
+				0.0f, 0.0f,
+				0.5f, 0.0f,
+
+				0.5f, 1.0f,
+				0.5f, 1.0f,
+
+				0.0f, 1.0f,
+				0.0f, 0.0f };
+
+		std::cout
+				<< " VirutalObjectFactory : creating creating HalfScreenQuadObjects... VertexArrayObjects..."
+				<< std::endl;
+
+		GLuint indexBufferHandleLeft;
+		glGenBuffers(1, &indexBufferHandleLeft);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferHandleLeft);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicesLeft), indicesLeft,
+				GL_STATIC_DRAW);
+
+		GLuint vertexBufferHandleLeft;
+		glGenBuffers(1, &vertexBufferHandleLeft);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandleLeft);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(positionsLeft), positionsLeft,
+				GL_STATIC_DRAW);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+		glGenBuffers(1, &vertexBufferHandleLeft);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandleLeft);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(uvCoordinatesLeft), uvCoordinatesLeft,
+				GL_STATIC_DRAW);
+
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+		glGenBuffers(1, &vertexBufferHandleLeft);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandleLeft);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(normalsLeft), normalsLeft, GL_STATIC_DRAW);
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+		glGenBuffers(1, &vertexBufferHandleLeft);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandleLeft);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(tangentsLeft), tangentsLeft,
+				GL_STATIC_DRAW);
+		glEnableVertexAttribArray(3);
+		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+		std::cout
+				<< " VirutalObjectFactory : creating HalfScreenQuadObjects... releasing buffers..."
+				<< std::endl;
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+
+		std::cout
+				<< " VirutalObjectFactory : creating HalfScreenQuadObjects... GraphicsComponent..."
+				<< std::endl;
+
+		quadMeshLeft->setVAO(quadVertexArrayHandleLeft);
+		quadMeshLeft->setNumIndices(6);
+		quadMeshLeft->setNumVertices(6);
+		quadMeshLeft->setNumFaces(2);
+
+		mHalfScreenQuadLeft = new GraphicsComponent(quadMeshLeft, quadMatLeft);
+
+		/**
+		 *  RIGHT HALF SCREEN QUAD
+		 */
+
+		Mesh* quadMeshRight = new Mesh();
+		Material* quadMatRight = new Material();
+
+		quadMatRight->setName("default_quad_material_2");
+		GLuint quadVertexArrayHandleRight;
+
+		glGenVertexArrays(1, &quadVertexArrayHandleRight);
+		glBindVertexArray(quadVertexArrayHandleRight);
+
+		int indicesRight[] = { 0, 1, 2, 3, 4, 5 };
+
+		GLfloat positionsRight[] = {
+				0.0f, -1.0f, 0.0f,
+				1.0f, -1.0f, 0.0f,
+				1.0f, 1.0f, 0.0f,
+				1.0f, 1.0f, 0.0f,
+				0.0f, 1.0f, 0.0f,
+				0.0f, -1.0f,0.0f };
+
+		GLfloat normalsRight[] = {
+				0.0, 0.0, 1.0,
+				0.0, 0.0, 1.0,
+				0.0, 0.0, 1.0,
+
+				0.0, 0.0, 1.0,
+				0.0, 0.0, 1.0,
+				0.0, 0.0, 1.0 };
+
+		GLfloat tangentsRight[] = {
+				0.0, -1.0, 0.0,
+				0.0, -1.0, 0.0,
+				0.0, -1.0, 0.0,
+
+				0.0, -1.0, 0.0,
+				0.0, -1.0, 0.0,
+				0.0, -1.0, 0.0 };
+
+		GLfloat uvCoordinatesRight[] = {
+				0.5f, 0.0f,
+				1.0f, 0.0f,
+				1.0f, 1.0f,
+
+				1.0f, 1.0f,
+				0.5f, 1.0f,
+				0.5f, 0.0f };
+
+		std::cout
+				<< " VirutalObjectFactory : creating creating HalfScreenQuadObjects... VertexArrayObjects..."
+				<< std::endl;
+
+		GLuint indexBufferHandleRight;
+		glGenBuffers(1, &indexBufferHandleRight);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferHandleRight);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicesRight),
+				indicesRight, GL_STATIC_DRAW);
+
+		GLuint vertexBufferHandleRight;
+		glGenBuffers(1, &vertexBufferHandleRight);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandleRight);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(positionsRight), positionsRight,
+				GL_STATIC_DRAW);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+		glGenBuffers(1, &vertexBufferHandleRight);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandleRight);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(uvCoordinatesRight),
+				uvCoordinatesRight, GL_STATIC_DRAW);
+
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+		glGenBuffers(1, &vertexBufferHandleRight);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandleRight);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(normalsRight), normalsRight,
+				GL_STATIC_DRAW);
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+		glGenBuffers(1, &vertexBufferHandleRight);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandleRight);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(tangentsRight), tangentsRight,
+				GL_STATIC_DRAW);
+		glEnableVertexAttribArray(3);
+		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+		std::cout
+				<< " VirutalObjectFactory : creating HalfScreenQuadObjects... releasing buffers..."
+				<< std::endl;
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+
+		std::cout
+				<< " VirutalObjectFactory : creating HalfScreenQuadObjects... GraphicsComponent..."
+				<< std::endl;
+
+		quadMeshRight->setVAO(quadVertexArrayHandleRight);
+		quadMeshRight->setNumIndices(6);
+		quadMeshRight->setNumVertices(6);
+		quadMeshRight->setNumFaces(2);
+
+		mHalfScreenQuadRight = new GraphicsComponent(quadMeshRight,
+				quadMatRight);
+
+	}
+
+	if ( side == LEFT )
+	{
+		return mHalfScreenQuadLeft;
+	}
+	else
+	{
+		return mHalfScreenQuadRight;
+	}
 }
 
 GraphicsComponent* VirtualObjectFactory::getQuad() {
