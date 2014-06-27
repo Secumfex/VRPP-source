@@ -51,6 +51,7 @@ void SetDefaultShaderListener::update() {
 }
 
 /******************* FEATURE UNDER WATER *********************/
+
 UnderwaterScene::SetClearColorListener::SetClearColorListener(float r, float g,
 		float b, float a) {
 	this->clearColorVec3 = new glm::vec3(r, g, b);
@@ -83,31 +84,40 @@ void UnderwaterScene::SetClearColorListener::update() {
 }
 
 UnderwaterScene::UnderOrAboveWaterListener::UnderOrAboveWaterListener(
-		Camera* cam, float* sea_level_y, Listener* EnterWaterListener,
-		Listener* ExitWaterListener) {
+		Camera* cam, float* sea_level_y) {
 	this->cam = cam;
 	this->sea_level_y = sea_level_y;
-	this->EnterWaterListener = EnterWaterListener;
-	this->ExitWaterListener = ExitWaterListener;
 	underwater = false;
 }
 
 void UnderwaterScene::UnderOrAboveWaterListener::update() {
 	if (cam->getPosition().y < *(this->sea_level_y)) {
 		if (!underwater) {
-			if (EnterWaterListener != 0) {
-				EnterWaterListener->update();
-			}
+
+			notify("ENTER_WATER");
+
 			underwater = true;
 		}
 	} else {
 		if (underwater) {
-			if (ExitWaterListener != 0) {
-				ExitWaterListener->update();
-			}
+
+			notify("EXIT_WATER");
+
 			underwater = false;
 		}
 	}
+}
+
+void UnderwaterScene::UnderOrAboveWaterListener::attachListenerOnEnterWater(
+		Listener* listener) {
+	listener->setName("ENTER_WATER");
+	attach(listener);
+}
+
+void UnderwaterScene::UnderOrAboveWaterListener::attachListenerOnExitWater(
+		Listener* listener) {
+	listener->setName("EXIT_WATER");
+	attach(listener);
 }
 
 UnderwaterScene::UpdateReflectedCameraPositionListener::UpdateReflectedCameraPositionListener(
@@ -187,4 +197,12 @@ void UnderwaterScene::KeepOffsetListener::update() {
 	vo->getPhysicsComponent()->setPosition(targetPosition.x, targetPosition.y,
 			targetPosition.z);
 	vo->updateModelMatrixViaPhysics();
+}
+
+UnderwaterScene::SetCameraListener::SetCameraListener(Camera* cam){
+	this->cam = cam;
+}
+
+void UnderwaterScene::SetCameraListener::update(){
+	RenderManager::getInstance()->setCamera(cam);
 }

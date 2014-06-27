@@ -16,7 +16,46 @@ Application* 	testingApp;
 VRState* 		testingState;
 IOHandler*   	testingInputHandler;
 
+/*****************  UTILITY *************************************/
+// debug views, if any
+std::vector< RenderPass* > debugViews;
+
+/**
+ * Create a tiny view at the top of the window
+ * should be used as very last renderpasses to write ontop of screen
+ *
+ * @param shader to be used ( should be simpleTex )
+ * @param state to use to add the renderpass to
+ * @param imageHandle of texture to be presented
+ */
+void addDebugView(Shader* shader, ApplicationState* state, GLuint imageHandle)
+{
+	int x = 0;
+	int y = IOManager::getInstance()->getHeight() - 100 ;
+
+	// max debug views : 8
+	if ( debugViews.size() < IOManager::getInstance()->getWidth() / 100)
+	{
+		x = debugViews.size() * 100;
+	}
+	else{
+		std::cout << "Maximum amount of debug views reached." << std::endl;
+		return;
+	}
+
+	MixTexturesRenderPass* renderTinyView = new MixTexturesRenderPass(shader, 0, imageHandle);
+	renderTinyView->setBaseTextureUniformName("diffuseTexture");
+	renderTinyView->setViewPortY(y);
+	renderTinyView->setViewPortX(x);
+	renderTinyView->setViewPortWidth(100);
+	renderTinyView->setViewPortHeight(100);
+	state->getRenderLoop()->addRenderPass(renderTinyView);
+
+	debugViews.push_back(renderTinyView);
+}
+
 /*****************  CONFIGURATION    ****************************/
+
 
 void configureTestingApplication(){
 	/* customization of application or state*/

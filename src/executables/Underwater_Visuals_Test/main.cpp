@@ -84,6 +84,8 @@ std::vector< RenderPass* > debugViews;
 
 /**
  * Create a tiny view at the top of the window
+ * should be used as very last renderpasses to write ontop of screen
+ *
  * @param shader to be used ( should be simpleTex )
  * @param state to use to add the renderpass to
  * @param imageHandle of texture to be presented

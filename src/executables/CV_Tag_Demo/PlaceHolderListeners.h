@@ -1,7 +1,7 @@
 #ifndef PLACEHOLDERLISTENERS_H
 #define PLACEHOLDERLISTENERS_H
 
-#include "Patterns/Listener.h"
+#include "Patterns/Subject.h"
 
 #include <GL/glew.h>
 #include <glm/glm.hpp>
@@ -42,17 +42,19 @@ public:
 /************ FEATURE UNDER WATER SCENE LISTENERS ******************/
 namespace UnderwaterScene
 {
-	/// Listener which calls a certain Listener when camera enters or exits the water
-	class UnderOrAboveWaterListener : public Listener{
+	/// Listener which calls a certain set of Listeners when camera enters or exits the water
+	class UnderOrAboveWaterListener : public Listener, public Subject{
 	private:
 		Camera* cam;
 		bool underwater;
 		float* sea_level_y;
-		Listener* EnterWaterListener;
-		Listener* ExitWaterListener;
 	public:
-		UnderOrAboveWaterListener(Camera* cam, float* sea_level_y = new float( 0.0f ), Listener* EnterWaterListener = 0, Listener* ExitWaterListener = 0);
-		void update();
+		UnderOrAboveWaterListener(Camera* cam, float* sea_level_y = new float( 0.0f ));
+
+		void attachListenerOnEnterWater( Listener* listener );
+		void attachListenerOnExitWater ( Listener* listener );
+
+		void update(); // check whether conditions changed and call listeners if so
 	};
 
 	/// Updates a target camera to the reflected position and view direction of a source camera, given a certain waterheight
@@ -112,6 +114,16 @@ namespace UnderwaterScene
 		SetClearColorListener( glm::vec4* clearColor );
 		void update();
 	};
+
+	/// Listener which sets the given Camera Object in RenderManager
+	class SetCameraListener : public Listener {
+	private:
+		Camera* 	cam;
+	public:
+		SetCameraListener(Camera* cam);
+		void update();
+	};
+
 } // namespace UnderwaterScene
 
 #endif
