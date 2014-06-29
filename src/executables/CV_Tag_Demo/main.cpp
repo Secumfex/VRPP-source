@@ -71,7 +71,7 @@ void configureVirtualObjects(){
 	/* creation and customization of Virtual Objects */
 	/* use testingState->createVirtualObject() to create a Virtual Object */
 
-	// alle Objektinstanzen erstellen
+	// alle Objektinstanzen der UnterwasserSzene erstellen
 	UnderwaterScene::createScene( testingState );
 
 	//TODO Statische Szene erstellen
@@ -107,6 +107,11 @@ void configureRendering(){
 
 	// TODO Alle anderen Renderpasses erstellen
 	// TODO Richtige Reihenfolge und verknüpfungen einstellen
+
+	// apply oculus post processing
+	OculusFeature::oculus->setRenderBuffer( UnderwaterScene:: finalImage );
+	testingState->getRenderLoop()->addRenderPass( OculusFeature::oculusPostProcessing );
+
 }
 
 void configureOtherStuff(){
@@ -131,7 +136,9 @@ void configureApplication(){
 	 *
 	 * 	Reihenfolge platzhaltend willkürlich
 	 */
-	// TODO OculusFeature:: initializeAndConfigureOculus( testingState );
+
+
+	OculusFeature:: initializeAndConfigureOculus( testingState );
 
 	// TODO TreasureChestFeature::createObjects( testingState);
 

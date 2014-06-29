@@ -433,3 +433,7 @@ FrameBufferObject* Oculus::getRenderBuffer()
 {
 	return renderBuffer;
 }
+
+void Oculus::setRenderBuffer(FrameBufferObject* renderbuffer) {
+	this->renderBuffer = renderbuffer;
+}

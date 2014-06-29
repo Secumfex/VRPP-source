@@ -140,6 +140,7 @@ public:
 	float getEyeRoll();
 
 	FrameBufferObject* getRenderBuffer();
+	void setRenderBuffer(FrameBufferObject* renderbuffer);	/**< use an extern fbo as renderbuffer*/
 };
 
 #endif

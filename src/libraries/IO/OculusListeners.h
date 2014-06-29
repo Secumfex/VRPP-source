@@ -38,4 +38,14 @@ public:
 	void update();
 };
 
+/// Listener which applies post processing distortion on top of the Oculus' instance FBO image and writes into active FBO it
+class OculusPostProcessingRenderpassListener : public Listener
+{
+private:
+	Oculus* oculus;
+public:
+	OculusPostProcessingRenderpassListener(Oculus* oculus = 0);
+	void update();
+};
+
 #endif /* OCULUSLISTENERS_H_ */

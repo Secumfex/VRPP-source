@@ -110,7 +110,7 @@ void configureRendering(){
 	 * PRESENTATION
 	 *****************************/
 	// present image when finished whith this render pass
-	default_renderpass_right_eye->attachListenerOnDeactivation( new OculusPostProcessingRenderpass(oculus));
+	default_renderpass_right_eye->attachListenerOnDeactivation( new OculusPostProcessingRenderpassListener(oculus));
 
 	// actual registration in renderloop
 	testingState->getRenderLoop()->addRenderPass(default_renderpass_left_eye);
