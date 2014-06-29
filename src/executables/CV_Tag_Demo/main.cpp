@@ -4,6 +4,8 @@
 #include "Tools/UtilityListeners.h"
 #include "PlaceHolderListeners.h"	// TODO use placeholder listeners header for missing listeners and stuff
 
+#include "Physics/PhysicWorldSimulationListener.h"
+
 // include features
 #include "FeatureUnderwaterScene.h"
 #include "FeatureTreasureChest.h"
@@ -69,6 +71,9 @@ void configureVirtualObjects(){
 	/* creation and customization of Virtual Objects */
 	/* use testingState->createVirtualObject() to create a Virtual Object */
 
+	// alle Objektinstanzen erstellen
+	UnderwaterScene::createScene( testingState );
+
 	//TODO Statische Szene erstellen
 	//TODO Andere Objekte ( Kiste, Fischschwarm, Seetang etc. ) erstellen
 
@@ -77,6 +82,7 @@ void configureVirtualObjects(){
 void configurePhysics(){
 	/* customization of Bullet / Physicsworld */
 
+	testingState->attachListenerOnBeginningProgramCycle( 	new PhysicWorldSimulationListener( IOManager::getInstance()->getDeltaTimePointer() ) );
 
 	// TODO Schwerelosigkeit ausschalten
 	// TODO Kamera bei y > 10.0f runterziehen
@@ -90,7 +96,17 @@ void configureInputHandler(){
 }
 
 void configureRendering(){
-	// TODO Alle Renderpasses erstellen
+	// TODO: Oculus vorher initialisieren, damit Fenstergröße in Inputmanager bekannt ist
+	IOManager::getInstance()->setWindowSize(1280, 800);
+
+	// alle Shader erstellen, die später benötigt werden
+	UnderwaterScene::createShaders( testingState );
+
+	// Testweise: alle Renderpasses erstellen und direkt in Renderloop einfügen
+	UnderwaterScene:: createRenderPasses( testingState, true);
+
+	// TODO Alle anderen Renderpasses erstellen
+	// TODO Richtige Reihenfolge und verknüpfungen einstellen
 }
 
 void configureOtherStuff(){
@@ -104,6 +120,9 @@ void configureApplication(){
 	testingApp 			->	setLabel("PROJEKT PRAKTIKUM");
 	testingState 	= 	new VRState("TESTING FRAMEWORK");
 	testingApp 			->	addState(testingState);
+
+	testingApp->initialize();	// to ensure IO manager and RenderManager are aware of all things necessary
+
 	testingInputHandler = testingState->getIOHandler();
 
 
@@ -113,8 +132,6 @@ void configureApplication(){
 	 * 	Reihenfolge platzhaltend willkürlich
 	 */
 	// TODO OculusFeature:: initializeAndConfigureOculus( testingState );
-
-	// TODO UnderwaterScene::createObjects( testingState );
 
 	// TODO TreasureChestFeature::createObjects( testingState);
 
