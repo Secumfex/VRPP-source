@@ -54,6 +54,9 @@ void SetOculusCameraEyeListener::update() {
 	{
 		cam->setEye( eye );
 	}
+
+	// update view matrix immediately
+	cam->getViewMatrix();
 }
 
 OculusPostProcessingRenderpassListener::OculusPostProcessingRenderpassListener(Oculus* oculus)

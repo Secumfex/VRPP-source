@@ -293,3 +293,17 @@ void OculusFeature::StereoRenderPassRenderAgainListener::update() {
 				}
 			}
 }
+
+void UnderwaterScene::SetCameraListener::setCamera(Camera* cam) {
+	this->cam = cam;
+}
+
+void UnderwaterScene::UpdateReflectedCameraPositionListener::setCamSource(
+		Camera* camera) {
+	this->cam_source = camera;
+}
+
+void UnderwaterScene::UpdateReflectedCameraPositionListener::setCamTarget(
+		Camera* camera) {
+	this->cam_target = camera;
+}

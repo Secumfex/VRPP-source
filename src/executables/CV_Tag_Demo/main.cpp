@@ -18,6 +18,8 @@ Application* 	testingApp;
 VRState* 		testingState;
 IOHandler*   	testingInputHandler;
 
+OculusCamera* 	reflectedOculusCamera;
+
 /*****************  UTILITY *************************************/
 // debug views, if any
 std::vector< RenderPass* > debugViews;
@@ -71,9 +73,14 @@ void configureVirtualObjects(){
 	/* creation and customization of Virtual Objects */
 	/* use testingState->createVirtualObject() to create a Virtual Object */
 
+	// some fine tuning of frame buffer sizes
 	UnderwaterScene::framebuffer_water_refraction_scalefactor = 0.5f;
 	UnderwaterScene::framebuffer_water_reflection_scalefactor = 0.5f;
 	UnderwaterScene::framebuffer_water_caustics_scalefactor = 0.5f;
+
+	// already create a reflected cam to be used as default reflected camera during object creation
+	reflectedOculusCamera = new OculusCamera( OculusFeature::oculus );
+	UnderwaterScene::reflectedCamera = reflectedOculusCamera;
 
 	// alle Objektinstanzen & framebuffer der UnterwasserSzene erstellen
 	UnderwaterScene::createScene( testingState );
@@ -113,25 +120,21 @@ void configureRendering(){
 	// TODO Alle anderen Renderpasses erstellen
 	// TODO Richtige Reihenfolge und verknüpfungen einstellen
 
-	// make stereo renderpasses where necessary
-
+	// make stereo renderpasses whenever geometry is rendered
 	std::cout << " Reconfiguring RenderPasses to Stereo Rendering" << std::endl;
 	OculusFeature::makeStereoRenderPass( UnderwaterScene::gbufferSunSkyRenderPass, 				OculusFeature::oculus, OculusFeature::oculusCam );
 	OculusFeature::makeStereoRenderPass( UnderwaterScene::gbufferRenderPass, 					OculusFeature::oculus, OculusFeature::oculusCam );
-	OculusFeature::makeStereoRenderPass( UnderwaterScene::gbufferReflectionMapSunSkyRenderPass, OculusFeature::oculus, OculusFeature::oculusCam );
-	OculusFeature::makeStereoRenderPass( UnderwaterScene::gbufferReflectionMapRenderPass, 		OculusFeature::oculus, OculusFeature::oculusCam );
+	OculusFeature::makeStereoRenderPass( UnderwaterScene::gbufferReflectionMapSunSkyRenderPass, OculusFeature::oculus, reflectedOculusCamera );
+	OculusFeature::makeStereoRenderPass( UnderwaterScene::gbufferReflectionMapRenderPass, 		OculusFeature::oculus, reflectedOculusCamera );
 	OculusFeature::makeStereoRenderPass( UnderwaterScene::gbufferRefractionMapSunSkyRenderPass, OculusFeature::oculus, OculusFeature::oculusCam );
 	OculusFeature::makeStereoRenderPass( UnderwaterScene::gbufferRefractionMapRenderPass, 		OculusFeature::oculus, OculusFeature::oculusCam );
 	OculusFeature::makeStereoRenderPass( UnderwaterScene::gbufferParticlesRenderPass, 			OculusFeature::oculus, OculusFeature::oculusCam );
 	OculusFeature::makeStereoRenderPass( UnderwaterScene::gbufferWaterRenderPass, 				OculusFeature::oculus, OculusFeature::oculusCam );
 
-	// overwrite resolution settings of water render pass
-	// TODO some matrices are left to overwrite here, to have it work at last
-//	UnderwaterScene::gbufferWaterRenderPass->attachListenerOnPostUniformUpload(
-//			new UploadUniformFloatListener("",
-//					UnderwaterScene::gbufferWaterRenderPass->getFrameBufferObject()->getWidth() / 2, "resX"));
+	// use a different shader for water object render pass, due to reflection map hickups
+	UnderwaterScene::gbufferWaterRenderPass->setShader( new Shader ( SHADERS_PATH "/CV_Tag_Demo/gbuffer_water_stereo.vert", SHADERS_PATH "/CV_Tag_Demo/gbuffer_water_stereo.frag") );
 
-	// apply oculus post processing
+	// apply oculus post processing on final image
 	std::cout << " Setting Stereo Post Processing effect on final image" << std::endl;
 	OculusFeature::oculus->setRenderBuffer( UnderwaterScene:: finalImage );
 	testingState->getRenderLoop()->addRenderPass( OculusFeature::oculusPostProcessing );

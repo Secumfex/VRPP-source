@@ -160,7 +160,7 @@ TextureRenderPass* 			presentFinalImage;
 /**
  * MISC
  */
-	Camera* reflectedCamera;
+	Camera* reflectedCamera = 0;
 
 	Texture* causticsTexture;
 	Texture* particlesTexture;
@@ -392,7 +392,12 @@ TextureRenderPass* 			presentFinalImage;
 		Camera* cam =  target->getCamera();
 		cam->setPosition( cam->getPosition() + glm::vec3(0.0,1.5,0.0));
 
-		reflectedCamera = new Camera();
+		// check whether there is already a camera instance to be used as reflected camera
+		if ( reflectedCamera == 0 )
+		{
+			reflectedCamera = new Camera();
+		}
+
 		reflectedCamera->setTopDown( true );
 		target->attachListenerOnBeginningProgramCycle(new UpdateReflectedCameraPositionListener(cam, reflectedCamera, &water_height));
 		/*********************************************************************************/

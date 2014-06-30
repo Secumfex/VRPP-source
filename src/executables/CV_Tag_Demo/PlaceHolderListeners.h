@@ -73,6 +73,9 @@ namespace UnderwaterScene
 		UpdateReflectedCameraPositionListener(Camera* cam, Camera* cam_target, float* water_height);
 		UpdateReflectedCameraPositionListener(Camera* cam, Camera* cam_target, float water_height);
 		void update();
+
+		void setCamSource( Camera* camera );
+		void setCamTarget( Camera* camera );
 	};
 
 	/// Uploads a sinus value
@@ -128,6 +131,8 @@ namespace UnderwaterScene
 	public:
 		SetCameraListener(Camera* cam);
 		void update();
+
+		void setCamera( Camera* cam );
 	};
 
 } // namespace UnderwaterScene
