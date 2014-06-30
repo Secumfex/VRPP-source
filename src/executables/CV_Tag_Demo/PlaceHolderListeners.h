@@ -16,6 +16,12 @@
 
 #include "UnderwaterSceneParticleSystem.h"
 
+#include "IO/Oculus.h"
+#include "IO/OculusCamera.h"
+#include "IO/OculusListeners.h"
+
+
+
 /// Listener which renders a frame by using current Instance pointers of RenderManager
 class RenderloopPlaceHolderListener : public Listener{
 private:
@@ -125,5 +131,52 @@ namespace UnderwaterScene
 	};
 
 } // namespace UnderwaterScene
+
+/************ FEATURE OCULUS LISTENERS ******************/
+namespace OculusFeature
+{
+	class SetViewPortListener : public Listener
+	{
+	private:
+		int x;
+		int y;
+		int width;
+		int height;
+	public:
+		SetViewPortListener(int x, int y, int width, int height);
+		void update();
+
+	};
+
+	class StereoRenderPassActivateRenderEyeSettingsListener : public Listener
+	{
+	private:
+		bool isActiveEye;			// boolean that is switched on and off to determine which eye should be rendered
+		RenderPass* renderPass;		// renderPass to be altered and called
+		OVR::Util::Render::StereoEye eye;
+
+		SetOculusCameraEyeListener setEyeListener;
+		SetViewPortListener setViewPortListener;
+		SetStereoPerspectiveListener setPerspectiveListener;
+
+		bool defaultClearColorBufferSetting;
+		bool defaultClearDepthBufferSetting;
+	public:
+		StereoRenderPassActivateRenderEyeSettingsListener( RenderPass* renderPass, Oculus* oculus, OculusCamera* oculusCam, OVR::Util::Render::StereoEye eye, bool isActiveEye );
+
+		void update();
+	};
+
+	class StereoRenderPassRenderAgainListener : public Listener
+	{
+	private:
+		bool shouldRender; 		// boolean that is switched on and off to determine whether this was called before
+		RenderPass* renderPass;
+	public:
+		StereoRenderPassRenderAgainListener(RenderPass* renderPass);
+		void update();
+	};
+
+}
 
 #endif

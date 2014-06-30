@@ -10,6 +10,9 @@
 #include "UnderwaterSceneParticleSystem.h"
 
 namespace UnderwaterScene{
+/**
+ * PARAMETERS
+ */
 
 	bool is_underwater;
 
@@ -25,7 +28,7 @@ namespace UnderwaterScene{
 	float fog_end_above_water = 190.0f;
 	float fog_begin_above_water = 20.0f;
 
-	int   particle_amount = 20;
+	int   particle_amount = 100;
 	float particle_distance_max = 3.5f;
 
 	glm::vec4 watercolor(95.0f / 255.0f * 0.7f, 158.0f / 255.0f * 0.7f, 160.0f/ 255.0f * 0.7f, 0.0f);
@@ -50,6 +53,13 @@ namespace UnderwaterScene{
 	glm::mat4 sunView;
 	glm::mat4 sunPerspective;
 	glm::mat4 sunViewPerspective;
+
+	float framebuffer_water_refraction_scalefactor = 1.0f; // size in proportion to actual window size
+	float framebuffer_water_reflection_scalefactor = 1.0f; // size in proportion to actual window size
+	float framebuffer_water_godrays_scalefactor = 0.25f; // size in proportion to actual window size
+	float framebuffer_water_particles_scalefactor = 0.5f; // size in proportion to actual window size
+	float framebuffer_water_caustics_scalefactor = 1.0f; // size in proportion to actual window size
+
 
 /**
  * OBJECTS
@@ -289,19 +299,19 @@ TextureRenderPass* 			presentFinalImage;
 		int window_width = IOManager::getInstance()->getWidth();
 		int window_height = IOManager::getInstance()->getHeight();
 
-		framebuffer_water_reflection_compositing = new FrameBufferObject(window_width,window_height);
+		framebuffer_water_reflection_compositing = new FrameBufferObject(window_width * framebuffer_water_reflection_scalefactor,window_height * framebuffer_water_reflection_scalefactor);
 		framebuffer_water_reflection_compositing ->bindFBO();
 		framebuffer_water_reflection_compositing ->createPositionTexture();
 		framebuffer_water_reflection_compositing ->makeDrawBuffers();	// draw color to color attachment 0
 		framebuffer_water_reflection_compositing ->unbindFBO();
 
-		framebuffer_water_refraction_compositing = new FrameBufferObject(window_width,window_height);
+		framebuffer_water_refraction_compositing = new FrameBufferObject(window_width * framebuffer_water_refraction_scalefactor,window_height * framebuffer_water_refraction_scalefactor);
 		framebuffer_water_refraction_compositing ->bindFBO();
 		framebuffer_water_refraction_compositing ->createPositionTexture();
 		framebuffer_water_refraction_compositing ->makeDrawBuffers();	// draw color to color attachment 0
 		framebuffer_water_refraction_compositing ->unbindFBO();
 
-		framebuffer_water_reflection_gbuffer = new FrameBufferObject(window_width,window_height);
+		framebuffer_water_reflection_gbuffer = new FrameBufferObject(window_width * framebuffer_water_reflection_scalefactor, window_height * framebuffer_water_reflection_scalefactor);
 		framebuffer_water_reflection_gbuffer->bindFBO();
 		framebuffer_water_reflection_gbuffer->createPositionTexture();
 		framebuffer_water_reflection_gbuffer->createNormalTexture();
@@ -309,7 +319,7 @@ TextureRenderPass* 			presentFinalImage;
 		framebuffer_water_reflection_gbuffer->makeDrawBuffers();
 		framebuffer_water_reflection_gbuffer->unbindFBO();
 
-		framebuffer_water_refraction_gbuffer = new FrameBufferObject(window_width,window_height);
+		framebuffer_water_refraction_gbuffer = new FrameBufferObject(window_width * framebuffer_water_refraction_scalefactor, window_height * framebuffer_water_refraction_scalefactor);
 		framebuffer_water_refraction_gbuffer->bindFBO();
 		framebuffer_water_refraction_gbuffer->createPositionTexture();
 		framebuffer_water_refraction_gbuffer->createNormalTexture();
@@ -317,19 +327,19 @@ TextureRenderPass* 			presentFinalImage;
 		framebuffer_water_refraction_gbuffer->makeDrawBuffers();
 		framebuffer_water_refraction_gbuffer->unbindFBO();
 
-		framebuffer_water_god_rays = new FrameBufferObject(window_width / 4, window_height / 4 );
+		framebuffer_water_god_rays = new FrameBufferObject(window_width * framebuffer_water_godrays_scalefactor , window_height * framebuffer_water_godrays_scalefactor );
 		framebuffer_water_god_rays->bindFBO();
 		framebuffer_water_god_rays->createPositionTexture();
 		framebuffer_water_god_rays->makeDrawBuffers();	// draw color to color attachment 0
 		framebuffer_water_god_rays->unbindFBO();
 
-		framebuffer_water_particles = new FrameBufferObject(window_width / 2, window_height / 2);
+		framebuffer_water_particles = new FrameBufferObject(window_width *  framebuffer_water_particles_scalefactor, window_height *  framebuffer_water_particles_scalefactor);
 		framebuffer_water_particles->bindFBO();
 		framebuffer_water_particles->createPositionTexture();
 		framebuffer_water_particles->makeDrawBuffers();	// draw color to color attachment 0
 		framebuffer_water_particles->unbindFBO();
 
-		framebuffer_water_caustics = new FrameBufferObject(window_width, window_height);
+		framebuffer_water_caustics = new FrameBufferObject(window_width * framebuffer_water_caustics_scalefactor, window_height * framebuffer_water_caustics_scalefactor);
 		framebuffer_water_caustics->bindFBO();
 		framebuffer_water_caustics->createPositionTexture();
 		framebuffer_water_caustics->makeDrawBuffers();	// draw color to color attachment 0
@@ -496,7 +506,6 @@ TextureRenderPass* 			presentFinalImage;
 		Listener* uniFogBeginInv= new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", &UnderwaterScene::fog_begin_inverse, "uniformFogBegin");
 		Listener* uniFogEnd 	= new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", &UnderwaterScene::fog_end, "uniformFogEnd");
 		Listener* uniFogEndInv 	= new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", &UnderwaterScene::fog_end_inverse, "uniformFogEnd");
-
 		Listener* uniSinusWave  = new UploadUniformSinusWaveListener("UNIFORMUPLOADLISTENER", IOManager::getInstance()->getWindowTimePointer(), 0.5f, 0.0f, "uniformSinus");
 
 		Listener* setClearColor 	= new SetClearColorListener 		( &UnderwaterScene::fog_color, 1.0);

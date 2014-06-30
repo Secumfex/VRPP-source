@@ -600,3 +600,10 @@ ScreenFillingTriangleRenderPass::ScreenFillingTriangleRenderPass(Shader* shader,
 
 	mInitialGraphicsComponentList.push_back( mTriangle );
 }
+
+bool RenderPass::getClearColorBufferBit() {
+	return clearColorBufferBit;
+}
+bool RenderPass::getClearDepthBufferBit() {
+	return clearColorBufferBit;
+}

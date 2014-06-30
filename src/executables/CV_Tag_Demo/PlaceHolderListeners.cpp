@@ -206,3 +206,90 @@ UnderwaterScene::SetCameraListener::SetCameraListener(Camera* cam){
 void UnderwaterScene::SetCameraListener::update(){
 	RenderManager::getInstance()->setCamera(cam);
 }
+
+OculusFeature::SetViewPortListener::SetViewPortListener(int x, int y, int width,
+		int height) {
+	this->x = x;
+	this->y = y;
+	this->width = width;
+	this->height = height;
+}
+
+void OculusFeature::SetViewPortListener::update() {
+	glViewport(x,y,width,height);
+}
+
+OculusFeature::StereoRenderPassActivateRenderEyeSettingsListener::StereoRenderPassActivateRenderEyeSettingsListener(
+		RenderPass* renderPass, Oculus* oculus, OculusCamera* oculusCam,
+		OVR::Util::Render::StereoEye eye, bool isActiveEye)
+: setEyeListener(oculusCam, eye)
+, setViewPortListener(
+			(eye == OVR::Util::Render::StereoEye_Left) ?
+					renderPass->getViewPortX() :
+					renderPass->getViewPortX()
+							+ renderPass->getViewPortWidth() / 2,
+			renderPass->getViewPortY(),
+			renderPass->getViewPortWidth() / 2,
+			renderPass->getViewPortHeight())
+, setPerspectiveListener(oculus, eye)
+{
+this->renderPass = renderPass;
+this->eye = eye;
+this->isActiveEye = isActiveEye;
+
+this->defaultClearColorBufferSetting = renderPass->getClearColorBufferBit();
+this->defaultClearDepthBufferSetting = renderPass->getClearDepthBufferBit();
+}
+
+void OculusFeature::StereoRenderPassActivateRenderEyeSettingsListener::update()
+{
+	if ( isActiveEye )
+	{
+		setEyeListener.update();
+		setViewPortListener.update();
+		setPerspectiveListener.update();
+
+		if ( eye == OVR::Util::Render::StereoEye_Right )
+		{	// make sure left eye render will not be cleared
+			renderPass->setClearColorBufferBit( false );
+			renderPass->setClearDepthBufferBit( false );
+		}
+
+		isActiveEye = false;
+	}
+	else{	// war nicht aktiv, beim nächstem mal aber
+		isActiveEye = true;
+
+		if ( eye == OVR::Util::Render::StereoEye_Right )
+		{	// make sure default clear color buffer setting is active for left eye
+			renderPass->setClearColorBufferBit( defaultClearColorBufferSetting );
+			renderPass->setClearDepthBufferBit( defaultClearDepthBufferSetting );
+		}
+	}
+}
+
+OculusFeature::StereoRenderPassRenderAgainListener::StereoRenderPassRenderAgainListener(
+		RenderPass* renderPass)
+{
+		this->renderPass = renderPass;
+		shouldRender = true;
+}
+
+void OculusFeature::StereoRenderPassRenderAgainListener::update() {
+	{
+				if ( shouldRender )
+				{
+					shouldRender = false;
+
+					renderPass->activate();
+					renderPass->render();
+					renderPass->deactivate();
+
+					return;
+				}
+				else{	// will trigger next time again
+					shouldRender = true;
+					return;
+				}
+			}
+}

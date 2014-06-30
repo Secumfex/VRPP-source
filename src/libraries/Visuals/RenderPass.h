@@ -172,6 +172,18 @@ public:
 	 */
 	float getViewPortHeight();
 	
+	/** \brief getter
+	 *
+	 * @return clear color buffer bit boolean
+	 */
+	bool getClearColorBufferBit();
+
+	/** \brief getter
+	 *
+	 * @return clear depth buffer bit boolean
+	 */
+	bool getClearDepthBufferBit();
+
 	/** \brief setter
 	 *
 	 * @param clear color buffer bit boolean
@@ -247,6 +259,7 @@ public:
 	 * @return initialGraphicsComponentList
 	 */
 	std::list<GraphicsComponent*>   getInitialGraphicsComponentList();
+
 protected:
 
 	float mViewPort_x, mViewPort_y, mViewPort_width, mViewPort_height, mCustomViewPortHeight, mCustomViewPortWidth;
