@@ -62,7 +62,7 @@ void main() {
     vec2 texCoordRefraction;
     
     
-    float xOffset;
+    float xOffset = 0.0f;
     // see whether fragCoord is in first or second half of screen
     if ( gl_FragCoord.x  > resX / 2.0 )
     {
@@ -70,7 +70,7 @@ void main() {
     }
     
     // reflectioncoord.s must map from [0, 1] to either [0,0.5] or [0.5, 1.0] in reflection map
-    texCoordReflection.s = max( min( ( ( ( passReflectionPosition.x / passReflectionPosition.w ) / 2.0f ) + 0.5f )  + noise_factor * normal.x , 1.0f) , 0.0f ) * 0.5 + xOffset;
+    texCoordReflection.s = max( min( ( ( ( passReflectionPosition.x / passReflectionPosition.w ) / 2.0f ) + 0.5f )  + noise_factor * normal.x , 1.0f) , 0.0f ) * 0.5f + xOffset;
     texCoordReflection.t = ( ( ( ( passReflectionPosition.y / passReflectionPosition.w ) / 2.0f ) + 0.5f )  + noise_factor * normal.z );
     
     
