@@ -62,8 +62,8 @@ void main() {
     vec2 texCoordRefraction;
     texCoordReflection.s = ( ( ( passReflectionPosition.x / passReflectionPosition.w ) / 2.0f ) + 0.5f ) + noise_factor * normal.x;
     texCoordReflection.t = ( ( ( passReflectionPosition.y / passReflectionPosition.w ) / 2.0f ) + 0.5f ) + noise_factor * normal.z;
-    texCoordRefraction.s = ( gl_FragCoord.x / 800.0 )   + noise_factor * normal.x;
-    texCoordRefraction.t = ( gl_FragCoord.y / 600.0 )   + noise_factor * normal.z;
+    texCoordRefraction.s = ( gl_FragCoord.x / resX )   + noise_factor * normal.x;
+    texCoordRefraction.t = ( gl_FragCoord.y / resY )   + noise_factor * normal.z;
     
     vec3 lightVector 		= normalize( passLightPosition - passPosition );
     vec3 reflectionVector 	= normalize( reflect( -lightVector, normal ) );

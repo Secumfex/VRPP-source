@@ -259,7 +259,7 @@ TextureRenderPass* 			presentFinalImage;
 		scene_sun_Object 		= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_sun_shape.dae", 	VirtualObjectFactory::OTHER, 0.0f, 1, true);
 
 		sunView = glm::lookAt( - sunLightDirection , glm::vec3 (0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f) );
-		sunPerspective = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 1000.0f);
+		sunPerspective = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 100.0f);
 		sunViewPerspective 		= sunPerspective * sunView;
 
 		if (scene_sun_Object->getGraphicsComponent().size() > 0){

@@ -92,12 +92,13 @@ void configureInputHandler(){
 	/* customization of input handling */
 	testingInputHandler->attachListenerOnKeyPress(		new TerminateApplicationListener(testingApp), GLFW_KEY_ESCAPE);
 
+	testingInputHandler->attachListenerOnKeyPress(new PrintValueListener( IOManager::getInstance()->getDeltaTimePointer(), "d_t : "), GLFW_KEY_T );
+
 	// TODO Tasten zum resetten etc.
 }
 
 void configureRendering(){
-	// TODO: Oculus vorher initialisieren, damit Fenstergröße in Inputmanager bekannt ist
-	IOManager::getInstance()->setWindowSize(1280, 800);
+	// Oculus wurde bereits initialisiert --> fenster größe ist bekannt
 
 	// alle Shader erstellen, die später benötigt werden
 	UnderwaterScene::createShaders( testingState );
@@ -109,8 +110,8 @@ void configureRendering(){
 	// TODO Richtige Reihenfolge und verknüpfungen einstellen
 
 	// apply oculus post processing
-	OculusFeature::oculus->setRenderBuffer( UnderwaterScene:: finalImage );
-	testingState->getRenderLoop()->addRenderPass( OculusFeature::oculusPostProcessing );
+//	OculusFeature::oculus->setRenderBuffer( UnderwaterScene:: finalImage );
+//	testingState->getRenderLoop()->addRenderPass( OculusFeature::oculusPostProcessing );
 
 }
 
