@@ -139,9 +139,14 @@ private:
 	 */
 	void makeShader(std::string vert, std::string frag); //
 
+	void getShaderInfo();
+
+	void useMinimalColorOutput();
+
 	//-----------------MEMBER VARIABLES-----------------
 protected:
 
+	std::vector<std::string> mOutputs;
 
 	std::map<std::string, GLuint> mUniformHandles;	/**< !docu pls! */
 

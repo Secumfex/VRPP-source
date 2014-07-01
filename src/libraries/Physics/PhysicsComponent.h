@@ -31,6 +31,15 @@ public:
 	PhysicsComponent();
 
 	/** \brief constructor
+	 *
+	 *this constructor copies every component of the input physicscomponent
+	 *
+	 * @param phy
+	 */
+
+	PhysicsComponent(PhysicsComponent* phy);
+
+	/** \brief constructor
 	*
 	* creates a physics component with a given model matrix. does not define any rigid body.
 	* @param modelMatrix 4x4Matrix

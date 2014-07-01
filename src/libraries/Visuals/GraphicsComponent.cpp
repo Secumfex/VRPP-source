@@ -9,15 +9,39 @@ GraphicsComponent::GraphicsComponent(){
 	mTranparency = false;
 	mEmission = false;
 	mShadow = false;
+	mDynamic = false;
+	mAnimated = false;
 	mGhostObject = new btGhostObject();
     mHasNormalMap = false;
+}
+
+GraphicsComponent::GraphicsComponent(GraphicsComponent* gc){
+	this->setAnimated(gc->hasAnimation());
+	this->setDynamic(gc->isDynamic());
+	this->setEmission(gc->hasEmission());
+	this->setShadow(gc->hasShadow());
+	this->setTransparency(gc->hasTransparency());
+	mGhostObject = new btGhostObject();
+	mGhostObject->setCollisionShape(gc->getGhostObject()->getCollisionShape());
+	this->setModelMatrixGc(gc->getModelMatrix());
+
+	this->setMesh(new Mesh(gc->getMesh()));
+	this->setMaterial(new Material(gc->getMaterial()));
+
+	unsigned int i;
+	for (i = 0; i < gc->getBones().size(); ++i) {
+	this->addBone(gc->getBones()[i]);
+	}
+
 }
 
 GraphicsComponent::GraphicsComponent(Mesh* mesh, Material* material){
 	mMesh = mesh;
 	mMaterial = material;
-	mTranparency = false;
 	mEmission = false;
+	mAnimated = false;
+	mDynamic = false;
+	mTranparency = false;
 	mShadow = false;
 	mGhostObject = new btGhostObject();
     mHasNormalMap = false;
@@ -94,6 +118,20 @@ void GraphicsComponent:: setGhostObject(glm::vec3 min, glm::vec3 max){
 	PhysicWorld::getInstance()->dynamicsWorld->addCollisionObject(mGhostObject);
 }
 btGhostObject* GraphicsComponent::getGhostObject(){
-return mGhostObject;
+	return mGhostObject;
+}
+void GraphicsComponent::addBone(Bone* bone){
+	mBones.push_back(bone);
 }
 
+vector<Bone*> GraphicsComponent::getBones(){
+	return mBones;
+}
+
+void GraphicsComponent::setAnimated(bool animated){
+	mAnimated = animated;
+}
+
+bool GraphicsComponent::hasAnimation(){
+	return mAnimated;
+}
