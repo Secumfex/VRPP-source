@@ -130,6 +130,9 @@ void configureRendering(){
 	fbo2->makeDrawBuffers();
 	fbo2->unbindFBO();
 
+	FrameBufferObject* fbo3 = new FrameBufferObject(800, 600); //fbo for depthWrite only
+
+
 	/* creating listeners */
 	Listener* uniResX = new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", 800, "resX");
 	Listener* uniResY = new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", 600, "resY");
@@ -199,6 +202,9 @@ void configureRendering(){
 	ssaoRenderPass->attachListenerOnPostUniformUpload( uniNormalMap2 );
 
 	testingState->getRenderLoop()->addRenderPass( ssaoRenderPass );*/
+
+	/* shadow map render pass */
+	RenderPass* shadowPass = new RenderPass(shadowShader, fbo3);
 
 }
 
