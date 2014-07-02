@@ -42,3 +42,12 @@ public:
 	SetClearColorListener(float r = 0.0, float g = 0.0, float b = 0.0, float a = 1.0);
 	void update();
 };
+
+class SetCamPositionListener : public Listener{
+private:
+	RenderManager* rm;
+	glm::vec3 position;
+public:
+	SetCamPositionListener(glm::vec3 newPosition);
+	void update();
+};
