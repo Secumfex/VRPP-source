@@ -20,14 +20,22 @@ namespace TextureTools {
      
         //send image data to the new texture
         if (bytesPerPixel < 3) {
+        	std::cout << "ERROR: bytes per pixel are to low : " << bytesPerPixel << std::endl;
             std::cout << "ERROR: Unable to open image"  << fileName << std::endl;
             return -1;
         } else if (bytesPerPixel == 3){
-            glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+
+        	// to ensure textures with odd dimensions can be buffered
+        	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+        	glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+        	glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+
+        	glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
         } else if (bytesPerPixel == 4) {
             glTexImage2D(GL_TEXTURE_2D, 0,GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         } else {
-            std::cout << "Unknown format for bytes per pixel... Changed to \"4\"" << std::endl;
+            std::cout << "WARNING: Unknown format for bytes per pixel... Changed to \"4\"" << std::endl;
             glTexImage2D(GL_TEXTURE_2D, 0,GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         }
 

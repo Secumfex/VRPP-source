@@ -147,14 +147,6 @@ void ApplyForceOnSelectedPhysicsComponentInCameraViewDirectionListener::update()
 	}
 }
 
-UpdateVirtualObjectModelMatrixListener::UpdateVirtualObjectModelMatrixListener(VirtualObject* vo){
-	this->vo = vo;
-}
-
-void UpdateVirtualObjectModelMatrixListener::update(){
-	vo->updateModelMatrixViaPhysics();
-}
-
 ApplyLinearImpulseOnRigidBody::ApplyLinearImpulseOnRigidBody(btRigidBody* rigidBody, glm::vec3 force){
 	this->rigidBody = rigidBody;
 	this->force = force;

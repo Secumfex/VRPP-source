@@ -36,17 +36,16 @@ void configureTestingApplication(){
 }
 
 void configureVirtualObjects(){
-	cowObject = testingState->createVirtualObject(RESOURCES_PATH "/cow.obj", VirtualObjectFactory::OTHER, 5.0f);	// to have something in the scene
+	cowObject = testingState->createVirtualObject(RESOURCES_PATH "/cow.obj", VirtualObjectFactory::OTHER, 5.0f, 8);	// to have something in the scene
 	cowObject->translate(glm::vec3(0.0f,4.0f,0.0f));
-	testingState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cowObject));
 	
 	VirtualObject* groundObject = testingState->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_ground.dae", VirtualObjectFactory::OTHER,0.0f,1,true);
 
 	VirtualObject* wallObject1 = testingState->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_wall1.dae", VirtualObjectFactory::OTHER,0.0f,1,true);	// to have something in the scene
 	VirtualObject* wallObject2 = testingState->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_wall2.dae", VirtualObjectFactory::OTHER,0.0f,1,true);	// to have something in the scene
-	VirtualObject* cubeObject2 = testingState->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::OTHER, 10.0f);	// to have something in the scene
-	cubeObject2->translate(glm::vec3(0.0f,2.0f,0.0f));
-	testingState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cubeObject2));
+	VirtualObject* cubeObject2 = testingState->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 10.0f, 8);	// to have something in the scene
+
+	cubeObject2->translate(glm::vec3(0.0f,7.0f,0.0f));
 	
 }
 
@@ -89,6 +88,27 @@ void configureInputHandler(){
 	
 }
 
+void configureGui(){
+
+	float points[] = {-1.0f, -1.0f,
+			1.0f, -1.0f,
+			-1.0f, -1.0f,
+			-1.0f, -1.0f,
+			1.0f, -1.0f,
+			1.0f, 1.0f};
+
+	//Gui-Handle//
+	GLuint vp_vbo, vao;
+	glGenBuffers (1, &vp_vbo);
+	glBindBuffer (GL_ARRAY_BUFFER, vp_vbo);
+	glBufferData (GL_ARRAY_BUFFER, sizeof(points), points, GL_STATIC_DRAW);
+	glGenVertexArrays (1, &vao);
+	glVertexAttribPointer (0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+	glEnableVertexAttribArray (0);
+
+
+}
+
 void configureRendering(){
 
 	/*
@@ -125,6 +145,7 @@ void configureApplication(){
 	configureVirtualObjects();
 	configurePhysics();
 	configureInputHandler();
+	configureGui();
 	configureRendering();
 	configureOtherStuff();
 }

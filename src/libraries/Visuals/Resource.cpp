@@ -253,3 +253,12 @@ std::vector<glm::vec3> Mesh::getVertices(){
 
 	return mVertexPositions;
 }
+
+void Mesh::setCenterOfMassOffsetMatrix(glm::mat4 offsetMatrix )
+{
+	mCenterOfMassOffsetMatrix = offsetMatrix;
+}
+
+const glm::mat4& Mesh::getCenterOfMassOffsetMatrix() const {
+	return mCenterOfMassOffsetMatrix;
+}

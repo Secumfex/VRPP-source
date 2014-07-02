@@ -52,15 +52,16 @@ public:
 	virtual void activate();
 
 	/** \brief deactivate this renderpass 
-	* disables the FBO, sets the RenderManager FBO and Shader to 0 and reenables / disables gl functions to default
+	* disables the FBO, sets the RenderManager FBO and Shader to 0 and re-enables / disables gl functions to default
 	* also calls Deactivation Listeners at the end */
 	virtual void deactivate();
 
 	/** \brief add a Request Flag to narrow down the list of objects to render */
 	void addRenderQueueRequestFlag(RenderQueueRequestFlag* renderQueueRequestFlag);
 
-	/** \brief !docu pls!
+	/** \brief extract the sub-list of valid graphics components from active render queue which would be rendered
 	 *
+	 * list of initial graphics components will be narrowed down by active render queue according to provided list of request flags
 	 * @return vector of graphic components references
 	 */
 	std::list<GraphicsComponent*> extractGCsFromRenderQueue();
@@ -171,6 +172,18 @@ public:
 	 */
 	float getViewPortHeight();
 	
+	/** \brief getter
+	 *
+	 * @return clear color buffer bit boolean
+	 */
+	bool getClearColorBufferBit();
+
+	/** \brief getter
+	 *
+	 * @return clear depth buffer bit boolean
+	 */
+	bool getClearDepthBufferBit();
+
 	/** \brief setter
 	 *
 	 * @param clear color buffer bit boolean
@@ -246,7 +259,9 @@ public:
 	 * @return initialGraphicsComponentList
 	 */
 	std::list<GraphicsComponent*>   getInitialGraphicsComponentList();
+
 protected:
+
 	float mViewPort_x, mViewPort_y, mViewPort_width, mViewPort_height, mCustomViewPortHeight, mCustomViewPortWidth;
 
 	FrameBufferObject *mFBO;				/**< FrameBufferObject which will be set as render target */
@@ -322,6 +337,45 @@ public:
 	GraphicsComponent* mTriangle;	/**< Screen Filling Triangle to be rendered */
 };
 
+/// a RenderPass which will perform a screen filling polygon render pass
+class ScreenFillingTriangleRenderPass : public RenderPass
+{
+protected:
+	GraphicsComponent* mTriangle;
+public:
+	/** \brief constructor
+	 *
+	 * @param shader to be used in this render pass
+	 * @param fbo to be used as rendertrget in this renderpass ( optional set 0 or leave out to render to screen )
+	 */
+	ScreenFillingTriangleRenderPass(Shader* shader, FrameBufferObject* fbo = 0);
+};
+
+/// a Renderpass which will perform a screen filling polygon render pass and upload one texture and is suitable for presenting a texture or post processing involving only one texture
+class TextureRenderPass : public RenderPass {
+protected:
+	GLuint mTexture; /**< texture handle */
+
+	UploadUniformTextureListener mTextureUploader; /**< Listener to upload base texture */
+
+	GraphicsComponent* mTriangle; /**< screen filling polygon graphics component */
+public:
+	virtual void uploadUniforms(); /**< upload texture as uniform */
+
+	/** \brief constructor
+	 *
+	 * @param textureShader shader to be used in this render pass
+	 * @param fbo to be used as render target in this renderpass ( optional: set 0 or leave out to render to screen )
+	 * @param texture handle of texture
+	 */
+	TextureRenderPass( Shader* textureShader, FrameBufferObject* fbo = 0, GLuint texture = 0 );
+
+	void setTexture(GLuint texture); /**< set texture handle*/
+
+	void setTextureUniformName(std::string name);	/**< set uniform target name of texture uploader ( uniform to which texture will attempt to upload )*/
+
+};
+
 /// a Renderpass which will perform a screen filling polygon render pass and upload two textures and is suitable for compositing of two textures, i.e. frames
 class MixTexturesRenderPass : public RenderPass {
 protected:
@@ -349,6 +403,29 @@ public:
 
 	void setBaseTextureUniformName(std::string name);	/**< set uniform target name of base texture uploader ( uniform to which base texture will attempt to upload )*/
 	void setMixTextureUniformName(std::string name);    /**< set uniform target name of mix texture uploader ( uniform to which mix texture will attempt to upload )*/
+};
+
+/// a Renderpass which will only call a render call if a condition is true
+class ConditionalRenderPassProxy : public RenderPass
+{
+protected:
+	bool* mCondition; 	 /**< condition to be checked*/
+	bool mInvert;	 /**< whether condition should be inverted */
+	RenderPass* mRenderPass;  /**< actual RenderPass to be rendered */
+public:
+	/** \brief constructor
+	 *
+	 * @param renderPass to be called if condition is true
+	 * @param condition to be checked against
+	 * @param invert boolean whether condition should be inverted
+	 */
+	ConditionalRenderPassProxy( RenderPass* renderPass, bool* condition, bool invert = false);
+	virtual void activate();	/**< calls mRenderPass->render() if condition is true */
+	virtual void render();	/**< calls mRenderPass->render() if condition is true */
+	virtual void deactivate();	/**< calls mRenderPass->render() if condition is true */
+
+	RenderPass* getRenderPass(); /**< getter */
+	void setRenderPass(RenderPass* renderPass); /**< setter */
 };
 
 #endif /* RENDERPASS_H_ */

@@ -57,6 +57,11 @@ public:
 	 */
 	void createDepthBuffer();
 
+	/** \brief creates a depthbuffer for this fbo
+	 *
+	 */
+	void createGuiTexture();
+
 	/** \brief getter
 	 *
 	 * @return FBO handle
@@ -104,6 +109,8 @@ public:
 	/** \brief binds this fbo
 	 *
 	 */
+
+	GLuint getGuiTextureHandle();
 	void bindFBO();
 
 	/** \brief unbinds this fbo
@@ -142,6 +149,19 @@ public:
 	 *
 	 */
 	void bindDepthBuffer();
+
+	/** \brief setter for depthbuffer of this fbo
+	 *
+	 *	to use a shared depth buffer amongst multiple frame buffer objects
+	 *	the shared depth buffer and frame buffer object MUST have the same size
+	 *	or an error message is printed and nothing will be set
+	 */
+	void setDepthBufferHandle(GLuint sharedDepthBufferHandle);
+
+	/** \brief binds normal map of this fbo
+	 *
+	 */
+	void bindGuiTexture();
 
 	/** \brief unbinds texture from current active texture
 	 *
@@ -187,6 +207,7 @@ protected:
     GLuint mSpecularTextureHandle;		/**< !docu pls! */
     GLuint mShadowMapHandle;			/**< !docu pls! */
     GLuint mDepthbufferHandle;			/**< !docu pls! */
+    GLuint mGuiTextureHandle;
 
 
 

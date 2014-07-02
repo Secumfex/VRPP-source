@@ -261,5 +261,16 @@ public:
 	void update();
 };
 
+/// Listener which sets the vo position to an offset from the target position
+class KeepOffsetListener : public Listener {
+private:
+	VirtualObject* vo;		// object to keep an offset
+	glm::vec3* target;		// target to keep an offset from
+	glm::vec3* offset;		// offset to be kept
+public:
+	KeepOffsetListener(VirtualObject* vo, glm::vec3* target, glm::vec3* offset = 0);
+	void update();
+};
+
 static void createSquare();
 

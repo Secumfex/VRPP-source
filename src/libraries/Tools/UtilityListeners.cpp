@@ -118,3 +118,33 @@ SetVec3ValuesListener::SetVec3ValuesListener(glm::vec3* target, glm::vec3 source
 void SetVec3ValuesListener::update(){
 	*target = *source;
 }
+
+bool DirtyFlagListener::getDirtyFlag() const {
+	return dirtyFlag;
+}
+
+void DirtyFlagListener::setDirtyFlag(bool dirtyFlag) {
+	this->dirtyFlag = dirtyFlag;
+}
+
+DirtyFlagListener::DirtyFlagListener() {
+	dirtyFlag = false;
+}
+
+void DirtyFlagListener::update() {
+	dirtyFlag = true;
+}
+
+SetBoolValueListener::SetBoolValueListener(bool* target, bool* value) {
+	this->source = value;
+	this->target = target;
+}
+
+SetBoolValueListener::SetBoolValueListener(bool* target, bool value) {
+	this->source = new bool(value);
+	this->target = target;
+}
+
+void SetBoolValueListener::update() {
+	*target = *source;
+}

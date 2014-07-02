@@ -18,8 +18,11 @@ void UploadUniformModelMatrixListener::update(){
 	Shader* shader = RenderManager::getInstance()->getCurrentShader();
 	VirtualObject* currentVO = RenderManager::getInstance()->getCurrentVO();
 
-	glm::mat4 model = currentVO->getModelMatrix();
-	shader->uploadUniform(model, "uniformModel");
+	if (currentVO)
+	{
+		glm::mat4 model = currentVO->getModelMatrix();
+		shader->uploadUniform(model, "uniformModel");
+	}
 }
 
 UploadUniformViewMatrixListener::UploadUniformViewMatrixListener(std::string name){
@@ -327,7 +330,7 @@ void UploadUniformResolutionYListener::update(){
 		shader->uploadUniform(IOManager::getInstance()->getHeight(), "resY");
 	}
 	else{
-		shader->uploadUniform(fbo->getWidth(), "resY");
+		shader->uploadUniform(fbo->getHeight(), "resY");
 	}
 }
 
@@ -439,4 +442,21 @@ void UploadUniformTextureListener::setTextureUnit(GLint unit)
 void UploadUniformTextureListener::setUniformName(std::string uniform_name)
 {
 	this->uniform_name = uniform_name;
+}
+
+UploadUniformBooleanListener::UploadUniformBooleanListener(std::string name, bool value, std::string uniform_name){
+	setName(name);
+	this->value     = new bool (value);
+	this->uniform_name 	= uniform_name;
+}
+
+UploadUniformBooleanListener::UploadUniformBooleanListener(std::string name, bool* value, std::string uniform_name){
+	setName(name);
+	this->value 	= value;
+	this->uniform_name 	= uniform_name;
+}
+
+void UploadUniformBooleanListener::update(){
+	Shader* shader = RenderManager::getInstance()->getCurrentShader();
+	shader->uploadUniform(*value, uniform_name);
 }

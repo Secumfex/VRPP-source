@@ -163,6 +163,7 @@ public:
 	 */
 	glm::mat4 getLightPerspectiveMatrix(int index);
 
+<<<<<<< HEAD
 	/**
 	*
 	* \brief get depth information from Kinect
@@ -170,6 +171,13 @@ public:
 	* @return positive/negative force
 	*/
 
+=======
+	/** \brief getter
+	 *
+	 * @return position of light at index
+	 */
+	glm::vec3 getLightPosition(int index);
+>>>>>>> origin/master
 
 	float getKinectData(GLubyte* dest);
 	/** \brief !docu pls!
@@ -201,13 +209,11 @@ public:
 	 */
 	void attachListenerOnWindowShouldClose(Listener* listener);
 
-
-private:
-
-	/** \brief !docu pls!
-	 *
+	/** \brief create four light sources
+	 *	create four Light sources for fun
 	 */
 	void createFourLightsources();
+private:
 
 	GLuint vbo;							/**< !docu pls! */
 	GLuint MVPHandle;					/**< !docu pls! */

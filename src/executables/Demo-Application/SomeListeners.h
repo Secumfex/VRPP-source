@@ -69,24 +69,6 @@ public:
 	void update();
 };
 
-/// Listener which updates the VirtualObject Modelmatrix by reading the PhysicsComponent Modelmatrix
-class UpdateVirtualObjectModelMatrixListener : public Listener{
-private:
-	VirtualObject* vo;
-public:
-	UpdateVirtualObjectModelMatrixListener(VirtualObject* vo);
-	void update();
-};
-
-/// Listener which updates the PhysicsWorld on every update
-class UpdatePhysicsWorldListener : public Listener {
-private:
-public:
-	UpdatePhysicsWorldListener();
-	void update();
-};
-
-
 /// Listener which sets the direction of the given Camera Object
 class SetCameraDirectionListener : public Listener {
 private:
@@ -94,6 +76,16 @@ private:
 	glm::vec3 	direction;
 public:
 	SetCameraDirectionListener(Camera* cam, glm::vec3 direction);
+	void update();
+};
+
+/// Listener which sets the Position of the given Camera Object
+class SetCameraPositionListener : public Listener {
+private:
+	Camera* 	cam;
+	glm::vec3 position;
+public:
+	SetCameraPositionListener(Camera* cam, glm::vec3 position);
 	void update();
 };
 

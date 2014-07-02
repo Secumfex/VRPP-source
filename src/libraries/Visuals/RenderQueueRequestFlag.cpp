@@ -26,7 +26,7 @@ FlagShadowCaster::FlagShadowCaster(bool invertedCondition){
 	setInvertCondition(invertedCondition);
 }
 
-list<GraphicsComponent*> FlagShadowCaster::extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* > temp){
+list<GraphicsComponent*>& FlagShadowCaster::extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* >& temp){
 	return rq->extrudeGCsForRequestFlag(this, temp);
 }
 
@@ -35,7 +35,7 @@ FlagUsesShader::FlagUsesShader(Shader* shader, bool invertedCondition){
 	setInvertCondition(invertedCondition);
 }
 
-list<GraphicsComponent*> FlagUsesShader::extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* > temp){
+list<GraphicsComponent*>& FlagUsesShader::extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* >& temp){
 	return rq->extrudeGCsForRequestFlag(this, temp);
 }
 
@@ -44,7 +44,7 @@ FlagUsesMesh::FlagUsesMesh(Mesh* mesh, bool invertedCondition){
 	mMesh = mesh;
 }
 
-list<GraphicsComponent*> FlagUsesMesh::extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* > temp){
+list<GraphicsComponent*>& FlagUsesMesh::extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* >& temp){
 	return rq->extrudeGCsForRequestFlag(this, temp);
 }
 
@@ -58,7 +58,7 @@ VirtualObject* FlagPartOfVirtualObject::getVirtualObject()
 	return mVO;
 }
 
-list<GraphicsComponent*> FlagPartOfVirtualObject::extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* > temp){
+list<GraphicsComponent*>& FlagPartOfVirtualObject::extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* >& temp){
 	return rq->extrudeGCsForRequestFlag(this, temp);
 }
 
@@ -66,7 +66,7 @@ FlagInViewFrustum::FlagInViewFrustum(bool invertedCondition){
 	setInvertCondition(invertedCondition);
 }
 
-list<GraphicsComponent*> FlagInViewFrustum::extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* > temp){
+list<GraphicsComponent*>& FlagInViewFrustum::extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* >& temp){
 	return rq->extrudeGCsForRequestFlag(this, temp);
 }
 
@@ -74,7 +74,7 @@ FlagTransparency::FlagTransparency(bool invertedCondition){
 	setInvertCondition(invertedCondition);
 }
 
-list<GraphicsComponent*> FlagTransparency::extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* > temp){
+list<GraphicsComponent*>& FlagTransparency::extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* >& temp){
 	return rq->extrudeGCsForRequestFlag(this, temp);
 }
 
@@ -82,6 +82,14 @@ FlagScreenFillingPolygon::FlagScreenFillingPolygon(bool invertedCondition){
 	setInvertCondition(invertedCondition);
 }
 
-list<GraphicsComponent*> FlagScreenFillingPolygon::extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* > temp){
+list<GraphicsComponent*>& FlagScreenFillingPolygon::extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* >& temp){
+	return rq->extrudeGCsForRequestFlag(this, temp);
+}
+
+CurrentRenderQueueFlag::CurrentRenderQueueFlag(bool invertedCondition){
+	setInvertCondition(invertedCondition);
+}
+
+list<GraphicsComponent*>& CurrentRenderQueueFlag::extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* >& temp){
 	return rq->extrudeGCsForRequestFlag(this, temp);
 }

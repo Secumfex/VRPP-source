@@ -91,11 +91,18 @@ void RenderManager::setCurrentFrustum(Frustum* frustum){
 	mFrustum = frustum;
 }
 void RenderManager::setLightPosition (glm::vec3 pos, int index){
-if(mLightPositions.empty())
-	createFourLightsources();
-if(index < 0 || index > 3)
-	return;
+	//    mLightPositions.push_back(pos);
 
+	if(mLightPositions.empty())
+	{
+		createFourLightsources();
+	}
+	if(index < 0 || ( index > mLightPositions.size( ) - 1 ) )
+	{
+		return;
+	}
+
+	mLightPositions[index] = pos;
 }
 
 FrameBufferObject* RenderManager::getCurrentFBO(){
@@ -128,13 +135,28 @@ Frustum* RenderManager::getCurrentFrustum(){
 }
 
 glm::mat4 RenderManager::getLightPerspectiveMatrix(int index){
-	glm::vec3 eye = mCamera->getPosition();
-	glm::vec3 center = mCamera->getViewDirection() - eye;
+	if (!mLightPositions.empty()){
+		glm::vec3 eye = mCamera->getPosition();
+		glm::vec3 center = mCamera->getViewDirection() - eye;
 
-	glm::mat4 persp = glm::perspective(60.0f, 1.0f, 0.1f, 100.0f);
-	glm::mat4 view = glm::lookAt(mLightPositions[index], center, vec3(0.0, 1.0, 0.0));
+		glm::mat4 persp = glm::perspective(60.0f, 1.0f, 0.1f, 100.0f);
+		glm::mat4 view = glm::lookAt(mLightPositions[index], center, vec3(0.0, 1.0, 0.0));
 
-	return  persp * view;
+		return  persp * view;
+	}
+	else{
+		return glm::mat4(1.0f);
+	}
+}
+
+glm::vec3 RenderManager::getLightPosition( int index )
+{
+	if ( !mLightPositions.empty() && index < mLightPositions.size() - 1 && index > 0 ){
+		return mLightPositions[index];
+	}
+	else{
+		return glm::vec3();
+	}
 }
 
 //glfw error-callback function
@@ -201,12 +223,13 @@ void RenderManager::manageShaderProgram(){
 			SHADERS_PATH "/RenderManagerApp/RenderManagerApp.frag");
 
 	glUseProgram(shaderProgramHandle);
+	MVPHandle = glGetUniformLocation(shaderProgramHandle, "uniformMVP");
 }
 
 void RenderManager::renderLoop(){
 	//   std::cout<<"RENDER LOOP REACHED SUCCESFULLY."<<std::endl;
 
-	MVPHandle = glGetUniformLocation(shaderProgramHandle, "uniformMVP");
+	//MVPHandle = glGetUniformLocation(shaderProgramHandle, "uniformMVP");
 
 	if(!glfwWindowShouldClose(window)){ //if window is not about to close
 		glfwMakeContextCurrent(window);

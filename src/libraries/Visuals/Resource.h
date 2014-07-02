@@ -461,6 +461,15 @@ public:
 	void addBoneWeight(GLuint boneweight);
 
 
+	/** \brief setter
+	 *
+	 * sets the center of mass model matrix offset
+	 * @param offsetMatrix (translational matrix to move the center of mass into the local model space origin)
+	 */
+	void setCenterOfMassOffsetMatrix(glm::mat4 offsetMatrix);
+
+	const glm::mat4& getCenterOfMassOffsetMatrix() const;
+
 	//---------------MEMBER VARIABLES--------------------
 private:
 
@@ -474,7 +483,7 @@ private:
 
 		std::vector<GLuint> mBoneWeights;			/**< !docu pls! */
 
-
+		glm::mat4 mCenterOfMassOffsetMatrix;	/**< offset of the center of mass in relation to the local coordinates origin */
 
 };
 

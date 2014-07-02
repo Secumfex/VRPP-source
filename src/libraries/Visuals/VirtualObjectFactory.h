@@ -35,11 +35,13 @@ class VirtualObjectFactory : public Singleton<VirtualObjectFactory> {
 VirtualObject* mCube;					/**< !docu pls! */
 GraphicsComponent* mScreenFillTriangle;	/**< !docu pls! */
 GraphicsComponent* mQuad;				/**< a Quad GraphicsComponent */
+GraphicsComponent* mHalfScreenQuadLeft;	/**< a Half Screen filling Quad GraphicsComponent the left side of the screen*/
+GraphicsComponent* mHalfScreenQuadRight;	/**< a Half Screen filling Quad GraphicsComponent for the right side of the screen */
 
 //---------------MEMBER FUNCTIONS--------------------
 public:
 
-enum BodyType {CUBE, SPHERE, PLANE, OTHER};	/**< possible body types of a virtual object */
+enum BodyType {CUBE, SPHERE, PLANE, MESH, OTHER};	/**< possible body types of a virtual object */
 
 /** \brief
  *
@@ -53,6 +55,14 @@ VirtualObject* createNonAssimpVO(float mass = 0.0f);
  * @return
  */
 GraphicsComponent* getTriangle();
+
+enum HalfScreen {LEFT,RIGHT};
+
+/** \brief getter
+ *
+ * @return
+ */
+GraphicsComponent* getHalfScreenQuad( HalfScreen side);
 
 /** \brief getter
  *
@@ -73,7 +83,7 @@ VirtualObject* createVirtualObject();
  * @param filename
  * @param bodyType
  * @param mass defines the behavior of the rigid body in the physics world
- * @param collisionFlag 
+ * @param collisionFlag a collision flag, see PhysicsComponent constructor for reference
  * @param blenderAxes defines whether the file uses world_axes of Blender ( Z is up, Y is depth ), which is common in Blender exported Collada files
  * @return virtual object
  */

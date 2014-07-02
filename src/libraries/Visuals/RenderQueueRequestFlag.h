@@ -73,7 +73,7 @@ public:
 	 *
 	 * Abstract method, sends Flag objects to overloaded metods ín the RenderQueue
 	 */
-	virtual list<GraphicsComponent* > extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* > temp) = 0;
+	virtual list<GraphicsComponent* >& extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* >& temp) = 0;
 };
 
 /*! @brief flag-child 
@@ -89,7 +89,7 @@ public:
 	 *
 	 * flag sends itself to the render queue, which will trigger the overloaded method
 	 */
-	list<GraphicsComponent* > extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* > temp);
+	list<GraphicsComponent* >& extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* >& temp);
 };
 
 /*! @brief flag-child
@@ -106,7 +106,7 @@ public:
 	 *
 	 * flag sends itself to the render queue, which will trigger the overloaded method
 	 */
-	list<GraphicsComponent* > extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* > temp);
+	list<GraphicsComponent* >& extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* >& temp);
 };
 
 /*! @brief flag : graphics component uses mesh object
@@ -124,7 +124,7 @@ public:
 	 *
 	 * flag sends itself to the render queue, which will trigger the overloaded method
 	 */
-	list<GraphicsComponent* > extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* > temp);
+	list<GraphicsComponent* >& extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* >& temp);
 };
 
 /*! @brief flag : graphics component uses mesh object
@@ -143,7 +143,7 @@ public:
 	 *
 	 * flag sends itself to the render queue, which will trigger the overloaded method
 	 */
-	list<GraphicsComponent* > extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* > temp);
+	list<GraphicsComponent* >& extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* >& temp);
 };
 
 /*! @brief flag-child
@@ -159,7 +159,7 @@ public:
 	 *
 	 * flag sends itself to the render queue, which will trigger the overloaded method
 	 */
-	list<GraphicsComponent* > extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* > temp);
+	list<GraphicsComponent* >& extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* >& temp);
 };
 
 /*! @brief flag-child
@@ -175,7 +175,7 @@ public:
 	 *
 	 * flag sends itself to the render queue, which will trigger the overloaded method
 	 */
-	list<GraphicsComponent* > extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* > temp);
+	list<GraphicsComponent* >& extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* >& temp);
 };
 
 /*! @brief flag-child
@@ -191,7 +191,19 @@ public:
 	 *
 	 * flag sends itself to the render queue, which will trigger the overloaded method
 	 */
-	list<GraphicsComponent* > extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* > temp);
+	list<GraphicsComponent* >& extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* >& temp);
+};
+
+class CurrentRenderQueueFlag : public RenderQueueRequestFlag{
+private:
+public:
+	CurrentRenderQueueFlag(bool invertedCondition = false);
+
+	/*! @brief flag visits the render queue
+	 *
+	 * flag sends itself to the render queue, which will trigger the overloaded method
+	 */
+	list<GraphicsComponent* >& extrudeGCsRequestFlagList(RenderQueue* rq, list<GraphicsComponent* >& temp);
 };
 
 #endif

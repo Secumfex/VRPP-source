@@ -47,6 +47,7 @@ RenderPass::RenderPass(Shader* shader, FrameBufferObject* fbo){
 	mCustomClearColor = 0;
 	mHasCustomClearColor = false;
 
+
 	mCustomViewPortHeight = 0.0f;
 	mCustomViewPortWidth = 0.0f;
 }
@@ -82,6 +83,7 @@ void RenderPass::activate()
 		mViewPort_width  = IOManager::getInstance()->getWidth();
 		mViewPort_height = IOManager::getInstance()->getHeight();
 	}
+
 	if (mCustomViewPortHeight != 0.0f)
 	{
 		mViewPort_height = mCustomViewPortHeight;
@@ -260,13 +262,16 @@ void RenderPass::setViewPortY(float y)
 
 void RenderPass::setViewPortWidth(float width)
 {
+
 	mCustomViewPortWidth = width;
+
 	mViewPort_width = width;
 }
 
 void RenderPass::setViewPortHeight(float height)
 {
 	mCustomViewPortHeight = height;
+
 	mViewPort_height = height;
 }
 
@@ -417,22 +422,14 @@ GBufferRenderPass::GBufferRenderPass(Shader* gbuffer_shader, FrameBufferObject* 
 	mCustomViewPortWidth = 0.0f;
 }
 
-void CompositingPass::uploadUniforms()
-{
-	RenderPass::uploadUniforms();
-	colorMapUploader.update();
-	positionMapUploader.update();
-	normalMapUploader.update();
-}
-
 CompositingPass::CompositingPass(Shader* gbuffer_compositing_shader, FrameBufferObject* fbo){
-	mTriangle =	VirtualObjectFactory::getInstance()->getTriangle();
-
 	clearDepthBufferBit = true;
 	clearColorBufferBit = true;
 
 	mShader = gbuffer_compositing_shader;
 	mFBO = fbo;
+	
+	mTriangle =	VirtualObjectFactory::getInstance()->getTriangle();
 
 	useDepthTest = false;
 
@@ -449,6 +446,15 @@ CompositingPass::CompositingPass(Shader* gbuffer_compositing_shader, FrameBuffer
 	positionMapUploader.setTextureUnit(4);
 	positionMapUploader.setUniformName("positionMap");
 }
+
+void CompositingPass::uploadUniforms()
+{
+	RenderPass::uploadUniforms();
+	colorMapUploader.update();
+	positionMapUploader.update();
+	normalMapUploader.update();
+}
+
 CompositingPass::~CompositingPass(){
 
 }
@@ -516,4 +522,88 @@ void MixTexturesRenderPass::setBaseTextureUniformName( std::string name)
 void MixTexturesRenderPass::setMixTextureUniformName(std::string name)
 {
 	mMixTextureUploader.setUniformName(name);
+}
+
+TextureRenderPass::TextureRenderPass( Shader* textureShader, FrameBufferObject* fbo, GLuint texture )
+{
+	mShader = textureShader;
+	mFBO = fbo;
+	setTexture( texture );
+
+	mTriangle = VirtualObjectFactory::getInstance()->getTriangle();
+
+	useDepthTest = false;
+
+	mInitialGraphicsComponentList.push_back( mTriangle );
+
+	mTextureUploader.setTextureUnit(7);
+	mTextureUploader.setUniformName("uniformTexture");
+}
+
+void TextureRenderPass::uploadUniforms()
+{
+	RenderPass::uploadUniforms();
+	mTextureUploader.update();
+}
+
+void TextureRenderPass::setTexture(GLuint baseTexture){
+	mTexture = baseTexture;
+	mTextureUploader.setTextureHandle(baseTexture);
+}
+
+void TextureRenderPass::setTextureUniformName( std::string name)
+{
+	mTextureUploader.setUniformName(name);
+}
+
+RenderPass* ConditionalRenderPassProxy::getRenderPass(){
+	return mRenderPass;
+}
+
+void ConditionalRenderPassProxy::setRenderPass( RenderPass* renderPass) {
+	mRenderPass = renderPass;
+}
+
+ConditionalRenderPassProxy::ConditionalRenderPassProxy(RenderPass* renderPass, bool* condition, bool invert) {
+	mCondition = condition;
+	mRenderPass = renderPass;
+	mInvert = invert;
+}
+
+void ConditionalRenderPassProxy::activate() {
+	if ( (mInvert) ? !*mCondition : *mCondition )
+	{
+		mRenderPass->activate();
+	}
+}
+
+void ConditionalRenderPassProxy::render() {
+	if ( (mInvert) ? !*mCondition : *mCondition )
+	{
+		mRenderPass->render();
+	}
+}
+
+void ConditionalRenderPassProxy::deactivate() {
+	if ( (mInvert) ? !*mCondition : *mCondition )
+	{
+		mRenderPass->deactivate();
+	}
+}
+
+ScreenFillingTriangleRenderPass::ScreenFillingTriangleRenderPass(Shader* shader, FrameBufferObject* fbo)
+  : RenderPass(shader, fbo)
+{
+	mTriangle = VirtualObjectFactory::getInstance()->getTriangle();
+
+	useDepthTest = false;
+
+	mInitialGraphicsComponentList.push_back( mTriangle );
+}
+
+bool RenderPass::getClearColorBufferBit() {
+	return clearColorBufferBit;
+}
+bool RenderPass::getClearDepthBufferBit() {
+	return clearColorBufferBit;
 }

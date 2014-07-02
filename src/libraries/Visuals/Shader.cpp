@@ -250,9 +250,6 @@ void Shader::attachUniformListener(std::string uniform){
 	else if(uniform == "uniformTime"){
 		attach(new UploadUniformWindowTimeListener("UNIFORMUPLOADLISTENER"));}
 	else {
-		std::cout << "ERROR: Uniform \"" << uniform << "\" is not a valid uniform name." << std:: endl;
+		std::cout << "WARNING: Uniform \"" << uniform << "\" is not a default uniform name." << std:: endl;
 	}
-
-
-
 }

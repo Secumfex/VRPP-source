@@ -13,6 +13,8 @@ int lastID = 0;
 VirtualObject::VirtualObject() {
 	modelMatrix = glm::mat4(); 	//loadidentity
 
+	mCenterOfMassOffsetMatrix = glm::mat4(); 	//loadidentity
+
 	physicsComponent = new PhysicsComponent();
 }
 
@@ -118,6 +120,13 @@ void VirtualObject::setPhysicsComponent(glm::vec3 min, glm::vec3 max, float mass
 	physicsComponent = new PhysicsComponent(min, max, mass,collisionFlag);
 }
 
+void VirtualObject::setPhysicsComponent(float x, float y, float z, btTriangleMesh btMesh, btTriangleIndexVertexArray* btTIVA){
+	if(physicsComponent != NULL)
+	physicsComponent->~PhysicsComponent();
+
+	physicsComponent = new PhysicsComponent(x,y,z, btMesh, mGraphComponent, btTIVA);
+}
+
 void VirtualObject::setPhysicsComponent(float radius, float x, float y, float z, float mass, int collisionFlag){
 	if(physicsComponent != NULL)
 	physicsComponent->~PhysicsComponent();
@@ -132,7 +141,7 @@ void VirtualObject::setPhysicsComponent(float width, float height, float depth, 
 }
 
 
-void VirtualObject::setPhysicComponent(float x, float y, float z, glm::vec3 normal, float mass, int collisionFlag){
+void VirtualObject::setPhysicsComponent(float x, float y, float z, glm::vec3 normal, float mass, int collisionFlag){
 	if(physicsComponent != NULL)
 	physicsComponent->~PhysicsComponent();
 
@@ -141,17 +150,40 @@ void VirtualObject::setPhysicComponent(float x, float y, float z, glm::vec3 norm
 }
 
 glm::mat4 VirtualObject::getModelMatrix(){
+
+	//TODO what was this supposed to do ?
+
+	/* glm::mat4 gcmodelmatrix = glm::mat4(1.0f);
+    unsigned int i = 0;
+    for (i = 0; i< mGraphComponent.size();i++){
+        gcmodelmatrix = mGraphComponent[i]->getModelMatrix() * gcmodelmatrix;
+        
+    }
+    gcmodelmatrix = modelMatrix;
+    */
 	return modelMatrix;
 }
 
 void VirtualObject::setModelMatrix(glm::mat4 modelmatrix){
 	modelMatrix = modelmatrix;
-	unsigned int i = 0;
-	for(i=0; i< mGraphComponent.size();i++){
-		mGraphComponent[i]->setModelMatrixGc(modelmatrix);
-	}
+
+	//TODO GC model matrices should not be effected, since they are "local", does everything still work as expected?
+
+	//unsigned int i = 0;
+	//for(i=0; i< mGraphComponent.size();i++){
+	//	mGraphComponent[i]->setModelMatrixGc(modelmatrix);
+	//}
 }
 
 PhysicsComponent* VirtualObject::getPhysicsComponent(){
 	return physicsComponent;
+}
+
+const glm::mat4& VirtualObject::getCenterOfMassOffsetMatrix() const {
+	return mCenterOfMassOffsetMatrix;
+}
+
+void VirtualObject::setCenterOfMassOffsetMatrix(
+		const glm::mat4& centerOfMassOffsetMatrix) {
+	mCenterOfMassOffsetMatrix = centerOfMassOffsetMatrix;
 }

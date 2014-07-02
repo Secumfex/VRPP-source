@@ -30,13 +30,12 @@ void configureTestingApplication(){
 
 void configureVirtualObjects(){
 	//setInitialGraphicsComponentList
-	VirtualObjectFactory *voFactory = VirtualObjectFactory::getInstance();
 
-	VirtualObject *object03 = voFactory->createVirtualObject(RESOURCES_PATH "/barrel.obj", VirtualObjectFactory::OTHER);
-	VirtualObject *object02 = voFactory->createVirtualObject(RESOURCES_PATH "/cow.obj", VirtualObjectFactory::OTHER);
-	VirtualObject *object01 = voFactory->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE);
+	VirtualObject *object03 = VirtualObjectFactory::getInstance()->createVirtualObject(RESOURCES_PATH "/barrel.obj", VirtualObjectFactory::OTHER);
+	VirtualObject *object02 = VirtualObjectFactory::getInstance()->createVirtualObject(RESOURCES_PATH "/cow.obj", VirtualObjectFactory::OTHER);
+	VirtualObject *object01 = VirtualObjectFactory::getInstance()->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE);
 
-	GraphicsComponent* triangle = voFactory->getTriangle();
+	//GraphicsComponent* triangle = VirtualObjectFactory::getInstance()->getTriangle();
 
 	MaterialManager::getInstance()->makeMaterial("polished_chrome", object02->getGraphicsComponent());
 
@@ -81,6 +80,9 @@ void configureInputHandler(){
 }
 
 void configureRendering(){
+	/* create Light sources so UploadUniformLightPerspectiveMatrixListener works */
+	RenderManager::getInstance()->createFourLightsources();
+
 	/* creating shaders */
 	Shader *simpleTexShader = new Shader(SHADERS_PATH "/Postprocessing/screenFill.vert",
 			SHADERS_PATH "/Postprocessing/simpleTexture.frag");
@@ -96,6 +98,9 @@ void configureRendering(){
 
 	Shader *postprocessShader = new Shader( 	SHADERS_PATH "/Postprocessing/screenFill.vert",
 			SHADERS_PATH "/Postprocessing/glow.frag");
+
+	/*Shader *ssaoShader = new Shader (	SHADERS_PATH "/Postprocessing/screenFill.vert",
+			SHADERS_PATH "/Postprocessing/ssao.frag");*/
 
 
 	/* creating and seting up fbos */
@@ -124,6 +129,8 @@ void configureRendering(){
 	/* creating listeners */
 	Listener* uniResX = new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", 800, "resX");
 	Listener* uniResY = new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", 600, "resY");
+	Listener* uniResX2 = new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", 800, "resX");
+	Listener* uniResY2 = new UploadUniformFloatListener	("UNIFORMUPLOADLISTENER", 600, "resY");
 	Listener* uniPositionMap1 = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 4, "positionMap", 	fbo->getPositionTextureHandle());	// upload to texture unit 4 ( default position Map unit )
 	Listener* uniNormalMap1 = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 5, "normalMap", 	fbo->getNormalTextureHandle());// upload to texture unit 5 ( default normal Map unit )
 	Listener* uniColorMap1 = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 6, "colorMap", 	fbo->getColorTextureHandle()); // upload to texture unit 6 ( default color Map unit )
@@ -137,35 +144,57 @@ void configureRendering(){
 	RenderPass* gBufferRenderPass = new RenderPass(gbufferShader, fbo);
 	gBufferRenderPass->setCustomClearColor( glm::vec4(1.0, 1.0, 1.0, 1.0) );
 	gBufferRenderPass->setClearColorBufferBit(true);	// clear color buffer on every frame
-	gBufferRenderPass->attachListenerOnPostUniformUpload( uniResX );
-	gBufferRenderPass->attachListenerOnPostUniformUpload( uniResY );
+	//gBufferRenderPass->attachListenerOnPostUniformUpload( uniResX );
+	//gBufferRenderPass->attachListenerOnPostUniformUpload( uniResY );
+
+
+	gBufferRenderPass->setInitialGraphicsComponentList ( ( testingState->getRenderQueue()->getGraphicsComponentList() ));
 
 	testingState->getRenderLoop()->addRenderPass(	gBufferRenderPass );
 
 	/* compositing renderpass */
 	
-	RenderPass* compositingRenderPass = new RenderPass(finalCompShader, fbo2);
+
+	//RenderPass* compositingRenderPass = new RenderPass(finalCompShader, fbo2);
+	CompositingPass* compositingRenderPass = new CompositingPass(finalCompShader, fbo2);
+
 	compositingRenderPass->setCustomClearColor( glm::vec4(1.0, 1.0, 1.0, 1.0) );
 	compositingRenderPass->setClearColorBufferBit(true);	// clear color buffer on every frame
 	compositingRenderPass->attachListenerOnPostUniformUpload( uniResX );
 	compositingRenderPass->attachListenerOnPostUniformUpload( uniResY );
-	compositingRenderPass->attachListenerOnPostUniformUpload( uniPositionMap1 );
-	compositingRenderPass->attachListenerOnPostUniformUpload( uniColorMap1 );
-	compositingRenderPass->attachListenerOnPostUniformUpload( uniNormalMap1 );
+	compositingRenderPass->setPositionMap(fbo->getPositionTextureHandle());
+	compositingRenderPass->setColorMap(fbo->getColorTextureHandle());
+	compositingRenderPass->setNormalMap(fbo->getNormalTextureHandle());
+
+
+	//compositingRenderPass->addInitialGraphicsComponent( VirtualObjectFactory::getInstance()->getTriangle() );
 
 	testingState->getRenderLoop()->addRenderPass( compositingRenderPass );
 
 	/* postprocessing renderpass */
-	MixTexturesRenderPass* glowRenderPass = new MixTexturesRenderPass( postprocessShader, 0, fbo->getColorTextureHandle(), fbo2->getPositionTextureHandle() );
+	MixTexturesRenderPass* glowRenderPass = new MixTexturesRenderPass( postprocessShader, 0, fbo->getColorTextureHandle(), fbo2->getColorTextureHandle() );
 	glowRenderPass->setBaseTextureUniformName( "colorMap" );	// set custom uniform name for base texture
 	glowRenderPass->setMixTextureUniformName(  "preGlowTexture" );
-	glowRenderPass->attachListenerOnPostUniformUpload( uniResX );
-	glowRenderPass->attachListenerOnPostUniformUpload( uniResY );
-	glowRenderPass->attachListenerOnPostUniformUpload( uniPositionMap2 );
-	glowRenderPass->attachListenerOnPostUniformUpload( uniColorMap2 );
-	glowRenderPass->attachListenerOnPostUniformUpload( uniNormalMap2 );
+	glowRenderPass->attachListenerOnPostUniformUpload( uniResX2 );
+	glowRenderPass->attachListenerOnPostUniformUpload( uniResY2 );
+	//glowRenderPass->attachListenerOnPostUniformUpload( uniPositionMap2 );
+	//glowRenderPass->attachListenerOnPostUniformUpload( uniColorMap2 );
+	//glowRenderPass->attachListenerOnPostUniformUpload( uniNormalMap2 );
 
 	testingState->getRenderLoop()->addRenderPass( glowRenderPass );
+
+	/* alternate postprocessing renderpss - ssao - not working */
+	/* .... */
+	/*MixTexturesRenderPass* ssaoRenderPass = new MixTexturesRenderPass( ssaoShader, 0, fbo->getColorTextureHandle(), fbo2->getPositionTextureHandle() );
+	ssaoRenderPass->setBaseTexture( "colorMap" );
+	ssaoRenderPass->setMixTextureUniformName(  "preGlowTexture" );
+	ssaoRenderPass->attachListenerOnPostUniformUpload( uniResX );
+	ssaoRenderPass->attachListenerOnPostUniformUpload( uniResY );
+	ssaoRenderPass->attachListenerOnPostUniformUpload( uniPositionMap2 );
+	ssaoRenderPass->attachListenerOnPostUniformUpload( uniColorMap2 );
+	ssaoRenderPass->attachListenerOnPostUniformUpload( uniNormalMap2 );
+
+	testingState->getRenderLoop()->addRenderPass( ssaoRenderPass );*/
 
 }
 

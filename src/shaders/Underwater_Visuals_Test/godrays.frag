@@ -8,12 +8,7 @@ out vec4 fragmentColor;
 uniform vec3 uniformCameraWorldPos;
 uniform mat4 uniformProjectorViewPerspective;
 
-
 uniform sampler2D uniformCausticsTexture;
-
-uniform float uniformFogBegin;
-uniform float uniformFogEnd;
-uniform vec3  uniformFogColor;
 
 uniform float uniformTime;
 

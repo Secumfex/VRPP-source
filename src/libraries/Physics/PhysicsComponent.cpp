@@ -10,7 +10,11 @@
 #include "Visuals/VirtualObject.h"
 
 #include "BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h"
-
+#include "BulletCollision/CollisionShapes/btBvhTriangleMeshShape.h"
+#include "BulletCollision/CollisionShapes/btTriangleMeshShape.h"
+#include "BulletCollision/CollisionShapes/btOptimizedBvh.h"
+#include "LinearMath/btAlignedAllocator.h"
+#include "BulletCollision/CollisionShapes/btTriangleInfoMap.h"
 
 using namespace std;
 
@@ -36,8 +40,19 @@ PhysicsComponent::PhysicsComponent(glm::vec3 min, glm::vec3 max, float mass, int
 
 	rigidBody = addBox(width , height , depth, x, y, z, mass);
 	rigidBody->setUserPointer(this);	// use bullet's user pointer to refer to this Object
-	setCollisionFlag(collisionFlag);	//momentan noch fest, muesste eig auch zusaetzlicher input wert sein
+	setCollisionFlag(collisionFlag);
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
+}
+
+PhysicsComponent::PhysicsComponent(float x, float y, float z, btTriangleMesh btMesh, vector<GraphicsComponent*> mGraphComponent, btTriangleIndexVertexArray* btTIVA) {
+
+	hit = false;
+
+	rigidBody = addTriangleMesh(x,y,z, btMesh, mGraphComponent, btTIVA);
+	rigidBody->setUserPointer(this);	// use bullet's user pointer to refer to this Object
+	setCollisionFlag(1);
+	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
+
 }
 
 PhysicsComponent::PhysicsComponent(float radius, float x, float y, float z, float mass, int collisionFlag) {
@@ -107,6 +122,12 @@ void PhysicsComponent::translate(glm::vec3 pos){
 	glm::vec3 origin = this->getPosition();
 	this->setPosition(origin.x+pos.x,origin.y+pos.y,origin.z+pos.z);
 
+//	btTransform transform = rigidBody -> getCenterOfMassTransform();
+//	transform.setOrigin( transform.getOrigin() + trans );
+//	rigidBody -> setCenterOfMassTransform(transform);
+//
+//	btVector3 position = transform.getOrigin();
+//	this->setPosition( position.x(), position.y(), position.z() );
 
 	/*
 	btTransform transform = rigidBody->getWorldTransform();
@@ -240,6 +261,34 @@ btRigidBody* PhysicsComponent::addHeightfield(char* filename, float x, float y, 
 	return body;
 }
 
+btRigidBody* PhysicsComponent::addTriangleMesh(float x, float y, float z, btTriangleMesh btMesh, vector<GraphicsComponent*> mGraphComponent, btTriangleIndexVertexArray* btTIVA){
+
+	static btTriangleMesh triangleMesh = btMesh;	//Var A
+	static btTriangleIndexVertexArray* tIVA = btTIVA; //Var B
+
+	static btRigidBody* staticBody = 0;
+
+	bool useQuantizedAabbCompression = true;
+	btBvhTriangleMeshShape* triangleShape = 0;
+	triangleShape = new btBvhTriangleMeshShape(tIVA, useQuantizedAabbCompression);
+
+	cout << "btBvhTriangleMeshShape created" << endl;
+
+	btTransform trans;
+	trans.setIdentity();
+	trans.setOrigin(btVector3(x, y, z));
+
+	float mass = 0.0f;
+
+	btDefaultMotionState* motionState = new btDefaultMotionState(trans);
+	btRigidBody::btRigidBodyConstructionInfo info(mass,motionState,triangleShape);
+	staticBody = new btRigidBody(info);
+
+	cout << "static rigidbody added" << endl;
+
+	return staticBody;
+}
+
 btRigidBody* PhysicsComponent::getRigidBody(){
 
 	return rigidBody;
@@ -276,6 +325,7 @@ glm::vec3 PhysicsComponent::getPosition(){
 	return pos;
 }
 
+
 bool PhysicsComponent::getHit(){
 
 	return hit;
@@ -290,26 +340,15 @@ void PhysicsComponent::update(VirtualObject* vo){
 
 	btRigidBody* body = rigidBody;
 
-
 		btTransform t;
 		body->getMotionState()->getWorldTransform(t);
 		float mat[16];
 		t.getOpenGLMatrix(mat);
 
-		vo->setModelMatrix(glm::make_mat4(mat));
-}
+		// in case the model is not symmetrical, the offset of the rigid body center of mass to the model space origin must be taken into account
+		// to prevent applying a double model matrix offset
+		const glm::mat4 centerOfMassOffset = vo->getCenterOfMassOffsetMatrix();
 
-void PhysicsComponent::initFrameListener(){
-/**
- * @todo instead:
- * 	write a "UpdatePhysicsComponentListener" class as a derivative of Listener
- * 	as members, it receives a simple PhysicsComponent pointer
- * 	in its update() method it calls pc->update()
- * alternatively, leave PhysicsComponent as it is ( a Listener itself )
- *  it may be attached to the RenderLoop just the way it is
- *  how ever, bear in mind that it can only be attached to a single Subject
- */
-//	Listener* frameListener;
-//	frameListener->setName("FRAMELISTENER");
-//	frameListener->update();
+		// first move origin into center of mass, then apply rigid body model matrix
+		vo->setModelMatrix( glm::make_mat4(mat) * centerOfMassOffset );
 }

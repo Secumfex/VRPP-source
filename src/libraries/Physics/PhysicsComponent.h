@@ -1,9 +1,11 @@
 #ifndef PHYSICSCOMPONENT_H
 #define PHYSICSCOMPONENT_H
 
-#include <glm/glm.hpp>
-#include "btBulletDynamicsCommon.h"
 
+#include "btBulletDynamicsCommon.h"
+#include "Visuals/GraphicsComponent.h"
+#include <glm/glm.hpp>
+#include <vector>
 
 using namespace std;
 
@@ -34,6 +36,16 @@ public:
 	* @param modelMatrix 4x4Matrix
 	*/
 	PhysicsComponent(glm::mat4 modelMatrix);
+
+	/** \brief constructor
+	*
+	* constructor to create a static mesh shaped rigidbody.
+	* @param x,y,z position in world
+	* @param btMesh btTriangleMesh of loaded model ->VarA
+	* @param mGraphComponent not used yet, but maybe for optimization neccessary
+	* @param btTIVA TriangleIndexVertexArray of loaded model ->VarB
+	*/
+	PhysicsComponent(float x, float y, float z, btTriangleMesh btMesh, vector<GraphicsComponent*> mGraphComponent, btTriangleIndexVertexArray* btTIVA);
 
 	/** \brief constructor
 	*
@@ -81,6 +93,8 @@ public:
 	 * @param x,y,z
 	 */
 	PhysicsComponent(char* filename, float x, float y, float z);
+
+
 
 	/** \brief destructor
 	*
@@ -173,6 +187,16 @@ public:
 	 */
 	btRigidBody* addHeightfield(char* filename, float x, float y, float z);
 
+	/** \brief defines the rigid body as mesh
+	 *
+	 * creates a static rigidbody from meshes
+	 * @param x,y,z position in world
+	 * @param btMesh btTriangleMesh of loaded model ->VarA
+	 * @param mGraphComponent graphic components of vo
+	 * @param btTIVA triangleIndexVertexArray of loaded model ->VarB
+	 * @return a bullet rigid body
+	 */
+	btRigidBody* addTriangleMesh(float x, float y, float z, btTriangleMesh btMesh,vector<GraphicsComponent*> mGraphComponent, btTriangleIndexVertexArray* btTIVA);
 
 	/** \brief getter
 	 *
@@ -199,6 +223,7 @@ public:
 	*/
 	glm::vec3 getPosition();
 
+
 	/** \brief getter
 	 *
 	 * @return current hit state
@@ -219,12 +244,6 @@ public:
 	* @param vo VirtualObject pointer
 	*/
 	void update(VirtualObject* vo);
-
-	/** \brief initialize FrameListener
-	*
-	* updates the modelMatrix by the rigid body's behavior in the physics world.
-	*/
-	void initFrameListener();
 };
 
 #endif

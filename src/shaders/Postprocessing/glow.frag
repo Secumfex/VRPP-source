@@ -2,7 +2,7 @@
 
 in vec2 passUV;
 
-uniform sampler2D preGlowTexure;
+uniform sampler2D preGlowTexture;
 uniform sampler2D colorMap;
 
 uniform float resX;
@@ -26,6 +26,6 @@ void main() {
         }
     }
     glow /= strength * strength * 4;
-    fragmentColor = texture(preGlowTexure, passUV);
+    fragmentColor = texture(preGlowTexture, passUV);
     fragmentColor += glow;
 }

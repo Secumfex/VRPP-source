@@ -14,6 +14,8 @@ using namespace std;
 #include "IO/IngameHandler.h"
 #include "IO/IOListeners.h"
 
+#include "Physics/UpdatePhysicsComponentListener.h"
+
 ApplicationState::ApplicationState(){
 	camera = new Camera();
 	renderQueue = new RenderQueue();
@@ -24,7 +26,7 @@ ApplicationState::ApplicationState(){
 	attachListenerOnBeginningProgramCycle(	new UpdateCameraPositionListener(camera, IOManager::getInstance()->getDeltaTimePointer()));
 	
 
-	perspectiveMatrix = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
+	perspectiveMatrix = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 250.f);
 }
 
 Frustum* ApplicationState::getFrustum(){
@@ -82,7 +84,7 @@ void ApplicationState::bindObjects(){
 	
 	rm->setCamera(camera);
 	rm->setCurrentFrustum(frustum);
-	rm->setPerspectiveMatrix(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
+	rm->setPerspectiveMatrix(45.0f, 4.0f / 3.0f, 0.1f, 200.f);
 	rm->setRenderQueue(renderQueue);
 	rm->setRenderLoop(renderLoop);
 
@@ -94,8 +96,29 @@ void ApplicationState::bindObjects(){
 
 
 VirtualObject* ApplicationState::createVirtualObject(std::string path, VirtualObjectFactory::BodyType bodyType, float mass, int collisionFlag, bool blenderAxes){
+
+	// if collision flag is 1 ( static ), ignore mass parameter value and set to 0.0f
+	if ( collisionFlag == 1 && mass != 0.0f )
+	{
+		std::cout << "WARNING: Collision Flag was 1 (static), but Mass was > 0.0. Mass will be set to 0.0"<< std::endl;
+		mass = 0.0f;
+	}
+
+	// if collision flag is 1 ( static ) but model has to be rotated due to Blender axes, ignore flag parameter and set to 8
+	if ( collisionFlag == 1 && blenderAxes == true )
+	{
+		std::cout << "WARNING: Collision Flag was 1 (static), but Blender-Axes was true. Collision Flag will be set to 8 (custom material)"<< std::endl;
+		collisionFlag = 8;	// to ensure model can be correctly rotated
+	}
+
 	VirtualObject* vo = VirtualObjectFactory::getInstance()->createVirtualObject(path, bodyType, mass, collisionFlag, blenderAxes);
 	renderQueue->addVirtualObject(vo);
+
+	// create a PhysicsComponent update Listener if object is dynamic ( collisionFlag != 1 --> static )
+	if ( collisionFlag != 1)
+	{
+		attachListenerOnBeginningProgramCycle( new UpdatePhysicsComponentListener( vo ) );
+	}
 
 	notify("CREATE_VIRTUAL_OBJECT_LISTENER");	//in case someone cares
 

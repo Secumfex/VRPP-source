@@ -8,6 +8,8 @@ uniform sampler2D colorMap;
 
 uniform mat4 uniformView;
 
+uniform vec3 uniformSunDirection;
+
 out vec4 fragmentColor;
 
 void main() {
@@ -19,18 +21,24 @@ void main() {
    // vec4 lightPos = uniformView * vec4(5,2,-2,1);
      
     // sun light direction
-    vec4 lightDir = uniformView * vec4(1,1,0,0);  
-        
+ //   vec4 lightDir = uniformView * vec4(1,1,0,0);  
+    
+    vec3 lightDir = normalize ( (transpose(inverse(uniformView)) * vec4 (uniformSunDirection, 0 ) ).xyz );
+    
     //calculate lighting with given position, normal and lightposition
     //vec3 nPosToLight = normalize(vec3(lightPos.xyz - position.xyz));
 	
-	vec3 nPosToLight = normalize(vec3( lightDir.xyz ) );
+//	vec3 nPosToLight = - normalize(vec3( lightDir.xyz ) );
 	
 	vec4 lightColor = vec4(1.0, 1.0, 1.0, 1.0);
 
-    vec3  reflection = normalize(reflect(-nPosToLight,normal.xyz));
-    float ambient = 0.1;
-    float diffuse = max(dot(normal.xyz, nPosToLight), 0);
-  
-    fragmentColor = color * ambient + (color * diffuse );
+    vec3  reflection = normalize(reflect( lightDir, normal.xyz));
+    float ambient = 0.2;
+    float diffuse = max(dot(normal.xyz, -lightDir ), 0);
+  	
+  	vec4 finalColor = vec4( 0,0,0,0);
+    finalColor.rgb = ambient * color.rgb;
+  	finalColor.rgb +=  color.rgb * ( max(diffuse - ambient, 0 ) );
+  	finalColor.a = color.a;
+    fragmentColor = finalColor;
 }

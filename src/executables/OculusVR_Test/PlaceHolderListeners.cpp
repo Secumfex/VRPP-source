@@ -91,22 +91,6 @@ void UpdateOculusOrientationListener::update()
 	}
 }
 
-OculusPostProcessingRenderpass::OculusPostProcessingRenderpass(Oculus* oculus)
-{
-	this->oculus = oculus;
-}
-
-void OculusPostProcessingRenderpass::update()
-{
-	if (oculus)
-	{
-		// just draw this on the active FBO
-	//	oculus->PresentFbo(Oculus::PostProcess_Distortion, RiftDistortionParams());
-
-		oculus->PresentFbo_NoDistortion();
-	}
-}
-
 BindOculusFrameBufferObjectListener:: BindOculusFrameBufferObjectListener(Oculus* oculus)
 {
 	this->oculus = oculus;

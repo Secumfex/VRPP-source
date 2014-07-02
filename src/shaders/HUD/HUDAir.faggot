@@ -1,0 +1,20 @@
+#version 330 
+
+uniform sampler2D uniformAirTexture;
+
+uniform float uniformAirLeft;
+
+in vec2 passUVCoords;
+
+out vec4 fragmentColor;
+
+void main() {
+	
+	if ( passUVCoords.t > uniformAirLeft){
+		discard;
+		}
+		
+	else{
+		fragmentColor  = texture2D(uniformAirTexture, passUVCoords);
+		}
+}

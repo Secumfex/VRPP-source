@@ -11,6 +11,7 @@
     void main()
     {
        gl_Position = View * Position;
-       oTexCoord = vec2(Texm * vec4(TexCoord,0,1));
-       oTexCoord.y = 1.0-oTexCoord.y;
+//    	gl_Position = Position;
+       oTexCoord = vec2(Texm * vec4(TexCoord,0,1) );
+       oTexCoord.y = oTexCoord.y;
     }

@@ -32,43 +32,34 @@ void configureMyApp(){
 	floor->	setPhysicsComponent(10.0f, 0.4f, 10.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1);
 
 	VirtualObject* 	cube1 = 	myVRState->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 1.0, 8);
-	myVRState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube1));
 
 	VirtualObject* 	cube2 = 	myVRState-> createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 1.0, 8);
 	cube2->translate(glm::vec3(2.0f, 0.0f, 0.0f));
-	myVRState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube2));
 
 	VirtualObject* 	cube4 = 	myVRState-> createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 1.0, 8);
 	cube4->translate(glm::vec3(-2.0f, 0.0f, 0.0f));
-	myVRState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube4));
 
 //////
 
 	VirtualObject* 	cube5 = 	myVRState->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 1.0, 8);
 	cube5->translate(glm::vec3(0.0f, 2.0f, 0.0f));
-	myVRState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube5));
 
 	VirtualObject* 	cube6 = 	myVRState-> createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 1.0, 8);
 	cube6->translate(glm::vec3(2.0f, 2.0f, 0.0f));
-	myVRState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube6));
 
 	VirtualObject* 	cube8 = 	myVRState-> createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 1.0, 8);
 	cube8->translate(glm::vec3(-2.0f, 2.0f, 0.0f));
-	myVRState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube8));
 
 	//////
 
 		VirtualObject* 	cube9 = 	myVRState->createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 1.0, 8);
 		cube9->translate(glm::vec3(0.0f, 4.0f, 0.0f));
-		myVRState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube9));
 
 		VirtualObject* 	cube10 = 	myVRState-> createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 1.0, 8);
 		cube10->translate(glm::vec3(2.0f, 4.0f, 0.0f));
-		myVRState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube10));
 
 		VirtualObject* 	cube12 = 	myVRState-> createVirtualObject(RESOURCES_PATH "/cube.obj", VirtualObjectFactory::CUBE, 1.0, 8);
 		cube12->translate(glm::vec3(-2.0f, 4.0f, 0.0f));
-		myVRState->attachListenerOnBeginningProgramCycle(new UpdateVirtualObjectModelMatrixListener(cube12));
 
 
 	/*
@@ -104,7 +95,7 @@ void configureMyApp(){
 	myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myVRState->getCamera()), 								GLFW_KEY_UP);
 	myVRStateIOHandler->attachListenerOnKeyPress(new TurnCameraListener(myVRState->getCamera(), 0.0f, -0.1f), 	GLFW_KEY_DOWN);		// pressing '->' : view direction straight ahead
 	myVRStateIOHandler->attachListenerOnKeyPress(new PrintCameraStatusListener( myVRState->getCamera()), 								GLFW_KEY_DOWN);
-	myVRStateIOHandler->attachListenerOnMouseButtonPress(new PickRayListener(myVRState->getCamera()), GLFW_MOUSE_BUTTON_2);		//
+//	myVRStateIOHandler->attachListenerOnMouseButtonPress(new PickRayListener(myVRState->getCamera()), GLFW_MOUSE_BUTTON_2);		//
 	myVRStateIOHandler->attachListenerOnMouseButtonPress(new ShootSphereListener(myVRState->getCamera(), myVRState), GLFW_MOUSE_BUTTON_LEFT);
 
 	SelectionHandler* sh = myVRStateIOHandler->getSelectionHandler();

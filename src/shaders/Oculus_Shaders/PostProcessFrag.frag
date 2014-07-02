@@ -7,7 +7,7 @@
     uniform vec4 HmdWarpParam;
     uniform sampler2D Texture0;
  
-    out vec2 oTexCoord;
+    in vec2 oTexCoord;
     
     vec2 HmdWarp(vec2 in01)
     {
