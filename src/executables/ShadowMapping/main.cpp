@@ -205,6 +205,8 @@ void configureRendering(){
 
 	/* shadow map render pass */
 	RenderPass* shadowPass = new RenderPass(shadowShader, fbo3);
+	shadowPass->setInitialGraphicsComponentList( testingState->getRenderQueue()->getGraphicsComponentList());
+	testingState->getRenderLoop()->addRenderPass(shadowPass);
 
 }
 
