@@ -163,7 +163,7 @@ public:
 	 */
 	glm::mat4 getLightPerspectiveMatrix(int index);
 
-<<<<<<< HEAD
+
 	/**
 	*
 	* \brief get depth information from Kinect
@@ -171,13 +171,12 @@ public:
 	* @return positive/negative force
 	*/
 
-=======
 	/** \brief getter
 	 *
 	 * @return position of light at index
 	 */
 	glm::vec3 getLightPosition(int index);
->>>>>>> origin/master
+
 
 	float getKinectData(GLubyte* dest);
 	/** \brief !docu pls!
