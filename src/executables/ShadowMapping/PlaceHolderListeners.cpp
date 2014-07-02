@@ -61,3 +61,14 @@ SetClearColorListener::SetClearColorListener(float r, float g, float b, float a)
 void SetClearColorListener::update(){
 		glClearColor(r,g,b,a);
 }
+
+SetCamPositionListener::SetCamPositionListener(glm::vec3 newPosition){
+	this->position = newPosition;
+	rm = RenderManager::getInstance();
+}
+
+void SetCamPositionListener::update(){
+	rm->getCamera()->setPosition(position);
+
+
+}

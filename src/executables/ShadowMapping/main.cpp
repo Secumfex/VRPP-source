@@ -144,7 +144,7 @@ void configureRendering(){
 	Listener* uniPositionMap2 = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 4, "positionMap", 	fbo2->getPositionTextureHandle());
 	Listener* uniNormalMap2 = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 5, "normalMap", 	fbo2->getNormalTextureHandle());
 	Listener* uniColorMap2 = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 6, "colorMap", 	fbo2->getColorTextureHandle());
-	Listener* uniCamPreRender = new UploadUniformVec3Listener	("UNIFORMUPLOADLISTENER", testingState->getCamera()->getPositionPointer(), "camPosition");
+	Listener* uniCamPreRender = new SetCamPositionListener	();
 
 	//testingApp->attachListenerOnProgramInitialization( new SetDefaultShaderListener( new Shader (SHADERS_PATH "/Postprocessing/GBuffer.vert", SHADERS_PATH "/Postprocessing/GBuffer.frag")));
 
