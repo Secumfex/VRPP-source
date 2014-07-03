@@ -71,27 +71,36 @@ void initializeAndConfigureOculus( ApplicationState* target ){
  * 		to be set up to render twice - for each eye once
  * @param oculus to be used to query stereo settings from
  * @param oculusCam that is assumed to be used during this render pass
+ *
+ * @return a pair instance of the two listeners that handle the activation which are both subjects
  */
-void makeStereoRenderPass(RenderPass* renderPass, Oculus* oculus, OculusCamera* oculusCam)
+std::pair<StereoRenderPassActivateRenderEyeSettingsListener* ,StereoRenderPassActivateRenderEyeSettingsListener*  > makeStereoRenderPass(RenderPass* renderPass, Oculus* oculus, OculusCamera* oculusCam)
 {
 	// left eye settings
+	StereoRenderPassActivateRenderEyeSettingsListener* leftEyeListener = 	new StereoRenderPassActivateRenderEyeSettingsListener(renderPass,
+			oculus, oculusCam, OVR::Util::Render::StereoEye_Left,
+			true);
+
+
 	renderPass->attachListenerOnActivation(
-			new StereoRenderPassActivateRenderEyeSettingsListener(renderPass,
-					oculus, oculusCam, OVR::Util::Render::StereoEye_Left,
-					true)
+			leftEyeListener
 	);
 
 	// right eye settings
+	StereoRenderPassActivateRenderEyeSettingsListener* rightEyeListener = 	new StereoRenderPassActivateRenderEyeSettingsListener(renderPass,
+			oculus, oculusCam, OVR::Util::Render::StereoEye_Right,
+			false);
+
 	renderPass->attachListenerOnActivation(
-			new StereoRenderPassActivateRenderEyeSettingsListener(renderPass,
-					oculus, oculusCam, OVR::Util::Render::StereoEye_Right,
-					false)
+			rightEyeListener
 	);
 
 	// trigger second render pass iteration
 	renderPass->attachListenerOnDeactivation(
 			new StereoRenderPassRenderAgainListener(renderPass)
 	);
+
+	return std::pair < StereoRenderPassActivateRenderEyeSettingsListener* , StereoRenderPassActivateRenderEyeSettingsListener* >(leftEyeListener, rightEyeListener);
 
 }
 

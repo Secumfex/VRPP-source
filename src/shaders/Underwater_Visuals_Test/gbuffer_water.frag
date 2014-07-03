@@ -67,6 +67,7 @@ void main() {
     
     vec3 lightVector 		= normalize( passLightPosition - passPosition );
     vec3 reflectionVector 	= normalize( reflect( -lightVector, normal ) );
+    vec3 refractionVector   = normalize( refract( -lightVector, normal, 0.75) ); 
     
     vec3 eyeVector = normalize(-passPosition);
     float viewAngle = abs ( dot ( eyeVector, normal ) ); // 0 --> close to parallel , 1 --> close to orthogonal
@@ -74,7 +75,10 @@ void main() {
     float refraction = viewAngle;
 
     float diffuse 	= ( max( dot( normal, lightVector ), 0 ) );
-    float specular 	= ( pow( max( dot( reflectionVector , eyeVector ), 0), 25) );
+    float specular = max( max( dot( reflectionVector , eyeVector ), 0), max( dot( refractionVector , eyeVector ), 0) );
+    
+    specular 	= ( pow( specular, 25) );
+    
     float ambient 	= 0.2;
 
     vec3 diffuse_color_texture 		= texture( diffuseTexture, texCoordNormal0 ).xyz;

@@ -10,6 +10,8 @@
 #include "FeatureUnderwaterScene.h"
 #include "FeatureTreasureChest.h"
 #include "FeatureOculus.h"
+
+#include "IO/OculusListeners.h"
 // TODO etc.
 
 /****************** GLOBAL VARIABLES ****************************/
@@ -129,16 +131,27 @@ void configureRendering(){
 	OculusFeature::makeStereoRenderPass( UnderwaterScene::gbufferRefractionMapSunSkyRenderPass, OculusFeature::oculus, OculusFeature::oculusCam );
 	OculusFeature::makeStereoRenderPass( UnderwaterScene::gbufferRefractionMapRenderPass, 		OculusFeature::oculus, OculusFeature::oculusCam );
 	OculusFeature::makeStereoRenderPass( UnderwaterScene::gbufferParticlesRenderPass, 			OculusFeature::oculus, OculusFeature::oculusCam );
-	OculusFeature::makeStereoRenderPass( UnderwaterScene::gbufferWaterRenderPass, 				OculusFeature::oculus, OculusFeature::oculusCam );
+
+	std::pair<
+			OculusFeature::StereoRenderPassActivateRenderEyeSettingsListener *,
+			OculusFeature::StereoRenderPassActivateRenderEyeSettingsListener *> listeners =
+			OculusFeature::makeStereoRenderPass(
+					UnderwaterScene::gbufferWaterRenderPass,
+					OculusFeature::oculus, OculusFeature::oculusCam);
+
+	listeners.first->attachListenerOnEyeSettingsActivation( new SetOculusCameraEyeListener(  reflectedOculusCamera, OVR::Util::Render::StereoEye_Left ) );
+	listeners.second->attachListenerOnEyeSettingsActivation( new SetOculusCameraEyeListener( reflectedOculusCamera, OVR::Util::Render::StereoEye_Right ) );
+
 
 	// use a different shader for water object render pass, due to reflection map hickups
 	UnderwaterScene::gbufferWaterRenderPass->setShader( new Shader ( SHADERS_PATH "/CV_Tag_Demo/gbuffer_water_stereo.vert", SHADERS_PATH "/CV_Tag_Demo/gbuffer_water_stereo.frag") );
+
+	// also add a Listener that updates the reflected camera view
 
 	// apply oculus post processing on final image
 	std::cout << " Setting Stereo Post Processing effect on final image" << std::endl;
 	OculusFeature::oculus->setRenderBuffer( UnderwaterScene:: finalImage );
 	testingState->getRenderLoop()->addRenderPass( OculusFeature::oculusPostProcessing );
-
 }
 
 void configureOtherStuff(){

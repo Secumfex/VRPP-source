@@ -19,6 +19,7 @@
 #include "IO/Oculus.h"
 #include "IO/OculusCamera.h"
 #include "IO/OculusListeners.h"
+#include <Patterns/Subject.h>
 
 
 
@@ -153,7 +154,8 @@ namespace OculusFeature
 
 	};
 
-	class StereoRenderPassActivateRenderEyeSettingsListener : public Listener
+	// also a Subject so you can attach more listeners to left or right eye activation
+	class StereoRenderPassActivateRenderEyeSettingsListener : public Listener, public Subject
 	{
 	private:
 		bool isActiveEye;			// boolean that is switched on and off to determine which eye should be rendered
@@ -170,6 +172,8 @@ namespace OculusFeature
 		StereoRenderPassActivateRenderEyeSettingsListener( RenderPass* renderPass, Oculus* oculus, OculusCamera* oculusCam, OVR::Util::Render::StereoEye eye, bool isActiveEye );
 
 		void update();
+
+		void attachListenerOnEyeSettingsActivation ( Listener* listener );	// will be called when these settings are activated
 	};
 
 	class StereoRenderPassRenderAgainListener : public Listener

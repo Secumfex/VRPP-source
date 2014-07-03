@@ -245,6 +245,8 @@ void OculusFeature::StereoRenderPassActivateRenderEyeSettingsListener::update()
 {
 	if ( isActiveEye )
 	{
+		isActiveEye = false;
+
 		setEyeListener.update();
 		setViewPortListener.update();
 		setPerspectiveListener.update();
@@ -255,7 +257,8 @@ void OculusFeature::StereoRenderPassActivateRenderEyeSettingsListener::update()
 			renderPass->setClearDepthBufferBit( false );
 		}
 
-		isActiveEye = false;
+		notify("EYE_SETTINGS_ACTIVATION");
+
 	}
 	else{	// war nicht aktiv, beim nächstem mal aber
 		isActiveEye = true;
@@ -268,6 +271,12 @@ void OculusFeature::StereoRenderPassActivateRenderEyeSettingsListener::update()
 	}
 }
 
+void OculusFeature::StereoRenderPassActivateRenderEyeSettingsListener::attachListenerOnEyeSettingsActivation( Listener* listener )
+{
+	listener->setName("EYE_SETTINGS_ACTIVATION");
+	attach(listener);
+}
+
 OculusFeature::StereoRenderPassRenderAgainListener::StereoRenderPassRenderAgainListener(
 		RenderPass* renderPass)
 {
@@ -275,23 +284,23 @@ OculusFeature::StereoRenderPassRenderAgainListener::StereoRenderPassRenderAgainL
 		shouldRender = true;
 }
 
+
+
 void OculusFeature::StereoRenderPassRenderAgainListener::update() {
 	{
-				if ( shouldRender )
-				{
-					shouldRender = false;
+		if (shouldRender) {
+			shouldRender = false;
 
-					renderPass->activate();
-					renderPass->render();
-					renderPass->deactivate();
+			renderPass->activate();
+			renderPass->render();
+			renderPass->deactivate();
 
-					return;
-				}
-				else{	// will trigger next time again
-					shouldRender = true;
-					return;
-				}
-			}
+			return;
+		} else {	// will trigger next time again
+			shouldRender = true;
+			return;
+		}
+	}
 }
 
 void UnderwaterScene::SetCameraListener::setCamera(Camera* cam) {
