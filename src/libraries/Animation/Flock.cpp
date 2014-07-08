@@ -166,7 +166,7 @@ glm::quat Flock::getRotation(Boid* boid){
 
 	glm::vec3 velocity = mPlaceToGo - boid->getPosition();
 
-	velocity = 0.25f * velocity + 0.75f * boid->getVelocity();
+	velocity = 0.1f * velocity + 0.9f * boid->getVelocity();
 
 	if(glm::length(velocity) == 0.0f)
 		return rotation;

@@ -10,6 +10,7 @@
 #include "FeatureUnderwaterScene.h"
 #include "FeatureTreasureChest.h"
 #include "FeatureOculus.h"
+#include "FishBoidFeature.h"
 // TODO etc.
 
 /****************** GLOBAL VARIABLES ****************************/
@@ -181,7 +182,7 @@ void configureApplication(){
 
 	// TODO KinectFeature::createObjects( testingState );
 
-	// TODO FishBoidFeature::createObjects( testingState );
+	 FishBoidFeature::createObjects( testingState );
 
 	/* configure to satisfaction*/
 	configureTestingApplication();
