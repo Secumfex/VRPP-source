@@ -12,6 +12,10 @@
 #include <Visuals/Shader.h>
 #include <Visuals/GraphicsComponent.h>
 #include <map>
+#include <sstream>
+
+using namespace std;
+
 /*! @brief ShaderFactory.
  *
  *	the shader factory supports functions for creating and managing Shader entities for certain GraphicsComponent
@@ -48,10 +52,13 @@ protected:
 	std::vector<Shader*> mGBufferVector;
 
 	std::string createGBuffer_vertex(GraphicsComponent* gc);
-	std::string createGBuffer_fragment(GraphicsComponent* gc);
 	std::string createGBuffer_vertexUniforms(GraphicsComponent* gc);
-	std::string createGBuffer_fragmentUniforms(GraphicsComponent* gc);
+	std::string createGBuffer_vertexUniforms_bones(GraphicsComponent* gc);
 	std::string createGBuffer_vertexNormal(GraphicsComponent* gc);
+	std::string createGBuffer_vertex_animation(GraphicsComponent* gc);
+	std::string createGBuffer_vertex_animation_matrix(GraphicsComponent* gc);
+	std::string createGBuffer_fragment(GraphicsComponent* gc);
+	std::string createGBuffer_fragmentUniforms(GraphicsComponent* gc);
 	std::string createGBuffer_fragmentNormal(GraphicsComponent* gc);
 	std::string createGBuffer_fragmentColor(GraphicsComponent* gc);
 

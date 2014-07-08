@@ -316,3 +316,26 @@ void UnderwaterScene::UpdateReflectedCameraPositionListener::setCamTarget(
 		Camera* camera) {
 	this->cam_target = camera;
 }
+
+UpdateBoidsListener::UpdateBoidsListener(Flock* flock){
+	mFlock = flock;
+}
+void UpdateBoidsListener::update(){
+	mFlock->update(IOManager::getInstance()->getDeltaTime());
+}
+
+UpdateBoidsSwimCycleListener::UpdateBoidsSwimCycleListener(Flock* flock){
+	mFlock = flock;
+}
+void UpdateBoidsSwimCycleListener::update(){
+	float angle = glfwGetTime() / 5.0f;
+	mFlock->setPlaceToGo(glm::vec3(glm::sin(angle) * 10.0f, 0.0f, glm::cos(angle) * 5.0f));
+}
+
+UpdateBoidsAvoidanceListener::UpdateBoidsAvoidanceListener(Flock* flock){
+	mFlock = flock;
+}
+void UpdateBoidsAvoidanceListener::update(){
+	glm::vec3 camposition = RenderManager::getInstance()->getCamera()->getPosition();
+	mFlock->setPlaceToAvoid(camposition);
+}

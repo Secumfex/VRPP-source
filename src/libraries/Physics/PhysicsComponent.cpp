@@ -23,6 +23,12 @@ PhysicsComponent::PhysicsComponent(){
 	hit = false;
 }
 
+PhysicsComponent::PhysicsComponent(PhysicsComponent* phy){
+	rigidBody = phy->getRigidBody();
+	hit = phy->getHit();
+	glm::vec3 pos = phy->getPosition();
+	this->setPosition(pos.x, pos.y, pos.z);
+}
 PhysicsComponent::PhysicsComponent(glm::vec3 min, glm::vec3 max, float mass, int collisionFlag) {
 
 	glm::vec3 boxValue = max-min;

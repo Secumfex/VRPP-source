@@ -11,6 +11,8 @@
 #include <glm/gtc/matrix_inverse.hpp>
 #include <cmath>
 
+#include <Animation/Flock.h>
+
 #include "Visuals/RenderManager.h"
 #include "Visuals/Shader.h"
 
@@ -185,7 +187,33 @@ namespace OculusFeature
 		StereoRenderPassRenderAgainListener(RenderPass* renderPass);
 		void update();
 	};
-
 }
+
+class UpdateBoidsListener : public Listener
+{
+private:
+	Flock* mFlock;
+public:
+	UpdateBoidsListener(Flock* flock);
+	void update();
+};
+
+class UpdateBoidsSwimCycleListener : public Listener
+{
+private:
+	Flock* mFlock;
+public:
+	UpdateBoidsSwimCycleListener(Flock* flock);
+	void update();
+};
+
+class UpdateBoidsAvoidanceListener : public Listener
+{
+private:
+	Flock* mFlock;
+public:
+	UpdateBoidsAvoidanceListener(Flock* flock);
+	void update();
+};
 
 #endif

@@ -3,6 +3,8 @@
 
 #include <GL/glew.h>
 #include <glm/glm.hpp>
+#include "Patterns/Listener.h"
+#include <sstream>
 
 #include "Patterns/Listener.h"
 
@@ -304,5 +306,15 @@ public:
     };
 
 
+ class UploadUniformBoneTransformationListener : public Listener{
+
+  	public:
+	 ///constructor @param name
+	 UploadUniformBoneTransformationListener(std::string name, std::string boneName);
+  	 ///
+	 void update();
+
+	 int index;
+  };
 
 #endif /* UPLOADUNIFORMLISTENERS_H_ */
