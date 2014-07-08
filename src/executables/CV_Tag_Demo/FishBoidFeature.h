@@ -16,13 +16,13 @@ void createObjects( ApplicationState* target ){
 	myFlock->addBoid(fish, trans);
 
 	unsigned int i;
-	for (i = 0; i < 25; ++i) {
+	for (i = 0; i < 50; ++i) {
 		VirtualObject *fish_copy = new VirtualObject(fish);
 		myFlock->addBoid(fish_copy, trans);
 		target->addVirtualObject(fish_copy);
 	}
 
-	myFlock->initializeStartPositions(5.0f, glm::vec3(0.0f, 2.0f, 0.0f));
+	myFlock->initializeStartPositions(1.0f, glm::vec3(0.0f, 2.0f, 0.0f));
 
 	target->attachListenerOnBeginningProgramCycle(new UpdateBoidsListener(myFlock));
 	target->attachListenerOnBeginningProgramCycle(new UpdateBoidsSwimCycleListener(myFlock));

@@ -329,7 +329,7 @@ UpdateBoidsSwimCycleListener::UpdateBoidsSwimCycleListener(Flock* flock){
 }
 void UpdateBoidsSwimCycleListener::update(){
 	float angle = glfwGetTime() / 5.0f;
-	mFlock->setPlaceToGo(glm::vec3(glm::sin(angle) * 10.0f, 0.0f, glm::cos(angle) * 5.0f));
+	mFlock->setPlaceToGo(glm::vec3(glm::sin(angle) * 10.0f, 4.0f, glm::cos(angle) * 5.0f));
 }
 
 UpdateBoidsAvoidanceListener::UpdateBoidsAvoidanceListener(Flock* flock){
