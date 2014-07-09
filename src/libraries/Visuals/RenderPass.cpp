@@ -71,11 +71,9 @@ void RenderPass::activate()
 	RenderManager *rm = RenderManager::getInstance();
 	rm->setCurrentShader(mShader);
 	rm->setCurrentFBO(mFBO);	
-	mShader->useProgram();
 
 	if (mFBO)
 	{
-		mFBO->bindFBO();
 		mViewPort_width = mFBO->getWidth();
 		mViewPort_height =mFBO->getHeight();
 	}
@@ -93,7 +91,7 @@ void RenderPass::activate()
 		mViewPort_width = mCustomViewPortWidth;
 	}
 
-	glViewport(mViewPort_x, mViewPort_y, mViewPort_width, mViewPort_height);
+	rm->setViewPort( mViewPort_x, mViewPort_y, mViewPort_width, mViewPort_height );
 
 	if (useDepthTest) 
 	{

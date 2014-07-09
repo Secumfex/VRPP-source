@@ -93,6 +93,18 @@ public:
 	void setLightPosition (glm::vec3 pos, int index);
 
 
+	/** \brief setter
+	 *
+	 * set the active viewport
+	 */
+	void setViewPort( glm::vec4 viewPort );
+
+	/** \brief setter
+	 *
+	 * set the active viewport
+	 */
+	void setViewPort( float viewPort_x, float viewPort_y,  float viewPort_width, float viewPort_height );
+
 	/** \brief getter
 	 *
 	 * @return mCurrentVO
@@ -134,6 +146,12 @@ public:
 	 * @return window
 	 */
 	GLFWwindow* getWindow();
+
+	/** \brief getter
+	 *
+	 * @return active viewport
+	 */
+	glm::vec4 getViewPort();
 
 	/** \brief getter
 	 *
@@ -215,6 +233,8 @@ private:
 	FrameBufferObject* mCurrentFBO;		/**< !docu pls! */
 	vector<glm::vec3> mLightPositions;	/**< !docu pls! */
 	RenderLoop* mRenderLoop;		/**< current renderloop */
+
+	glm::vec4 mViewPort;					/**< active viewport */
 
 };
 

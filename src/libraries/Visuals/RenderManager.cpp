@@ -57,10 +57,27 @@ void RenderManager::setCurrentGC(GraphicsComponent* gc){
 }
 
 void RenderManager::setCurrentShader(Shader* shader){
+	if ( mCurrentShader != shader)
+	{
+		shader->useProgram();
+	}
 	mCurrentShader = shader;
+
 }
 
 void RenderManager::setCurrentFBO(FrameBufferObject* fbo){
+	if ( mCurrentFBO != fbo )
+	{
+		if (fbo != 0)
+		{
+			fbo->bindFBO();
+
+		}
+		else
+		{
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		}
+	}
 	mCurrentFBO = fbo;
 }
 
@@ -260,6 +277,8 @@ RenderManager::RenderManager(){
 	mCurrentGC = 0;
 	mCurrentFBO = 0;
 	mCurrentShader = 0;
+
+	mViewPort = glm::vec4(0,0,0,0);
 }
 
 void RenderManager::attachListenerOnNewFrame(Listener* listener){
@@ -277,4 +296,32 @@ void RenderManager::createFourLightsources(){
 	mLightPositions.push_back(vec3(-20, 20, 20));
 	mLightPositions.push_back(vec3(20, 20, -20));
 	mLightPositions.push_back(vec3(-20, 20, -20));
+}
+
+RenderLoop* RenderManager::getCurrentRenderLoop() {
+	return mRenderLoop;
+}
+
+glm::vec4 RenderManager::getViewPort() {
+	return mViewPort;
+}
+
+void RenderManager::setViewPort( 	float viewPort_x, float  viewPort_y, float viewPort_width, float viewPort_height)
+{
+	if ( mViewPort != glm::vec4( viewPort_x, viewPort_y, viewPort_width, viewPort_height) )
+	{
+		mViewPort = glm::vec4( viewPort_x, viewPort_y, viewPort_width, viewPort_height );
+		glViewport(viewPort_x, viewPort_y, viewPort_width, viewPort_height);
+
+	}
+}
+
+void RenderManager::setViewPort( glm::vec4 viewPort )
+{
+	if ( mViewPort != viewPort )
+	{
+		mViewPort = viewPort;
+		glViewport(viewPort.x, viewPort.y, viewPort.z, viewPort.w);
+
+	}
 }
