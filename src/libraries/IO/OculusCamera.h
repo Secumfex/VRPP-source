@@ -14,7 +14,7 @@ protected:
 
 	OVR::Util::Render::StereoEye eye;	/**< the eye for which this camera is currently set */
 public:
-	OculusCamera(Oculus* oculus);
+	OculusCamera(Oculus* oculus=0);
 	virtual ~OculusCamera();
 
 	glm::mat4 getViewMatrix(); /**< returns the accumulated view matrix */

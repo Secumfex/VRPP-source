@@ -5,9 +5,9 @@
 #include "IO/OculusCamera.h"
 #include "IO/OculusListeners.h"
 #include "IO/OculusPostProcessingRenderPass.h"
-
+#include "IO/PlayerOculusCamera.h"
 #include "PlaceHolderListeners.h"
-
+#include "IO/PlayerOculusCamera.h"
 namespace OculusFeature
 {
 
@@ -44,7 +44,7 @@ void initializeAndConfigureOculus( ApplicationState* target ){
 	oculus->UpdateEyeParams();
 
 	// create oculus camera
-	oculusCam = new OculusCamera(oculus);
+	oculusCam = new PlayerOculusCamera(oculus);
 
 	target->setCamera(oculusCam);
 

@@ -13,7 +13,8 @@ PhysicWorld::PhysicWorld() {
 	solver = new btSequentialImpulseConstraintSolver();
 	dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher,broadphase,solver,collisionConfiguration);
 
-	dynamicsWorld->setGravity(btVector3(0,-10,0));
+	//original gravity was btVector3(0,-10,0);
+	dynamicsWorld->setGravity(btVector3(0,-0.1,0));
 
 //	cout<<dynamicsWorld<<endl;
 
