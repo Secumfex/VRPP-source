@@ -469,8 +469,8 @@ TextureRenderPass* 			presentFinalImage;
 			SHADERS_PATH "/Underwater_Visuals_Test/gbuffer_water.frag");
 
 	gbuffer_shadow_shader = new Shader(
-			SHADERS_PATH "Underwater_Visuals_Test/gbuffer_shadow.vert",
-			SHADERS_PATH "Underwater_Visuals_Test/gbuffer_shadow.frag");
+			SHADERS_PATH "/Underwater_Visuals_Test/gbuffer_shadow.vert",
+			SHADERS_PATH "/Underwater_Visuals_Test/gbuffer_shadow.frag");
 
 	add_shader = new Shader(
 			SHADERS_PATH "/Underwater_Visuals_Test/screenFill.vert",
@@ -559,8 +559,9 @@ TextureRenderPass* 			presentFinalImage;
 			target->getRenderLoop()->addRenderPass( gbufferRenderPass);
 
 		// 1.2.2: render shadowMap
-
-		gbufferRenderPass = new GBufferRenderPass(gbuffer_shadow_shader, framebuffer_shadow);
+		gbufferShadowRenderPass = new GBufferRenderPass(gbuffer_shadow_shader, framebuffer_shadow);
+		if(addToRenderLoop)
+			target->getRenderLoop()->addRenderPass(gbufferShadowRenderPass);
 
 		// 1.2.3: light GBuffer scene
 		gbufferCompositingRenderPass = new CompositingPass(gbuffer_compositing_shader, framebuffer_gbuffer_compositing_default);

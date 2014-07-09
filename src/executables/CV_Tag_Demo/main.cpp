@@ -169,7 +169,7 @@ void configureRendering(){
 
 void configureOtherStuff(){
 	/* customization for other stuff */
-	
+
 }
 
 void configureApplication(){
