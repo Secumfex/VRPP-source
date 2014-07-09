@@ -89,6 +89,7 @@ namespace UnderwaterScene{
 	FrameBufferObject* framebuffer_water_water_object;
 	FrameBufferObject* framebuffer_water_caustics;
 	FrameBufferObject* framebuffer_scene_sky_sun;
+	FrameBufferObject* framebuffer_shadow;
 
 	FrameBufferObject* framebuffer_gbuffer_default;
 	FrameBufferObject* framebuffer_gbuffer_compositing_default;
@@ -110,6 +111,7 @@ Shader* gbuffer_fog;
 Shader* gbuffer_god_rays_shader;
 Shader* gbuffer_particle_shader;
 Shader* gbuffer_water_shader;
+Shader* gbuffer_shadow_shader;
 
 Shader* add_shader;
 Shader* overlay_shader;
@@ -124,6 +126,7 @@ Shader *combine_GBuffers;
 GBufferRenderPass* 			gbufferSunSkyRenderPass;
 CompositingPass* 			gbufferCompositingSkySunRenderPass;
 GBufferRenderPass* 			gbufferRenderPass;
+GBufferRenderPass* 			gbufferShadowRenderPass;
 CompositingPass* 			gbufferCompositingRenderPass;
 GBufferRenderPass* 			gbufferReflectionMapSunSkyRenderPass;
 CompositingPass* 			gbufferCompositingReflectionMapSkySunRenderPass;
@@ -361,6 +364,8 @@ TextureRenderPass* 			presentFinalImage;
 		framebuffer_scene_sky_sun->makeDrawBuffers();
 		framebuffer_scene_sky_sun->unbindFBO();
 
+		framebuffer_shadow 			=new FrameBufferObject(window_width, window_height);	// create a depth map
+
 		framebuffer_gbuffer_default = new FrameBufferObject(window_width,window_height);
 		framebuffer_gbuffer_default->bindFBO();
 		framebuffer_gbuffer_default->createPositionTexture();
@@ -463,6 +468,10 @@ TextureRenderPass* 			presentFinalImage;
 			SHADERS_PATH "/Underwater_Visuals_Test/gbuffer_water.vert",
 			SHADERS_PATH "/Underwater_Visuals_Test/gbuffer_water.frag");
 
+	gbuffer_shadow_shader = new Shader(
+			SHADERS_PATH "Underwater_Visuals_Test/gbuffer_shadow.vert",
+			SHADERS_PATH "Underwater_Visuals_Test/gbuffer_shadow.frag");
+
 	add_shader = new Shader(
 			SHADERS_PATH "/Underwater_Visuals_Test/screenFill.vert",
 			SHADERS_PATH "/Underwater_Visuals_Test/add.frag ");
@@ -549,7 +558,11 @@ TextureRenderPass* 			presentFinalImage;
 		if (addToRenderLoop)
 			target->getRenderLoop()->addRenderPass( gbufferRenderPass);
 
-		// 1.2.2: light GBuffer scene
+		// 1.2.2: render shadowMap
+
+		gbufferRenderPass = new GBufferRenderPass(gbuffer_shadow_shader, framebuffer_shadow);
+
+		// 1.2.3: light GBuffer scene
 		gbufferCompositingRenderPass = new CompositingPass(gbuffer_compositing_shader, framebuffer_gbuffer_compositing_default);
 		gbufferCompositingRenderPass->setClearColorBufferBit(false);
 		gbufferCompositingRenderPass->setUseAlphaBlending(true);
