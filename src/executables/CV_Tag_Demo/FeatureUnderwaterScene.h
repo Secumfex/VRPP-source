@@ -53,6 +53,8 @@ namespace UnderwaterScene{
 	glm::mat4 sunView;
 	glm::mat4 sunPerspective;
 	glm::mat4 sunViewPerspective;
+	glm::mat4 depthMVP;
+	glm::mat4 depthBiasMVP;
 
 	float framebuffer_water_refraction_scalefactor = 1.0f; // size in proportion to actual window size
 	float framebuffer_water_reflection_scalefactor = 1.0f; // size in proportion to actual window size
@@ -275,6 +277,17 @@ TextureRenderPass* 			presentFinalImage;
 		sunPerspective = glm::ortho(-50.0f, 50.0f, -20.0f, 25.0f, 0.1f, 40.0f);
 		sunViewPerspective 		= sunPerspective * sunView;
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		 glm::mat4 depthModelMatrix = glm::mat4(1.0);
+		 depthMVP = sunPerspective * sunView * depthModelMatrix;
+
+		 glm::mat4 biasMatrix(
+				 0.5, 0.0, 0.0, 0.0,
+				 0.0, 0.5, 0.0, 0.0,
+				 0.0, 0.0, 0.5, 0.0,
+				 0.5, 0.5, 0.5, 1.0);
+		 depthBiasMVP = biasMatrix * depthMVP;
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		if (scene_sun_Object->getGraphicsComponent().size() > 0){
 				scene_sun_Object->getGraphicsComponent()[0]->setEmission(true);
 		}
@@ -510,7 +523,9 @@ TextureRenderPass* 			presentFinalImage;
 		Listener* uniFogColor 	= new UploadUniformVec3Listener 	("UNIFORMUPLOADLISTENER", &UnderwaterScene::fog_color, 							"uniformFogColor");
 		Listener* uniFogColorInv= new UploadUniformVec3Listener 	("UNIFORMUPLOADLISTENER", &UnderwaterScene::fog_color_inverse, 					"uniformFogColor");
 		Listener* uniLightPos 	= new UploadUniformVec3Listener 	("UNIFORMUPLOADLISTENER", &UnderwaterScene::lightPosition, 						"uniformLightPosition");
-		Listener* uniSunDir		= new UploadUniformVec3Listener		("UNIFORMUPLOADLISTENER", &UnderwaterScene::sunLightDirection,					"uniformSunDirection");
+		Listener* uniSunDir		= new UploadUniformVec3Listener	("UNIFORMUPLOADLISTENER", &UnderwaterScene::sunLightDirection,					"uniformSunDirection");
+		Listener* uniDepthMVP	=new UploadUniformMat4Listener	("UNIFORMUPLOADLISTENER", &UnderwaterScene::depthMVP,						"uniformDepthMVP");
+		Listener* uniDepthBiasMVP=new UploadUniformMat4Listener	("UNIFORMUPLOADLISTENER", &UnderwaterScene::depthBiasMVP,					"uniformDepthBiasMVP");
 
 		Listener* uniRefrText   = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 10, "uniformRefractionMap", 	UnderwaterScene::framebuffer_water_refraction_compositing->getPositionTextureHandle());
 		Listener* uniReflText   = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 11, "uniformReflectionMap", 	UnderwaterScene::framebuffer_water_reflection_compositing->getPositionTextureHandle());
@@ -583,10 +598,13 @@ TextureRenderPass* 			presentFinalImage;
 		gbufferCompositingRenderPass->setNormalMap(   framebuffer_gbuffer_default->getNormalTextureHandle());
 
 		gbufferCompositingRenderPass->attachListenerOnPostUniformUpload( uniSunDir );	// attach sun direction
+		gbufferCompositingRenderPass->attachListenerOnPostUniformUpload(	uniSunVPersp );
 
 		// add uniforms needed for shadow mapping
 		gbufferCompositingRenderPass->attachListenerOnPostUniformUpload( uniShadowMap ); // shadow map to compare depth values with
 		gbufferCompositingRenderPass->attachListenerOnPostUniformUpload( uniSunVPersp ); // needed to compute shadow map coordinates
+		gbufferCompositingRenderPass->attachListenerOnPostUniformUpload( uniDepthMVP ); // just for the cause
+		gbufferCompositingRenderPass->attachListenerOnPostUniformUpload( uniDepthBiasMVP); // just in the case
 
 		if (addToRenderLoop)
 				target->getRenderLoop()->addRenderPass( gbufferCompositingRenderPass );
