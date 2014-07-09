@@ -20,11 +20,11 @@ void main() {
 
   //try
       vec4 fragPosition = texture(positionMap, passUV);
-      vec4 shadowCoord = uniformDepthBiasMVP * fragPosition;
+      vec4 shadowCoord = inverse(uniformView) * fragPosition;
       shadowCoord.xyz /= shadowCoord.w;
-      float visibility = 0.001;
+      float visibility = 1.0;
       if ( texture ( uniformDepthMap, shadowCoord.xy ).z < shadowCoord.z){
-          visibility = 1.0;
+          visibility = 0.01;
       }
       
   //\try
