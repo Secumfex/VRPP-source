@@ -126,7 +126,7 @@ Shader *combine_GBuffers;
 GBufferRenderPass* 			gbufferSunSkyRenderPass;
 CompositingPass* 			gbufferCompositingSkySunRenderPass;
 GBufferRenderPass* 			gbufferRenderPass;
-GBufferRenderPass* 			gbufferShadowRenderPass;
+RenderPass* 				gbufferShadowRenderPass;
 CompositingPass* 			gbufferCompositingRenderPass;
 GBufferRenderPass* 			gbufferReflectionMapSunSkyRenderPass;
 CompositingPass* 			gbufferCompositingReflectionMapSkySunRenderPass;
@@ -364,7 +364,11 @@ TextureRenderPass* 			presentFinalImage;
 		framebuffer_scene_sky_sun->makeDrawBuffers();
 		framebuffer_scene_sky_sun->unbindFBO();
 
-		framebuffer_shadow 			=new FrameBufferObject(window_width, window_height);	// create a depth map
+		framebuffer_shadow 	= new FrameBufferObject( 512, 512 );	// create a depth map
+		framebuffer_shadow->createPositionTexture();
+		framebuffer_shadow->makeDrawBuffers();	// draw color to color attachment 0
+		framebuffer_shadow->unbindFBO();
+
 
 		framebuffer_gbuffer_default = new FrameBufferObject(window_width,window_height);
 		framebuffer_gbuffer_default->bindFBO();
@@ -515,6 +519,7 @@ TextureRenderPass* 			presentFinalImage;
 		Listener* uniGBufferDepthMap = new UploadUniformTextureListener("", 7, "uniformDepthMap", framebuffer_gbuffer_default->getDepthBufferHandle( ) );
 		Listener* uniPartMap	= new UploadUniformTextureListener 	("UNIFORMUPLOADLISTENER", 14,"uniformParticlesMap", 	UnderwaterScene::framebuffer_water_particles->getPositionTextureHandle());
 		Listener* uniPartText	= new UploadUniformTextureListener 	("UNIFORMUPLOADLISTENER", 4,"uniformParticleTexture",   UnderwaterScene::particlesTexture->getTextureHandle());
+		Listener* uniShadowMap  = new UploadUniformTextureListener 	("UNIFORMUPLOADLISTENER", 10,"uniformDepthMap",   		UnderwaterScene::framebuffer_shadow->getDepthBufferHandle() );	// shadow map from sun view
 
 		Listener* uniSunVPersp	= new UploadUniformMat4Listener 	("UNIFORMUPLOADLISTENER", &UnderwaterScene::sunViewPerspective, "uniformProjectorViewPerspective");
 		Listener* uniReflMatr	= new UploadUniformMat4Listener 	("UNIFORMUPLOADLISTENER", UnderwaterScene::reflectedCamera->getViewMatrixPointer(), "uniformReflectionView");
@@ -559,7 +564,9 @@ TextureRenderPass* 			presentFinalImage;
 			target->getRenderLoop()->addRenderPass( gbufferRenderPass);
 
 		// 1.2.2: render shadowMap
-		gbufferShadowRenderPass = new GBufferRenderPass(gbuffer_shadow_shader, framebuffer_shadow);
+		gbufferShadowRenderPass = new RenderPass(gbuffer_shadow_shader, framebuffer_shadow);
+		gbufferShadowRenderPass->setInitialGraphicsComponentList( scene_objects );
+		gbufferShadowRenderPass->removeInitialGraphicsComponent( scene_waterPlaneObject );
 		if(addToRenderLoop)
 			target->getRenderLoop()->addRenderPass(gbufferShadowRenderPass);
 
@@ -572,6 +579,10 @@ TextureRenderPass* 			presentFinalImage;
 		gbufferCompositingRenderPass->setNormalMap(   framebuffer_gbuffer_default->getNormalTextureHandle());
 
 		gbufferCompositingRenderPass->attachListenerOnPostUniformUpload( uniSunDir );	// attach sun direction
+
+				// add uniforms needed for shadow mapping
+		gbufferCompositingRenderPass->attachListenerOnPostUniformUpload( uniShadowMap ); // shadow map to compare depth values with
+		gbufferCompositingRenderPass->attachListenerOnPostUniformUpload( uniSunVPersp ); // needed to compute shadow map coordinates
 
 		if (addToRenderLoop)
 				target->getRenderLoop()->addRenderPass( gbufferCompositingRenderPass );

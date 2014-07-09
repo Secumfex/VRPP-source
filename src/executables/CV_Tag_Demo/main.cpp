@@ -165,6 +165,10 @@ void configureRendering(){
 	std::cout << " Setting Stereo Post Processing effect on final image" << std::endl;
 	OculusFeature::oculus->setRenderBuffer( UnderwaterScene:: finalImage );
 	testingState->getRenderLoop()->addRenderPass( OculusFeature::oculusPostProcessing );
+
+	// some debug views
+	addDebugView(UnderwaterScene::simpleTex, testingState, UnderwaterScene::framebuffer_shadow->getDepthBufferHandle() );
+	addDebugView(UnderwaterScene::simpleTex, testingState, UnderwaterScene::framebuffer_gbuffer_default->getDepthBufferHandle() );
 }
 
 void configureOtherStuff(){
