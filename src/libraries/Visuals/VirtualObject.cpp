@@ -131,7 +131,7 @@ void VirtualObject::setPhysicsComponent(glm::vec3 min, glm::vec3 max, float mass
 	physicsComponent = new PhysicsComponent(min, max, mass,collisionFlag);
 }
 
-void VirtualObject::setPhysicsComponent(float x, float y, float z, btTriangleMesh btMesh, btTriangleIndexVertexArray* btTIVA){
+void VirtualObject::setPhysicsComponent(float x, float y, float z, btTriangleMesh* btMesh, btTriangleIndexVertexArray* btTIVA){
 	if(physicsComponent != NULL)
 		physicsComponent->~PhysicsComponent();
 
