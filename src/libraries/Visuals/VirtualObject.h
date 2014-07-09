@@ -147,7 +147,7 @@ public:
 	 * @param btTIVA btTriangleIndexVertexArray of loaded model ->VarB
 	 * @return void
 	 */
-	void setPhysicsComponent(float x, float y, float z, btTriangleMesh btMesh, btTriangleIndexVertexArray* btTIVA);
+	void setPhysicsComponent(float x, float y, float z, btTriangleMesh* btMesh, btTriangleIndexVertexArray* btTIVA);
 
 	/** \brief sets PhysicsComponent
 	 *

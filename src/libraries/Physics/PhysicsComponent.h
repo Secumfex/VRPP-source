@@ -54,7 +54,7 @@ public:
 	* @param mGraphComponent not used yet, but maybe for optimization neccessary
 	* @param btTIVA TriangleIndexVertexArray of loaded model ->VarB
 	*/
-	PhysicsComponent(float x, float y, float z, btTriangleMesh btMesh, vector<GraphicsComponent*> mGraphComponent, btTriangleIndexVertexArray* btTIVA);
+	PhysicsComponent(float x, float y, float z, btTriangleMesh* btMesh, vector<GraphicsComponent*> mGraphComponent, btTriangleIndexVertexArray* btTIVA);
 
 	/** \brief constructor
 	*
@@ -205,7 +205,7 @@ public:
 	 * @param btTIVA triangleIndexVertexArray of loaded model ->VarB
 	 * @return a bullet rigid body
 	 */
-	btRigidBody* addTriangleMesh(float x, float y, float z, btTriangleMesh btMesh,vector<GraphicsComponent*> mGraphComponent, btTriangleIndexVertexArray* btTIVA);
+	btRigidBody* addTriangleMesh(float x, float y, float z, btTriangleMesh* btMesh,vector<GraphicsComponent*> mGraphComponent, btTriangleIndexVertexArray* btTIVA);
 
 	/** \brief getter
 	 *

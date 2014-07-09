@@ -469,8 +469,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 					);
 
 
-	glm::mat4 inversesceneMatrix = glm::inverse(glm::transpose(glm::make_mat4x4(&(pScene->mRootNode->mTransformation.a1))));
-
+	
 	// Melden, falls der Import nicht funktioniert hat
 	if (!pScene) {
 		cout << Importer.GetErrorString() << endl;
@@ -479,11 +478,14 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 
 	cout << "Import of scene " << filename.c_str() << " succeeded." << endl;
 
+	glm::mat4 inversesceneMatrix = glm::inverse(glm::transpose(glm::make_mat4x4(&(pScene->mRootNode->mTransformation.a1))));
+
+
 	glm::vec3 physics_min = glm::vec3(FLT_MAX, FLT_MAX, FLT_MAX);
 	glm::vec3 physics_max = glm::vec3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
 
 	Mesh* physMesh = new Mesh();
-	btTriangleMesh btMesh = new btTriangleMesh();
+	btTriangleMesh* btMesh = new btTriangleMesh();
 	btTriangleIndexVertexArray* btTIVA = new btTriangleIndexVertexArray();
 	cout << "pScene->mNumMeshes " << pScene->mNumMeshes << endl;
 
@@ -574,7 +576,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 					aiVector3D vec2 = mesh->mVertices[face.mIndices[2]];
 					btVertex2 = btVector3(vec2.x, vec2.y, vec2.z);
 
-					btMesh.addTriangle(btVertex0, btVertex1, btVertex2, false);
+					btMesh->addTriangle(btVertex0, btVertex1, btVertex2, false);
 
 
 					//Var B with TriangleIndexVertexArray, set array for triangleIndexBase
