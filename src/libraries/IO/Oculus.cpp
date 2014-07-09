@@ -70,7 +70,7 @@ void Oculus::UnBindRenderBuffer()
 
 void Oculus::PresentFbo_NoDistortion()
 {
-	glViewport(0,0,renderBuffer->getWidth(), renderBuffer->getHeight());
+	RenderManager::getInstance()->setViewPort( 0,0,renderBuffer->getWidth(), renderBuffer->getHeight() );
 
 	glDisable(GL_DEPTH_TEST);
 	PresFbo->useProgram();

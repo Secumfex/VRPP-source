@@ -95,19 +95,17 @@ void RenderPass::activate()
 
 	if (useDepthTest) 
 	{
-		glEnable(GL_DEPTH_TEST);
+		rm->enableDepthTesting();
 	}else
 	{
-		glDisable(GL_DEPTH_TEST);
+		rm->disableDepthTesting();
 	}
 
 	if (useAlphaBlending)
 	{
-		glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		rm->enableAlphaBlending();
 	}else{
-		glDisable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+		rm->disableAlphaBlending();
 	}
 
 	if ( mHasCustomClearColor )
@@ -120,24 +118,24 @@ void RenderPass::activate()
 
 void RenderPass::deactivate()
 {
-	RenderManager *rm = RenderManager::getInstance();
-	rm->setCurrentShader(0);
-	rm->setCurrentFBO(0);	
-	
-	if (mFBO)
-	{
-		mFBO->unbindFBO();
-	}
-
-	if (!useDepthTest) 
-	{
-		glEnable(GL_DEPTH_TEST);
-	}
-	if (useAlphaBlending)
-	{
-		glDisable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-	}
+//	RenderManager *rm = RenderManager::getInstance();
+//	rm->setCurrentShader(0);
+//	rm->setCurrentFBO(0);
+//
+//	if (mFBO)
+//	{
+//		mFBO->unbindFBO();
+//	}
+//
+//	if (!useDepthTest)
+//	{
+//		glEnable(GL_DEPTH_TEST);
+//	}
+//	if (useAlphaBlending)
+//	{
+//		glDisable(GL_BLEND);
+//        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+//	}
 
 	notify("DEACTIVATION");
 }

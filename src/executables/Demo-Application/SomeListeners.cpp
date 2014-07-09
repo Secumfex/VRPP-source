@@ -56,8 +56,8 @@ void AlternativeRenderloopListener::update(){
 
 		//render GCs with current Shader 
 		if ( currentRenderQueue != 0 ){
-			voList = currentRenderQueue->getVirtualObjectList();	//get List of all VOs in RenderQueue
-			//for every VO
+
+			voList = currentRenderQueue->getVirtualObjectList();//for every VO
 			for (std::list<VirtualObject* >::iterator i = voList.begin(); i != voList.end(); ++i) {	//get GCs of VO
 				currentGCs = (*i)->getGraphicsComponent();
 					//for every GC

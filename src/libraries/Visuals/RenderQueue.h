@@ -88,44 +88,44 @@ public:
 	 * return list of all virtual objects in this queue
 	 * @return voList
 	 */
-	list<VirtualObject* > getVirtualObjectList();
+	list<VirtualObject* >& getVirtualObjectList();
 
 	/** \brief getter
 	 *
 	 * return list of all graphicscomponents in this queue
 	 *
 	 */
-	 list<GraphicsComponent* > getGraphicsComponentList();
+	 list<GraphicsComponent* >& getGraphicsComponentList();
 
 	/** \brief getter
 	 *
 	 * @return gcFlagStorage
 	 */
-	map<string, vector<GraphicsComponent* > > getGcFlagStorage();
+	map<string, vector<GraphicsComponent* > >& getGcFlagStorage();
 
 	/** \brief getter
 	 *
 	 * @return gcShaderStorage
 	 */
-	map<string, vector<GraphicsComponent* > > getGcShaderStorage();
+	map<string, vector<GraphicsComponent* > >& getGcShaderStorage();
 
 	/** \brief getter
 	 *
 	 * @return gcTexStorage
 	 */
-	map<string, vector<GraphicsComponent* > > getGcTexStorage();
+	map<string, vector<GraphicsComponent* > >& getGcTexStorage();
 
 	/** \brief getter
 	 *
 	 * @return vo2gcMap
 	 */
-	map<VirtualObject*, vector<GraphicsComponent* > > getVo2GcMap();
+	map<VirtualObject*, vector<GraphicsComponent* > >& getVo2GcMap();
 
 	/** \brief getter
 	 *
 	 * @return gc2voMap
 	 */
-	map<GraphicsComponent*, VirtualObject* > getGc2VoMap();
+	map<GraphicsComponent*, VirtualObject* >& getGc2VoMap();
 
 	/** \brief sort graphic components by attributes
 	 *

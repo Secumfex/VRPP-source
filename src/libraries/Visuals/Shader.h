@@ -158,6 +158,11 @@ protected:
 
 	GLint blurStrength;								/**< !docu pls! */
 
+	// some maps to keep track of what is active and only upload new stuff when necessary
+	std::map<std::string, GLint> mActiveUniformsInt;
+	std::map<std::string, GLfloat> mActiveUniformsFloat;
+	std::map<std::string, glm::vec3> mActiveUniformsVec3;
+	std::map<std::string, glm::mat4> mActiveUniformsMat4;
 };
 
 #endif /* SHADER_H_ */

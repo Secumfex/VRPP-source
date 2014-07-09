@@ -139,6 +139,7 @@ void ParticlesRenderPass::render() {
 
 	notify("PRERENDER");
 	std::vector<Particle*> particles = mParticleSystem->getParticles();
+	rm->setCurrentVAO(mVAO);
 	for (unsigned int i = 0; i < particles.size(); i++) {
 
 		notify("PREUNIFORMUPLOAD");
@@ -154,9 +155,7 @@ void ParticlesRenderPass::render() {
 				"uniformParticlePosition");
 		notify("POSTUNIFORMUPLOAD");
 
-		glBindVertexArray(mVAO); // Bind our Vertex Array Object
 		glDrawArrays(GL_TRIANGLES, 0, 6); // Draw our square
-		glBindVertexArray(0); // Unbind our Vertex Array Object
 	}
 	notify("POSTRENDER");
 }

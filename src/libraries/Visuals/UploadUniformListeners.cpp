@@ -94,7 +94,7 @@ void UploadUniformPositionMapListener::update(){
 	glEnable(GL_TEXTURE_2D);
 	if (fbo){
 		if (fbo->getPositionTextureHandle() != -1){
-			fbo->bindPositionTexture();
+			RenderManager::getInstance()->bindTexture(fbo->getPositionTextureHandle(), 4);
 			shader->uploadUniform(4,"positionMap");	//upload only if texture exists
 		}
 	}
@@ -109,12 +109,12 @@ void UploadUniformNormalMapListener::update(){
 	FrameBufferObject* fbo = mSourceFBO;
 	if(!fbo) {
 		fbo = RenderManager::getInstance()->getCurrentFBO();
-	}Shader* shader = RenderManager::getInstance()->getCurrentShader();
+	}
+	Shader* shader = RenderManager::getInstance()->getCurrentShader();
 
-	glActiveTexture(GL_TEXTURE5);
-	glEnable(GL_TEXTURE_2D);if (fbo){
+	if (fbo){
 		if (fbo->getNormalTextureHandle() != -1){
-			fbo->bindNormalTexture();
+			RenderManager::getInstance()->bindTexture(fbo->getNormalTextureHandle(), 5);
 			shader->uploadUniform(5,"normalMap"); //upload only if texture exists
 		}
 	}
@@ -132,11 +132,9 @@ void UploadUniformColorMapListener::update(){
 	}
 	Shader* shader = RenderManager::getInstance()->getCurrentShader();
 
-	glActiveTexture(GL_TEXTURE6);
-	glEnable(GL_TEXTURE_2D);
 	if (fbo){
 		if (fbo->getColorTextureHandle() != -1){
-			fbo->bindColorTexture();
+			RenderManager::getInstance()->bindTexture(fbo->getColorTextureHandle(), 6);
 			shader->uploadUniform(6,"colorMap"); //upload only if texture exists
 		}
 	}
@@ -173,12 +171,9 @@ void UploadUniformSpecularMapListener::update(){
 	}
 	Shader* shader = RenderManager::getInstance()->getCurrentShader();
 
-
-	glActiveTexture(GL_TEXTURE7);
-	glEnable(GL_TEXTURE_2D);
 	if (fbo){
 		if (fbo->getSpecularTextureHandle() != -1){
-			fbo->bindSpecularTexture();
+			RenderManager::getInstance()->bindTexture(fbo->getSpecularTextureHandle(), 7);
 			shader->uploadUniform(7,"specularMap"); //upload only if texture exists
 		}
 	}
@@ -203,9 +198,7 @@ void UploadUniformDiffuseTextureListener::update(){
 	Shader* shader = RenderManager::getInstance()->getCurrentShader();
 	GraphicsComponent* gc = RenderManager::getInstance()->getCurrentGC();
 
-	glActiveTexture(GL_TEXTURE0);
-	glEnable(GL_TEXTURE_2D);
-	gc->getMaterial()->getDiffuseMap()->bindTexture();
+	RenderManager::getInstance()->bindTexture( gc->getMaterial()->getDiffuseMap(), 0);
 
 	shader->uploadUniform(0,"diffuseTexture");
 }
@@ -218,11 +211,10 @@ void UploadUniformNormalTextureListener::update(){
 	Shader* shader = RenderManager::getInstance()->getCurrentShader();
 	GraphicsComponent* gc = RenderManager::getInstance()->getCurrentGC();
 
-	glActiveTexture(GL_TEXTURE1);
-	glEnable(GL_TEXTURE_2D);
-	gc->getMaterial()->getNormalMap()->bindTexture();
+	RenderManager::getInstance()->bindTexture( gc->getMaterial()->getNormalMap(), 1);
+
 	shader->uploadUniform(1,"normalTexture");
-	glActiveTexture(GL_TEXTURE0);
+//	glActiveTexture(GL_TEXTURE0);
 }
 
 UploadUniformShininessListener::UploadUniformShininessListener(std::string name){
@@ -252,7 +244,6 @@ UploadUniformDiffuseColorListener::UploadUniformDiffuseColorListener(std::string
 void UploadUniformDiffuseColorListener::update(){
 	Shader* shader = RenderManager::getInstance()->getCurrentShader();
 	GraphicsComponent* gc = RenderManager::getInstance()->getCurrentGC();
-
 
 	shader->uploadUniform(gc->getMaterial()->getDiffuse(), "diffuseColor");
 }
@@ -422,8 +413,7 @@ UploadUniformTextureListener::UploadUniformTextureListener(std::string name, GLi
 }
 
 void UploadUniformTextureListener::update(){
-	glActiveTexture(GL_TEXTURE0 + unit);			// set active texture as target to load texture to
-	glBindTexture(GL_TEXTURE_2D, texture_handle);	// load texture to active texture unit
+	RenderManager::getInstance()->bindTexture( texture_handle, unit );
 
 	Shader* shader = RenderManager::getInstance()->getCurrentShader();
 	shader->uploadUniform( unit, uniform_name);		// upload texture unit to shader uniform sampler2d variable

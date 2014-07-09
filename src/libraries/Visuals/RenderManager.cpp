@@ -36,28 +36,12 @@ glm::mat4 RenderManager::getPerspectiveMatrix(){
 	return mFrustum->getPerspectiveMatrix();
 }
 
-//TODO
-/*wir brauchen eine setCurrentGC(GraphicsComponent* gc)
-und eine getCurrentGC()
-die auf eine globale Pointer-variable im RenderManager zugreifen
-sowas wie GraphicsComponent* mCurrentGC
-gesetzt wird der shit in der renderLoop, aber das machen wir sp�ter
-erstmal wollen wir nur den Access haben
-
-WENN wir das geschafft haben kommt Step2
-dann machen wir uns noch eine currentVO globale variable, ebenfalls im RenderManager (auf raphis anfrage)
-die getCurrentVO wird dann genauso aussehen wie die getCurrentGC, nur halt mit virtual object
-die setCurrentVO wird stattdessen auf die jeweilige map in der RenderQueue zugreifen und kann direkt in der
-setCurrentGC aufgerufen werden sobald die GC global gesetzt wurde
-
- */
-
 void RenderManager::setCurrentGC(GraphicsComponent* gc){
 	mCurrentGC = gc;
 }
 
 void RenderManager::setCurrentShader(Shader* shader){
-	if ( mCurrentShader != shader)
+	if ( mCurrentShader != shader && shader != 0)
 	{
 		shader->useProgram();
 	}
@@ -66,7 +50,7 @@ void RenderManager::setCurrentShader(Shader* shader){
 }
 
 void RenderManager::setCurrentFBO(FrameBufferObject* fbo){
-	if ( mCurrentFBO != fbo )
+	if ( mCurrentFBO != fbo)
 	{
 		if (fbo != 0)
 		{
@@ -96,8 +80,8 @@ void RenderManager::setDefaultPerspectiveMatrix(){
 }
 
 VirtualObject* RenderManager::getCurrentVO(){
-	map<GraphicsComponent*, VirtualObject* > gc2voMap = mRenderqueue->getGc2VoMap();
-	VirtualObject* myCurrentVO = gc2voMap[mCurrentGC];
+
+	VirtualObject* myCurrentVO = mRenderqueue->getGc2VoMap().at(mCurrentGC);
 
 	return myCurrentVO;
 }
@@ -133,7 +117,6 @@ Shader* RenderManager::getCurrentShader(){
 	return mCurrentShader;
 }
 Camera* RenderManager::getCamera(){
-	//TODO: ordentlich Kamera uebergeben
 	return mCamera;
 }
 
@@ -239,12 +222,12 @@ void RenderManager::manageShaderProgram(){
 }
 
 void RenderManager::renderLoop(){
-	//   std::cout<<"Render loop reached successfully."<<std::endl;
+	// std::cout<<"Render loop reached successfully."<<std::endl;
 
-	//MVPHandle = glGetUniformLocation(shaderProgramHandle, "uniformMVP");
+	// MVPHandle = glGetUniformLocation(shaderProgramHandle, "uniformMVP");
 
+	glfwMakeContextCurrent(window);
 	if(!glfwWindowShouldClose(window)){ //if window is not about to close
-		glfwMakeContextCurrent(window);
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -278,7 +261,17 @@ RenderManager::RenderManager(){
 	mCurrentFBO = 0;
 	mCurrentShader = 0;
 
-	mViewPort = glm::vec4(0,0,0,0);
+	mViewPort = glm::vec4(0,0,800,600);
+
+	window = 0;
+	mCurrentVAO = 0;
+	mCurrentVO = 0;
+	shaderProgramHandle = 0;
+	MVPHandle = 0;
+	mFrustum = 0;
+
+	depthTesting = false;
+	alphaBlending = false;
 }
 
 void RenderManager::attachListenerOnNewFrame(Listener* listener){
@@ -312,7 +305,6 @@ void RenderManager::setViewPort( 	float viewPort_x, float  viewPort_y, float vie
 	{
 		mViewPort = glm::vec4( viewPort_x, viewPort_y, viewPort_width, viewPort_height );
 		glViewport(viewPort_x, viewPort_y, viewPort_width, viewPort_height);
-
 	}
 }
 
@@ -322,6 +314,73 @@ void RenderManager::setViewPort( glm::vec4 viewPort )
 	{
 		mViewPort = viewPort;
 		glViewport(viewPort.x, viewPort.y, viewPort.z, viewPort.w);
+	}
+}
 
+void RenderManager::enableDepthTesting() {
+	if ( !depthTesting )
+	{
+		glEnable(GL_DEPTH_TEST);
+		depthTesting = true;
+	}
+}
+
+void RenderManager::disableDepthTesting() {
+if ( depthTesting )
+	{
+		glDisable(GL_DEPTH_TEST);
+		depthTesting = false;
+	}
+}
+
+void RenderManager::enableAlphaBlending() {
+	if (!alphaBlending)
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		alphaBlending = true;
+	}
+}
+
+void RenderManager::disableAlphaBlending() {
+	if ( alphaBlending )
+	{
+		glDisable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+		alphaBlending = false;
+	}
+}
+
+GLuint RenderManager::getCurrentVAO() {
+	return mCurrentVAO;
+}
+
+void RenderManager::setCurrentVAO(GLuint VAO) {
+	if ( mCurrentVAO != VAO )
+	{
+		mCurrentVAO = VAO;
+		glBindVertexArray(VAO);
+	}
+}
+
+std::map<int, GLuint>& RenderManager::getActiveTextures() {
+	return mActiveTextures;
+}
+
+void RenderManager::bindTexture(Texture* tex, int unit) {
+	if ( mActiveTextures[unit] != tex->getTextureHandle() )
+	{
+		glActiveTexture( GL_TEXTURE0 + unit );
+		tex->bindTexture();
+		mActiveTextures[unit] = tex->getTextureHandle();
+	}
+}
+
+void RenderManager::bindTexture(GLuint texture_handle, int unit) {
+	if ( mActiveTextures[unit] != texture_handle )
+	{
+		glActiveTexture( GL_TEXTURE0 + unit );
+		glBindTexture( GL_TEXTURE_2D, texture_handle );
+		mActiveTextures[unit] = texture_handle;
 	}
 }

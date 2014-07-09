@@ -53,6 +53,10 @@ public:
      */
 	void setCurrentShader(Shader* shader);
 
+	GLuint getCurrentVAO();
+	void setCurrentVAO(GLuint VAO);
+
+
     /** \brief setter
      *
      * sets/changes mCurrentFBO
@@ -216,9 +220,23 @@ public:
 	 *	create four Light sources for fun
 	 */
 	void createFourLightsources();
+
+	void enableDepthTesting();	// enable depth testing if not enabled already
+	void disableDepthTesting(); // enable depth testing if not disabled already
+
+	void enableAlphaBlending();
+	void disableAlphaBlending();
+
+	std::map<int, GLuint>& getActiveTextures();
+
+	void bindTexture( Texture* tex, int unit );
+	void bindTexture( GLuint texture_handle, int unit );
 private:
 
-	GLuint vbo;							/**< !docu pls! */
+	bool depthTesting;
+	bool alphaBlending;
+
+	GLuint mCurrentVAO;					/**< !docu pls! */
 	GLuint MVPHandle;					/**< !docu pls! */
 	GLuint shaderProgramHandle;			/**< !docu pls! */
 
@@ -235,6 +253,7 @@ private:
 	RenderLoop* mRenderLoop;		/**< current renderloop */
 
 	glm::vec4 mViewPort;					/**< active viewport */
+	map<int, GLuint> mActiveTextures;	/**< active textures */
 
 };
 
