@@ -339,3 +339,38 @@ void UpdateBoidsAvoidanceListener::update(){
 	glm::vec3 camposition = RenderManager::getInstance()->getCamera()->getPosition();
 	mFlock->setPlaceToAvoid(camposition);
 }
+
+UpdateAnimationLoopListener::UpdateAnimationLoopListener(AnimationLoop* animation){
+	mAnimation = animation;
+}
+void UpdateAnimationLoopListener::update(){
+	mAnimation->updateNodes(glfwGetTime());
+}
+
+LookAtCameraListener::LookAtCameraListener(VirtualObject* vo, glm::mat4 mat, glm::vec3 pos){
+	mVO = vo;
+	mMat = mat;
+	mPos = pos;
+}
+void LookAtCameraListener::update(){
+	glm::vec3 orientation = RenderManager::getInstance()->getCamera()->getPosition() - mPos;
+	glm::vec3 initial = glm::vec3(1.0f, 0.0f, 0.0f);
+
+	orientation = orientation / glm::length(orientation);
+
+	if(orientation == initial){
+		mVO->setModelMatrix(mMat);
+		return;}
+
+	glm::vec3 axis = glm::cross(initial, orientation);
+		axis = glm::vec3(0.0f, axis.y, axis.z);
+		axis /= glm::length(axis);
+
+		float angle = glm::dot(orientation, initial);
+		angle = glm::acos(angle);
+
+		glm::mat4 rot_matrix = glm::rotate(glm::mat4(), glm::degrees(angle), axis);
+
+		mVO->setModelMatrix(rot_matrix * mMat);
+
+}

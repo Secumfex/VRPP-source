@@ -14,6 +14,7 @@
 #include "FeatureOculus.h"
 #include "IO/OculusListeners.h"
 #include "FishBoidFeature.h"
+#include "FeatureAnimation.h"
 
 		// TODO etc.
 
@@ -138,6 +139,12 @@ void configureRendering(){
 		std::cout << "ERROR : could not insert Renderpass at the specified position" << std::endl;
 	}
 
+	// einer renderpass fuer bone_animation #copypasta_von_arend
+	RenderPass* gbufferAnimationPass = AnimationFeature::createAnimationRenderPass( UnderwaterScene::framebuffer_gbuffer_default );
+	if ( !testingState->getRenderLoop()->addRenderPassAfter( gbufferAnimationPass, UnderwaterScene::gbufferRenderPass ) )
+	{
+		std::cout << "ERROR : could not insert Renderpass at the specified position" << std::endl;
+	}
 
 
 	// TODO Alle anderen Renderpasses erstellen
@@ -153,6 +160,7 @@ void configureRendering(){
 	OculusFeature::makeStereoRenderPass( UnderwaterScene::gbufferRefractionMapRenderPass, 		OculusFeature::oculus, OculusFeature::oculusCam );
 	OculusFeature::makeStereoRenderPass( UnderwaterScene::gbufferParticlesRenderPass, 			OculusFeature::oculus, OculusFeature::oculusCam );
 	OculusFeature::makeStereoRenderPass( FishBoidFeature::gbufferBoidRenderPass, 			OculusFeature::oculus, OculusFeature::oculusCam );
+	OculusFeature::makeStereoRenderPass( AnimationFeature::gbufferAnimationRenderPass, 			OculusFeature::oculus, OculusFeature::oculusCam );
 
 	std::pair<
 			OculusFeature::StereoRenderPassActivateRenderEyeSettingsListener *,
@@ -218,6 +226,9 @@ void configureApplication(){
 
 	// create boids
 	FishBoidFeature::createObjects( testingState );
+
+	// create animationloop
+	AnimationFeature::createObjects( testingState );
 
 	/* configure to satisfaction*/
 	configureTestingApplication();

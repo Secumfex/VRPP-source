@@ -216,4 +216,24 @@ public:
 	void update();
 };
 
+class UpdateAnimationLoopListener : public Listener
+{
+private:
+	AnimationLoop* mAnimation;
+public:
+	UpdateAnimationLoopListener(AnimationLoop* animation);
+	void update();
+};
+
+class LookAtCameraListener : public Listener
+{
+private:
+	VirtualObject* mVO;
+	glm::vec3 mPos;
+	glm::mat4 mMat;
+public:
+	LookAtCameraListener(VirtualObject* vo, glm::mat4 mat, glm::vec3 pos);
+	void update();
+};
+
 #endif
