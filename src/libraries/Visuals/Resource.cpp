@@ -32,6 +32,20 @@ Material :: Material(){
 	mEmissColor = mAmbColor;
     mTransparency = 0.0f;
 }
+
+Material::Material (Material* mat){
+
+	mTextures = std::vector<Texture*>(mat->getAllMaps());
+
+	this->setAmbient(mat->getAmbient());
+	this->setDiffuse(mat->getDiffuse());
+	this->setEmission(mat->getEmission());
+	this->setName(mat->getName());
+	this->setShininess(mat->getShininess());
+	this->setSpecular(mat->getSpecular());
+	this->setTransparency(mat->getTransparency());
+}
+
 Material :: ~Material(){}
 
 void Material ::setAmbientMap(Texture* tex){ //ändern
@@ -148,6 +162,9 @@ Texture* Material ::getLightMap(){
 	return mTextures[10];
 }
 
+std::vector<Texture*> Material::getAllMaps(){
+	return mTextures;
+}
 
 std::string Material::getName(){
 	return mName;
@@ -209,6 +226,16 @@ Mesh::Mesh() {
 	mVaoHandle = 0;
 	mNumVerts = 0;
 }
+
+Mesh::Mesh(Mesh* mesh){
+	this->setNumFaces(mesh->getNumFaces());
+	this->setNumIndices(mesh->getNumIndices());
+	this->setNumVertices(mesh->getNumVertices());
+	this->setVAO(mesh->getVAO());
+	this->setVertexPosition(mesh->getVertices());
+	this->setCenterOfMassOffsetMatrix( mesh->getCenterOfMassOffsetMatrix() );
+}
+
 Mesh::~Mesh() { }
 
 void Mesh :: setVAO(GLuint vao){

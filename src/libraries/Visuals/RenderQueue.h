@@ -160,49 +160,49 @@ public:
 	 *
 	 * overloaded method for any possible flag object. will extract a GC list depending on that object
 	 */
-	list<GraphicsComponent* > extrudeGCsForRequestFlag(FlagShadowCaster* flag, list<GraphicsComponent* > temp);
+	list<GraphicsComponent* >& extrudeGCsForRequestFlag(FlagShadowCaster* flag, list<GraphicsComponent* >& temp);
 
 	/** \brief overloaded. returns GC-list depending on flag
 	 *
 	 * overloaded method for any possible flag object. will extract a GC list depending on that object
 	 */
-	list<GraphicsComponent* > extrudeGCsForRequestFlag(FlagUsesShader* flag, list<GraphicsComponent* > temp);
+	list<GraphicsComponent* >& extrudeGCsForRequestFlag(FlagUsesShader* flag, list<GraphicsComponent* >& temp);
 
 	/** \brief overloaded. returns GC-list depending on flag
 	 *
 	 * overloaded method for any possible flag object. will extract a GC list depending on that object
 	 */
-	list<GraphicsComponent* > extrudeGCsForRequestFlag(FlagTransparency* flag, list<GraphicsComponent* > temp);
+	list<GraphicsComponent* >& extrudeGCsForRequestFlag(FlagTransparency* flag, list<GraphicsComponent* >& temp);
 
 	/** \brief overloaded. returns GC-list depending on flag
 	 *
 	 * overloaded method for any possible flag object. will extract a GC list depending on that object
 	 */
-	list<GraphicsComponent* > extrudeGCsForRequestFlag(FlagUsesMesh* flag, list<GraphicsComponent* > temp);
+	list<GraphicsComponent* >& extrudeGCsForRequestFlag(FlagUsesMesh* flag, list<GraphicsComponent* >& temp);
 
 	/** \brief overloaded. returns GC-list depending on flag
 	 *
 	 * overloaded method for any possible flag object. will extract a GC list depending on that object
 	 */
-	list<GraphicsComponent* > extrudeGCsForRequestFlag(FlagPartOfVirtualObject* flag, list<GraphicsComponent* > temp);
+	list<GraphicsComponent* >& extrudeGCsForRequestFlag(FlagPartOfVirtualObject* flag, list<GraphicsComponent* >& temp);
 
 	/** \brief overloaded. returns GC-list depending on flag
 		 *
 		 * overloaded method for any possible flag object. will extract a GC list depending on that object
 		 */
-	list<GraphicsComponent* > extrudeGCsForRequestFlag(CurrentRenderQueueFlag* flag, list<GraphicsComponent* > temp);
+	list<GraphicsComponent* >& extrudeGCsForRequestFlag(CurrentRenderQueueFlag* flag, list<GraphicsComponent* >& temp);
 
 	/** \brief overloaded. returns GC-list depending on flag
 	 *
 	 * overloaded method for any possible flag object. will extract a GC list depending on that object
 	 */
-	list<GraphicsComponent* > extrudeGCsForRequestFlag(FlagScreenFillingPolygon* flag, list<GraphicsComponent* > temp);
+	list<GraphicsComponent* >& extrudeGCsForRequestFlag(FlagScreenFillingPolygon* flag, list<GraphicsComponent* >& temp);
 
 		/** \brief overloaded. returns GC-list depending on flag
 	 *
 	 * overloaded method for any possible flag object. will extract a GC list depending on that object
 	 */
-	list<GraphicsComponent* > extrudeGCsForRequestFlag(FlagInViewFrustum* flag, list<GraphicsComponent* > temp);	
+	list<GraphicsComponent* >& extrudeGCsForRequestFlag(FlagInViewFrustum* flag, list<GraphicsComponent* >& temp);
 private:
 	list<VirtualObject* >::iterator currentFirstElement; 			/**< VO pointer used with voList */
 //	vector<GraphicsComponent>::iterator gcIterator; 				/**< iterator for gc-vectors */

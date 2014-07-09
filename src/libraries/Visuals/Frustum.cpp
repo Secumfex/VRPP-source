@@ -33,6 +33,11 @@ void Frustum::setCamera(Camera *cam){
 	mCam = cam;
 }
 
+void Frustum::setPerspectiveMatrix(glm::mat4 perspectiveMatrix)
+{
+//	std::cout << "WARNING: Perspective Matrix has been set manually. Bullet Frustum instance may no longer align."<<std::endl;
+	mPerspectiveMatrix = perspectiveMatrix;
+}
 
 void Frustum::setPerspectiveMatrix(GLfloat fovy, GLfloat aspect, GLfloat near, GLfloat far){
 

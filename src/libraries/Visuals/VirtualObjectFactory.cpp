@@ -18,6 +18,10 @@ VirtualObjectFactory::VirtualObjectFactory() {
 	mCube = 0;
 	mScreenFillTriangle = 0;
 	mQuad = 0;
+	mHalfScreenQuadLeft = 0;
+	mHalfScreenQuadRight = 0;
+	mDefaultBone = new Bone();
+	mDefaultAnimation = new AnimationLoop();
 }
 
 //eingefügt
@@ -78,6 +82,245 @@ GraphicsComponent* VirtualObjectFactory::getTriangle() {
 
 	}
 	return mScreenFillTriangle;
+}
+
+GraphicsComponent* VirtualObjectFactory::getHalfScreenQuad(HalfScreen side) {
+	if (mHalfScreenQuadLeft == 0 || mHalfScreenQuadRight == 0) {
+
+		std::cout << " VirutalObjectFactory : creating HalfScreenQuadObjects..."
+						<< std::endl;
+
+		/**
+		 *  LEFT HALF SCREEN QUAD
+		 */
+
+		Mesh* quadMeshLeft = new Mesh();
+		Material* quadMatLeft = new Material();
+
+		quadMatLeft->setName("default_quad_material");
+		GLuint quadVertexArrayHandleLeft;
+
+		glGenVertexArrays(1, &quadVertexArrayHandleLeft);
+		glBindVertexArray(quadVertexArrayHandleLeft);
+
+		int indicesLeft[] = { 0, 1, 2, 3, 4, 5 };
+
+		GLfloat positionsLeft[] = {
+				-1.0f, -1.0f, 0.0f,
+				0.0, -1.0f, 0.0f,
+				0.0, 1.0f, 0.0f,
+
+				0.0f, 1.0f, 0.0f,
+				-1.0f, 1.0f, 0.0f,
+				-1.0f, -1.0f, 0.0f
+		};
+
+		GLfloat normalsLeft[] = {
+				0.0, 0.0, 1.0,
+				0.0, 0.0, 1.0,
+				0.0, 0.0, 1.0,
+
+				0.0, 0.0, 1.0,
+				0.0, 0.0, 1.0,
+				0.0, 0.0, 1.0 };
+
+		GLfloat tangentsLeft[] = {
+				0.0, -1.0, 0.0,
+				0.0, -1.0, 0.0,
+				0.0, -1.0, 0.0,
+
+				0.0, -1.0, 0.0,
+				0.0, -1.0, 0.0,
+				0.0, -1.0, 0.0 };
+
+		GLfloat uvCoordinatesLeft[] = {
+				0.0f, 0.0f,
+				0.5f, 0.0f,
+				0.5f, 1.0f,
+
+				0.5f, 1.0f,
+				0.0f, 1.0f,
+				0.0f, 0.0f };
+
+		std::cout
+				<< " VirutalObjectFactory : creating creating HalfScreenQuadObjects... VertexArrayObjects..."
+				<< std::endl;
+
+		GLuint indexBufferHandleLeft;
+		glGenBuffers(1, &indexBufferHandleLeft);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferHandleLeft);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicesLeft), indicesLeft,
+				GL_STATIC_DRAW);
+
+		GLuint vertexBufferHandleLeft;
+		glGenBuffers(1, &vertexBufferHandleLeft);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandleLeft);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(positionsLeft), positionsLeft,
+				GL_STATIC_DRAW);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+		glGenBuffers(1, &vertexBufferHandleLeft);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandleLeft);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(uvCoordinatesLeft), uvCoordinatesLeft,
+				GL_STATIC_DRAW);
+
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+		glGenBuffers(1, &vertexBufferHandleLeft);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandleLeft);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(normalsLeft), normalsLeft, GL_STATIC_DRAW);
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+		glGenBuffers(1, &vertexBufferHandleLeft);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandleLeft);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(tangentsLeft), tangentsLeft,
+				GL_STATIC_DRAW);
+		glEnableVertexAttribArray(3);
+		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+		std::cout
+				<< " VirutalObjectFactory : creating HalfScreenQuadObjects... releasing buffers..."
+				<< std::endl;
+
+//		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+//		glBindBuffer(GL_ARRAY_BUFFER, 0);
+//		glBindVertexArray(0);
+
+		std::cout
+				<< " VirutalObjectFactory : creating HalfScreenQuadObjects... GraphicsComponent..."
+				<< std::endl;
+
+		quadMeshLeft->setVAO(quadVertexArrayHandleLeft);
+		quadMeshLeft->setNumIndices(6);
+		quadMeshLeft->setNumVertices(6);
+		quadMeshLeft->setNumFaces(2);
+
+		mHalfScreenQuadLeft = new GraphicsComponent(quadMeshLeft, quadMatLeft);
+
+		/**
+		 *  RIGHT HALF SCREEN QUAD
+		 */
+
+		Mesh* quadMeshRight = new Mesh();
+		Material* quadMatRight = new Material();
+
+		quadMatRight->setName("default_quad_material_2");
+		GLuint quadVertexArrayHandleRight;
+
+		glGenVertexArrays(1, &quadVertexArrayHandleRight);
+		glBindVertexArray(quadVertexArrayHandleRight);
+
+		int indicesRight[] = { 0, 1, 2, 3, 4, 5 };
+
+		GLfloat positionsRight[] = {
+				0.0f, -1.0f, 0.0f,
+				1.0f, -1.0f, 0.0f,
+				1.0f, 1.0f, 0.0f,
+				1.0f, 1.0f, 0.0f,
+				0.0f, 1.0f, 0.0f,
+				0.0f, -1.0f,0.0f };
+
+		GLfloat normalsRight[] = {
+				0.0, 0.0, 1.0,
+				0.0, 0.0, 1.0,
+				0.0, 0.0, 1.0,
+
+				0.0, 0.0, 1.0,
+				0.0, 0.0, 1.0,
+				0.0, 0.0, 1.0 };
+
+		GLfloat tangentsRight[] = {
+				0.0, -1.0, 0.0,
+				0.0, -1.0, 0.0,
+				0.0, -1.0, 0.0,
+
+				0.0, -1.0, 0.0,
+				0.0, -1.0, 0.0,
+				0.0, -1.0, 0.0 };
+
+		GLfloat uvCoordinatesRight[] = {
+				0.5f, 0.0f,
+				1.0f, 0.0f,
+				1.0f, 1.0f,
+
+				1.0f, 1.0f,
+				0.5f, 1.0f,
+				0.5f, 0.0f };
+
+		std::cout
+				<< " VirutalObjectFactory : creating creating HalfScreenQuadObjects... VertexArrayObjects..."
+				<< std::endl;
+
+		GLuint indexBufferHandleRight;
+		glGenBuffers(1, &indexBufferHandleRight);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferHandleRight);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicesRight),
+				indicesRight, GL_STATIC_DRAW);
+
+		GLuint vertexBufferHandleRight;
+		glGenBuffers(1, &vertexBufferHandleRight);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandleRight);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(positionsRight), positionsRight,
+				GL_STATIC_DRAW);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+		glGenBuffers(1, &vertexBufferHandleRight);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandleRight);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(uvCoordinatesRight),
+				uvCoordinatesRight, GL_STATIC_DRAW);
+
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+		glGenBuffers(1, &vertexBufferHandleRight);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandleRight);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(normalsRight), normalsRight,
+				GL_STATIC_DRAW);
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+		glGenBuffers(1, &vertexBufferHandleRight);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandleRight);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(tangentsRight), tangentsRight,
+				GL_STATIC_DRAW);
+		glEnableVertexAttribArray(3);
+		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+		std::cout
+				<< " VirutalObjectFactory : creating HalfScreenQuadObjects... releasing buffers..."
+				<< std::endl;
+
+//		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+//		glBindBuffer(GL_ARRAY_BUFFER, 0);
+//		glBindVertexArray(0);
+
+		std::cout
+				<< " VirutalObjectFactory : creating HalfScreenQuadObjects... GraphicsComponent..."
+				<< std::endl;
+
+		quadMeshRight->setVAO(quadVertexArrayHandleRight);
+		quadMeshRight->setNumIndices(6);
+		quadMeshRight->setNumVertices(6);
+		quadMeshRight->setNumFaces(2);
+
+		mHalfScreenQuadRight = new GraphicsComponent(quadMeshRight,
+				quadMatRight);
+	}
+
+	if ( side == LEFT )
+	{
+		return mHalfScreenQuadLeft;
+	}
+	else
+	{
+		return mHalfScreenQuadRight;
+	}
 }
 
 GraphicsComponent* VirtualObjectFactory::getQuad() {
@@ -159,9 +402,9 @@ GraphicsComponent* VirtualObjectFactory::getQuad() {
 		
 		std::cout << " VirutalObjectFactory : creating QuadObject... releasing buffers..." << std::endl;
 
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindVertexArray(0);
+//		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+//		glBindBuffer(GL_ARRAY_BUFFER, 0);
+//		glBindVertexArray(0);
 
 		std::cout << " VirutalObjectFactory : creating QuadObject... GraphicsComponent..." << std::endl;
 
@@ -196,7 +439,6 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 	VirtualObject* virtualObject = new VirtualObject();
 
 	Assimp::Importer Importer;
-	//TextureManager* texManager = TextureManager::getInstance();
 
 	std::string directory = filename.substr(filename.find_last_of('/') + 1);
 	std::string objName = directory;
@@ -225,6 +467,9 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 					| aiProcess_CalcTangentSpace
 
 					);
+
+
+	glm::mat4 inversesceneMatrix = glm::inverse(glm::transpose(glm::make_mat4x4(&(pScene->mRootNode->mTransformation.a1))));
 
 	// Melden, falls der Import nicht funktioniert hat
 	if (!pScene) {
@@ -264,6 +509,35 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 
 		cout << "mesh->mNumFaces " << mesh->mNumFaces << endl;
 
+
+		if(pScene->mRootNode->FindNode(mesh->mName)){
+			aiMatrix4x4 mesh_transform = pScene->mRootNode->FindNode(mesh->mName)->mTransformation;
+				aiNode* mesh_node = pScene->mRootNode->FindNode(mesh->mName);
+
+				while(mesh_node->mParent){
+					mesh_node = mesh_node->mParent;
+					mesh_transform = mesh_node->mTransformation * mesh_transform;
+				}
+				inversesceneMatrix = glm::make_mat4(&mesh_transform.a1);
+				inversesceneMatrix = glm::transpose(inversesceneMatrix);
+				inversesceneMatrix = glm::inverse(inversesceneMatrix);
+
+//				unsigned int j = 0;
+//				if(!pScene->HasAnimations())
+//				for (j = 0; j < mesh->mNumVertices; ++j) {
+//					//todo: fix mesh_transform
+//
+//					mesh->mVertices[j] = mesh_transform * mesh->mVertices[j];
+//					if (mesh->HasNormals()){
+//						mesh->mNormals[j] = mesh_transform.Inverse().Transpose() * mesh->mNormals[j];
+//					}
+//					if (mesh->HasTangentsAndBitangents()){
+//						mesh->mTangents[j] = mesh_transform.Inverse().Transpose() * mesh->mTangents[j];
+//					}
+//				}
+		}
+
+
 		if (bodyType == MESH) {
 
 			//Var A TriangleMesh; set Parameters
@@ -302,6 +576,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 
 					btMesh.addTriangle(btVertex0, btVertex1, btVertex2, false);
 
+
 					//Var B with TriangleIndexVertexArray, set array for triangleIndexBase
 					triangleIndexBase[++z] = face.mIndices[0];
 					triangleIndexBase[++z] = face.mIndices[1];
@@ -321,6 +596,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 			btIMesh.m_numTriangles = numTriangles;
 			btTIVA->addIndexedMesh(btIMesh, PHY_INTEGER);
 		}
+	std::map<std::string, Bone*> bone_map;
 
 		//Our Material and Mesh to be filled
 
@@ -331,6 +607,8 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
         
         // for Shader
         bool hasNormalMap = false;
+		GraphicsComponent* gc=new GraphicsComponent(aMesh,aMat);
+		vector<Bone*> bones;
 
 		GLuint buffer = 0;
 		glm::vec3 aabbMax = glm::vec3(INT_MIN, INT_MIN, INT_MIN);
@@ -339,15 +617,16 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 		//Our Indices for our Vertexlist
 		std::vector<unsigned int> indices;
 
-		int incidesCounter = 0;
-
 		for (unsigned int t = 0; t < mesh->mNumFaces; ++t) {
 			unsigned int i = 0;
 			for (i = 0; i < mesh->mFaces[t].mNumIndices; ++i) {
 				indices.push_back(mesh->mFaces[t].mIndices[i]);
-				incidesCounter++;
 			}
 		}
+
+		unsigned int j=0;
+
+
 
 		aMesh->setNumVertices(mesh->mNumVertices);
 		aMesh->setNumIndices(mesh->mNumFaces * 3);
@@ -409,8 +688,51 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 			glVertexAttribPointer(3, 3, GL_FLOAT, 0, 0, 0);
 
 		}
-		if (mesh->HasBones()) {
-			cout << "HAT ANIMATION" << endl;
+		if(mesh->HasBones()){
+			gc->setAnimated(true);
+			unsigned int j;
+			for (j = 0; j < mesh->mNumBones; ++j) {
+				vector<float> boneweight(mesh->mNumVertices);
+				aiBone *bone = mesh->mBones[j];
+				unsigned int l;
+				for (l = 0; l < bone->mNumWeights; ++l) {
+					boneweight[bone->mWeights[l].mVertexId] = bone->mWeights[l].mWeight;
+				}
+				std::string name = bone->mName.C_Str();
+
+				Bone *myBone;
+				if(bone_map.find(name) != bone_map.end()){
+					myBone = bone_map[name];
+				}else{
+
+					myBone = new Bone(name);
+
+
+			//TODO: boners
+					aiMatrix4x4 mesh_transform = bone->mOffsetMatrix;
+
+						myBone->setInverseSceneMatrix(inversesceneMatrix );
+
+					glm::mat4 offsetmatrix = glm::make_mat4x4(&(mesh_transform.a1));
+					offsetmatrix = glm::transpose(offsetmatrix);
+
+
+					myBone->setOffsetMatrix(offsetmatrix);
+					bone_map.insert(std::pair<std::string, Bone*>(name, myBone));
+				}
+				bones.push_back(myBone);
+				gc->addBone(myBone);
+
+				glGenBuffers(1, &buffer);
+				glBindBuffer(GL_ARRAY_BUFFER, buffer);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * boneweight.size(), &boneweight[0], GL_STATIC_DRAW);
+
+				// normalLoc wurde hier ersetzt
+				glEnableVertexAttribArray(10 + j);
+				glVertexAttribPointer(10 + j, 1, GL_FLOAT, 0, 0, 0);
+
+			}
+
 		}
 
 		// buffer for vertex texture coordinates
@@ -553,20 +875,87 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 			std::string matName = name.C_Str();
 			matName = matName.substr(matName.find_last_of('/') + 1);
 
-			std::cout << "\nName des Materials: " << matName << endl;
+			std::cout<<"\nName des Materials: "<<matName<<endl;
 
 			aMat->setName(matName);
-		} else {
+		}
+		else{
 			aMat->setName("genericMaterial");
 		}
 
+
 		/* try to generate material by name */
 
-		GraphicsComponent* gc = new GraphicsComponent(aMesh, aMat);
-		MaterialManager* mm = MaterialManager::getInstance();
 
-		if (aMat->getName().find("custom") != std::string::npos) {
-			cout << "\nRead from mtl\n";
+		MaterialManager* mm= MaterialManager::getInstance();
+
+
+
+		if(aMat->getName().find("custom") != std::string::npos){
+			cout<<"\nRead from mtl\n";
+
+
+
+			// diffuse
+
+			float c[4];
+
+			set_float4(c, 0.8f, 0.8f, 0.8f, 1.0f);
+			aiColor4D diffuse;
+			if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_DIFFUSE, &diffuse)){
+				color4_to_float4(&diffuse, c);
+			}
+			aMat->setDiffuse(glm::vec3(c[0], c[1], c[2]));
+
+
+			// ambient
+			set_float4(c, 0.2f, 0.2f, 0.2f, 1.0f);
+			aiColor4D ambient;
+			if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_AMBIENT, &ambient))
+				color4_to_float4(&ambient, c);
+			//memcpy(aMat.ambient, c, sizeof(c));
+			aMat->setAmbient(glm::vec3(ambient.r, ambient.g, ambient.b));
+
+			// specular
+
+			set_float4(c, 0.0f, 0.0f, 0.0f, 1.0f);
+
+			aiColor4D specular;
+			if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_SPECULAR, &specular))
+				color4_to_float4(&specular, c);
+			//memcpy(aMat.specular, c, sizeof(c));
+			aMat->setSpecular(glm::vec3(specular.r, specular.g, specular.b));
+
+			// emission
+			set_float4(c, 0.0f, 0.0f, 0.0f, 1.0f);
+			aiColor4D emission;
+			if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_EMISSIVE, &emission))
+				color4_to_float4(&emission, c);
+			//memcpy(aMat.emissive, c, sizeof(c));
+			aMat->setEmission(glm::vec3(emission.r, emission.g, emission.b));
+
+			// shininess
+			float shininess = 0.0;
+			//unsigned int max;
+			if(AI_SUCCESS != mtl->Get(AI_MATKEY_SHININESS, shininess))
+				shininess = 50.0;
+
+
+			aMat->setShininess(1.0f);
+			//shininess/1000.0f
+
+		}
+		else{
+
+			try {
+				mm->makeMaterial(aMat->getName(),gc);
+
+			}
+			catch (string param){
+				cout<<"\nFAILED: generate material by name";
+
+			}
+		}
 
 			float c[4];
 
@@ -615,12 +1004,13 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 			// shininess
 			float shininess = 0.0;
 			//unsigned int max;
-			if (AI_SUCCESS != mtl->Get(AI_MATKEY_SHININESS, shininess))
+			if (AI_SUCCESS != mtl->Get(AI_MATKEY_SHININESS, shininess)){
 				shininess = 50.0;
 
 			aMat->setShininess(1.0f);
 			//shininess/1000.0f
-		} else {
+		}
+	else {
 			try {
 				mm->makeMaterial(aMat->getName(), gc);
 			} catch (string param) {
@@ -651,6 +1041,14 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 			physics_max.y = aabbMax.y;
 		if (aabbMax.z > physics_max.z)
 			physics_max.z = aabbMax.z;
+
+		if(pScene->HasAnimations()){
+			AnimationLoop *myAnimation = makeAnimation(bone_map, pScene, true);
+			virtualObject->setAnimation(myAnimation);
+		}else{
+			virtualObject->setAnimation(mDefaultAnimation);
+		}
+
 	}
 
 	glm::vec3 boxValue = physics_max - physics_min;
@@ -730,13 +1128,96 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 		virtualObject->updateModelMatrixViaPhysics();
 	}
 	/******************************************************/
+
 	return virtualObject;
 }
 
-VirtualObject* VirtualObjectFactory::createVirtualObject(
-		vector<GraphicsComponent*> graphcomps) {
-	VirtualObject* virtualObject = new VirtualObject();
-	//TODO: alle GraphicsComponents werden an das VO übergeben
 
-	return virtualObject;
+AnimationLoop* VirtualObjectFactory::makeAnimation(map<std::string, Bone*> bones, const aiScene* pScene, bool isBlender){
+	AnimationLoop* myAnimation = new AnimationLoop();
+
+	aiNode* node = pScene->mRootNode;
+
+//	node = node->FindNode(pScene->mAnimations[0]->mChannels[0]->mNodeName);
+//	node = node->mParent;
+
+	glm::mat4 matrix = glm::transpose(glm::make_mat4(&(node->mTransformation.a1)));
+	Node* myRootNode = new Node(getNodeChildren(node));
+	myRootNode->setName(node->mName.C_Str());
+	myRootNode->setNodeMatrix(matrix);
+
+	unsigned int i;
+	for (i = 0; i < pScene->mAnimations[0]->mNumChannels; ++i) {
+		setNodeTransform(myRootNode, pScene->mAnimations[0]->mChannels[i], isBlender);
+	}
+
+	setBones(myRootNode, bones);
+	//todo:solve problem, lol
+	myAnimation->addNode(myRootNode);
+	myAnimation->setDuration(pScene->mAnimations[0]->mDuration);
+
+	myAnimation->updateNodes(0.0f);
+
+	return myAnimation;
+}
+
+vector<Node*> VirtualObjectFactory::getNodeChildren(aiNode* node){
+	vector<Node*> children;
+
+	unsigned int i;
+	for (i = 0; i < node->mNumChildren ; ++i) {
+		Node* temp = new Node(getNodeChildren(node->mChildren[i]));
+		temp->setName(node->mChildren[i]->mName.C_Str());
+		glm::mat4 matrix = glm::transpose(glm::make_mat4(&(node->mTransformation.a1)));
+
+		temp->setNodeMatrix(matrix);
+		children.push_back(temp);
+	}
+	return children;
+}
+
+void VirtualObjectFactory::setNodeTransform(Node* node, aiNodeAnim* nodeanim, bool isBlender){
+	std::string name = nodeanim->mNodeName.C_Str();
+
+	unsigned int i;
+
+	if(name == node->getName()){
+		for (i = 0; i < nodeanim->mNumPositionKeys; ++i) {
+			float time = nodeanim->mPositionKeys[i].mTime;
+
+			glm::vec3 position = glm::vec3(nodeanim->mPositionKeys[i].mValue.x, nodeanim->mPositionKeys[i].mValue.y, nodeanim->mPositionKeys[i].mValue.z);
+			glm::vec3 scale = glm::vec3(nodeanim->mScalingKeys[i].mValue.x, nodeanim->mScalingKeys[i].mValue.y, nodeanim->mScalingKeys[i].mValue.z);
+			glm::quat rotation = glm::quat(nodeanim->mRotationKeys[i].mValue.w, nodeanim->mRotationKeys[i].mValue.x, nodeanim->mRotationKeys[i].mValue.y, nodeanim->mRotationKeys[i].mValue.z);
+//			glm::quat rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
+
+			aiQuaternion quat = nodeanim->mRotationKeys[i].mValue;
+
+//			glm::vec3 axis = glm::vec3(glm::asin(quat.x), glm::asin(quat.y), glm::asin(quat.z));
+//			float angle = glm::acos(quat.w);
+//
+//			glm::mat4 rot = glm::rotate(glm::mat4(), glm::degrees(angle), axis);
+
+//			rotation = glm::quat_cast(rot);
+
+			node->addTransformation(position, scale, glm::normalize(rotation), time);
+		}
+	}
+
+	for (i = 0; i < node->getChildren().size(); ++i) {
+		setNodeTransform(node->getChildren()[i], nodeanim, isBlender);
+	}
+}
+
+void VirtualObjectFactory::setBones(Node* node, map<std::string, Bone*> bones){
+
+	if(bones.find(node->getName()) != bones.end()){
+		node->setBone(bones[node->getName()]);
+	}else{
+		node->setBone(mDefaultBone);
+	}
+
+	unsigned int i;
+	for (i = 0; i < node->getChildren().size(); ++i) {
+		setBones(node->getChildren()[i], bones);
+	}
 }

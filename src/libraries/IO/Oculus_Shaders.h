@@ -3,6 +3,9 @@
 // From OculusSDK-0.2.2
 static const char* PostProcessVertexShaderSrc = SHADERS_PATH "/Oculus_Shaders/PostProcessVert.vert";
 
+// simple screen filling triangle vertex shader
+//static const char* PostProcessVertexShaderSrc = SHADERS_PATH "/Oculus_Shaders/screenFill.vert";
+
 // From OculusSDK-0.2.2
 static const char* PostProcessFragShaderSrc = SHADERS_PATH "/Oculus_Shaders/PostProcessFrag.frag";
 
@@ -56,6 +59,6 @@ static const char* PostProcessFullFragShaderSrc =
 
 // static const char* PresentFboFragSrc = SHADERS_PATH "/Oculus_Shaders/PresentFboFrag.frag";
 
- static const char* PresentFboVertSrc = SHADERS_PATH "/GBuffer/screenFill.vert";
+ static const char* PresentFboVertSrc = SHADERS_PATH "/Oculus_Shaders/screenFill.vert";
 
- static const char* PresentFboFragSrc = SHADERS_PATH "/GBuffer/simpleTexture.frag";
+ static const char* PresentFboFragSrc = SHADERS_PATH "/Oculus_Shaders/simpleTexture.frag";

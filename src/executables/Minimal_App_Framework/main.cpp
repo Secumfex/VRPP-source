@@ -2,6 +2,8 @@
 #include "Application/ApplicationStates.h"
 #include "Application/ApplicationListeners.h"
 #include "Tools/UtilityListeners.h"
+#include "Physics/PhysicWorldSimulationListener.h"
+#include "IO/IOManager.h"
 #include "PlaceHolderListeners.h"
 
 /*
@@ -30,6 +32,8 @@ void configureVirtualObjects(){
 
 void configurePhysics(){
 	/* customization of Bullet / Physicsworld */
+
+	testingApp->attachListenerOnBeginningProgramCycle( 	new PhysicWorldSimulationListener( IOManager::getInstance()->getDeltaTimePointer() ) );
 
 }
 

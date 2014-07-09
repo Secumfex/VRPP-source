@@ -413,7 +413,7 @@ void RenderQueue::sortByFlags() {
 
 /** \brief leaves only shadow casting elements in the list
  */
-list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagShadowCaster* flag, list<GraphicsComponent* > temp){
+list<GraphicsComponent* >& RenderQueue::extrudeGCsForRequestFlag(FlagShadowCaster* flag, list<GraphicsComponent* >& temp){
 	vector<GraphicsComponent* > vec = gcFlagStorage["SHADOW"];
 	list<GraphicsComponent* >::iterator l_it = temp.begin();
 	vector<GraphicsComponent* >::iterator v_it = vec.begin();
@@ -439,14 +439,14 @@ list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagShadowCaster
 	return temp;
 }
 
-list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagUsesShader* flag, list<GraphicsComponent* > temp){
+list<GraphicsComponent* >& RenderQueue::extrudeGCsForRequestFlag(FlagUsesShader* flag, list<GraphicsComponent* >& temp){
 	//TODO
 	return temp;
 }
 
 /** \brief leaves only transparent elements in the list
  */
-list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagTransparency* flag, list<GraphicsComponent* > temp){
+list<GraphicsComponent* >& RenderQueue::extrudeGCsForRequestFlag(FlagTransparency* flag, list<GraphicsComponent* >& temp){
 		vector<GraphicsComponent* > vec = gcFlagStorage["TRANSPARENCY"];
 	list<GraphicsComponent* >::iterator l_it = temp.begin();
 	vector<GraphicsComponent* >::iterator v_it = vec.begin();
@@ -472,20 +472,22 @@ list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagTransparency
 	return temp;
 }
 
-list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagUsesMesh* flag, list<GraphicsComponent* > temp){
+list<GraphicsComponent* >& RenderQueue::extrudeGCsForRequestFlag(FlagUsesMesh* flag, list<GraphicsComponent* >& temp){
 	// TODO
 	return temp;
 }
 
-list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(CurrentRenderQueueFlag* flag, list<GraphicsComponent* > temp){
+list<GraphicsComponent* >& RenderQueue::extrudeGCsForRequestFlag(CurrentRenderQueueFlag* flag, list<GraphicsComponent* >& temp){
 	// TODO in case list changed, return current GC list
 
-	return getGraphicsComponentList();
+	temp = getGraphicsComponentList();
+
+	return temp;
 }
 
 
 
-list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagPartOfVirtualObject* flag, list<GraphicsComponent* > temp){
+list<GraphicsComponent* >& RenderQueue::extrudeGCsForRequestFlag(FlagPartOfVirtualObject* flag, list<GraphicsComponent* >& temp){
 	list<GraphicsComponent* >::iterator l_it = temp.begin();
 	vector<GraphicsComponent* > vo_gcs = flag->getVirtualObject()->getGraphicsComponent();
 	
@@ -517,12 +519,12 @@ list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagPartOfVirtua
 	return temp;
 }
 
-list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagScreenFillingPolygon* flag, list<GraphicsComponent* > temp){
+list<GraphicsComponent* >& RenderQueue::extrudeGCsForRequestFlag(FlagScreenFillingPolygon* flag, list<GraphicsComponent* >& temp){
 	//TODO
 	return temp;
 }
 
-list<GraphicsComponent* > RenderQueue::extrudeGCsForRequestFlag(FlagInViewFrustum* flag, list<GraphicsComponent* > temp){
+list<GraphicsComponent* >& RenderQueue::extrudeGCsForRequestFlag(FlagInViewFrustum* flag, list<GraphicsComponent* >& temp){
 	//TODO
 	return temp;
 }

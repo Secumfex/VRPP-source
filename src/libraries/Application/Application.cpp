@@ -19,6 +19,12 @@ Application::Application(std::string label){
 	RenderManager* rm = RenderManager::getInstance();
 	rm->libInit();
 
+	IOManager* io = IOManager::getInstance();
+	io->setWindow(rm->getWindow());	// set window reference of IO Manager
+
+
+	// aset window immediately
+
 }
 
 void Application::setLabel(std::string label){

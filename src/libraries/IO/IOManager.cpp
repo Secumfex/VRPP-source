@@ -90,6 +90,14 @@ void IOManager::setWindow(GLFWwindow* window){
 
 }
 
+void IOManager::setWindowSize(int width, int height)
+{
+	glfwSetWindowSize(window, width, height);
+
+	WIDTH  = width;
+	HEIGHT = height;
+}
+
 int IOManager::getWidth()
 {
 	return WIDTH;

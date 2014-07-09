@@ -5,6 +5,7 @@
 #include <BulletCollision/CollisionDispatch/btGhostObject.h>
 #include <btBulletCollisionCommon.h>
 #include "Physics/PhysicWorld.h"
+#include "Animation/AnimationLoop.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -148,6 +149,36 @@ public:
 	 */
     bool hasNormalMap();
 
+    /** \brief adds Bone*
+	 *
+	 *@param bone
+	 */
+
+	void addBone(Bone* bone);
+
+	/** brief getter
+	 *
+	 * @return mBones
+	 */
+	vector<Bone*> getBones();
+
+	/** \brief setter
+	 *
+	 * sets if the component has animation or not
+	 * @param animated
+	 * @todo default value?
+	 * @todo which value means what?
+	 */
+
+	void setAnimated(bool animated);
+
+	/** \brief checks if graphic component has animation
+	 *
+	 * @return 1 if component is transparent
+	 * @return 0 if component is not transparent
+	 */
+	bool hasAnimation();
+
 	/** \brief default constructor without parameters
 	 *
 	 */
@@ -161,17 +192,27 @@ public:
 
 	GraphicsComponent(Mesh* mesh, Material* material);
 
+	/** \brief constructor
+	 *
+	 *this constructor copies every component of the input graphicscomponent
+	 *
+	 * @param gc
+	 */
+
+	GraphicsComponent(GraphicsComponent* gc);
+
 
 private:
 	Mesh *mMesh;					/**< !docu pls! */
 	Material *mMaterial;			/**< !docu pls! */
 
-
+	vector<Bone*> mBones;
 
 	glm::mat4 modelMatrixGc;		/**< !docu pls! */
 
 	btGhostObject *mGhostObject;	/**< !docu pls! */
 
+	bool mAnimated;					/**< !docu pls! */
 	bool mDynamic;					/**< !docu pls! */
 	bool mEmission;					/**< !docu pls! */
 	bool mShadow;					/**< !docu pls! */

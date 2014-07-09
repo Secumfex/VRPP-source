@@ -119,3 +119,37 @@ RenderLoop::RenderLoop() {
 RenderLoop::~RenderLoop() {
 	// TODO Auto-generated destructor stub
 }
+
+bool RenderLoop::addRenderPassBefore(RenderPass* addRenderPass,
+		RenderPass* beforeRenderPass) {
+	// iterate over vector
+	for (std::vector<RenderPass*>::iterator it = mRenderPasses.begin(); it != mRenderPasses.end(); ++it)
+	{
+		if ( *it == beforeRenderPass)	// found renderPass
+		{
+			mRenderPasses.insert(it, addRenderPass);
+			return true;
+		}
+	}
+	return false;
+}
+
+bool RenderLoop::addRenderPassAfter(RenderPass* addRenderPass,
+		RenderPass* afterRenderPass) {
+
+	// iterate over vector
+	for (std::vector<RenderPass*>::iterator it = mRenderPasses.begin(); it != mRenderPasses.end(); ++it)
+	{
+		if ( *it == afterRenderPass)	// found renderPass
+		{
+			++it;
+			mRenderPasses.insert(it, addRenderPass);
+			return true;
+		}
+	}
+	return false;
+}
+
+std::vector<RenderPass*> RenderLoop::getRenderPasses() {
+	return mRenderPasses;
+}
