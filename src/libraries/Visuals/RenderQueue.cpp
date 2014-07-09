@@ -91,39 +91,39 @@ void RenderQueue::resetQueue() {
 
 /** \brief getter for GCs sorted by flags
  */
-map<string, vector<GraphicsComponent*> > RenderQueue::getGcFlagStorage() {
+map<string, vector<GraphicsComponent*> >& RenderQueue::getGcFlagStorage() {
 	return gcFlagStorage;
 }
 
 /** \brief getter for GCs sorted by shaders
  */
-map<string, vector<GraphicsComponent*> > RenderQueue::getGcShaderStorage() {
+map<string, vector<GraphicsComponent*> >& RenderQueue::getGcShaderStorage() {
 	return gcShaderStorage;
 }
 
 /** \brief getter for GCs sorted by textures
  */
-map<string, vector<GraphicsComponent*> > RenderQueue::getGcTexStorage() {
+map<string, vector<GraphicsComponent*> >& RenderQueue::getGcTexStorage() {
 	return gcTexStorage;
 }
 
 /** \brief getter for GC->VO map
  */
-map<GraphicsComponent*, VirtualObject*> RenderQueue::getGc2VoMap() {
+map<GraphicsComponent*, VirtualObject*>& RenderQueue::getGc2VoMap() {
 	return gc2voMap;
 }
 
 /** \brief getter for VO->GC map
  */
-map<VirtualObject*, vector<GraphicsComponent*> > RenderQueue::getVo2GcMap() {
+map<VirtualObject*, vector<GraphicsComponent*> >& RenderQueue::getVo2GcMap() {
 	return vo2gcMap;
 }
 
-list<VirtualObject*> RenderQueue::getVirtualObjectList() {
+list<VirtualObject*>& RenderQueue::getVirtualObjectList() {
 	return voList;
 }
 
-list<GraphicsComponent* > RenderQueue::getGraphicsComponentList() {
+list<GraphicsComponent* >& RenderQueue::getGraphicsComponentList() {
 	return gcList;
 }
 

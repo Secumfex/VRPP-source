@@ -7,6 +7,7 @@
 
 #include <Visuals/Shader.h>
 
+#include <Visuals/RenderManager.h>
 
 Shader::Shader(std::vector<const char*> shaders){
 
@@ -157,7 +158,11 @@ void Shader :: uploadAllUniforms(){
 bool Shader :: uploadUniform(glm::mat4 uniformMatrix, std::string uniformName){
 
 	if(mUniformHandles.find(uniformName)!=mUniformHandles.end()){
-		glUniformMatrix4fv(mUniformHandles[uniformName], 1, GL_FALSE, glm::value_ptr(uniformMatrix));
+		if (mActiveUniformsMat4[uniformName] != uniformMatrix)
+		{
+			glUniformMatrix4fv(mUniformHandles[uniformName], 1, GL_FALSE, glm::value_ptr(uniformMatrix));
+			mActiveUniformsMat4[uniformName] = uniformMatrix;
+		}
 		return true;
 	}else
 		return false;
@@ -165,21 +170,33 @@ bool Shader :: uploadUniform(glm::mat4 uniformMatrix, std::string uniformName){
 
 bool Shader :: uploadUniform(glm::vec3 uniformVector, std::string uniformName){
 	if(mUniformHandles.find(uniformName)!=mUniformHandles.end()){
-		glUniform3f(mUniformHandles[uniformName], uniformVector.x, uniformVector.y, uniformVector.z);
+		if (mActiveUniformsVec3[uniformName] != uniformVector)
+		{
+			glUniform3f(mUniformHandles[uniformName], uniformVector.x, uniformVector.y, uniformVector.z);
+			mActiveUniformsVec3[uniformName] = uniformVector;
+		}
 		return true;
 	}else
 		return false;
 }
 bool Shader::uploadUniform(GLfloat uniformVariable, std::string uniformName){
 	if(mUniformHandles.find(uniformName)!=mUniformHandles.end()){
-		glUniform1f(mUniformHandles[uniformName], uniformVariable);
+		if ( mActiveUniformsFloat[uniformName] != uniformVariable)
+		{
+			glUniform1f(mUniformHandles[uniformName], uniformVariable);
+			mActiveUniformsFloat[uniformName] = uniformVariable;
+		}
 		return true;
 	}else
 		return false;
 }
 bool Shader::uploadUniform(GLint uniformVariable, std::string uniformName){
 	if(mUniformHandles.find(uniformName)!=mUniformHandles.end()){
-		glUniform1i(mUniformHandles[uniformName], uniformVariable);
+		if (mActiveUniformsInt[uniformName] != uniformVariable)
+		{
+			glUniform1i(mUniformHandles[uniformName], uniformVariable);
+			mActiveUniformsInt[uniformName] = uniformVariable;
+		}
 		return true;
 	}else
 		return false;
@@ -190,7 +207,7 @@ void Shader::useProgram(){
 }
 
 void Shader::render(GraphicsComponent *gc){
-	glBindVertexArray(gc->getMesh()->getVAO());
+	RenderManager::getInstance()->setCurrentVAO(gc->getMesh()->getVAO() );
 	glDrawElements(GL_TRIANGLES, gc->getMesh()->getNumIndices(), GL_UNSIGNED_INT, 0);
 }
 

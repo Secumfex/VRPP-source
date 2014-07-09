@@ -7,6 +7,7 @@
 #include "Visuals/FrameBufferObject.h"
 #include "Visuals/VirtualObjectFactory.h"
 #include "Visuals/Shader.h"
+#include "Visuals/RenderManager.h"
 
 #include <iostream>
 

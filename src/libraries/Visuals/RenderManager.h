@@ -53,6 +53,10 @@ public:
      */
 	void setCurrentShader(Shader* shader);
 
+	GLuint getCurrentVAO();
+	void setCurrentVAO(GLuint VAO);
+
+
     /** \brief setter
      *
      * sets/changes mCurrentFBO
@@ -92,6 +96,18 @@ public:
      */
 	void setLightPosition (glm::vec3 pos, int index);
 
+
+	/** \brief setter
+	 *
+	 * set the active viewport
+	 */
+	void setViewPort( glm::vec4 viewPort );
+
+	/** \brief setter
+	 *
+	 * set the active viewport
+	 */
+	void setViewPort( float viewPort_x, float viewPort_y,  float viewPort_width, float viewPort_height );
 
 	/** \brief getter
 	 *
@@ -134,6 +150,12 @@ public:
 	 * @return window
 	 */
 	GLFWwindow* getWindow();
+
+	/** \brief getter
+	 *
+	 * @return active viewport
+	 */
+	glm::vec4 getViewPort();
 
 	/** \brief getter
 	 *
@@ -198,9 +220,23 @@ public:
 	 *	create four Light sources for fun
 	 */
 	void createFourLightsources();
+
+	void enableDepthTesting();	// enable depth testing if not enabled already
+	void disableDepthTesting(); // enable depth testing if not disabled already
+
+	void enableAlphaBlending();
+	void disableAlphaBlending();
+
+	std::map<int, GLuint>& getActiveTextures();
+
+	void bindTexture( Texture* tex, int unit );
+	void bindTexture( GLuint texture_handle, int unit );
 private:
 
-	GLuint vbo;							/**< !docu pls! */
+	bool depthTesting;
+	bool alphaBlending;
+
+	GLuint mCurrentVAO;					/**< !docu pls! */
 	GLuint MVPHandle;					/**< !docu pls! */
 	GLuint shaderProgramHandle;			/**< !docu pls! */
 
@@ -215,6 +251,9 @@ private:
 	FrameBufferObject* mCurrentFBO;		/**< !docu pls! */
 	vector<glm::vec3> mLightPositions;	/**< !docu pls! */
 	RenderLoop* mRenderLoop;		/**< current renderloop */
+
+	glm::vec4 mViewPort;					/**< active viewport */
+	map<int, GLuint> mActiveTextures;	/**< active textures */
 
 };
 
