@@ -40,12 +40,12 @@ std::vector< RenderPass* > debugViews;
 void addDebugView(Shader* shader, ApplicationState* state, GLuint imageHandle)
 {
 	int x = 0;
-	int y = IOManager::getInstance()->getHeight() - 100 ;
+	int y = IOManager::getInstance()->getHeight() - 200 ;
 
 	// max debug views : 8
-	if ( debugViews.size() < IOManager::getInstance()->getWidth() / 100)
+	if ( debugViews.size() < IOManager::getInstance()->getWidth() / 200)
 	{
-		x = debugViews.size() * 100;
+		x = debugViews.size() * 200;
 	}
 	else{
 		std::cout << "Maximum amount of debug views reached." << std::endl;
@@ -56,8 +56,8 @@ void addDebugView(Shader* shader, ApplicationState* state, GLuint imageHandle)
 	renderTinyView->setBaseTextureUniformName("diffuseTexture");
 	renderTinyView->setViewPortY(y);
 	renderTinyView->setViewPortX(x);
-	renderTinyView->setViewPortWidth(100);
-	renderTinyView->setViewPortHeight(100);
+	renderTinyView->setViewPortWidth(200);
+	renderTinyView->setViewPortHeight(200);
 	state->getRenderLoop()->addRenderPass(renderTinyView);
 
 	debugViews.push_back(renderTinyView);
@@ -168,7 +168,6 @@ void configureRendering(){
 
 	// some debug views
 	addDebugView(UnderwaterScene::simpleTex, testingState, UnderwaterScene::framebuffer_shadow->getDepthBufferHandle() );
-	addDebugView(UnderwaterScene::simpleTex, testingState, UnderwaterScene::framebuffer_gbuffer_default->getDepthBufferHandle() );
 }
 
 void configureOtherStuff(){
