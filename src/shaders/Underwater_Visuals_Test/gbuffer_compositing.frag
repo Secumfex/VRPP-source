@@ -19,11 +19,14 @@ out vec4 fragmentColor;
 void main() {
 
   //try
-      vec4 shadowCoord = uniformDepthBiasMVP * vertPos;
+      vec4 fragPosition = texture(positionMap, passUV);
+      vec4 shadowCoord = uniformDepthBiasMVP * fragPosition;
+      shadowCoord.xyz /= shadowCoord.w;
       float visibility = 0.001;
       if ( texture ( uniformDepthMap, shadowCoord.xy ).z < shadowCoord.z){
           visibility = 1.0;
       }
+      
   //\try
 
     vec4 position = texture(positionMap, passUV);
