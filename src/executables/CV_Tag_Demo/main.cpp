@@ -100,16 +100,17 @@ void configurePhysics(){
 	/* customization of Bullet / Physicsworld */
 
 	testingState->attachListenerOnBeginningProgramCycle( 	new PhysicWorldSimulationListener( IOManager::getInstance()->getDeltaTimePointer() ) );
-	btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,1,0),0);
+
 	//create an invisible ground plane
-		btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,5,5)));
-    	btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0,groundMotionState,groundShape,btVector3(0,0,0));
-   	 	btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
-    	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(groundRigidBody);
+	btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,1,0),0);
+	btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
+    btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0,groundMotionState,groundShape,btVector3(0,0,0));
+   	 btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
+    PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(groundRigidBody);
 
 	btRigidBody* camBody = OculusFeature::oculusCam->getRigidBody();
-	OculusFeature::oculusCam->setPosition(0.0f,0.0f,5.0f);
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(camBody);
+	OculusFeature::oculusCam->setPosition(0.0f,7.0f,5.0f);
 
 	// TODO Kamera bei y > 10.0f runterziehen
 }

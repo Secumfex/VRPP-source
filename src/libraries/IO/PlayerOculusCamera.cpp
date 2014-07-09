@@ -5,6 +5,8 @@
 PlayerOculusCamera::PlayerOculusCamera(Oculus* oculus)
 {
 	this->oculus = oculus;
+
+
 	xPosition = 0.0;
 	yPosition = 0.0;
 	zPosition = 5.0;
@@ -58,14 +60,31 @@ void PlayerOculusCamera::updatePosition(float deltaTime){
 		// @todo setLinearVelocity as proposed by movement speeds
 		btVector3 old_linearVelocity = rigidBody->getLinearVelocity();
 		
-		glm::vec3 linVelocity 	= 	(getViewDirection()); // view direction minus y component
-		//linVelocity.y = 0.0f;	// set y to 0
-		linVelocity = glm::normalize(linVelocity) 	* speedForward; //normalize and multiply
-		linVelocity += 	 	getRight() 				* speedRight; // multiply with current speed
-		
+//		rigidBody->setLinearVelocity(btVector3(linVelocity.x,linVelocity.y,linVelocity.z));
 
-		rigidBody->setLinearVelocity(btVector3(linVelocity.x,old_linearVelocity.getY(),linVelocity.z));
-		
+		if ( old_linearVelocity.length() < 2.0f )
+		{
+			glm::vec3 viewDir = 	( getViewDirection() ); // view direction minus y component
+			viewDir = glm::normalize(viewDir) 	* speedForward; //normalize and multiply
+			viewDir += 	 	getRight() 				* speedRight; // multiply with current speed
+
+			rigidBody->applyCentralImpulse( btVector3( viewDir.x, viewDir.y, viewDir.z ) * deltaTime );
+		}
+		else
+		{
+			// dunno do somethings else this sux
+			//			rigidBody->applyCentralImpulse( ( btVector3( viewDir.x, viewDir.y, viewDir.z ) - old_linearVelocity )* deltaTime);
+		}
+		if ( getPosition().y > 10.0f )
+		{
+			if ( getPosition().y > 11.0f )
+			{
+				rigidBody->applyCentralImpulse( btVector3( 0.0f, -10.0f , 0.0f ) * deltaTime );
+			}
+			rigidBody->applyCentralImpulse( btVector3( 0.0f, -2.5f , 0.0f ) * deltaTime );
+		}
+
+
 		// read current position of rigid Body and overwrite Camera-Position
 	    btVector3 rigidBody_pos = rigidBody->getWorldTransform().getOrigin();
 	    Camera::setPosition(glm::vec3(rigidBody_pos.getX(), rigidBody_pos.getY() + 0.25f, rigidBody_pos.getZ()));
@@ -88,7 +107,7 @@ void PlayerOculusCamera::setPosition(glm::vec3 newPos){
 		worldTrans.setIdentity();
 		motion->getWorldTransform( worldTrans );			// current transformation
 
-		btTransform positionTransform;				// correction : rotation
+		btTransform positionTransform;				// correction : translation
 		positionTransform.setIdentity();
 
 		positionTransform.setOrigin(
