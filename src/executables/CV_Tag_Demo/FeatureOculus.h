@@ -15,7 +15,7 @@ namespace OculusFeature
  * OBJECT INSTANCES
  */
 	Oculus* 		oculus;
-	OculusCamera* 	oculusCam;
+	PlayerOculusCamera* 	oculusCam;
 	OculusPostProcessingRenderPass* oculusPostProcessing;	// post processing renderpass, default output : window
 
 

@@ -59,7 +59,7 @@ void PlayerOculusCamera::updatePosition(float deltaTime){
 		btVector3 old_linearVelocity = rigidBody->getLinearVelocity();
 		
 		glm::vec3 linVelocity 	= 	(getViewDirection()); // view direction minus y component
-		linVelocity.y = 0.0f;	// set y to 0
+		//linVelocity.y = 0.0f;	// set y to 0
 		linVelocity = glm::normalize(linVelocity) 	* speedForward; //normalize and multiply
 		linVelocity += 	 	getRight() 				* speedRight; // multiply with current speed
 		
@@ -75,11 +75,29 @@ void PlayerOculusCamera::updatePosition(float deltaTime){
 void PlayerOculusCamera::setPosition(glm::vec3 newPos){
 	if (rigidBody != 0){
 		btVector3 new_position(newPos.x,newPos.y,newPos.z); 
-		btTransform transform = rigidBody -> getCenterOfMassTransform();
-		transform.setOrigin(new_position);
-		rigidBody -> setCenterOfMassTransform(transform);
+		//btTransform transform = rigidBody -> getCenterOfMassTransform();
+		//transform.setOrigin(new_position);
+		//rigidBody -> setCenterOfMassTransform(transform);
 		newPos.y += 0.25f;
 		Camera::setPosition(newPos);	// set the other old stuff for consistency
+
+
+		btMotionState* motion = rigidBody->getMotionState();							// current motion state of rigid body
+
+		btTransform worldTrans;
+		worldTrans.setIdentity();
+		motion->getWorldTransform( worldTrans );			// current transformation
+
+		btTransform positionTransform;				// correction : rotation
+		positionTransform.setIdentity();
+
+		positionTransform.setOrigin(
+				new_position);
+
+		btTransform newTransform;
+		newTransform.setIdentity();							// transformation after correction
+		newTransform.mult( positionTransform, worldTrans);	// apply offset then rotation
+		rigidBody -> setCenterOfMassTransform(newTransform);
 	}
 }
 
