@@ -230,7 +230,14 @@ public:
 	 *
 	 * @param initialGraphicsComponentVector vector of graphics component which will be set as initial Graphics Components list
 	 */
-	void setInitialGraphicsComponentList(std::vector < GraphicsComponent*> initialGraphicsComponentVector );
+	void setInitialGraphicsComponentList(std::vector < GraphicsComponent* > initialGraphicsComponentVector );
+
+	/** \brief setter
+	 *
+	 * @param initialGraphicsComponentVector vector of virtual objects whose GraphicsComponents will be set as initial Graphics Components list
+	 */
+	void setInitialGraphicsComponentList(std::vector < VirtualObject* > initialGraphicsComponentVector );
+
 
 	/** \brief add a graphics component as rendering candidate
 	 * @param gc graphics component to be added to the initial graphics component list
@@ -260,6 +267,15 @@ public:
 	 */
 	std::list<GraphicsComponent*>   getInitialGraphicsComponentList();
 
+	/** \brief removes a graphicscomponent from the initial graphicscomponent list if it exists
+	 *	@param gc to be removed from the initial graphicscomponent list
+	 */
+	void removeInitialGraphicsComponent(GraphicsComponent* gc);
+
+	/** \brief removes all graphicscomponents of the virtual object from the initial graphicscomponent list if it exists
+	 *	@param vo to be completely removed from the initial graphics component list
+	 */
+	void removeInitialGraphicsComponent(VirtualObject* vo);
 protected:
 
 	float mViewPort_x, mViewPort_y, mViewPort_width, mViewPort_height, mCustomViewPortHeight, mCustomViewPortWidth;

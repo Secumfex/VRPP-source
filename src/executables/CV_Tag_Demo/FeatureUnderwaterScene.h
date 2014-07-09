@@ -482,6 +482,9 @@ TextureRenderPass* 			presentFinalImage;
 	 * They will be added to the state's render loop in this order,
 	 * so to add Render Passes in between, use RenderLoop::addRenderPassBefore()
 	 *
+	 * Keep in mind that objects from outside this feature have to be added to
+	 * the initial graphicscomponent lists of the renderpasses manually, after calling this method
+	 *
 	 * @param target state to get camera etc. from
 	 * @param addToRenderLoop boolean whether to add renderpasses to renderloop instantly, true by default
 	 */
@@ -540,10 +543,8 @@ TextureRenderPass* 			presentFinalImage;
 		// 1.2.1: render scene into GBuffer
 		gbufferRenderPass = new GBufferRenderPass(gbuffer_shader, framebuffer_gbuffer_default);
 		gbufferRenderPass->setClearColorBufferBit(true);
-		gbufferRenderPass->setInitialGraphicsComponentList ( ( target->getRenderQueue() )->getGraphicsComponentList( ) );
-		gbufferRenderPass->addRenderQueueRequestFlag( new FlagPartOfVirtualObject(UnderwaterScene::scene_waterPlaneObject, true ) );
-		gbufferRenderPass->addRenderQueueRequestFlag( new FlagPartOfVirtualObject(UnderwaterScene::scene_sky_dome, true) );
-		gbufferRenderPass->addRenderQueueRequestFlag( new FlagPartOfVirtualObject(UnderwaterScene::scene_sun_Object, true) );
+		gbufferRenderPass->setInitialGraphicsComponentList ( scene_objects );
+		gbufferRenderPass->removeInitialGraphicsComponent( scene_waterPlaneObject );
 
 		if (addToRenderLoop)
 			target->getRenderLoop()->addRenderPass( gbufferRenderPass);
@@ -595,10 +596,8 @@ TextureRenderPass* 			presentFinalImage;
 		//2.1.3: render the rest of the scene into GBuffer
 		gbufferReflectionMapRenderPass = new GBufferRenderPass(gbuffer_culling_shader, UnderwaterScene::framebuffer_water_reflection_gbuffer);
 		gbufferReflectionMapRenderPass->setClearColorBufferBit(true);	// clear background information
-		gbufferReflectionMapRenderPass->setInitialGraphicsComponentList( target->getRenderQueue()->getGraphicsComponentList() );	// render scene without background
-		gbufferReflectionMapRenderPass->addRenderQueueRequestFlag( new FlagPartOfVirtualObject( UnderwaterScene::scene_waterPlaneObject, true ) );  // render everything but the water plane object
-		gbufferReflectionMapRenderPass->addRenderQueueRequestFlag( new FlagPartOfVirtualObject(UnderwaterScene::scene_sky_dome, true) );			// render everything left but the sky dome object
-		gbufferReflectionMapRenderPass->addRenderQueueRequestFlag( new FlagPartOfVirtualObject(UnderwaterScene::scene_sun_Object, true) ); 			// render everything left but the sun object
+		gbufferReflectionMapRenderPass->setInitialGraphicsComponentList( scene_objects );	// render scene without background
+		gbufferReflectionMapRenderPass->removeInitialGraphicsComponent( UnderwaterScene::scene_waterPlaneObject );  // render everything but the water plane object
 		gbufferReflectionMapRenderPass->attachListenerOnPostUniformUpload( uniClipPoint ); // upload clipping plane support point
 		gbufferReflectionMapRenderPass->attachListenerOnPostUniformUpload( uniClipNorm );  // upload clipping plane normal
 
@@ -647,10 +646,8 @@ TextureRenderPass* 			presentFinalImage;
 		// 2.2.3 : render refracted View into seperate GBuffer FBO
 		gbufferRefractionMapRenderPass = new GBufferRenderPass(gbuffer_culling_shader, UnderwaterScene::framebuffer_water_refraction_gbuffer);
 		gbufferRefractionMapRenderPass->setClearColorBufferBit(true);
-		gbufferRefractionMapRenderPass->setInitialGraphicsComponentList( target->getRenderQueue()->getGraphicsComponentList() );
-		gbufferRefractionMapRenderPass->addRenderQueueRequestFlag( new FlagPartOfVirtualObject( UnderwaterScene::scene_waterPlaneObject, true ) );  // render everything but the water plane object
-		gbufferRefractionMapRenderPass->addRenderQueueRequestFlag( new FlagPartOfVirtualObject(UnderwaterScene::scene_sky_dome, true) );			// render everything left but the sky dome object
-		gbufferRefractionMapRenderPass->addRenderQueueRequestFlag( new FlagPartOfVirtualObject(UnderwaterScene::scene_sun_Object, true) ); 			// render everything left but the sun object
+		gbufferRefractionMapRenderPass->setInitialGraphicsComponentList( scene_objects );
+		gbufferRefractionMapRenderPass->removeInitialGraphicsComponent( scene_waterPlaneObject );  // render everything but the water plane object
 		gbufferRefractionMapRenderPass->attachListenerOnPostUniformUpload( uniClipPoint ); // upload clipping plane support point
 		gbufferRefractionMapRenderPass->attachListenerOnPostUniformUpload( uniClipNormInv );  // upload clipping plane normal
 

@@ -317,6 +317,15 @@ void RenderPass::setInitialGraphicsComponentList(std::vector < GraphicsComponent
 	}
 }
 
+void RenderPass::setInitialGraphicsComponentList(std::vector < VirtualObject* > initialGraphicsComponentVector)
+{
+	mInitialGraphicsComponentList.clear();
+	for (unsigned int i = 0; i < initialGraphicsComponentVector.size(); i++)
+	{
+		addInitialGraphicsComponent( initialGraphicsComponentVector[i]);
+	}
+}
+
 void RenderPass::addInitialGraphicsComponent(GraphicsComponent* gc)
 {
 	mInitialGraphicsComponentList.push_back(gc);
@@ -606,4 +615,16 @@ bool RenderPass::getClearColorBufferBit() {
 }
 bool RenderPass::getClearDepthBufferBit() {
 	return clearColorBufferBit;
+}
+
+void RenderPass::removeInitialGraphicsComponent(GraphicsComponent* gc) {
+	mInitialGraphicsComponentList.remove(gc);
+}
+
+void RenderPass::removeInitialGraphicsComponent(VirtualObject* vo) {
+	std::vector <GraphicsComponent* > gcs = vo->getGraphicsComponent();
+	for (unsigned int i = 0; i < gcs.size(); i++)
+	{
+		removeInitialGraphicsComponent(gcs[i]);
+	}
 }

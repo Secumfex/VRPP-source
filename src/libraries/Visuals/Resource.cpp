@@ -233,6 +233,7 @@ Mesh::Mesh(Mesh* mesh){
 	this->setNumVertices(mesh->getNumVertices());
 	this->setVAO(mesh->getVAO());
 	this->setVertexPosition(mesh->getVertices());
+	this->setCenterOfMassOffsetMatrix( mesh->getCenterOfMassOffsetMatrix() );
 }
 
 Mesh::~Mesh() { }

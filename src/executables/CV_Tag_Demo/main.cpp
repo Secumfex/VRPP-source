@@ -6,6 +6,8 @@
 
 #include "Physics/PhysicWorldSimulationListener.h"
 
+#include "Tools/ShaderFactory.h"
+
 // include features
 #include "FeatureUnderwaterScene.h"
 #include "FeatureTreasureChest.h"
@@ -120,6 +122,15 @@ void configureRendering(){
 	// Testweise: alle Renderpasses erstellen und direkt in Renderloop einfügen
 	UnderwaterScene:: createRenderPasses( testingState, true);
 
+	// create a renderpass for boids, rendering into default gbuffer right after under water scene gbuffer rendering
+	RenderPass* gbufferBoidRenderPass = FishBoidFeature::createGBufferBoidRenderPass( UnderwaterScene::framebuffer_gbuffer_default );
+	if ( !testingState->getRenderLoop()->addRenderPassAfter( gbufferBoidRenderPass, UnderwaterScene::gbufferRenderPass ) )
+	{
+		std::cout << "ERROR : could not insert Renderpass at the specified position" << std::endl;
+	}
+
+
+
 	// TODO Alle anderen Renderpasses erstellen
 	// TODO Richtige Reihenfolge und verknüpfungen einstellen
 
@@ -132,6 +143,7 @@ void configureRendering(){
 	OculusFeature::makeStereoRenderPass( UnderwaterScene::gbufferRefractionMapSunSkyRenderPass, OculusFeature::oculus, OculusFeature::oculusCam );
 	OculusFeature::makeStereoRenderPass( UnderwaterScene::gbufferRefractionMapRenderPass, 		OculusFeature::oculus, OculusFeature::oculusCam );
 	OculusFeature::makeStereoRenderPass( UnderwaterScene::gbufferParticlesRenderPass, 			OculusFeature::oculus, OculusFeature::oculusCam );
+	OculusFeature::makeStereoRenderPass( FishBoidFeature::gbufferBoidRenderPass, 			OculusFeature::oculus, OculusFeature::oculusCam );
 
 	std::pair<
 			OculusFeature::StereoRenderPassActivateRenderEyeSettingsListener *,
@@ -195,7 +207,8 @@ void configureApplication(){
 
 	// TODO KinectFeature::createObjects( testingState );
 
-	 FishBoidFeature::createObjects( testingState );
+	// create boids
+	FishBoidFeature::createObjects( testingState );
 
 	/* configure to satisfaction*/
 	configureTestingApplication();

@@ -12,7 +12,7 @@ Flock::Flock() {
 	startVelocity = glm::vec3(0.001f, 0.0f, 0.0f);
 	setPlaceToGo(glm::vec3(0.0f, 0.0f, 0.0f));
 	setPlaceToAvoid(glm::vec3(0.0f, 0.0f, 0.0f));
-	mSpeedlimit = 0.3f;
+	mSpeedlimit = 1.0f;
 }
 
 Flock::~Flock() {

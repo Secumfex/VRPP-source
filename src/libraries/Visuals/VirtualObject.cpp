@@ -27,7 +27,8 @@ VirtualObject::VirtualObject(VirtualObject* vo){
 	this->setModelMatrix(vo->getModelMatrix());
 	this->setAnimation(new AnimationLoop(vo->getAnimation()));
 	physicsComponent = new PhysicsComponent(vo->getPhysicsComponent());
-	cout << "bla" << endl;
+
+	this->setCenterOfMassOffsetMatrix( vo->getCenterOfMassOffsetMatrix( ) );
 }
 VirtualObject::VirtualObject(glm::vec3 min, glm::vec3 max, float mass, int collisionFlag){
 	physicsComponent = new PhysicsComponent(min,max, mass,collisionFlag);
