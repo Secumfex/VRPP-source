@@ -469,8 +469,7 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 					);
 
 
-	glm::mat4 inversesceneMatrix = glm::inverse(glm::transpose(glm::make_mat4x4(&(pScene->mRootNode->mTransformation.a1))));
-
+	
 	// Melden, falls der Import nicht funktioniert hat
 	if (!pScene) {
 		cout << Importer.GetErrorString() << endl;
@@ -478,6 +477,9 @@ VirtualObject* VirtualObjectFactory::createVirtualObject(std::string filename,
 	}
 
 	cout << "Import of scene " << filename.c_str() << " succeeded." << endl;
+
+	glm::mat4 inversesceneMatrix = glm::inverse(glm::transpose(glm::make_mat4x4(&(pScene->mRootNode->mTransformation.a1))));
+
 
 	glm::vec3 physics_min = glm::vec3(FLT_MAX, FLT_MAX, FLT_MAX);
 	glm::vec3 physics_max = glm::vec3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
