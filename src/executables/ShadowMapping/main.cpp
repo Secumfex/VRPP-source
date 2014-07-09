@@ -4,6 +4,7 @@
 #include "Tools/UtilityListeners.h"
 #include "PlaceHolderListeners.h"
 
+
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -205,6 +206,7 @@ void configureRendering(){
 
 	/* shadow map render pass */
 	RenderPass* shadowPass = new RenderPass(shadowShader, fbo3);
+	testingState->getRenderLoop()->addRenderPass( shadowPass );
 
 
 }
