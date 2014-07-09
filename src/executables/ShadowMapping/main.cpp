@@ -206,6 +206,7 @@ void configureRendering(){
 	/* shadow map render pass */
 	RenderPass* shadowPass = new RenderPass(shadowShader, fbo3);
 
+
 }
 
 void configureOtherStuff(){
