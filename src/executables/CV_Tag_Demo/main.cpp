@@ -17,6 +17,7 @@
 #include "IO/OculusListeners.h"
 #include "FishBoidFeature.h"
 #include "FeatureAnimation.h"
+#include "FeatureMountainCollision.h"
 
 		// TODO etc.
 
@@ -121,6 +122,9 @@ void configurePhysics(){
 	OculusFeature::oculusCam->setPosition(0.0f,7.0f,5.0f);
 
 	// TODO Kamera bei y > 10.0f runterziehen  erledigt glaube ich
+
+	//hier sone annäherung der berge durch spheren
+	MountainCollision::makeSphereApproximationOfMountain();
 }
 
 void configureInputHandler(){
