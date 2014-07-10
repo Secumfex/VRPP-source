@@ -145,13 +145,6 @@ void configureRendering(){
 	// Testweise: alle Renderpasses erstellen und direkt in Renderloop einf�gen
 	UnderwaterScene:: createRenderPasses( testingState, true);
 
-	/* postprocessing renderpass */
-	MixTexturesRenderPass* glowRenderPass = new MixTexturesRenderPass( postprocessShader, 0, fbo->getColorTextureHandle(), fbo2->getColorTextureHandle() );
-	//glowRenderPass->setBaseTextureUniformName( "colorMap" );	// set custom uniform name for base texture
-	//glowRenderPass->setMixTextureUniformName(  "preGlowTexture" );
-	//glowRenderPass->attachListenerOnPostUniformUpload( uniResX2 );
-	//glowRenderPass->attachListenerOnPostUniformUpload( uniResY2 );
-
 	// create a renderpass for boids, rendering into default gbuffer right after under water scene gbuffer rendering
 	RenderPass* gbufferBoidRenderPass = FishBoidFeature::createGBufferBoidRenderPass( UnderwaterScene::framebuffer_gbuffer_default );
 	if ( !testingState->getRenderLoop()->addRenderPassAfter( gbufferBoidRenderPass, UnderwaterScene::gbufferRenderPass ) )
