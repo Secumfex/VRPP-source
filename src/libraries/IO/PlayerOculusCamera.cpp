@@ -51,6 +51,7 @@ void PlayerOculusCamera::createRigidBody(){
 		btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(1.0,motionState,collisionShape,btVector3(0,0,0)); 
 	    rigidBody = new btRigidBody(rigidBodyCI);	// create a rigid body from the information provided
     	rigidBody->setActivationState(DISABLE_DEACTIVATION);	// so disable getting "stuck" after some time
+    	rigidBody->setDamping(0.5f,0.5f);
     }
 }
 
@@ -62,21 +63,21 @@ void PlayerOculusCamera::updatePosition(float deltaTime){
 		
 //		rigidBody->setLinearVelocity(btVector3(linVelocity.x,linVelocity.y,linVelocity.z));
 
+		glm::vec3 viewDir = 	( getViewDirection() ); // view direction minus y component
+		viewDir = glm::normalize(viewDir) 	* speedForward; //normalize and multiply
+		viewDir += 	 	getRight() 				* speedRight; // multiply with current speed
+
 		if ( old_linearVelocity.length() < 2.0f )
 		{
-			glm::vec3 viewDir = 	( getViewDirection() ); // view direction minus y component
-			viewDir = glm::normalize(viewDir) 	* speedForward; //normalize and multiply
-			viewDir += 	 	getRight() 				* speedRight; // multiply with current speed
-
 			rigidBody->applyCentralImpulse( btVector3( viewDir.x, viewDir.y, viewDir.z ) * deltaTime );
 		}
 		else
 		{
-			
-			// dunno do somethings else this sux
-			//			rigidBody->applyCentralImpulse( ( btVector3( viewDir.x, viewDir.y, viewDir.z ) - old_linearVelocity )* deltaTime);
+			// clamp velocity and apply anyways
+			rigidBody->setLinearVelocity(old_linearVelocity.normalize() * 1.99f);
+			rigidBody->applyCentralImpulse( btVector3( viewDir.x, viewDir.y, viewDir.z ) * deltaTime );
 		}
-		if ( getPosition().y > 10.0f )
+		if ( getPosition().y > 10.25f )
 		{
 			if ( getPosition().y > 11.0f )
 			{
