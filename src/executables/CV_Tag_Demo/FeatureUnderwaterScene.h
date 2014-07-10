@@ -323,7 +323,7 @@ TextureRenderPass* 			presentFinalImage;
 
 		/*******************sand particle System objects *****************************************/
 		sand_particles = new ParticleSystem(target->getCamera()->getPositionPointer(), particle_distance_max);
-		sand_particles->setParticleAmount(particle_amount);
+		sand_particles->setParticleAmount(particle_amount*1.5);
 		target->attachListenerOnBeginningProgramCycle(new UpdateParticleSystemListener(sand_particles, IOManager::getInstance()->getDeltaTimePointer()));
 		/*********************************************************************************/
 
@@ -506,6 +506,10 @@ TextureRenderPass* 			presentFinalImage;
 			SHADERS_PATH "/Underwater_visuals_Test/particles.vert",
 			SHADERS_PATH "/Underwater_Visuals_Test/particles.frag");
 
+	gbuffer_sand_particle_shader = new Shader(
+			SHADERS_PATH "/Underwater_visuals_Test/sand_particles.vert",
+			SHADERS_PATH "/Underwater_Visuals_Test/sand_particles.frag");
+
 	gbuffer_water_shader = new Shader(
 			SHADERS_PATH "/Underwater_Visuals_Test/gbuffer_water.vert",
 			SHADERS_PATH "/Underwater_Visuals_Test/gbuffer_water.frag");
@@ -558,6 +562,7 @@ TextureRenderPass* 			presentFinalImage;
 		Listener* uniCausticsTex2=new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 12, "uniformCausticsTexture", UnderwaterScene::causticsTexture->getTextureHandle());
 		Listener* uniGBufferDepthMap = new UploadUniformTextureListener("", 7, "uniformDepthMap", framebuffer_gbuffer_default->getDepthBufferHandle( ) );
 		Listener* uniPartMap	= new UploadUniformTextureListener 	("UNIFORMUPLOADLISTENER", 14,"uniformParticlesMap", 	UnderwaterScene::framebuffer_water_particles->getPositionTextureHandle());
+		Listener* uniSandPartMap	= new UploadUniformTextureListener 	("UNIFORMUPLOADLISTENER", 14,"uniformSandParticlesMap", 	UnderwaterScene::framebuffer_sand_particles->getPositionTextureHandle());
 		Listener* uniPartText	= new UploadUniformTextureListener 	("UNIFORMUPLOADLISTENER", 4,"uniformParticleTexture",   UnderwaterScene::particlesTexture->getTextureHandle());
 		Listener* uniSandPartText	= new UploadUniformTextureListener 	("UNIFORMUPLOADLISTENER", 4,"uniformSandParticleTexture",   UnderwaterScene::sandParticlesTexture->getTextureHandle());
 		Listener* uniShadowMap  = new UploadUniformTextureListener 	("UNIFORMUPLOADLISTENER", 10,"uniformDepthMap",   		UnderwaterScene::framebuffer_shadow->getDepthBufferHandle() );	// shadow map from sun view
@@ -784,7 +789,7 @@ TextureRenderPass* 			presentFinalImage;
 				target->getRenderLoop()->addRenderPass( gbufferParticlesRenderPass );
 		
 
-		gbufferSandParticlesRenderPass = new ParticlesRenderPass(gbuffer_particle_shader, UnderwaterScene::framebuffer_sand_particles, UnderwaterScene::sand_particles, VirtualObjectFactory::getInstance()->getQuad()->getMesh()->getVAO());
+		gbufferSandParticlesRenderPass = new ParticlesRenderPass(gbuffer_sand_particle_shader, UnderwaterScene::framebuffer_sand_particles, UnderwaterScene::sand_particles, VirtualObjectFactory::getInstance()->getQuad()->getMesh()->getVAO());
 
 		gbufferSandParticlesRenderPass->attachListenerOnPostUniformUpload( uniGBufferDepthMap );
 
@@ -792,7 +797,7 @@ TextureRenderPass* 			presentFinalImage;
 		gbufferSandParticlesRenderPass->setUseDepthTest(false);	// disable depth testing
 		gbufferSandParticlesRenderPass->setClearColorBufferBit(true); // clear color buffer bit on every frame
 		gbufferSandParticlesRenderPass->setCustomClearColor( glm::vec4 ( 0.0f, 0.0f, 0.0f, 0.0f) );// set clear color to transparent
-		gbufferSandParticlesRenderPass->attachListenerOnPostUniformUpload( uniPartText);	// upload Particles Texture
+		gbufferSandParticlesRenderPass->attachListenerOnPostUniformUpload( uniSandPartText);	// upload Particles Texture
 		gbufferSandParticlesRenderPass->attachListenerOnPostUniformUpload( uniSinusWave);  // upload Sinus Wave value
 
 		if (addToRenderLoop)

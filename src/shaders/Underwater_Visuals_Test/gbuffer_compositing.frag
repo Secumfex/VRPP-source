@@ -13,6 +13,9 @@ uniform mat4 uniformProjectorViewPerspective;
 uniform vec3 uniformSunDirection;
 uniform vec3 uniformCameraWorldPos;
 
+uniform float resX;
+uniform float resY;
+
 out vec4 fragmentColor;
 
 void main() {
@@ -56,7 +59,7 @@ void main() {
     finalColor.rgb = ambient * color.rgb;
   	finalColor.rgb +=  color.rgb * ( max( diffuse * visibility - ambient, 0 ) );
   	finalColor.a = color.a;
-  	
+
   //	finalColor = vec4 ( shadowCoord.xyz, 1.0);
   	
     fragmentColor = finalColor;
