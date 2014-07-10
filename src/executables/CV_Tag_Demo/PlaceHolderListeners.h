@@ -113,6 +113,18 @@ namespace UnderwaterScene
 		void setCamera( Camera* cam );
 	};
 
+	// Listener which resets position of camera
+	class SetCameraPositionListener : public Listener {
+private:
+	Camera* 	cam;
+	glm::vec3 position;
+public:
+	SetCameraPositionListener(Camera* cam, glm::vec3 position);
+	void update();
+};
+
+
+
 } // namespace UnderwaterScene
 
 /************ FEATURE OCULUS LISTENERS ******************/

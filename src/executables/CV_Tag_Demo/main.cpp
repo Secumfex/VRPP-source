@@ -112,7 +112,7 @@ void configurePhysics(){
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(camBody);
 	OculusFeature::oculusCam->setPosition(0.0f,7.0f,5.0f);
 
-	// TODO Kamera bei y > 10.0f runterziehen
+	// TODO Kamera bei y > 10.0f runterziehen  erledigt glaube ich
 }
 
 void configureInputHandler(){
@@ -121,7 +121,9 @@ void configureInputHandler(){
 
 	testingInputHandler->attachListenerOnKeyPress(new PrintValueListener( IOManager::getInstance()->getDeltaTimePointer(), "d_t : "), GLFW_KEY_T );
 
-	// TODO Tasten zum resetten etc.
+	// TODO Tasten zum resetten etc.  Camera wird resettet, jedoch wird der vektor bei merhmaligem drücken akkumuliert.
+	testingInputHandler->attachListenerOnKeyPress(new UnderwaterScene::SetCameraPositionListener(OculusFeature::oculusCam, glm::vec3(0.0f,4.0f,0.0f)), GLFW_KEY_R ); //original 0.0f,5.0f,0.0f
+	
 }
 
 void configureRendering(){

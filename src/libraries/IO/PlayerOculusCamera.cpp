@@ -72,6 +72,7 @@ void PlayerOculusCamera::updatePosition(float deltaTime){
 		}
 		else
 		{
+			
 			// dunno do somethings else this sux
 			//			rigidBody->applyCentralImpulse( ( btVector3( viewDir.x, viewDir.y, viewDir.z ) - old_linearVelocity )* deltaTime);
 		}

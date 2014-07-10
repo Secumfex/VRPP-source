@@ -154,6 +154,14 @@ UnderwaterScene::SetCameraListener::SetCameraListener(Camera* cam){
 	this->cam = cam;
 }
 
+UnderwaterScene::SetCameraPositionListener::SetCameraPositionListener(Camera* cam, glm::vec3 position){
+	this->cam 			= cam;
+	this->position = position;
+}
+void UnderwaterScene::SetCameraPositionListener::update(){
+	cam->setPosition(position);
+}
+
 void UnderwaterScene::SetCameraListener::update(){
 	RenderManager::getInstance()->setCamera(cam);
 }
