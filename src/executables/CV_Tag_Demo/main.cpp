@@ -129,6 +129,7 @@ void configureRendering(){
 		std::cout << "ERROR : could not insert Renderpass at the specified position" << std::endl;
 	}
 
+	UnderwaterScene::gbufferShadowRenderPass->addInitialGraphicsComponent( FishBoidFeature::fishes );
 
 
 	// TODO Alle anderen Renderpasses erstellen
@@ -143,7 +144,7 @@ void configureRendering(){
 	OculusFeature::makeStereoRenderPass( UnderwaterScene::gbufferRefractionMapSunSkyRenderPass, OculusFeature::oculus, OculusFeature::oculusCam );
 	OculusFeature::makeStereoRenderPass( UnderwaterScene::gbufferRefractionMapRenderPass, 		OculusFeature::oculus, OculusFeature::oculusCam );
 	OculusFeature::makeStereoRenderPass( UnderwaterScene::gbufferParticlesRenderPass, 			OculusFeature::oculus, OculusFeature::oculusCam );
-	OculusFeature::makeStereoRenderPass( FishBoidFeature::gbufferBoidRenderPass, 			OculusFeature::oculus, OculusFeature::oculusCam );
+	OculusFeature::makeStereoRenderPass( FishBoidFeature::gbufferBoidRenderPass, 				OculusFeature::oculus, OculusFeature::oculusCam );
 
 	std::pair<
 			OculusFeature::StereoRenderPassActivateRenderEyeSettingsListener *,

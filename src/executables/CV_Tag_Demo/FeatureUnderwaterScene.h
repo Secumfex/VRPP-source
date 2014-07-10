@@ -274,7 +274,7 @@ TextureRenderPass* 			presentFinalImage;
 		scene_sun_Object 		= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_sun_shape.dae", 	VirtualObjectFactory::OTHER, 0.0f, 1, true);
 
 		sunView = glm::lookAt( - sunLightDirection * 20.0f , glm::vec3 (0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f) );
-		sunPerspective = glm::ortho(-50.0f, 50.0f, -20.0f, 25.0f, 0.1f, 40.0f);
+		sunPerspective = glm::ortho(-25.0f, 25.0f, -15.0f, 10.0f, 0.1f, 50.0f);
 		sunViewPerspective 		= sunPerspective * sunView;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -377,7 +377,7 @@ TextureRenderPass* 			presentFinalImage;
 		framebuffer_scene_sky_sun->makeDrawBuffers();
 		framebuffer_scene_sky_sun->unbindFBO();
 
-		framebuffer_shadow 	= new FrameBufferObject( 512, 512 );	// create a depth map
+		framebuffer_shadow 	= new FrameBufferObject( 1024, 1024 );	// create a depth map
 		framebuffer_shadow->createPositionTexture();
 		framebuffer_shadow->makeDrawBuffers();	// draw color to color attachment 0
 		framebuffer_shadow->unbindFBO();
@@ -586,6 +586,7 @@ TextureRenderPass* 			presentFinalImage;
 		gbufferShadowRenderPass->removeInitialGraphicsComponent( scene_waterPlaneObject );
 		gbufferShadowRenderPass->attachListenerOnPostUniformUpload( uniSunView );
 		gbufferShadowRenderPass->attachListenerOnPostUniformUpload( uniSunPersp );
+		gbufferShadowRenderPass->attachListenerOnPostUniformUpload( uniCamPos );
 		if(addToRenderLoop)
 			target->getRenderLoop()->addRenderPass(gbufferShadowRenderPass);
 
@@ -598,13 +599,14 @@ TextureRenderPass* 			presentFinalImage;
 		gbufferCompositingRenderPass->setNormalMap(   framebuffer_gbuffer_default->getNormalTextureHandle());
 
 		gbufferCompositingRenderPass->attachListenerOnPostUniformUpload( uniSunDir );	// attach sun direction
-		gbufferCompositingRenderPass->attachListenerOnPostUniformUpload(	uniSunVPersp );
+		gbufferCompositingRenderPass->attachListenerOnPostUniformUpload( uniSunVPersp );
 
 		// add uniforms needed for shadow mapping
 		gbufferCompositingRenderPass->attachListenerOnPostUniformUpload( uniShadowMap ); // shadow map to compare depth values with
 		gbufferCompositingRenderPass->attachListenerOnPostUniformUpload( uniSunVPersp ); // needed to compute shadow map coordinates
 		gbufferCompositingRenderPass->attachListenerOnPostUniformUpload( uniDepthMVP ); // just for the cause
 		gbufferCompositingRenderPass->attachListenerOnPostUniformUpload( uniDepthBiasMVP); // just in the case
+		gbufferCompositingRenderPass->attachListenerOnPostUniformUpload( uniCamPos );
 
 		if (addToRenderLoop)
 				target->getRenderLoop()->addRenderPass( gbufferCompositingRenderPass );
@@ -735,7 +737,6 @@ TextureRenderPass* 			presentFinalImage;
 
 		gbufferGodraysRenderPass->attachListenerOnPostUniformUpload( uniCausticsTex2);		// upload caustics texture used for god ray sampling
 		gbufferGodraysRenderPass->attachListenerOnPostUniformUpload( uniSunVPersp );		// upload sun view perspective matrix
-		gbufferGodraysRenderPass->attachListenerOnPostUniformUpload( uniCamPos );			// upload cam world position
 		gbufferGodraysRenderPass->attachListenerOnPostUniformUpload( uniCamPos );			// upload cam world position
 
 		if (addToRenderLoop)

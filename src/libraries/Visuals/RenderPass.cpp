@@ -346,6 +346,14 @@ void RenderPass::addInitialGraphicsComponent(std::vector <GraphicsComponent* > g
 	}
 }
 
+void RenderPass::addInitialGraphicsComponent(std::vector <VirtualObject* > vos)
+{
+	for (unsigned int i = 0; i < vos.size(); i++)
+	{
+		addInitialGraphicsComponent(vos[i]);
+	}
+}
+
 void RenderPass::attachListenerOnPreUniformUpload(Listener* listener)
 {
 	listener->setName( "PREUNIFORMUPLOAD" );
