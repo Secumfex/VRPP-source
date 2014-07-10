@@ -135,9 +135,9 @@ void Shader::makeShader(std::string vert, std::string frag){
 
 Shader::~Shader() {
 	glDeleteProgram(mProgramHandle);
-	for (list<Listener*>::iterator it = listeners.begin(); it != listeners.end(); it++) {
-	 delete &it;
-}
+//	for (list<Listener*>::iterator it = listeners.begin(); it != listeners.end(); it++) {
+//	 delete &it;
+//}
 }
 
 void Shader::setShaderName(std::string name){

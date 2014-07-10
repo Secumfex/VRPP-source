@@ -192,7 +192,7 @@ void configureRendering(){
 	testingState->getRenderLoop()->addRenderPass( OculusFeature::oculusPostProcessing );
 
 	// some debug views
-	addDebugView(UnderwaterScene::simpleTex, testingState, UnderwaterScene::framebuffer_shadow->getDepthBufferHandle() );
+	addDebugView(UnderwaterScene::simpleTex, testingState, UnderwaterScene::framebuffer_gbuffer_default->getPositionTextureHandle() );
 }
 
 void configureOtherStuff(){

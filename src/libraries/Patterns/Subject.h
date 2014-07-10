@@ -1,6 +1,8 @@
 #ifndef SUBJECT_H_
 #define SUBJECT_H_
 #include <list>
+#include <map>
+#include <string.h>
 #include "Listener.h"
 
 using namespace std;
@@ -36,7 +38,9 @@ public:
 private:
 
 protected:
-	list<Listener*> listeners;	/**<  list of all listeners attached to the Subject */
+//	list<Listener*> listeners;	/**<  list of all listeners attached to the Subject */
+	map<std::string, std::list<Listener* > > listeners;
+
 	/** \brief protected-constructor so the class becomes abstract
 	 *
 	 */
