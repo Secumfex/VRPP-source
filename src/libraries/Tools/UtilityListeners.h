@@ -145,6 +145,15 @@ public:
 	void update();
 };
 
+/// Listener to invert a Boolean Value
+class InvertBoolValueListener : public Listener{
+private:
+	bool* target;
+public:
+	InvertBoolValueListener(bool* target); /**< copies value to target on update*/
+	void update();
+};
+
 /// Listener which sets target boolean to value pointed at
 class SetBoolValueListener : public Listener{
 private:
