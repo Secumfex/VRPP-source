@@ -254,6 +254,11 @@ public:
 	 */
 	void addInitialGraphicsComponent(std::vector<GraphicsComponent* > gcs);
 
+	/** \brief add a bunch of graphics components as rendering canditates
+	 * @param vos vector of virtual objects whose Graphicscomponents are to be added to the initial graphics component list
+	 */
+	void addInitialGraphicsComponent(std::vector<VirtualObject* > vos);
+
 	/** \brief getter
 	 *
 	 * @return initialGraphicsComponentList pointer

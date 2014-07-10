@@ -41,12 +41,12 @@ std::vector< RenderPass* > debugViews;
 void addDebugView(Shader* shader, ApplicationState* state, GLuint imageHandle)
 {
 	int x = 0;
-	int y = IOManager::getInstance()->getHeight() - 100 ;
+	int y = IOManager::getInstance()->getHeight() - 200 ;
 
 	// max debug views : 8
-	if ( debugViews.size() < IOManager::getInstance()->getWidth() / 100)
+	if ( debugViews.size() < IOManager::getInstance()->getWidth() / 200)
 	{
-		x = debugViews.size() * 100;
+		x = debugViews.size() * 200;
 	}
 	else{
 		std::cout << "Maximum amount of debug views reached." << std::endl;
@@ -57,8 +57,8 @@ void addDebugView(Shader* shader, ApplicationState* state, GLuint imageHandle)
 	renderTinyView->setBaseTextureUniformName("diffuseTexture");
 	renderTinyView->setViewPortY(y);
 	renderTinyView->setViewPortX(x);
-	renderTinyView->setViewPortWidth(100);
-	renderTinyView->setViewPortHeight(100);
+	renderTinyView->setViewPortWidth(200);
+	renderTinyView->setViewPortHeight(200);
 	state->getRenderLoop()->addRenderPass(renderTinyView);
 
 	debugViews.push_back(renderTinyView);
@@ -125,12 +125,12 @@ void configureInputHandler(){
 }
 
 void configureRendering(){
-	// Oculus wurde bereits initialisiert --> fenster größe ist bekannt
+	// Oculus wurde bereits initialisiert --> fenster grï¿½ï¿½e ist bekannt
 
-	// alle Shader erstellen, die später benötigt werden
+	// alle Shader erstellen, die spï¿½ter benï¿½tigt werden
 	UnderwaterScene::createShaders( testingState );
 
-	// Testweise: alle Renderpasses erstellen und direkt in Renderloop einfügen
+	// Testweise: alle Renderpasses erstellen und direkt in Renderloop einfï¿½gen
 	UnderwaterScene:: createRenderPasses( testingState, true);
 
 	// create a renderpass for boids, rendering into default gbuffer right after under water scene gbuffer rendering
@@ -140,6 +140,7 @@ void configureRendering(){
 		std::cout << "ERROR : could not insert Renderpass at the specified position" << std::endl;
 	}
 
+
 	// einer renderpass fuer bone_animation #copypasta_von_arend
 	RenderPass* gbufferAnimationPass = AnimationFeature::createAnimationRenderPass( UnderwaterScene::framebuffer_gbuffer_default );
 	if ( !testingState->getRenderLoop()->addRenderPassAfter( gbufferAnimationPass, UnderwaterScene::gbufferRenderPass ) )
@@ -147,9 +148,12 @@ void configureRendering(){
 		std::cout << "ERROR : could not insert Renderpass at the specified position" << std::endl;
 	}
 
+	UnderwaterScene::gbufferShadowRenderPass->addInitialGraphicsComponent( FishBoidFeature::fishes );
+
+
 
 	// TODO Alle anderen Renderpasses erstellen
-	// TODO Richtige Reihenfolge und verknüpfungen einstellen
+	// TODO Richtige Reihenfolge und verknï¿½pfungen einstellen
 
 	// make stereo renderpasses whenever geometry is rendered
 	std::cout << " Reconfiguring RenderPasses to Stereo Rendering" << std::endl;
@@ -160,8 +164,9 @@ void configureRendering(){
 	OculusFeature::makeStereoRenderPass( UnderwaterScene::gbufferRefractionMapSunSkyRenderPass, OculusFeature::oculus, OculusFeature::oculusCam );
 	OculusFeature::makeStereoRenderPass( UnderwaterScene::gbufferRefractionMapRenderPass, 		OculusFeature::oculus, OculusFeature::oculusCam );
 	OculusFeature::makeStereoRenderPass( UnderwaterScene::gbufferParticlesRenderPass, 			OculusFeature::oculus, OculusFeature::oculusCam );
-	OculusFeature::makeStereoRenderPass( FishBoidFeature::gbufferBoidRenderPass, 			OculusFeature::oculus, OculusFeature::oculusCam );
 	OculusFeature::makeStereoRenderPass( AnimationFeature::gbufferAnimationRenderPass, 			OculusFeature::oculus, OculusFeature::oculusCam );
+
+	OculusFeature::makeStereoRenderPass( FishBoidFeature::gbufferBoidRenderPass, 				OculusFeature::oculus, OculusFeature::oculusCam );
 
 	std::pair<
 			OculusFeature::StereoRenderPassActivateRenderEyeSettingsListener *,
@@ -183,11 +188,14 @@ void configureRendering(){
 	std::cout << " Setting Stereo Post Processing effect on final image" << std::endl;
 	OculusFeature::oculus->setRenderBuffer( UnderwaterScene:: finalImage );
 	testingState->getRenderLoop()->addRenderPass( OculusFeature::oculusPostProcessing );
+
+	// some debug views
+	addDebugView(UnderwaterScene::simpleTex, testingState, UnderwaterScene::framebuffer_shadow->getDepthBufferHandle() );
 }
 
 void configureOtherStuff(){
 	/* customization for other stuff */
-	
+
 }
 
 void configureApplication(){
@@ -205,7 +213,7 @@ void configureApplication(){
 	/**
 	 * 	Initialisierung der einzelnen Features, bzw Objektinstanzen die so gebraucht werden
 	 *
-	 * 	Reihenfolge platzhaltend willkürlich
+	 * 	Reihenfolge platzhaltend willkï¿½rlich
 	 */
 
 

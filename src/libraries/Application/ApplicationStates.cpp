@@ -37,6 +37,10 @@ Camera* ApplicationState::getCamera(){
 	return camera;
 }
 
+Camera* ApplicationState::getAltCamera(){
+	return altCamera;
+}
+
 RenderQueue* ApplicationState::getRenderQueue(){
 	return renderQueue;
 }
@@ -70,6 +74,10 @@ void ApplicationState::setCamera(				Camera* camera){
 	this->camera = camera;
 	this->iOHandler->setCameraObject(camera);
 	attachListenerOnBeginningProgramCycle(	new UpdateCameraPositionListener(camera, IOManager::getInstance()->getDeltaTimePointer()));
+}
+
+void ApplicationState::setAltCamera(				Camera* camera){
+	this->altCamera = camera;
 }
 
 void ApplicationState::activate(){
