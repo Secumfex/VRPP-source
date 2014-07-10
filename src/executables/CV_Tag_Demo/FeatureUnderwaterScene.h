@@ -77,6 +77,7 @@ namespace UnderwaterScene{
 	VirtualObject* scene_wallObject2;
 	VirtualObject* scene_waterPlaneObject;
 	VirtualObject* scene_mountainObject1;
+	VirtualObject* scene_Octopus;
 
 /**
  * FRAMEBUFFERS
@@ -269,6 +270,7 @@ TextureRenderPass* 			presentFinalImage;
 		scene_wallObject2 		= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_wall2.dae", 		VirtualObjectFactory::OTHER, 0.0f, 1, true);
 		scene_stoneObject1 		= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_stone_01.dae", 	VirtualObjectFactory::OTHER, 0.0f, 1, true);
 		scene_mountainObject1	= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_mountain_01.dae", 	VirtualObjectFactory::OTHER, 0.0f, 4, true);
+		scene_Octopus	= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_octopus.dae", 	VirtualObjectFactory::SPHERE, 0.0f, 4, true);
 
 		scene_sky_dome			= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_sky_dome.dae", 	VirtualObjectFactory::OTHER, 0.0f, 4, true);
 		scene_sun_Object 		= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_sun_shape.dae", 	VirtualObjectFactory::OTHER, 0.0f, 4, true);
@@ -298,6 +300,7 @@ TextureRenderPass* 			presentFinalImage;
 		scene_objects.push_back( scene_wallObject2 );
 		scene_objects.push_back( scene_stoneObject1 );
 		scene_objects.push_back( scene_mountainObject1 );
+		scene_objects.push_back( scene_Octopus );
 
 		scene_objects_background.push_back( scene_sun_Object );
 		scene_objects_background.push_back( scene_sky_dome );
