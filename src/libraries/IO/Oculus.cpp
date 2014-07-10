@@ -70,16 +70,17 @@ void Oculus::UnBindRenderBuffer()
 
 void Oculus::PresentFbo_NoDistortion()
 {
-	RenderManager::getInstance()->setViewPort( 0,0,renderBuffer->getWidth(), renderBuffer->getHeight() );
+	RenderManager* rm = RenderManager::getInstance();
+	rm->setViewPort( 0,0,renderBuffer->getWidth(), renderBuffer->getHeight() );
 
-	glDisable(GL_DEPTH_TEST);
-	PresFbo->useProgram();
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, renderBuffer->getPositionTextureHandle());
-		glUniform1i(glGetUniformLocation(progPresFbo, "diffuseTexture"), 0);
+	rm->disableDepthTesting();
+	rm->setCurrentShader( PresFbo );
+
+	rm->bindTexture( renderBuffer->getPositionTextureHandle(), 0);
+	PresFbo->uploadUniform(0, "diffuseTexture");
 	PresFbo->render(VirtualObjectFactory::getInstance()->getTriangle());
-	glEnable(GL_DEPTH_TEST);
 
+	rm->enableDepthTesting();
 }
 
 void Oculus::PresentFbo_PostProcessDistortion(
@@ -89,9 +90,9 @@ void Oculus::PresentFbo_PostProcessDistortion(
     const OVR::Util::Render::DistortionConfig*  pDistortion = eyeParams.pDistortion;
     if (pDistortion == NULL)
         return;
-
+    RenderManager* rm = RenderManager::getInstance();
 //    glUseProgram(progRiftDistortion);
-    RiftDistortion->useProgram();
+    rm->setCurrentShader( RiftDistortion );
     {
         // Set uniforms for distortion shader
         OVR::Matrix4f ident;
@@ -134,11 +135,10 @@ void Oculus::PresentFbo_PostProcessDistortion(
             distParams.DistScale * pDistortion->K[3]
         );
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, renderBuffer->getPositionTextureHandle());
-        glUniform1i(glGetUniformLocation(progRiftDistortion, "Texture0"), 0);
+        rm->bindTexture(renderBuffer->getPositionTextureHandle(), 0);
+        RiftDistortion->uploadUniform(0, "Texture0");
 
-        glDisable(GL_DEPTH_TEST);
+        rm->disableDepthTesting();
 
         if ( eyeParams.Eye == OVR::Util::Render::StereoEye_Right )
         {
@@ -198,9 +198,9 @@ void Oculus::PresentFbo_PostProcessDistortion(
 //        glDisableVertexAttribArray(0);
 //        glDisableVertexAttribArray(1);
     }
-    glEnable(GL_DEPTH_TEST);
+    rm->enableDepthTesting();
 
-    glUseProgram(0);
+//    glUseProgram(0);
 }
 
 void Oculus::PresentFbo(PostProcessType post, const RiftDistortionParams& distParams)
