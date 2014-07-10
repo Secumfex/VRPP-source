@@ -135,6 +135,14 @@ void DirtyFlagListener::update() {
 	dirtyFlag = true;
 }
 
+InvertBoolValueListener::InvertBoolValueListener(bool* target) {
+	this->target = target;
+}
+
+void InvertBoolValueListener::update() {
+	*target ? *target = false : *target = true;
+}
+
 SetBoolValueListener::SetBoolValueListener(bool* target, bool* value) {
 	this->source = value;
 	this->target = target;

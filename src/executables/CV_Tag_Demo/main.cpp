@@ -8,6 +8,8 @@
 
 #include "Tools/ShaderFactory.h"
 
+#include "Visuals/RenderPass.h"
+
 // include features
 #include "FeatureUnderwaterScene.h"
 #include "FeatureTreasureChest.h"
@@ -25,6 +27,8 @@ VRState* 		testingState;
 IOHandler*   	testingInputHandler;
 
 OculusCamera* 	reflectedOculusCamera;
+
+bool debugView = new bool(false);
 
 /*****************  UTILITY *************************************/
 // debug views, if any
@@ -59,9 +63,13 @@ void addDebugView(Shader* shader, ApplicationState* state, GLuint imageHandle)
 	renderTinyView->setViewPortX(x);
 	renderTinyView->setViewPortWidth(200);
 	renderTinyView->setViewPortHeight(200);
-	state->getRenderLoop()->addRenderPass(renderTinyView);
 
-	debugViews.push_back(renderTinyView);
+	bool* inv;
+	ConditionalRenderPassProxy* condPass = new ConditionalRenderPassProxy(renderTinyView, &debugView, inv);
+
+	state->getRenderLoop()->addRenderPass(condPass);
+
+	debugViews.push_back(condPass);
 }
 
 /*****************  CONFIGURATION    ****************************/
@@ -105,7 +113,7 @@ void configurePhysics(){
 	btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,1,0),0);
 	btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
     btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0,groundMotionState,groundShape,btVector3(0,0,0));
-   	 btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
+   	btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
     PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(groundRigidBody);
 
 	btRigidBody* camBody = OculusFeature::oculusCam->getRigidBody();
@@ -121,9 +129,11 @@ void configureInputHandler(){
 
 	testingInputHandler->attachListenerOnKeyPress(new PrintValueListener( IOManager::getInstance()->getDeltaTimePointer(), "d_t : "), GLFW_KEY_T );
 
-	// TODO Tasten zum resetten etc.  Camera wird resettet, jedoch wird der vektor bei merhmaligem drücken akkumuliert.
+	// TODO Tasten zum resetten etc.  Camera wird resettet, jedoch wird der vektor bei merhmaligem drï¿½cken akkumuliert.
 	testingInputHandler->attachListenerOnKeyPress(new UnderwaterScene::SetCameraPositionListener(OculusFeature::oculusCam, glm::vec3(0.0f,4.0f,0.0f)), GLFW_KEY_R ); //original 0.0f,5.0f,0.0f
 	
+	testingInputHandler->attachListenerOnKeyPress(new InvertBoolValueListener( &debugView), GLFW_KEY_M );
+
 }
 
 void configureRendering(){
@@ -192,7 +202,10 @@ void configureRendering(){
 	testingState->getRenderLoop()->addRenderPass( OculusFeature::oculusPostProcessing );
 
 	// some debug views
+	addDebugView(UnderwaterScene::simpleTex, testingState, UnderwaterScene::framebuffer_shadow->getNormalTextureHandle() );
 	addDebugView(UnderwaterScene::simpleTex, testingState, UnderwaterScene::framebuffer_shadow->getDepthBufferHandle() );
+	addDebugView(UnderwaterScene::simpleTex, testingState, UnderwaterScene::framebuffer_shadow->getDepthBufferHandle() );
+
 }
 
 void configureOtherStuff(){
