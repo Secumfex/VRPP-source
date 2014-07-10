@@ -14,6 +14,7 @@
 #include "FeatureOculus.h"
 #include "IO/OculusListeners.h"
 #include "FishBoidFeature.h"
+#include "HUD.h"
 
 		// TODO etc.
 
@@ -114,12 +115,12 @@ void configureInputHandler(){
 }
 
 void configureRendering(){
-	// Oculus wurde bereits initialisiert --> fenster größe ist bekannt
+	// Oculus wurde bereits initialisiert --> fenster grï¿½ï¿½e ist bekannt
 
-	// alle Shader erstellen, die später benötigt werden
+	// alle Shader erstellen, die spï¿½ter benï¿½tigt werden
 	UnderwaterScene::createShaders( testingState );
 
-	// Testweise: alle Renderpasses erstellen und direkt in Renderloop einfügen
+	// Testweise: alle Renderpasses erstellen und direkt in Renderloop einfï¿½gen
 	UnderwaterScene:: createRenderPasses( testingState, true);
 
 	// create a renderpass for boids, rendering into default gbuffer right after under water scene gbuffer rendering
@@ -132,7 +133,7 @@ void configureRendering(){
 
 
 	// TODO Alle anderen Renderpasses erstellen
-	// TODO Richtige Reihenfolge und verknüpfungen einstellen
+	// TODO Richtige Reihenfolge und verknï¿½pfungen einstellen
 
 	// make stereo renderpasses whenever geometry is rendered
 	std::cout << " Reconfiguring RenderPasses to Stereo Rendering" << std::endl;
@@ -171,7 +172,7 @@ void configureRendering(){
 }
 
 void configureOtherStuff(){
-	/* customization for other stuff */
+	HUD::createHUD(testingState);
 
 }
 
@@ -190,7 +191,7 @@ void configureApplication(){
 	/**
 	 * 	Initialisierung der einzelnen Features, bzw Objektinstanzen die so gebraucht werden
 	 *
-	 * 	Reihenfolge platzhaltend willkürlich
+	 * 	Reihenfolge platzhaltend willkï¿½rlich
 	 */
 
 

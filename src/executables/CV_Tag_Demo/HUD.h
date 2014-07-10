@@ -2,6 +2,7 @@
 #define HUD_H
 
 #include "HUDElement.h"
+#include "HUDSystem.h"
 
 namespace HUD{
 
@@ -52,7 +53,7 @@ namespace HUD{
 	hudSys->addHUDElement(marker);		//add HUDElement to HUDElements Vector
 
 	//Listener (not used yet, but implemented for later purpose
-	target->attachListenerOnBeginningProgramCycle(new UpdateHUDSystemListener(hudSys, IOManager::getInstance()->getDeltaTimePointer()));
+	//target->attachListenerOnBeginningProgramCycle(new UpdateHUDSystemListener(hudSys, IOManager::getInstance()->getDeltaTimePointer()));
 	}
 }
 
