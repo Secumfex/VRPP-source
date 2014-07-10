@@ -270,7 +270,7 @@ TextureRenderPass* 			presentFinalImage;
 		scene_wallObject2 		= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_wall2.dae", 		VirtualObjectFactory::OTHER, 0.0f, 1, true);
 		scene_stoneObject1 		= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_stone_01.dae", 	VirtualObjectFactory::OTHER, 0.0f, 1, true);
 		scene_mountainObject1	= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_mountain_01.dae", 	VirtualObjectFactory::OTHER, 0.0f, 4, true);
-		scene_Octopus	= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_octopus.dae", 	VirtualObjectFactory::SPHERE, 0.0f, 4, true);
+		scene_Octopus			= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_octopus.dae", 		VirtualObjectFactory::SPHERE, 0.0f, 1, true);
 
 		scene_sky_dome			= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_sky_dome.dae", 	VirtualObjectFactory::OTHER, 0.0f, 4, true);
 		scene_sun_Object 		= target->createVirtualObject(RESOURCES_PATH "/demo_scene/demo_scene_sun_shape.dae", 	VirtualObjectFactory::OTHER, 0.0f, 4, true);

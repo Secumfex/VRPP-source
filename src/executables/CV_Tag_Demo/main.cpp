@@ -111,7 +111,7 @@ void configurePhysics(){
 
 	//create an invisible ground plane
 	btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,1,0),0);
-	btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
+	btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0.5f,0)));
     btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0,groundMotionState,groundShape,btVector3(0,0,0));
    	btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
     PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(groundRigidBody);
