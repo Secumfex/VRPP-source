@@ -23,6 +23,12 @@ PhysicsComponent::PhysicsComponent(){
 	hit = false;
 }
 
+PhysicsComponent::PhysicsComponent(PhysicsComponent* phy){
+	rigidBody = phy->getRigidBody();
+	hit = phy->getHit();
+	glm::vec3 pos = phy->getPosition();
+	this->setPosition(pos.x, pos.y, pos.z);
+}
 PhysicsComponent::PhysicsComponent(glm::vec3 min, glm::vec3 max, float mass, int collisionFlag) {
 
 	glm::vec3 boxValue = max-min;
@@ -44,7 +50,7 @@ PhysicsComponent::PhysicsComponent(glm::vec3 min, glm::vec3 max, float mass, int
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(rigidBody);
 }
 
-PhysicsComponent::PhysicsComponent(float x, float y, float z, btTriangleMesh btMesh, vector<GraphicsComponent*> mGraphComponent, btTriangleIndexVertexArray* btTIVA) {
+PhysicsComponent::PhysicsComponent(float x, float y, float z, btTriangleMesh* btMesh, vector<GraphicsComponent*> mGraphComponent, btTriangleIndexVertexArray* btTIVA) {
 
 	hit = false;
 
@@ -261,9 +267,9 @@ btRigidBody* PhysicsComponent::addHeightfield(char* filename, float x, float y, 
 	return body;
 }
 
-btRigidBody* PhysicsComponent::addTriangleMesh(float x, float y, float z, btTriangleMesh btMesh, vector<GraphicsComponent*> mGraphComponent, btTriangleIndexVertexArray* btTIVA){
+btRigidBody* PhysicsComponent::addTriangleMesh(float x, float y, float z, btTriangleMesh* btMesh, vector<GraphicsComponent*> mGraphComponent, btTriangleIndexVertexArray* btTIVA){
 
-	static btTriangleMesh triangleMesh = btMesh;	//Var A
+	static btTriangleMesh* triangleMesh = btMesh;	//Var A
 	static btTriangleIndexVertexArray* tIVA = btTIVA; //Var B
 
 	static btRigidBody* staticBody = 0;

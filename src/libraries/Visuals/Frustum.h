@@ -54,6 +54,13 @@ public:
 	 */
 	void setPerspectiveMatrix(GLfloat fovy, GLfloat aspect, GLfloat near, GLfloat far);
 
+	/** \brief setter
+	 *
+	 * overwrites the perspective matrix on which the btFrustum is based. May cause issues. Use with caution.
+	 */
+	void setPerspectiveMatrix(glm::mat4 perspectiveMatrix);
+
+
 	/** \brief getter
 	 *
 	 * @return the perspective matrix

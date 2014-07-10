@@ -47,6 +47,14 @@ public:
 
 	GLFWwindow* window;		/**< GLFW window used to call GLFW methods */
 
+	/** \brief setter
+	 *
+	 * sets/changes window size
+	 * @param width to be resized to
+	 * @param height to be resized to
+	 */
+	void setWindowSize(int width, int height);
+
 
 	/** \brief setter
 	 *

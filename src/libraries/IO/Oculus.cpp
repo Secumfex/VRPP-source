@@ -21,6 +21,9 @@ Oculus::Oculus()
     , EyePitch(0)
     , EyeRoll(0)
 { 
+	renderBuffer = 0;
+	RiftDistortion = 0;
+	PresFbo = 0;
 }
 
  Oculus::~Oculus()
@@ -46,31 +49,33 @@ void Oculus::CreateShaders()
 /// We need an active GL context for this
 void Oculus::CreateRenderBuffer(float bufferScaleUp)
 {
-    fboWidth = (int)((bufferScaleUp) * (float)windowWidth );
-    fboHeight = (int)((bufferScaleUp) * (float)windowHeight );
-    renderBuffer.resize(fboWidth, fboHeight);
-    renderBuffer.createPositionTexture();
-    renderBuffer.makeDrawBuffers();
+	fboWidth = (int)((bufferScaleUp) * (float) windowWidth );
+    fboHeight = (int)((bufferScaleUp) * (float )windowHeight );
+    renderBuffer = new FrameBufferObject(fboWidth, fboHeight);
+    renderBuffer->bindFBO();
+    renderBuffer->createPositionTexture();
+    renderBuffer->makeDrawBuffers();
+    renderBuffer->unbindFBO();
 }
 
 void Oculus::BindRenderBuffer() 
 {
-    renderBuffer.bindFBO();
+    renderBuffer->bindFBO();
 }
 
 void Oculus::UnBindRenderBuffer() 
 {
-    renderBuffer.unbindFBO();
+    renderBuffer->unbindFBO();
 }
 
 void Oculus::PresentFbo_NoDistortion()
 {
-	glViewport(0,0,renderBuffer.getWidth(), renderBuffer.getHeight());
+	glViewport(0,0,renderBuffer->getWidth(), renderBuffer->getHeight());
 
 	glDisable(GL_DEPTH_TEST);
 	PresFbo->useProgram();
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, renderBuffer.getPositionTextureHandle());
+		glBindTexture(GL_TEXTURE_2D, renderBuffer->getPositionTextureHandle());
 		glUniform1i(glGetUniformLocation(progPresFbo, "diffuseTexture"), 0);
 	PresFbo->render(VirtualObjectFactory::getInstance()->getTriangle());
 	glEnable(GL_DEPTH_TEST);
@@ -130,56 +135,68 @@ void Oculus::PresentFbo_PostProcessDistortion(
         );
 
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, renderBuffer.getPositionTextureHandle());
+        glBindTexture(GL_TEXTURE_2D, renderBuffer->getPositionTextureHandle());
         glUniform1i(glGetUniformLocation(progRiftDistortion, "Texture0"), 0);
 
-        float verts[] = { // Left eye coords
-            -1.0f, -1.0f,
-             0.0f, -1.0f,
-             0.0f,  1.0f,
-            -1.0f,  1.0f,
-        };
-        float texs[] = {
-            0.0f, 1.0f,
-            0.5f, 1.0f,
-            0.5f, 0.0f,
-            0.0f, 0.0f,
-        };
+        glDisable(GL_DEPTH_TEST);
 
-        // Adjust coords for right eye
-        if (eyeParams.Eye == OVR::Util::Render::StereoEye_Right)
+        if ( eyeParams.Eye == OVR::Util::Render::StereoEye_Right )
         {
-            verts[2*0  ] += 1.0f;
-            verts[2*1  ] += 1.0f;
-            verts[2*2  ] += 1.0f;
-            verts[2*3  ] += 1.0f;
-            
-            texs[2*0] += 0.5f;
-            texs[2*1] += 0.5f;
-            texs[2*2] += 0.5f;
-            texs[2*3] += 0.5f;
+        	RiftDistortion->render( VirtualObjectFactory::getInstance()->getHalfScreenQuad(VirtualObjectFactory::RIGHT));
+        }
+        else
+        {
+        	RiftDistortion->render( VirtualObjectFactory::getInstance()->getHalfScreenQuad(VirtualObjectFactory::LEFT));
         }
 
-        glDisable(GL_DEPTH_TEST);
-//        RiftDistortion->render(VirtualObjectFactory::getInstance()->getTriangle());
 
-        const unsigned int tris[] = {
-            0,1,2,  0,2,3, // ccw
-        };
-
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, verts);
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, texs);
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
-
-        glDrawElements(GL_TRIANGLES,
-                       6,
-                       GL_UNSIGNED_INT,
-                       &tris[0]);
-
-        glDisableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
+//        float verts[] = { // Left eye coords
+//            -1.0f, -1.0f,
+//             0.0f, -1.0f,
+//             0.0f,  1.0f,
+//            -1.0f,  1.0f,
+//        };
+//        float texs[] = {
+//            0.0f, 1.0f,
+//            0.5f, 1.0f,
+//            0.5f, 0.0f,
+//            0.0f, 0.0f,
+//        };
+//
+//        // Adjust coords for right eye
+//        if (eyeParams.Eye == OVR::Util::Render::StereoEye_Right)
+//        {
+//            verts[2*0  ] += 1.0f;
+//            verts[2*1  ] += 1.0f;
+//            verts[2*2  ] += 1.0f;
+//            verts[2*3  ] += 1.0f;
+//
+//            texs[2*0] += 0.5f;
+//            texs[2*1] += 0.5f;
+//            texs[2*2] += 0.5f;
+//            texs[2*3] += 0.5f;
+//        }
+//
+//        glDisable(GL_DEPTH_TEST);
+////        RiftDistortion->render(VirtualObjectFactory::getInstance()->getTriangle());
+//
+//        const unsigned int tris[] = {
+//            0,1,2,  0,2,3, // ccw
+//        };
+//
+//        glBindBuffer(GL_ARRAY_BUFFER, 0);
+//        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, verts);
+//        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, texs);
+//        glEnableVertexAttribArray(0);
+//        glEnableVertexAttribArray(1);
+//
+//        glDrawElements(GL_TRIANGLES,
+//                       6,
+//                       GL_UNSIGNED_INT,
+//                       tris);
+//
+//        glDisableVertexAttribArray(0);
+//        glDisableVertexAttribArray(1);
     }
     glEnable(GL_DEPTH_TEST);
 
@@ -410,4 +427,13 @@ float Oculus::getEyePitch()
 float Oculus::getEyeRoll()
 {
 	return EyeRoll;
+}
+
+FrameBufferObject* Oculus::getRenderBuffer()
+{
+	return renderBuffer;
+}
+
+void Oculus::setRenderBuffer(FrameBufferObject* renderbuffer) {
+	this->renderBuffer = renderbuffer;
 }

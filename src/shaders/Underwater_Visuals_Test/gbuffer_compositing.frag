@@ -1,18 +1,34 @@
 #version 330
 
 in vec2 passUV;
+in vec4 vertPos;
 
 uniform sampler2D positionMap;
 uniform sampler2D normalMap;
 uniform sampler2D colorMap;
+uniform sampler2D uniformDepthMap;
 
 uniform mat4 uniformView;
+uniform mat4 uniformProjectorViewPerspective;
+uniform mat4 uniformDepthBiasMVP;
 
 uniform vec3 uniformSunDirection;
 
 out vec4 fragmentColor;
 
 void main() {
+
+  //try
+      vec4 fragPosition = texture(positionMap, passUV);
+      vec4 shadowCoord = inverse(uniformView) * fragPosition;
+      shadowCoord.xyz /= shadowCoord.w;
+      float visibility = 1.0;
+      if ( texture ( uniformDepthMap, shadowCoord.xy ).z < shadowCoord.z){
+          visibility = 0.01;
+      }
+      
+  //\try
+
     vec4 position = texture(positionMap, passUV);
     vec4 normal = texture(normalMap, passUV);
     vec4 color = texture(colorMap, passUV);
@@ -39,6 +55,7 @@ void main() {
   	vec4 finalColor = vec4( 0,0,0,0);
     finalColor.rgb = ambient * color.rgb;
   	finalColor.rgb +=  color.rgb * ( max(diffuse - ambient, 0 ) );
+    finalColor.rgb = visibility * finalColor.rgb;
   	finalColor.a = color.a;
     fragmentColor = finalColor;
 }

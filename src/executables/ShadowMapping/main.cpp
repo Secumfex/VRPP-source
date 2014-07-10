@@ -4,6 +4,7 @@
 #include "Tools/UtilityListeners.h"
 #include "PlaceHolderListeners.h"
 
+
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -144,7 +145,6 @@ void configureRendering(){
 	Listener* uniPositionMap2 = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 4, "positionMap", 	fbo2->getPositionTextureHandle());
 	Listener* uniNormalMap2 = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 5, "normalMap", 	fbo2->getNormalTextureHandle());
 	Listener* uniColorMap2 = new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 6, "colorMap", 	fbo2->getColorTextureHandle());
-	Listener* uniCamPreRender = new SetCamPositionListener	();
 
 	//testingApp->attachListenerOnProgramInitialization( new SetDefaultShaderListener( new Shader (SHADERS_PATH "/Postprocessing/GBuffer.vert", SHADERS_PATH "/Postprocessing/GBuffer.frag")));
 
@@ -206,9 +206,6 @@ void configureRendering(){
 
 	/* shadow map render pass */
 	RenderPass* shadowPass = new RenderPass(shadowShader, fbo3);
-	shadowPass->attachListenerOnPreRender(uniCamPreRender);
-	shadowPass->setInitialGraphicsComponentList( testingState->getRenderQueue()->getGraphicsComponentList());
-	testingState->getRenderLoop()->addRenderPass(shadowPass);
 
 }
 

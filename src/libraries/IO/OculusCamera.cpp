@@ -7,9 +7,11 @@
 
 #include <IO/OculusCamera.h>
 #include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/transform.hpp>
 
 OculusCamera::OculusCamera(Oculus* oculus) {
 	this->oculus = oculus;
+	eye = OVR::Util::Render::StereoEye_Center;
 }
 
 OculusCamera::~OculusCamera() {
@@ -25,10 +27,32 @@ glm::mat4 OculusCamera::getViewMatrix()
 
 	accumulatedViewMatrix =  rotation * viewMatrix;
 
+	// adjust view matrix if eye parameter is set
+	if ( eye != OVR::Util::Render::StereoEye_Center )
+	{
+		float offset = oculus->getStereoConfig().GetIPD() * 0.5f;
+
+		if ( eye == OVR::Util::Render::StereoEye_Right)
+		{
+			offset = - offset;
+		}
+
+		accumulatedViewMatrix = glm::translate(offset, 0.0f, 0.0f) * accumulatedViewMatrix;
+	}
+
 	return accumulatedViewMatrix;
 }
 
 glm::mat4* OculusCamera::getViewMatrixPointer()
 {
 	return &accumulatedViewMatrix;
+}
+
+void OculusCamera::setEye(OVR::Util::Render::StereoEye eye)
+{
+	this->eye = eye;
+}
+OVR::Util::Render::StereoEye OculusCamera::getEye()
+{
+	return eye;
 }

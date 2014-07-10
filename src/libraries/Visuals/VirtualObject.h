@@ -18,6 +18,7 @@ class VirtualObject{
 
 	glm::mat4 mCenterOfMassOffsetMatrix;			/**< translational matrix of center of mass into model space origin of mesh >*/
 
+	AnimationLoop* mAnimation;
 	vector<GraphicsComponent*> mGraphComponent;		/**< vector of graphic-components */
 
 public:
@@ -36,6 +37,14 @@ public:
 	 * @param modelMatrix 4x4Matrix
 	 */
 	VirtualObject(glm::mat4 modelMatrix);
+
+	/** \brief constructor
+	 *
+	 *this constructor will copy a VirtualObject and all its pointers.
+	 *
+	 * @param vo VirtualObject*
+	 */
+	VirtualObject(VirtualObject* vo);
 
 	/** \brief constructor
 	 *
@@ -138,7 +147,7 @@ public:
 	 * @param btTIVA btTriangleIndexVertexArray of loaded model ->VarB
 	 * @return void
 	 */
-	void setPhysicsComponent(float x, float y, float z, btTriangleMesh btMesh, btTriangleIndexVertexArray* btTIVA);
+	void setPhysicsComponent(float x, float y, float z, btTriangleMesh* btMesh, btTriangleIndexVertexArray* btTIVA);
 
 	/** \brief sets PhysicsComponent
 	 *
@@ -208,7 +217,22 @@ public:
 	PhysicsComponent* getPhysicsComponent();
 	const glm::mat4& getCenterOfMassOffsetMatrix() const;
 	void setCenterOfMassOffsetMatrix(const glm::mat4& centerOfMassOffsetMatrix);
+
+	/** \brief
+	*
+	* sets an AnimationLoop to the VOs member "mAnimationLoop"
+	* @param animation AnimationLoop pointer
+	* @return void
+	*/
+	void setAnimation(AnimationLoop* animation);
+
+	/** \brief getter
+	 *
+	 * @return the virtual objects animation
+	 */
+	AnimationLoop* getAnimation();
 };
+
 
 
 #endif /* VIRTUALOBJECT_H */

@@ -62,11 +62,12 @@ void main() {
     vec2 texCoordRefraction;
     texCoordReflection.s = ( ( ( passReflectionPosition.x / passReflectionPosition.w ) / 2.0f ) + 0.5f ) + noise_factor * normal.x;
     texCoordReflection.t = ( ( ( passReflectionPosition.y / passReflectionPosition.w ) / 2.0f ) + 0.5f ) + noise_factor * normal.z;
-    texCoordRefraction.s = ( gl_FragCoord.x / 800.0 )   + noise_factor * normal.x;
-    texCoordRefraction.t = ( gl_FragCoord.y / 600.0 )   + noise_factor * normal.z;
+    texCoordRefraction.s = ( gl_FragCoord.x / resX )   + noise_factor * normal.x;
+    texCoordRefraction.t = ( gl_FragCoord.y / resY )   + noise_factor * normal.z;
     
     vec3 lightVector 		= normalize( passLightPosition - passPosition );
     vec3 reflectionVector 	= normalize( reflect( -lightVector, normal ) );
+    vec3 refractionVector   = normalize( refract( -lightVector, normal, 0.75) ); 
     
     vec3 eyeVector = normalize(-passPosition);
     float viewAngle = abs ( dot ( eyeVector, normal ) ); // 0 --> close to parallel , 1 --> close to orthogonal
@@ -74,7 +75,10 @@ void main() {
     float refraction = viewAngle;
 
     float diffuse 	= ( max( dot( normal, lightVector ), 0 ) );
-    float specular 	= ( pow( max( dot( reflectionVector , eyeVector ), 0), 25) );
+    float specular = max( max( dot( reflectionVector , eyeVector ), 0), max( dot( refractionVector , eyeVector ), 0) );
+    
+    specular 	= ( pow( specular, 25) );
+    
     float ambient 	= 0.2;
 
     vec3 diffuse_color_texture 		= texture( diffuseTexture, texCoordNormal0 ).xyz;
