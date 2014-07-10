@@ -21,9 +21,13 @@ void main() {
   //try
       vec4 fragPosition = texture(positionMap, passUV);
       vec4 shadowCoord = inverse(uniformView) * fragPosition;
-      float visibility = 1.0;
-      if ( texture ( uniformDepthMap, shadowCoord.xy ).z < shadowCoord.z){
-          visibility = 0.01;
+      shadowCoord = uniformProjectorViewPerspective * shadowCoord;
+      shadowCoord.xyz = shadowCoord.xyz / shadowCoord.w;
+      shadowCoord.xyz = shadowCoord.xyz * 0.5 +0.5;
+      
+      float visibility = 0.01;
+      if ( texture ( uniformDepthMap, shadowCoord.xy ).z +0.01 > shadowCoord.z){
+          visibility = 1.0;
       }
       
   //\try

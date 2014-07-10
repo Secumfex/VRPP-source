@@ -138,6 +138,19 @@ namespace UnderwaterScene
 		void setCamera( Camera* cam );
 	};
 
+	/// listener to upload a uniform-float to keep in sight how much air is left on the player
+	class UploadUniformAirListener : public Listener {
+	private:
+		float airLeft, maxAir;
+		glm::vec3* camPosition;
+		float* windowTime;
+		std::string uniform_name;
+		float timeUnderWater, startTime;
+	public:
+		UploadUniformAirListener(std::string name = std::string("UNIFORMUPLOADLISTENER"), std::string uniform_name = "custom_uniform", float maxAir = 120.0);
+		void update();
+	};
+
 } // namespace UnderwaterScene
 
 /************ FEATURE OCULUS LISTENERS ******************/

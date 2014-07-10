@@ -169,6 +169,7 @@ void configureRendering(){
 
 	// some debug views
 	addDebugView(UnderwaterScene::simpleTex, testingState, UnderwaterScene::framebuffer_shadow->getDepthBufferHandle() );
+	addDebugView(UnderwaterScene::overlay_HUD_shader, testingState, UnderwaterScene::framebuffer_HUD->getColorTextureHandle());
 }
 
 void configureOtherStuff(){

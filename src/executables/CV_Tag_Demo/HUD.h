@@ -23,16 +23,16 @@ namespace HUD{
 
 	void createHUD(ApplicationState* target){
 	//creating frameBufferObject
-		framebuffer_HUD = new FrameBufferObject(800, 600);
-		framebuffer_HUD->bindFBO();
-		framebuffer_HUD->createPositionTexture();
-		framebuffer_HUD->makeDrawBuffers();
-		framebuffer_HUD->unbindFBO();
+//		framebuffer_HUD = new FrameBufferObject(800, 600);
+//		framebuffer_HUD->bindFBO();
+//		framebuffer_HUD->createPositionTexture();
+//		framebuffer_HUD->makeDrawBuffers();
+//		framebuffer_HUD->unbindFBO();
 
 	//creating textures
-		HUD_texture1 = new Texture(RESOURCES_PATH "/demo_scene/bubbles4.png");
-		HUD_texture2 = new Texture(RESOURCES_PATH "/demo_scene/scala.png");
-		HUD_texture3 = new Texture(RESOURCES_PATH "/demo_scene/marker.png");
+//		HUD_texture1 = new Texture(RESOURCES_PATH "/demo_scene/bubbles4.png");
+//		HUD_texture2 = new Texture(RESOURCES_PATH "/demo_scene/scala.png");
+//		HUD_texture3 = new Texture(RESOURCES_PATH "/demo_scene/marker.png");
 
 	//new HUDSystem - add some HUDElements
 	hudSys = new	HUDSystem();

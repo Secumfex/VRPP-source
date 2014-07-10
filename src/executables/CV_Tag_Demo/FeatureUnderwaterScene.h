@@ -9,6 +9,8 @@
 
 #include "UnderwaterSceneParticleSystem.h"
 
+#include "HUD.h"
+
 namespace UnderwaterScene{
 /**
  * PARAMETERS
@@ -92,6 +94,7 @@ namespace UnderwaterScene{
 	FrameBufferObject* framebuffer_water_caustics;
 	FrameBufferObject* framebuffer_scene_sky_sun;
 	FrameBufferObject* framebuffer_shadow;
+	FrameBufferObject* framebuffer_HUD;
 
 	FrameBufferObject* framebuffer_gbuffer_default;
 	FrameBufferObject* framebuffer_gbuffer_compositing_default;
@@ -114,6 +117,7 @@ Shader* gbuffer_god_rays_shader;
 Shader* gbuffer_particle_shader;
 Shader* gbuffer_water_shader;
 Shader* gbuffer_shadow_shader;
+Shader* overlay_HUD_shader;
 
 Shader* add_shader;
 Shader* overlay_shader;
@@ -161,6 +165,7 @@ ConditionalRenderPassProxy* addGodRaysProxy;
 MixTexturesRenderPass* 		overlayParticles;			// will not be added
 ConditionalRenderPassProxy* overlayParticlesProxy;		// will be added instead
 TextureRenderPass* 			presentFinalImage;
+MixTexturesRenderPass* 		hudRenderPass;
 
 /**
  * MISC
@@ -169,6 +174,7 @@ TextureRenderPass* 			presentFinalImage;
 
 	Texture* causticsTexture;
 	Texture* particlesTexture;
+	Texture* bubblesTexture;
 
 	ParticleSystem* water_particles;
 
@@ -382,6 +388,12 @@ TextureRenderPass* 			presentFinalImage;
 		framebuffer_shadow->makeDrawBuffers();	// draw color to color attachment 0
 		framebuffer_shadow->unbindFBO();
 
+		framebuffer_HUD		= new FrameBufferObject(800, 600 );		//create FBO for HUD
+		framebuffer_HUD->bindFBO();
+		framebuffer_HUD->createPositionTexture();
+		framebuffer_HUD->makeDrawBuffers();
+		framebuffer_HUD->unbindFBO();
+
 
 		framebuffer_gbuffer_default = new FrameBufferObject(window_width,window_height);
 		framebuffer_gbuffer_default->bindFBO();
@@ -408,6 +420,7 @@ TextureRenderPass* 			presentFinalImage;
 		/******************* textures creation	  ****************************************/
 		causticsTexture = new Texture( RESOURCES_PATH "/demo_scene/caustics.jpg" );
 		particlesTexture= new Texture( RESOURCES_PATH "/demo_scene/particle.png");
+		bubblesTexture 	= new Texture( RESOURCES_PATH "/demo_scene/bubbles4.png");
 		/*********************************************************************************/
 
 		/******************* default cam position ****************************************/
@@ -497,6 +510,10 @@ TextureRenderPass* 			presentFinalImage;
 			SHADERS_PATH "/Underwater_Visuals_Test/screenFill.vert",
 			SHADERS_PATH "/Underwater_Visuals_Test/overlay.frag ");
 
+	overlay_HUD_shader = new Shader(
+			SHADERS_PATH "/HUD/StaticHUDElement.vert",
+			SHADERS_PATH  "/HUD/HUDAir.faggot");
+
 	combine_GBuffers = new Shader(
 			SHADERS_PATH "/Underwater_Visuals_Test/screenFill.vert",
 			SHADERS_PATH "/Underwater_Visuals_Test/combineGBuffers.frag ");
@@ -535,6 +552,8 @@ TextureRenderPass* 			presentFinalImage;
 		Listener* uniPartMap	= new UploadUniformTextureListener 	("UNIFORMUPLOADLISTENER", 14,"uniformParticlesMap", 	UnderwaterScene::framebuffer_water_particles->getPositionTextureHandle());
 		Listener* uniPartText	= new UploadUniformTextureListener 	("UNIFORMUPLOADLISTENER", 4,"uniformParticleTexture",   UnderwaterScene::particlesTexture->getTextureHandle());
 		Listener* uniShadowMap  = new UploadUniformTextureListener 	("UNIFORMUPLOADLISTENER", 10,"uniformDepthMap",   		UnderwaterScene::framebuffer_shadow->getDepthBufferHandle() );	// shadow map from sun view
+		Listener* uniAirLeft	= new UploadUniformAirListener		( "UNIFORMUPLOADLISTENER", "uniformAirLeft", HUD::maxAir);
+		Listener* uniHUDMap 	= new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 15, "uniformHUDTexture", 		UnderwaterScene::framebuffer_HUD->getColorTextureHandle());
 
 		Listener* uniSunView	= new UploadUniformMat4Listener 	("UNIFORMUPLOADLISTENER", &UnderwaterScene::sunView, "uniformView");
 		Listener* uniSunPersp	= new UploadUniformMat4Listener 	("UNIFORMUPLOADLISTENER", &UnderwaterScene::sunPerspective, "uniformPerspective");
@@ -588,6 +607,14 @@ TextureRenderPass* 			presentFinalImage;
 		gbufferShadowRenderPass->attachListenerOnPostUniformUpload( uniSunPersp );
 		if(addToRenderLoop)
 			target->getRenderLoop()->addRenderPass(gbufferShadowRenderPass);
+
+		// render HUD
+
+		hudRenderPass			= new MixTexturesRenderPass(overlay_HUD_shader, framebuffer_HUD);
+		hudRenderPass->attachListenerOnPostUniformUpload(uniAirLeft);
+		hudRenderPass->attachListenerOnPostUniformUpload(uniHUDMap);
+		if(addToRenderLoop)
+			target->getRenderLoop()->addRenderPass(hudRenderPass);
 
 		// 1.2.3: light GBuffer scene
 		gbufferCompositingRenderPass = new CompositingPass(gbuffer_compositing_shader, framebuffer_gbuffer_compositing_default);
@@ -840,6 +867,8 @@ TextureRenderPass* 			presentFinalImage;
 
 		if (addToRenderLoop)
 				target->getRenderLoop()->addRenderPass( gbufferWaterRenderPass );
+
+
 
 		/******** COMPOSITING ***********/
 
