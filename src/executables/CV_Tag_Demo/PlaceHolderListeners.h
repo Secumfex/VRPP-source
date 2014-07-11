@@ -123,6 +123,15 @@ public:
 	void update();
 };
 
+	class RandomizeParticlePositionsListener : public Listener
+	{
+	private:
+		ParticleSystem* particlesystem;
+	public:
+		RandomizeParticlePositionsListener(ParticleSystem* particlesystem);
+		void update();
+	};
+
 
 
 } // namespace UnderwaterScene

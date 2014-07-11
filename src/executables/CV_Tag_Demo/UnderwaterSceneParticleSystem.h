@@ -33,6 +33,8 @@ namespace UnderwaterScene
 		void removeRandomParticle();
 		void removeParticle(	 UnderwaterScene::Particle* particle);
 
+		void randomizeParticlePositions();
+
 		/*Getter & Setter*/
 		void setRadius(float radius);
 		void setCenter(glm::vec3* center);

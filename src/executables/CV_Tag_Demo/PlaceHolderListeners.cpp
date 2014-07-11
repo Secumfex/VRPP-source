@@ -333,3 +333,12 @@ void LookAtCameraListener::update(){
 		mVO->setModelMatrix(rot_matrix * mMat);
 
 }
+
+UnderwaterScene::RandomizeParticlePositionsListener::RandomizeParticlePositionsListener(
+		ParticleSystem* particlesystem) {
+	this->particlesystem = particlesystem;
+}
+
+void UnderwaterScene::RandomizeParticlePositionsListener::update() {
+	particlesystem->randomizeParticlePositions();
+}

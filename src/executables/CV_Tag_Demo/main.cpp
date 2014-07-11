@@ -117,11 +117,9 @@ void configurePhysics(){
    	btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
     PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(groundRigidBody);
 
+
 	btRigidBody* camBody = OculusFeature::oculusCam->getRigidBody();
 	PhysicWorld::getInstance()->dynamicsWorld->addRigidBody(camBody);
-	OculusFeature::oculusCam->setPosition(0.0f,7.0f,5.0f);
-
-	// TODO Kamera bei y > 10.0f runterziehen  erledigt glaube ich
 
 	//hier sone annäherung der berge durch spheren
 	MountainCollision::makeSphereApproximationOfMountain();
@@ -138,6 +136,8 @@ void configureInputHandler(){
 	
 	testingInputHandler->attachListenerOnKeyPress(new InvertBoolValueListener( &debugView), GLFW_KEY_M );
 
+	testingInputHandler->attachListenerOnKeyPress(new UnderwaterScene::RandomizeParticlePositionsListener( UnderwaterScene::water_particles), GLFW_KEY_P );
+	testingInputHandler->attachListenerOnKeyPress(new UnderwaterScene::RandomizeParticlePositionsListener( UnderwaterScene::sand_particles), GLFW_KEY_P );
 }
 
 void configureRendering(){
@@ -180,6 +180,7 @@ void configureRendering(){
 	OculusFeature::makeStereoRenderPass( UnderwaterScene::gbufferRefractionMapSunSkyRenderPass, OculusFeature::oculus, OculusFeature::oculusCam );
 	OculusFeature::makeStereoRenderPass( UnderwaterScene::gbufferRefractionMapRenderPass, 		OculusFeature::oculus, OculusFeature::oculusCam );
 	OculusFeature::makeStereoRenderPass( UnderwaterScene::gbufferParticlesRenderPass, 			OculusFeature::oculus, OculusFeature::oculusCam );
+	OculusFeature::makeStereoRenderPass( UnderwaterScene::gbufferSandParticlesRenderPass,		OculusFeature::oculus, OculusFeature::oculusCam );
 	OculusFeature::makeStereoRenderPass( AnimationFeature::gbufferAnimationRenderPass, 			OculusFeature::oculus, OculusFeature::oculusCam );
 
 	OculusFeature::makeStereoRenderPass( FishBoidFeature::gbufferBoidRenderPass, 				OculusFeature::oculus, OculusFeature::oculusCam );
@@ -273,6 +274,10 @@ void configureApplication(){
 int main() {
 
 	configureApplication();		// 1 do some customization
+
+	PhysicWorld::getInstance()->dynamicsWorld->stepSimulation(0.01f);	// to ensure every rigid body is where it is supposed to be
+	UnderwaterScene::sand_particles->randomizeParticlePositions();
+	UnderwaterScene::water_particles->randomizeParticlePositions();
 
 	testingApp->run();			// 2 run application
 

@@ -47,6 +47,25 @@ void ParticleSystem::addRandomParticle() {
 	addParticle(randParticle);
 }
 
+void ParticleSystem::randomizeParticlePositions()
+{
+	for ( unsigned int i = 0; i < particles.size(); i++)
+	{
+		glm::vec3 offset(0.0f, 0.0f, 0.0f);
+
+		offset.x += ((((float) std::rand() / (float) RAND_MAX) * radius) * 2.0f)
+				- radius; // randomize a little bit by adding [-radius, radius] to the mix
+		offset.y += ((((float) std::rand() / (float) RAND_MAX) * radius) * 2.0f)
+				- radius; // randomize a little bit by adding [-radius, radius] to the mix
+		offset.z += ((((float) std::rand() / (float) RAND_MAX) * radius) * 2.0f)
+				- radius; // randomize a little bit by adding [-radius, radius] to the mix
+
+		particles[i]->setPosition(*center + offset);
+	}
+}
+
+
+
 void ParticleSystem::addParticle(Particle* particle) {
 	particles.push_back(particle);
 }

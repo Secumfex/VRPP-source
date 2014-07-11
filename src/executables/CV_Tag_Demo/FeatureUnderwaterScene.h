@@ -315,18 +315,6 @@ TextureRenderPass* 			presentFinalImage;
 		scene_objects_background.push_back( scene_sky_dome );
 		/*********************************************************************************/
 
-		/******************* particle System objects *****************************************/
-		water_particles = new ParticleSystem(target->getCamera()->getPositionPointer(), particle_distance_max);
-		water_particles->setParticleAmount(particle_amount);
-		target->attachListenerOnBeginningProgramCycle(new UpdateParticleSystemListener(water_particles, IOManager::getInstance()->getDeltaTimePointer()));
-		/*********************************************************************************/
-
-		/*******************sand particle System objects *****************************************/
-		sand_particles = new ParticleSystem(target->getCamera()->getPositionPointer(), particle_distance_max);
-		sand_particles->setParticleAmount(particle_amount*1.5);
-		target->attachListenerOnBeginningProgramCycle(new UpdateParticleSystemListener(sand_particles, IOManager::getInstance()->getDeltaTimePointer()));
-		/*********************************************************************************/
-
 		/******************* framebuffer objects *****************************************/
 
 		// window size to use for framebuffer creation
@@ -437,6 +425,7 @@ TextureRenderPass* 			presentFinalImage;
 
 		/******************* default cam position ****************************************/
 		Camera* cam =  target->getCamera();
+		cam->setPosition(0.0f,7.0f,5.0f);
 		cam->setPosition( cam->getPosition() + glm::vec3(0.0,1.5,0.0));
 
 		// check whether there is already a camera instance to be used as reflected camera
@@ -456,6 +445,18 @@ TextureRenderPass* 			presentFinalImage;
 
 		scene_listener_keep_offset_sun_reflection = new KeepOffsetListener( scene_sky_dome, reflectedCamera->getPositionPointer(), new glm::vec3( 0.0f, 0.0f, 0.0f));
 		scene_listener_keep_offset_sky_reflection = new KeepOffsetListener( scene_sun_Object, reflectedCamera->getPositionPointer(), new glm::vec3( offset ) );
+		/*********************************************************************************/
+
+		/******************* particle System objects *****************************************/
+		water_particles = new ParticleSystem(target->getCamera()->getPositionPointer(), particle_distance_max);
+		water_particles->setParticleAmount(particle_amount);
+		target->attachListenerOnBeginningProgramCycle(new UpdateParticleSystemListener(water_particles, IOManager::getInstance()->getDeltaTimePointer()));
+		/*********************************************************************************/
+
+		/*******************sand particle System objects *****************************************/
+		sand_particles = new ParticleSystem(target->getCamera()->getPositionPointer(), particle_distance_max);
+		sand_particles->setParticleAmount(particle_amount*1.5);
+		target->attachListenerOnBeginningProgramCycle(new UpdateParticleSystemListener(sand_particles, IOManager::getInstance()->getDeltaTimePointer()));
 		/*********************************************************************************/
 	}
 
