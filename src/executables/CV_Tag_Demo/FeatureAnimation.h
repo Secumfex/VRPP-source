@@ -23,6 +23,9 @@ void createObjects( ApplicationState* target ){
 
 	glm::mat4 mat = glm::translate(glm::mat4(), position) * glm::scale(glm::mat4(), glm::vec3(0.25f, 0.25f, 0.25f));
 
+	fish->setModelMatrix(mat);
+	fish->scale(glm::vec3(0.25f, 0.25f, 0.25f));
+	fish->translate(position);
 	target->attachListenerOnBeginningProgramCycle(new UpdateAnimationLoopListener(fish->getAnimation()));
 	target->attachListenerOnBeginningProgramCycle(new LookAtCameraListener(fish, mat, position));
 }

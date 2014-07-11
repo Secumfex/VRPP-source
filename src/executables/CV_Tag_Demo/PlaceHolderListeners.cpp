@@ -219,7 +219,7 @@ void OculusFeature::StereoRenderPassActivateRenderEyeSettingsListener::update()
 		notify("EYE_SETTINGS_ACTIVATION");
 
 	}
-	else{	// war nicht aktiv, beim nächstem mal aber
+	else{	// war nicht aktiv, beim nï¿½chstem mal aber
 		isActiveEye = true;
 
 		if ( eye == OVR::Util::Render::StereoEye_Right )
@@ -312,25 +312,25 @@ LookAtCameraListener::LookAtCameraListener(VirtualObject* vo, glm::mat4 mat, glm
 	mPos = pos;
 }
 void LookAtCameraListener::update(){
-	glm::vec3 orientation = RenderManager::getInstance()->getCamera()->getPosition() - mPos;
-	glm::vec3 initial = glm::vec3(1.0f, 0.0f, 0.0f);
+//	glm::vec3 orientation = RenderManager::getInstance()->getCamera()->getPosition() - mPos;
+//	glm::vec3 initial = glm::vec3(0.0f, 1.0f, 0.0f);
+//
+//	orientation = orientation / glm::length(orientation);
+//
+//	if(orientation == initial){
+//		mVO->setModelMatrix(mMat);
+//		return;}
+//
+//	glm::vec3 axis = glm::cross(initial, orientation);
+//		axis = glm::vec3(0.0f, axis.y, axis.z);
+//		axis /= glm::length(axis);
+//
+//		float angle = glm::dot(orientation, initial);
+//		angle = glm::acos(angle);
+//
+//		glm::mat4 rot_matrix = glm::rotate(glm::mat4(), glm::degrees(angle), axis);
 
-	orientation = orientation / glm::length(orientation);
-
-	if(orientation == initial){
 		mVO->setModelMatrix(mMat);
-		return;}
-
-	glm::vec3 axis = glm::cross(initial, orientation);
-		axis = glm::vec3(0.0f, axis.y, axis.z);
-		axis /= glm::length(axis);
-
-		float angle = glm::dot(orientation, initial);
-		angle = glm::acos(angle);
-
-		glm::mat4 rot_matrix = glm::rotate(glm::mat4(), glm::degrees(angle), axis);
-
-		mVO->setModelMatrix(rot_matrix * mMat);
 
 }
 
