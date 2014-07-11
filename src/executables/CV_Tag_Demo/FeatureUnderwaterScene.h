@@ -24,9 +24,10 @@ namespace UnderwaterScene{
 	float fog_end_inverse	= 10000.0f;
 
 	float fog_begin_under_water = 3.0f;
-	float fog_end_under_water = 50.0f;
+	//float fog_end_under_water = 50.0f; //old values
+	float fog_end_under_water = 15.0f;
 	float fog_end_above_water = 190.0f;
-	float fog_begin_above_water = 20.0f;
+	float fog_begin_above_water = 17.0f;
 
 	int   particle_amount = 100;
 	float particle_distance_max = 3.5f;
@@ -37,7 +38,8 @@ namespace UnderwaterScene{
 	glm::vec3 fog_color(102.0f / 255.0f * 0.7f, 205.0f / 255.0f * 0.7f, 170.0f/ 255.0f * 0.7f);
 	glm::vec3 fog_color_inverse(135.0f / 255.0f, 206.0f / 255.0f, 235.0f / 255.0f);
 	glm::vec3 fog_color_above_water(135.0f / 255.0f, 206.0f / 255.0f, 250.0f / 255.0f);
-	glm::vec3 fog_color_under_water(95.0f / 255.0f * 0.7f, 158.0f / 255.0f * 0.7f, 160.0f/ 255.0f * 0.7f);
+	//glm::vec3 fog_color_under_water(95.0f / 255.0f * 0.7f, 158.0f / 255.0f * 0.7f, 160.0f/ 255.0f * 0.7f); //old values
+	glm::vec3 fog_color_under_water(3.0f / 255.0f * 0.7f, 158.0f / 255.0f * 0.3f, 250.0f/ 255.0f * 0.3f);
 
 	glm::vec3 reflectedCameraPosition(0.0f,0.0f,0.0f);
 
