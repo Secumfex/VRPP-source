@@ -15,6 +15,7 @@
 #include "IO/OculusListeners.h"
 #include "FishBoidFeature.h"
 #include "FeatureAnimation.h"
+#include "HUD.h"
 
 		// TODO etc.
 
@@ -121,7 +122,7 @@ void configureInputHandler(){
 
 	testingInputHandler->attachListenerOnKeyPress(new PrintValueListener( IOManager::getInstance()->getDeltaTimePointer(), "d_t : "), GLFW_KEY_T );
 
-	// TODO Tasten zum resetten etc.  Camera wird resettet, jedoch wird der vektor bei merhmaligem drücken akkumuliert.
+	// TODO Tasten zum resetten etc.  Camera wird resettet, jedoch wird der vektor bei merhmaligem drï¿½cken akkumuliert.
 	testingInputHandler->attachListenerOnKeyPress(new UnderwaterScene::SetCameraPositionListener(OculusFeature::oculusCam, glm::vec3(0.0f,4.0f,0.0f)), GLFW_KEY_R ); //original 0.0f,5.0f,0.0f
 	
 }
@@ -130,6 +131,7 @@ void configureRendering(){
 	// Oculus wurde bereits initialisiert --> fenster grï¿½ï¿½e ist bekannt
 
 	// alle Shader erstellen, die spï¿½ter benï¿½tigt werden
+	HUD::createHUD(testingState);
 	UnderwaterScene::createShaders( testingState );
 
 	// Testweise: alle Renderpasses erstellen und direkt in Renderloop einfï¿½gen
@@ -167,8 +169,9 @@ void configureRendering(){
 	OculusFeature::makeStereoRenderPass( UnderwaterScene::gbufferRefractionMapRenderPass, 		OculusFeature::oculus, OculusFeature::oculusCam );
 	OculusFeature::makeStereoRenderPass( UnderwaterScene::gbufferParticlesRenderPass, 			OculusFeature::oculus, OculusFeature::oculusCam );
 	OculusFeature::makeStereoRenderPass( AnimationFeature::gbufferAnimationRenderPass, 			OculusFeature::oculus, OculusFeature::oculusCam );
+	OculusFeature::makeStereoRenderPass( AnimationFeature::gbufferAnimationRenderPass, 			OculusFeature::oculus, OculusFeature::oculusCam );
 
-	OculusFeature::makeStereoRenderPass( FishBoidFeature::gbufferBoidRenderPass, 				OculusFeature::oculus, OculusFeature::oculusCam );
+	OculusFeature::makeStereoRenderPass( UnderwaterScene::HUDAirRenderpass, 					OculusFeature::oculus, OculusFeature::oculusCam );
 
 	std::pair<
 			OculusFeature::StereoRenderPassActivateRenderEyeSettingsListener *,
@@ -189,14 +192,13 @@ void configureRendering(){
 	// apply oculus post processing on final image
 	std::cout << " Setting Stereo Post Processing effect on final image" << std::endl;
 	OculusFeature::oculus->setRenderBuffer( UnderwaterScene:: finalImage );
-	testingState->getRenderLoop()->addRenderPass( OculusFeature::oculusPostProcessing );
+	//testingState->getRenderLoop()->addRenderPass( OculusFeature::oculusPostProcessing );
 
 	// some debug views
 	addDebugView(UnderwaterScene::simpleTex, testingState, UnderwaterScene::framebuffer_shadow->getDepthBufferHandle() );
 }
 
 void configureOtherStuff(){
-	/* customization for other stuff */
 
 }
 

@@ -9,6 +9,8 @@
 
 #include "UnderwaterSceneParticleSystem.h"
 
+#include "HUD.h"
+
 namespace UnderwaterScene{
 /**
  * PARAMETERS
@@ -114,6 +116,7 @@ Shader* gbuffer_god_rays_shader;
 Shader* gbuffer_particle_shader;
 Shader* gbuffer_water_shader;
 Shader* gbuffer_shadow_shader;
+Shader* HUDAirShader;
 
 Shader* add_shader;
 Shader* overlay_shader;
@@ -161,6 +164,8 @@ ConditionalRenderPassProxy* addGodRaysProxy;
 MixTexturesRenderPass* 		overlayParticles;			// will not be added
 ConditionalRenderPassProxy* overlayParticlesProxy;		// will be added instead
 TextureRenderPass* 			presentFinalImage;
+MixTexturesRenderPass*		overlayHUD;
+RenderPass* HUDAirRenderpass;
 
 /**
  * MISC
@@ -500,6 +505,10 @@ TextureRenderPass* 			presentFinalImage;
 	combine_GBuffers = new Shader(
 			SHADERS_PATH "/Underwater_Visuals_Test/screenFill.vert",
 			SHADERS_PATH "/Underwater_Visuals_Test/combineGBuffers.frag ");
+
+	HUDAirShader	= new Shader(
+			SHADERS_PATH "/HUD/StaticHUDElement.vert",
+			SHADERS_PATH  "/HUD/HUDAir.faggot");
 }
 
 	/**
@@ -550,6 +559,10 @@ TextureRenderPass* 			presentFinalImage;
 		Listener* setClearColor 	= new SetClearColorListener 		( &UnderwaterScene::fog_color, 1.0);
 		Listener* setClearColor2 	= new SetClearColorListener 		( &UnderwaterScene::fog_color, 1.0);
 		Listener* setClearColorInv 	= new SetClearColorListener 		( &UnderwaterScene::fog_color_inverse, 1.0);
+
+		Listener* uniAirLeft	= new UploadUniformAirListener		( "UNIFORMUPLOADLISTENER", "uniformAirLeft", HUD::maxAir);
+		Listener* uniHUDMap		= new UploadUniformTextureListener	( "UNIFORMUPLOADLISTENER", 9, "uniformAirTexture", HUD::HUD_texture1->getTextureHandle());
+		Listener* uniHUD		= new UploadUniformTextureListener	( "UNIFORMUPLOADLISTENER", 9, "uniformAirTexture", HUD::framebuffer_HUD->getPositionTextureHandle());
 
 	/******************** 1 GBuffer Alternative Rendering ************************/
 
@@ -901,6 +914,21 @@ TextureRenderPass* 			presentFinalImage;
 		overlayParticlesProxy = new ConditionalRenderPassProxy (overlayParticles, &UnderwaterScene::is_underwater);
 		if (addToRenderLoop)
 				target->getRenderLoop()->addRenderPass( overlayParticlesProxy );
+
+		// 6.4. : overlay particles ontop of scene fbo
+		overlayHUD = new MixTexturesRenderPass( overlay_shader, finalImage, finalImage->getPositionTextureHandle(), HUD::framebuffer_HUD->getPositionTextureHandle() );
+		overlayHUD->setMixTextureUniformName("uniformOverlayTexture");
+		if (addToRenderLoop)
+				target->getRenderLoop()->addRenderPass( overlayHUD );
+
+
+		//6.4.2 : overlay HUD
+		HUDAirRenderpass = new RenderPass(HUDAirShader, HUD::framebuffer_HUD);
+		HUDAirRenderpass->attachListenerOnPostUniformUpload(uniAirLeft);
+		HUDAirRenderpass->attachListenerOnPostUniformUpload(uniHUDMap);
+		HUDAirRenderpass->addInitialGraphicsComponent(VirtualObjectFactory::getInstance()->getQuad());
+		if (addToRenderLoop)
+			target->getRenderLoop()->addRenderPassBefore(HUDAirRenderpass, overlayHUD);
 
 		/********* Present Final Image ***************/
 		presentFinalImage = new TextureRenderPass(simpleTex,0,finalImage->getPositionTextureHandle());

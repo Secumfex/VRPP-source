@@ -219,7 +219,7 @@ void OculusFeature::StereoRenderPassActivateRenderEyeSettingsListener::update()
 		notify("EYE_SETTINGS_ACTIVATION");
 
 	}
-	else{	// war nicht aktiv, beim nächstem mal aber
+	else{	// war nicht aktiv, beim nï¿½chstem mal aber
 		isActiveEye = true;
 
 		if ( eye == OVR::Util::Render::StereoEye_Right )
@@ -331,5 +331,45 @@ void LookAtCameraListener::update(){
 		glm::mat4 rot_matrix = glm::rotate(glm::mat4(), glm::degrees(angle), axis);
 
 		mVO->setModelMatrix(rot_matrix * mMat);
+
+}
+
+UploadUniformAirListener::UploadUniformAirListener(std::string name, std::string uniform_name, float maxAir){
+	this->maxAir = maxAir;
+	airLeft = 1.0f;
+	this->uniform_name = uniform_name;
+	this->windowTime = NULL;			//no window time before application is running
+	startTime = 0;
+	this->camPosition = NULL;			//same same here
+	timeUnderWater = 1.0f;
+}
+
+void UploadUniformAirListener::update(){
+	if ( windowTime == NULL)																//initialise after application boot
+		this->windowTime =  IOManager::getInstance()->getWindowTimePointer();
+	if ( startTime == 0)
+		startTime = IOManager::getInstance()->getWindowTime();								//same same
+	if ( camPosition == NULL)
+		camPosition = RenderManager::getInstance()->getCamera()->getPositionPointer();		//same same
+
+	if ( camPosition->y < 10.0){						//test if under or above water surface
+		if ( timeUnderWater != 0.0){					//test if already underwater or just diving in
+			timeUnderWater = *windowTime - startTime;	//update time (under water)
+		}
+		else {
+			timeUnderWater = 1.0;
+			startTime = *windowTime;					//when diving in, start counting the time (under water)
+		}
+
+	}
+	else
+		timeUnderWater = 0.0;							//restore air when above water surface (while being under water before)
+
+	airLeft = (maxAir - timeUnderWater) / maxAir;		//noralize
+
+	//-------------------------------------
+
+	Shader* shader = RenderManager::getInstance()->getCurrentShader();
+	shader->uploadUniform( airLeft, uniform_name);		//upload uniform
 
 }
