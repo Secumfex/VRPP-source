@@ -90,7 +90,7 @@ void configureVirtualObjects(){
 
 	// some fine tuning of frame buffer sizes
 	UnderwaterScene::framebuffer_water_refraction_scalefactor = 0.5f;
-	UnderwaterScene::framebuffer_water_reflection_scalefactor = 0.5f;
+	UnderwaterScene::framebuffer_water_reflection_scalefactor = 0.25f;
 	UnderwaterScene::framebuffer_water_caustics_scalefactor = 0.5f;
 
 	// already create a reflected cam to be used as default reflected camera during object creation
@@ -207,11 +207,13 @@ void configureRendering(){
 	testingState->getRenderLoop()->addRenderPass( OculusFeature::oculusPostProcessing );
 
 	// some debug views
-	addDebugView( UnderwaterScene::simpleTex, testingState, UnderwaterScene::framebuffer_gbuffer_default->getPositionTextureHandle() );
 
-	addDebugView( UnderwaterScene::simpleTex, testingState, UnderwaterScene::framebuffer_shadow->getNormalTextureHandle() );
-	addDebugView( UnderwaterScene::simpleTex, testingState, UnderwaterScene::framebuffer_gbuffer_default->getDepthBufferHandle() );
+	addDebugView( UnderwaterScene::simpleTex, testingState, UnderwaterScene::framebuffer_shadow->getDepthBufferHandle() );
+	addDebugView( UnderwaterScene::simpleTex, testingState, UnderwaterScene::framebuffer_gbuffer_default->getNormalTextureHandle() );
 	addDebugView( UnderwaterScene::simpleTex, testingState, UnderwaterScene::framebuffer_gbuffer_default->getColorTextureHandle() );
+	addDebugView( UnderwaterScene::simpleTex, testingState, UnderwaterScene::framebuffer_water_particles->getPositionTextureHandle());
+	addDebugView( UnderwaterScene::simpleTex, testingState, UnderwaterScene::framebuffer_water_reflection_compositing->getPositionTextureHandle());
+	addDebugView( UnderwaterScene::simpleTex, testingState, UnderwaterScene::framebuffer_water_caustics->getPositionTextureHandle());
 }
 
 void configureOtherStuff(){

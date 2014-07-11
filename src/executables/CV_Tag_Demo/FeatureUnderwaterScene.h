@@ -89,7 +89,7 @@ namespace UnderwaterScene{
 	FrameBufferObject* framebuffer_water_refraction_compositing;
 	FrameBufferObject* framebuffer_water_god_rays;
 	FrameBufferObject* framebuffer_water_particles;
-	FrameBufferObject* framebuffer_sand_particles;
+//	FrameBufferObject* framebuffer_sand_particles;
 	FrameBufferObject* framebuffer_water_water_object;
 	FrameBufferObject* framebuffer_water_caustics;
 	FrameBufferObject* framebuffer_scene_sky_sun;
@@ -361,11 +361,11 @@ TextureRenderPass* 			presentFinalImage;
 		framebuffer_water_particles->makeDrawBuffers();	// draw color to color attachment 0
 		framebuffer_water_particles->unbindFBO();
 
-		framebuffer_sand_particles = new FrameBufferObject(window_width *  framebuffer_water_particles_scalefactor, window_height *  framebuffer_water_particles_scalefactor);
-		framebuffer_sand_particles->bindFBO();
-		framebuffer_sand_particles->createPositionTexture();
-		framebuffer_sand_particles->makeDrawBuffers();	// draw color to color attachment 0
-		framebuffer_sand_particles->unbindFBO();
+//		framebuffer_sand_particles = new FrameBufferObject(window_width *  framebuffer_water_particles_scalefactor, window_height *  framebuffer_water_particles_scalefactor);
+//		framebuffer_sand_particles->bindFBO();
+//		framebuffer_sand_particles->createPositionTexture();
+//		framebuffer_sand_particles->makeDrawBuffers();	// draw color to color attachment 0
+//		framebuffer_sand_particles->unbindFBO();
 
 		framebuffer_water_caustics = new FrameBufferObject(window_width * framebuffer_water_caustics_scalefactor, window_height * framebuffer_water_caustics_scalefactor);
 		framebuffer_water_caustics->bindFBO();
@@ -563,7 +563,7 @@ TextureRenderPass* 			presentFinalImage;
 		Listener* uniCausticsTex2=new UploadUniformTextureListener	("UNIFORMUPLOADLISTENER", 12, "uniformCausticsTexture", UnderwaterScene::causticsTexture->getTextureHandle());
 		Listener* uniGBufferDepthMap = new UploadUniformTextureListener("", 7, "uniformDepthMap", framebuffer_gbuffer_default->getDepthBufferHandle( ) );
 		Listener* uniPartMap	= new UploadUniformTextureListener 	("UNIFORMUPLOADLISTENER", 14,"uniformParticlesMap", 	UnderwaterScene::framebuffer_water_particles->getPositionTextureHandle());
-		Listener* uniSandPartMap	= new UploadUniformTextureListener 	("UNIFORMUPLOADLISTENER", 14,"uniformSandParticlesMap", 	UnderwaterScene::framebuffer_sand_particles->getPositionTextureHandle());
+		Listener* uniSandPartMap	= new UploadUniformTextureListener 	("UNIFORMUPLOADLISTENER", 14,"uniformSandParticlesMap", 	UnderwaterScene::framebuffer_water_particles->getPositionTextureHandle());
 		Listener* uniPartText	= new UploadUniformTextureListener 	("UNIFORMUPLOADLISTENER", 4,"uniformParticleTexture",   UnderwaterScene::particlesTexture->getTextureHandle());
 		Listener* uniSandPartText	= new UploadUniformTextureListener 	("UNIFORMUPLOADLISTENER", 4,"uniformSandParticleTexture",   UnderwaterScene::sandParticlesTexture->getTextureHandle());
 		Listener* uniShadowMap  = new UploadUniformTextureListener 	("UNIFORMUPLOADLISTENER", 10,"uniformDepthMap",   		UnderwaterScene::framebuffer_shadow->getDepthBufferHandle() );	// shadow map from sun view
@@ -790,14 +790,14 @@ TextureRenderPass* 			presentFinalImage;
 				target->getRenderLoop()->addRenderPass( gbufferParticlesRenderPass );
 		
 
-		gbufferSandParticlesRenderPass = new ParticlesRenderPass(gbuffer_sand_particle_shader, UnderwaterScene::framebuffer_sand_particles, UnderwaterScene::sand_particles, VirtualObjectFactory::getInstance()->getQuad()->getMesh()->getVAO());
+		gbufferSandParticlesRenderPass = new ParticlesRenderPass(gbuffer_sand_particle_shader, UnderwaterScene::framebuffer_water_particles, UnderwaterScene::sand_particles, VirtualObjectFactory::getInstance()->getQuad()->getMesh()->getVAO());
 
 		gbufferSandParticlesRenderPass->attachListenerOnPostUniformUpload( uniGBufferDepthMap );
 
 		gbufferSandParticlesRenderPass->setUseAlphaBlending(true);	// enable alpha blending
 		gbufferSandParticlesRenderPass->setUseDepthTest(false);	// disable depth testing
-		gbufferSandParticlesRenderPass->setClearColorBufferBit(true); // clear color buffer bit on every frame
-		gbufferSandParticlesRenderPass->setCustomClearColor( glm::vec4 ( 0.0f, 0.0f, 0.0f, 0.0f) );// set clear color to transparent
+		gbufferSandParticlesRenderPass->setClearColorBufferBit(false); // clear color buffer bit on every frame
+//		gbufferSandParticlesRenderPass->setCustomClearColor( glm::vec4 ( 0.0f, 0.0f, 0.0f, 0.0f) );// set clear color to transparent
 		gbufferSandParticlesRenderPass->attachListenerOnPostUniformUpload( uniSandPartText);	// upload Particles Texture
 		gbufferSandParticlesRenderPass->attachListenerOnPostUniformUpload( uniSinusWave);  // upload Sinus Wave value
 
@@ -869,7 +869,7 @@ TextureRenderPass* 			presentFinalImage;
 		if (addToRenderLoop)
 				target->getRenderLoop()->addRenderPass( overlayParticlesRefractionProxy );
 
-		overlaySandParticlesRefraction = new MixTexturesRenderPass( overlay_shader, UnderwaterScene::framebuffer_water_refraction_compositing, UnderwaterScene::framebuffer_water_refraction_compositing->getPositionTextureHandle(), UnderwaterScene::framebuffer_sand_particles->getPositionTextureHandle() );
+		overlaySandParticlesRefraction = new MixTexturesRenderPass( overlay_shader, UnderwaterScene::framebuffer_water_refraction_compositing, UnderwaterScene::framebuffer_water_refraction_compositing->getPositionTextureHandle(), UnderwaterScene::framebuffer_water_particles->getPositionTextureHandle() );
 		overlaySandParticlesRefraction->setMixTextureUniformName("uniformAddTexture");
 		overlaySandParticlesRefractionProxy = new ConditionalRenderPassProxy (overlaySandParticlesRefraction, &UnderwaterScene::is_underwater, true);
 		if (addToRenderLoop)
@@ -955,12 +955,12 @@ TextureRenderPass* 			presentFinalImage;
 		if (addToRenderLoop)
 				target->getRenderLoop()->addRenderPass( overlayParticlesProxy );
 
-		overlaySandParticles = new MixTexturesRenderPass( overlay_shader, finalImage, finalImage->getPositionTextureHandle(), UnderwaterScene::framebuffer_sand_particles->getPositionTextureHandle() );
-		overlaySandParticles->setMixTextureUniformName("uniformOverlayTexture");
-
-		overlaySandParticlesProxy = new ConditionalRenderPassProxy (overlaySandParticles, &UnderwaterScene::is_underwater);
-		if (addToRenderLoop)
-				target->getRenderLoop()->addRenderPass( overlaySandParticlesProxy );
+//		overlaySandParticles = new MixTexturesRenderPass( overlay_shader, finalImage, finalImage->getPositionTextureHandle(), UnderwaterScene::framebuffer_water_particles->getPositionTextureHandle() );
+//		overlaySandParticles->setMixTextureUniformName("uniformOverlayTexture");
+//
+//		overlaySandParticlesProxy = new ConditionalRenderPassProxy (overlaySandParticles, &UnderwaterScene::is_underwater);
+//		if (addToRenderLoop)
+//				target->getRenderLoop()->addRenderPass( overlaySandParticlesProxy );
 
 		/********* Present Final Image ***************/
 		presentFinalImage = new TextureRenderPass(simpleTex,0,finalImage->getPositionTextureHandle());
