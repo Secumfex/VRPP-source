@@ -1,4 +1,5 @@
 #include "UnderwaterSceneParticleSystem.h"
+#include <time.h>
 
 using namespace UnderwaterScene;
 
@@ -31,6 +32,7 @@ void ParticleSystem::moveToOppositeSide(Particle* particle) {
 }
 
 void ParticleSystem::addRandomParticle() {
+	//srand (time(NULL)); seeding must be improved, so far it will remain non-random.
 	glm::vec3 offset(0.0f, 0.0f, 0.0f);
 
 	offset.x += ((((float) std::rand() / (float) RAND_MAX) * radius) * 2.0f)
