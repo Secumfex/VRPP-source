@@ -68,4 +68,34 @@ namespace ShaderTools {
 
         return programHandle;
     }
+
+    GLuint makeShaderProgram(const char* vertexShaderName, const char* geometryShaderName, const char* fragmentShaderName) {
+        //compile vertex shader
+        GLuint vertexShaderHandle = glCreateShader(GL_VERTEX_SHADER);
+        loadShaderSource(vertexShaderHandle, vertexShaderName);
+        glCompileShader(vertexShaderHandle);
+        checkShader(vertexShaderHandle);
+
+        //compile geometry shader
+        GLuint geometryShaderHandle = glCreateShader(GL_GEOMETRY_SHADER);
+        loadShaderSource(geometryShaderHandle, geometryShaderName);
+        glCompileShader(geometryShaderHandle);
+        checkShader(geometryShaderHandle);
+
+        //compile fragment shader
+        GLuint fragmentShaderHandle = glCreateShader(GL_FRAGMENT_SHADER);
+        loadShaderSource(fragmentShaderHandle, fragmentShaderName);
+        glCompileShader(fragmentShaderHandle);
+        checkShader(fragmentShaderHandle);
+
+
+        //link shader programs
+        GLuint programHandle = glCreateProgram();
+        glAttachShader(programHandle, vertexShaderHandle);
+        glAttachShader(programHandle, geometryShaderHandle);
+        glAttachShader(programHandle, fragmentShaderHandle);
+        glLinkProgram(programHandle);
+
+        return programHandle;
+    }
 }

@@ -30,5 +30,11 @@ namespace ShaderTools {
 	 */
 	GLuint makeShaderProgram(const char* vertexShaderName, const char* fragmentShaderName);
 
+
+	/**
+	 * same as makeShaderProgram but with geometryShader
+	 */
+	GLuint makeShaderProgram(const char* vertexShaderName, const char* geometryShaderName, const char* fragmentShaderName);
+
 }
 
