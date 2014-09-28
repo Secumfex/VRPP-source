@@ -41,4 +41,6 @@ namespace ShaderTools {
 	 * The id of a created the shader program
 	 */
 	GLuint makeShaderProgram(const char* vertexShaderName, const char* fragmentShaderName);
+
+	GLuint makeShaderProgram(const char* vertexShaderName, const char* geometryShaderName, const char* fragmentShaderName);
 }

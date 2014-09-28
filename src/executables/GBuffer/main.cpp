@@ -67,6 +67,7 @@ int main() {
     //load, compile and link GBuffer renderer
     GLuint gBufferProgramHandle = ShaderTools::makeShaderProgram(
                                                                  SHADERS_PATH "/GBuffer/GBuffer.vert",
+                                                                 SHADERS_PATH "/GBuffer/GBuffer.geo",
                                                                  SHADERS_PATH "/GBuffer/GBuffer.frag");
     
     GLuint modelHandle = glGetUniformLocation(gBufferProgramHandle, "uniformModel");
@@ -89,7 +90,7 @@ int main() {
         GLuint vertexBufferHandle;
         glGenBuffers(1, &vertexBufferHandle);
         glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandle);
-        
+
         //        3 :.
         //          :   .
         //          :      .
