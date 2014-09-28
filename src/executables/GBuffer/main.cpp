@@ -67,6 +67,7 @@ int main() {
     //load, compile and link GBuffer renderer
     GLuint gBufferProgramHandle = ShaderTools::makeShaderProgram(
                                                                  SHADERS_PATH "/GBuffer/GBuffer.vert",
+                                                                 SHADERS_PATH "/GBuffer/GBuffer.geom",
                                                                  SHADERS_PATH "/GBuffer/GBuffer.frag");
     
     GLuint modelHandle = glGetUniformLocation(gBufferProgramHandle, "uniformModel");
