@@ -28,7 +28,7 @@ int main() {
     glewExperimental= GL_TRUE;
 #endif
     
-    GLFWwindow* window = glfwCreateWindow(800, 800, "Compositing", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(800, 800, "Bachelor Video Compression", NULL, NULL);
     glfwMakeContextCurrent(window);
     glClearColor(1,1,1,0);
     
@@ -75,13 +75,6 @@ int main() {
     GLuint projectionHandle = glGetUniformLocation(gBufferProgramHandle, "uniformProjection");
     
     
-    
-    //--------------------------------------------//
-    //        Create a Vertex Array Object        //
-    //         to render a triangle that          //
-    //           fills the whole screen           //
-    //--------------------------------------------//
-    
     GLuint screenFillVertexArrayHandle;
     {
         glGenVertexArrays(1, &screenFillVertexArrayHandle);
@@ -91,14 +84,6 @@ int main() {
         glGenBuffers(1, &vertexBufferHandle);
         glBindBuffer(GL_ARRAY_BUFFER, vertexBufferHandle);
 
-        //        3 :.
-        //          :   .
-        //          :      .
-        //        1 :_________.
-        //          |         |  .
-        //          |    +    |     .
-        //          |_________|........
-        //       -1/-1        1        3
         
         GLfloat vertices[] = {-1, -1,   3, -1,   -1,  3};
         glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
@@ -106,14 +91,7 @@ int main() {
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
     }
-    
-    
-    
-    //--------------------------------------------//
-    //        Create a Vertex Array Object        //
-    //         containing several buffers         //
-    //             to render a cube               //
-    //--------------------------------------------//
+
     
     GLuint cubeVertexArrayHandle;
     {
@@ -140,11 +118,6 @@ int main() {
         glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
     }
     
-    
-    
-    //--------------------------------------------//
-    //         Create a Framebuffer Object        //
-    //--------------------------------------------//
     
     GLuint framebufferHandle;
     GLuint positionTextureHandle;
@@ -219,10 +192,7 @@ int main() {
         //setting up the camera parameters
         mat4 viewMatrix = lookAt(vec3(0.0f, 1.0f, -6.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
         mat4 projectionMatrix = perspective(40.0f, 4.0f / 3.0f, 0.1f, 100.f);
-        
-        //--------------------------------------------//
-        //        Render the scene into the FBO       //
-        //--------------------------------------------//
+
         
         glBindFramebuffer(GL_FRAMEBUFFER, framebufferHandle);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -234,7 +204,7 @@ int main() {
         
         glUseProgram(gBufferProgramHandle);
         
-        glViewport(0, 0, width, (height/4)*3);
+        //glViewport(0, 0, width, (height/4)*3);
         
         glUniformMatrix4fv(viewHandle, 1, GL_FALSE, value_ptr(viewMatrix));
         glUniformMatrix4fv(projectionHandle, 1, GL_FALSE, value_ptr(projectionMatrix));
@@ -293,26 +263,22 @@ int main() {
         
         glActiveTexture(GL_TEXTURE0);
         
-        //--------------------------------------------//
-        //       Render small views at the top to     //
-        //      show all the components of the FBO    //
-        //--------------------------------------------//
         glDisable(GL_DEPTH_TEST);
         
         glBindVertexArray(screenFillVertexArrayHandle);
         glUseProgram(simpleTextureProgramHandle);
         
-        glViewport(0, (height/4)*3, width/3, height/4);
-        glBindTexture(GL_TEXTURE_2D, positionTextureHandle);
-        glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-LEFT VIEWPORT
-        
-        glViewport(width/3, (height/4)*3, width/3, height/4);
-        glBindTexture(GL_TEXTURE_2D, normalTextureHandle);
-        glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-CENTER VIEWPORT
-        
-        glViewport((width/3)*2, (height/4)*3, width/3, height/4);
-        glBindTexture(GL_TEXTURE_2D, colorTextureHandle);
-        glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-RIGHT VIEWPORT
+//        glViewport(0, (height/4)*3, width/3, height/4);
+//        glBindTexture(GL_TEXTURE_2D, positionTextureHandle);
+//        glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-LEFT VIEWPORT
+//
+//        glViewport(width/3, (height/4)*3, width/3, height/4);
+//        glBindTexture(GL_TEXTURE_2D, normalTextureHandle);
+//        glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-CENTER VIEWPORT
+//
+//        glViewport((width/3)*2, (height/4)*3, width/3, height/4);
+//        glBindTexture(GL_TEXTURE_2D, colorTextureHandle);
+//        glDrawArrays(GL_TRIANGLES, 0, 3); //DRAW PLANE INTO TOP-RIGHT VIEWPORT
         
         //show what's been drawn
         glfwSwapBuffers(window);
